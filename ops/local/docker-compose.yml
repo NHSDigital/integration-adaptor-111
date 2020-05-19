@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+
+  integration-adaptor-111:
+    image: uk.nhs/integration-adaptor-111:0.0.1-SNAPSHOT
+    ports:
+      - "10001:8080"
+
+  rabbitmq:
+    image: 'rabbitmq:3.6-management-alpine'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
