@@ -1,7 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import uk.nhs.connect.iucds.cda.ucr.II;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
 
 import org.hl7.fhir.dstu3.model.Identifier;
 

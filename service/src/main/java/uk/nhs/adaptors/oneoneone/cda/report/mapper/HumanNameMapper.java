@@ -1,24 +1,39 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import java.util.Collections;
-
-import uk.nhs.connect.iucds.cda.ucr.EN;
-
+import java.util.stream.Stream;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.PN;
 import org.hl7.fhir.dstu3.model.HumanName;
-import org.hl7.fhir.dstu3.model.Period;
-import org.hl7.fhir.dstu3.model.StringType;
 
 public class HumanNameMapper {
 
-    public static HumanName mapHumanName(EN itk_person_name) {
+    public static HumanName mapHumanName(PN itk_person_name) {
         HumanName humanName = new HumanName();
-        humanName.setUse(null);
-        humanName.setText(null);
-        humanName.setFamily(itk_person_name.getFamilyArray(1).toString());
-        humanName.setGiven(Collections.singletonList(new StringType(itk_person_name.getGivenArray(1).toString())));
-        humanName.setPrefix(Collections.singletonList(new StringType(itk_person_name.getPrefixArray(1).toString())));
-        humanName.setSuffix(Collections.singletonList(new StringType(itk_person_name.getSuffixArray(1).toString())));
-        humanName.setPeriod(new Period());
+
+        if (!NodeUtil.hasSubNodes(itk_person_name)) {
+            return humanName.setText(NodeUtil.getNodeValueString(itk_person_name));
+        }
+
+        Stream.of(itk_person_name.getGivenArray())
+            .map(NodeUtil::getNodeValueString)
+            .forEach(humanName::addGiven);
+
+        Stream.of(itk_person_name.getPrefixArray())
+            .map(NodeUtil::getNodeValueString)
+            .forEach(humanName::addPrefix);
+
+        Stream.of(itk_person_name.getSuffixArray())
+            .map(NodeUtil::getNodeValueString)
+            .forEach(humanName::addSuffix);
+
+        if (itk_person_name.sizeOfFamilyArray() >= 1) {
+            humanName.setFamily(NodeUtil.getNodeValueString(itk_person_name.getFamilyArray(0)));
+        }
+
+        if (itk_person_name.isSetValidTime()) {
+            humanName.setPeriod(PeriodMapper.mapPeriod(itk_person_name.getValidTime()));
+        }
+
         return humanName;
     }
 }

@@ -11,7 +11,7 @@ import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 
-public class EncounterParticipantMapper {
+public class ParticipantMapper {
 
     public static List<Encounter.EncounterParticipantComponent> mapEncounterParticipants(POCDMT000002UK01EncounterParticipant[] encounterParticipantArray) {
 
@@ -19,8 +19,23 @@ public class EncounterParticipantMapper {
 
         for(POCDMT000002UK01EncounterParticipant encounterParticipant : encounterParticipantArray) {
             Encounter.EncounterParticipantComponent encounterParticipantComponent = new Encounter.EncounterParticipantComponent();
-            encounterParticipantComponent.setPeriod(PeriodMapper.mapPeriod(encounterParticipant.getTime()));
+            /*
+            field:      type : CodeableConcept
+            purpose:    role of the participant in the encounter (ParticipantType)
+            number:     0..*
+             */
             encounterParticipantComponent.setType(retrieveEncounterTypeFromITK(encounterParticipant));
+
+            /*
+            field:      period : Period
+            purpose:    period of time during the encounter that the participant participated
+             */
+            encounterParticipantComponent.setPeriod(PeriodMapper.mapPeriod(encounterParticipant.getTime()));
+
+            /*
+            field:      individual : Reference (Practitioner | RelatedPerson)
+            purpose:    person involved in the encounter other than the Patient
+             */
             encounterParticipantComponent.setIndividual(retrieveIndividualFromITK(encounterParticipant));
             encounterParticipantComponent.setIndividualTarget(retrieveIndividualTargetFromITK(encounterParticipant));
 
@@ -43,6 +58,9 @@ public class EncounterParticipantMapper {
 
     private static Resource retrieveIndividualTargetFromITK(POCDMT000002UK01EncounterParticipant encounterParticipant) {
         POCDMT000002UK01AssignedEntity assignedEntity = encounterParticipant.getAssignedEntity();
+        // TODO 2020-05-29: to figure out how to distinguish Practitioner from RelatedPerson in the assigned Entity
+        // TODO 2020-05-29: Should the assigned entity be always a Practitioner? what about RelatedPerson?
+        RelatedPersonMapper.mapRelatedPerson(assignedEntity);
         return PractitionerMapper.mapPractitioner(assignedEntity);
     }
 }

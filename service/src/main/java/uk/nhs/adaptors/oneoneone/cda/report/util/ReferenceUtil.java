@@ -1,9 +1,11 @@
-package uk.nhs.gpitf.reports.util;
+package uk.nhs.adaptors.oneoneone.cda.report.util;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
 import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Reference;
 
