@@ -11,8 +11,8 @@ import java.util.List;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.IdType;
+import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.ResourceType;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,25 +32,25 @@ public class EncounterReportBundleServiceTest {
     private EncounterMapper encounterMapper;
 
     @Mock
-    private EpisodeOfCareMapper episodeOfCareMapper;
+    private ServiceProviderMapper serviceProviderMapper;
 
     private static final Encounter ENCOUNTER;
     private static final IdType ENCOUNTER_ID = newRandomUuid();
-    private static final EpisodeOfCare EPISODE_OF_CARE;
-    private static final IdType EPISODE_OF_CARE_ID = newRandomUuid();
+    private static final Organization ORGANIZATION;
+    private static final IdType ORGANIZATION_ID = newRandomUuid();
 
     static {
         ENCOUNTER = new Encounter();
         ENCOUNTER.setStatus(FINISHED);
         ENCOUNTER.setIdElement(ENCOUNTER_ID);
-        EPISODE_OF_CARE = new EpisodeOfCare();
-        EPISODE_OF_CARE.setIdElement(EPISODE_OF_CARE_ID);
+        ORGANIZATION = new Organization();
+        ORGANIZATION.setIdElement(ORGANIZATION_ID);
     }
 
     @Before
     public void setUp() {
         when(encounterMapper.mapEncounter()).thenReturn(ENCOUNTER);
-        when(episodeOfCareMapper.mapEpisodeOfCare()).thenReturn(EPISODE_OF_CARE);
+        when(serviceProviderMapper.mapServiceProvider()).thenReturn(ORGANIZATION);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class EncounterReportBundleServiceTest {
         assertThat(encounterBundle.getEntry().size()).isEqualTo(2);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
-        verifyEntry(entries.get(1), EPISODE_OF_CARE_ID.getValue(), ResourceType.EpisodeOfCare);
+        verifyEntry(entries.get(1), ORGANIZATION_ID.getValue(), ResourceType.Organization);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {
