@@ -22,14 +22,14 @@ import uk.nhs.adaptors.oneoneone.properties.QueueProperties;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ReportServiceTest {
+public class EncounterReportServiceTest {
 
     private static final String ENCOUNTER_REPORT_MAPPING = "<encounter-report-mapping>";
     private static final String ROUTING_KEY = "ROUTING-KEY";
     private static final String EXCHANGE = "EXCHANGE";
 
     @InjectMocks
-    private ReportService reportService;
+    private EncounterReportService encounterReportService;
 
     @Mock
     private QueueProperties queueProperties;
@@ -58,7 +58,7 @@ public class ReportServiceTest {
         when(fhirContext.newJsonParser()).thenReturn(parser);
         when(parser.encodeResourceToString(encounterBundle)).thenReturn(ENCOUNTER_REPORT_MAPPING);
 
-        reportService.transformAndPopulateToGP(clinicalDoc);
+        encounterReportService.transformAndPopulateToGP(clinicalDoc);
 
         verify(rabbitTemplate).convertAndSend(EXCHANGE, ROUTING_KEY, ENCOUNTER_REPORT_MAPPING);
     }

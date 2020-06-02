@@ -20,7 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import uk.nhs.adaptors.oneoneone.cda.report.service.ReportService;
+import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -29,7 +29,7 @@ public class ReportControllerTest {
     private ReportController reportController;
 
     @Mock
-    private ReportService reportService;
+    private EncounterReportService encounterReportService;
 
     @Test
     public void postReportValidRequest() throws JsonProcessingException {
@@ -38,7 +38,7 @@ public class ReportControllerTest {
         reportController.postReport(validRequest);
 
         ArgumentCaptor<POCDMT000002UK01ClinicalDocument1> captor = ArgumentCaptor.forClass(POCDMT000002UK01ClinicalDocument1.class);
-        verify(reportService).transformAndPopulateToGP(captor.capture());
+        verify(encounterReportService).transformAndPopulateToGP(captor.capture());
         POCDMT000002UK01ClinicalDocument1 clinicalDocument = captor.getValue();
         assertThat(clinicalDocument.getId().getRoot()).isEqualTo("A709A442-3CF4-476E-8377-376500E829C9");
         assertThat(clinicalDocument.getSetId().getRoot()).isEqualTo("411910CF-1A76-4330-98FE-C345DDEE5553");

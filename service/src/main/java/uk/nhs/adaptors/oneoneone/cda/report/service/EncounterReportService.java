@@ -11,7 +11,7 @@ import uk.nhs.adaptors.oneoneone.properties.QueueProperties;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Service
-public class ReportService {
+public class EncounterReportService {
 
     @Autowired
     private EncounterReportBundleService encounterReportBundleService;
