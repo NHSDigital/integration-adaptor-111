@@ -4,7 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Bundle;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +14,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReportMapper;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.parser.IParser;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterBundleService;
 import uk.nhs.adaptors.oneoneone.properties.QueueProperties;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -31,16 +32,16 @@ public class ReportServiceTest {
     private ReportService reportService;
 
     @Mock
-    private ReportMapper reportMapper;
-
-    @Mock
     private QueueProperties queueProperties;
 
     @Mock
     private RabbitTemplate rabbitTemplate;
 
     @Mock
-    private ObjectMapper objectMapper;
+    private EncounterBundleService encounterBundleService;
+
+    @Mock
+    private FhirContext fhirContext;
 
     @Before
     public void setUp() {
@@ -50,11 +51,13 @@ public class ReportServiceTest {
 
     @Test
     public void transformAndPopulateToGP() throws JsonProcessingException {
-
         POCDMT000002UK01ClinicalDocument1 clinicalDoc = mock(POCDMT000002UK01ClinicalDocument1.class);
-        Encounter encounter = mock(Encounter.class);
-        when(reportMapper.mapReport(clinicalDoc)).thenReturn(encounter);
-        when(objectMapper.writeValueAsString(encounter)).thenReturn(ENCOUNTER_REPORT_MAPPING);
+        Bundle encounterBundle = mock(Bundle.class);
+        when(encounterBundleService.createEncounterBundle(clinicalDoc)).thenReturn(encounterBundle);
+        IParser parser = mock(IParser.class);
+        when(fhirContext.newJsonParser()).thenReturn(parser);
+        when(parser.encodeResourceToString(encounterBundle)).thenReturn(ENCOUNTER_REPORT_MAPPING);
+
         reportService.transformAndPopulateToGP(clinicalDoc);
 
         verify(rabbitTemplate).convertAndSend(EXCHANGE, ROUTING_KEY, ENCOUNTER_REPORT_MAPPING);
