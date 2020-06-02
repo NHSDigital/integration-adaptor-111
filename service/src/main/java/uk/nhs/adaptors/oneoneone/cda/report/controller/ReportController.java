@@ -18,14 +18,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import uk.nhs.adaptors.oneoneone.cda.report.service.ReportService;
+import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @RestController
 public class ReportController {
 
     @Autowired
-    private ReportService reportService;
+    private EncounterReportService encounterReportService;
 
     @PostMapping(value = "/report", consumes = { TEXT_XML_VALUE, APPLICATION_XML_VALUE })
     @ResponseStatus(value = ACCEPTED)
@@ -33,7 +33,7 @@ public class ReportController {
         try {
             POCDMT000002UK01ClinicalDocument1 clinicalDocument = extractClinicalDocument(reportXml);
             validate(clinicalDocument);
-            reportService.transformAndPopulateToGP(clinicalDocument);
+            encounterReportService.transformAndPopulateToGP(clinicalDocument);
         } catch (XmlException e) {
             throw new ResponseStatusException(BAD_REQUEST, e.getMessage());
         }
