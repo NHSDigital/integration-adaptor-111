@@ -10,7 +10,7 @@ public class ServiceProviderMapperTest {
     private ServiceProviderMapper serviceProviderMapper = new ServiceProviderMapper();
 
     @Test
-    public void mapEpisodeOfCare() {
+    public void mapServiceProvider() {
         Organization organization = serviceProviderMapper.mapServiceProvider();
 
         assertThat(organization.getIdElement().getValue()).startsWith("urn:uuid:");
