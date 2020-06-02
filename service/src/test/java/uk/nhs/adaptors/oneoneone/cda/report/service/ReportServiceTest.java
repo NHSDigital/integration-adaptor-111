@@ -17,7 +17,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterBundleService;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterReportBundleService;
 import uk.nhs.adaptors.oneoneone.properties.QueueProperties;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -38,7 +38,7 @@ public class ReportServiceTest {
     private RabbitTemplate rabbitTemplate;
 
     @Mock
-    private EncounterBundleService encounterBundleService;
+    private EncounterReportBundleService encounterReportBundleService;
 
     @Mock
     private FhirContext fhirContext;
@@ -53,7 +53,7 @@ public class ReportServiceTest {
     public void transformAndPopulateToGP() throws JsonProcessingException {
         POCDMT000002UK01ClinicalDocument1 clinicalDoc = mock(POCDMT000002UK01ClinicalDocument1.class);
         Bundle encounterBundle = mock(Bundle.class);
-        when(encounterBundleService.createEncounterBundle(clinicalDoc)).thenReturn(encounterBundle);
+        when(encounterReportBundleService.createEncounterBundle(clinicalDoc)).thenReturn(encounterBundle);
         IParser parser = mock(IParser.class);
         when(fhirContext.newJsonParser()).thenReturn(parser);
         when(parser.encodeResourceToString(encounterBundle)).thenReturn(ENCOUNTER_REPORT_MAPPING);
