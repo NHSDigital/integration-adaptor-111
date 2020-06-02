@@ -95,7 +95,7 @@ pipeline {
                     //           } // dir terraform/aws
                     //         } // dir integration-adaptors
                     //     } //script
-                    // } //steps
+                    } //steps
                 } //stage
                 stage('Run integration tests') {
                     steps {
