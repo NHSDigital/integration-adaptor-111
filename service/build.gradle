@@ -27,6 +27,8 @@ dependencies {
     testImplementation "org.assertj:assertj-core:3.16.1"
     testImplementation "org.springframework.boot:spring-boot-starter-test:2.3.0.RELEASE"
     testImplementation "io.rest-assured:rest-assured:4.3.0"
+    testImplementation group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-validation-resources-dstu3', version: '4.2.0'
+
 }
 
 sourceSets {
