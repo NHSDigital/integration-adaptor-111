@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Component
-public class EncounterBundleService {
+public class EncounterReportBundleService {
 
     @Autowired
     private EncounterMapper encounterMapper;

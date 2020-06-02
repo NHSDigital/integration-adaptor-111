@@ -5,10 +5,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import ca.uhn.fhir.context.FhirContext;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterBundleService;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterReportBundleService;
 import uk.nhs.adaptors.oneoneone.properties.QueueProperties;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -16,7 +14,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 public class ReportService {
 
     @Autowired
-    private EncounterBundleService encounterBundleService;
+    private EncounterReportBundleService encounterReportBundleService;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -28,7 +26,7 @@ public class ReportService {
     private QueueProperties queueProperties;
 
     public void transformAndPopulateToGP(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument) {
-        Bundle encounterBundle = encounterBundleService.createEncounterBundle(clinicalDocumentDocument);
+        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(clinicalDocumentDocument);
 
         rabbitTemplate.convertAndSend(queueProperties.getExchange(), queueProperties.getRoutingKey(),
             toJsonString(encounterBundle));

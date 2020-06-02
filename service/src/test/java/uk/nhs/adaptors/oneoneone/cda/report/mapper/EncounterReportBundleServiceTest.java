@@ -24,9 +24,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EncounterBundleServiceTest {
+public class EncounterReportBundleServiceTest {
     @InjectMocks
-    private EncounterBundleService encounterBundleService;
+    private EncounterReportBundleService encounterReportBundleService;
 
     @Mock
     private EncounterMapper encounterMapper;
@@ -57,7 +57,7 @@ public class EncounterBundleServiceTest {
     public void createEncounterBundle() {
         POCDMT000002UK01ClinicalDocument1 document = mock(POCDMT000002UK01ClinicalDocument1.class);
 
-        Bundle encounterBundle = encounterBundleService.createEncounterBundle(document);
+        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
 
         assertThat(encounterBundle.getEntry().size()).isEqualTo(2);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
