@@ -1,3 +1,7 @@
+String tfProject     = "nia"
+String tfEnvironment = "build1" // change for ptl, vp goes here
+String tfComponent   = "111"  // this defines the application - nhais, mhs, 111 etc
+
 pipeline {
     agent{
         label 'jenkins-workers'
@@ -23,7 +27,7 @@ pipeline {
                 stage('Run Tests') {
                     steps {
                         script {
-                            sh label: 'Start RabbitMQ', script 'docker-compose -f ops/local/docker-compose.yml up rabbitmq'
+                            sh label: 'Start RabbitMQ', script: 'docker-compose -f ops/local/docker-compose.yml up rabbitmq'
                             sh label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .'
                             //sh label: 'Running tests', script: 'docker run local/111-tests:${BUILD_TAG}'
                             sh label: 'Stop RabbitMQ', script: 'docker-compose -f ops/local/docker-compose.yml stop rabbitmq'
@@ -68,6 +72,9 @@ pipeline {
             when {
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
+            options {
+              lock("${tfProject}-${tfEnvironment}-${tfComponent}")
+            }
             stages {
                 stage('Deploy using Terraform') {
                     steps {
@@ -75,9 +82,6 @@ pipeline {
                     //     script {
                     //         String tfCodeBranch  = "develop"
                     //         String tfCodeRepo    = "https://github.com/nhsconnect/integration-adaptors"
-                    //         String tfProject     = "nia"
-                    //         String tfEnvironment = "build1" // change for ptl, vp goes here
-                    //         String tfComponent   = "111"  // this defines the application - nhais, mhs, 111 etc
                     //         String tfRegion      = TF_STATE_BUCKET_REGION
 
                     //         List<String> tfParams = []
