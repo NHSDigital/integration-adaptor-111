@@ -8,12 +8,10 @@ import java.util.Date;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.IVXBTS;
 
-import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Period;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -28,7 +26,7 @@ public class PeriodMapperTest {
     public static final String PERIOD_END_ITK = "201105192015+00";
 
     @Test
-    public void mapPeriod() throws XmlException {
+    public void mapPeriod() {
 
         IVXBTS ivxbtsLow = IVXBTS.Factory.newInstance();
         ivxbtsLow.setValue(PERIOD_START_ITK);
