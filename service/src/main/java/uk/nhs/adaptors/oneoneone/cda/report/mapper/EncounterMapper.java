@@ -228,7 +228,6 @@ public class EncounterMapper {
         return ParticipantMapper
             .mapEncounterParticipants(clinicalDocument
                 .getComponentOf()
-                .getEncompassingEncounter()
-                .getEncounterParticipantArray());
+                .getEncompassingEncounter().getEncounterParticipantArray());
     }
 }

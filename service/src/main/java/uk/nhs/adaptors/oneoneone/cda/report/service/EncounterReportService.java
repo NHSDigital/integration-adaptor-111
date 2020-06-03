@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.uhn.fhir.context.FhirContext;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterReportBundleService;
 import uk.nhs.adaptors.oneoneone.properties.QueueProperties;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
