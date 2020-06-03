@@ -3,6 +3,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,10 +47,12 @@ public class PractitionerMapper {
     }
 
     private List<HumanName> getHumanNameFromITK(POCDMT000002UK01AssignedEntity assignedEntity) {
-        PN[] itkPersonName = assignedEntity.getAssignedPerson().getNameArray();
-        return Arrays.stream(itkPersonName)
-            .map(humanNameMapper::mapHumanName)
-            .collect(Collectors.toList());
+        if (assignedEntity.isSetAssignedPerson()) {
+            PN[] itkPersonName = assignedEntity.getAssignedPerson().getNameArray();
+            return Arrays.stream(itkPersonName)
+                .map(humanNameMapper::mapHumanName)
+                .collect(Collectors.toList());
+        } else return Collections.emptyList();
     }
 
     private  List<ContactPoint> getTelecomFromITK(POCDMT000002UK01AssignedEntity assignedEntity) {
