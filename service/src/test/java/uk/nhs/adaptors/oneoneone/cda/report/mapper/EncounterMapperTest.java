@@ -11,8 +11,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -79,11 +81,12 @@ public class EncounterMapperTest {
     }
 
     private List<Encounter.EncounterParticipantComponent> getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        return participantMapper
-                .mapEncounterParticipants(clinicalDocument
-                .getComponentOf()
-                .getEncompassingEncounter()
-                .getEncounterParticipantArray());
+        return Arrays.stream(clinicalDocument
+            .getComponentOf()
+            .getEncompassingEncounter()
+            .getEncounterParticipantArray())
+            .map(participantMapper::mapEncounterParticipant)
+            .collect(Collectors.toList());
     }
 
     private void verifyContactPoint(List<ContactPoint> actual, List<ContactPoint> expected) {

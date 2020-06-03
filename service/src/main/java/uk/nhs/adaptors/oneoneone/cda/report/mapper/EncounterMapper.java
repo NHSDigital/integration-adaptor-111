@@ -3,7 +3,9 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -232,9 +234,11 @@ public class EncounterMapper {
     }
 
     private List<Encounter.EncounterParticipantComponent> getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        return participantMapper
-            .mapEncounterParticipants(clinicalDocument
-                .getComponentOf()
-                .getEncompassingEncounter().getEncounterParticipantArray());
+        return Arrays.stream(clinicalDocument
+            .getComponentOf()
+            .getEncompassingEncounter()
+            .getEncounterParticipantArray())
+            .map(participantMapper::mapEncounterParticipant)
+            .collect(Collectors.toList());
     }
 }

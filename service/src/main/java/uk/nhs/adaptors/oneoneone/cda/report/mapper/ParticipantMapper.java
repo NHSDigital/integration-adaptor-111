@@ -22,16 +22,7 @@ public class ParticipantMapper {
     @Autowired
     PractitionerMapper practitionerMapper;
 
-    @Autowired
-    ParticipantMapper participantMapper;
-
-    public List<Encounter.EncounterParticipantComponent> mapEncounterParticipants(POCDMT000002UK01EncounterParticipant[] encounterParticipantArray) {
-        return Arrays.stream(encounterParticipantArray)
-            .map(participantMapper::mapEncounterParticipant)
-            .collect(Collectors.toList());
-    }
-
-    private Encounter.EncounterParticipantComponent mapEncounterParticipant(POCDMT000002UK01EncounterParticipant encounterParticipant) {
+    public Encounter.EncounterParticipantComponent mapEncounterParticipant(POCDMT000002UK01EncounterParticipant encounterParticipant) {
         return new Encounter.EncounterParticipantComponent()
             .setType(retrieveEncounterTypeFromITK(encounterParticipant))
             .setPeriod(periodMapper.mapPeriod(encounterParticipant.getTime()))
