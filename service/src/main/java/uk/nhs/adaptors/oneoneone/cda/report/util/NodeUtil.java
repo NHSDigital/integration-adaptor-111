@@ -18,23 +18,6 @@ public class NodeUtil {
         .orElse(null);
   }
 
-  public String getAllText(Node node) {
-    if (node.getNodeType() == Node.TEXT_NODE) {
-      return node.getNodeValue();
-    }
-
-    StringBuilder sb = new StringBuilder();
-    Node child = node.getFirstChild();
-    while (child != null) {
-      if (sb.length() > 0) {
-        sb.append(" ");
-      }
-      sb.append(getAllText(child));
-      child = child.getNextSibling();
-    }
-    return sb.toString();
-  }
-
   public static boolean hasSubNodes(XmlObject xmlObject) {
     var node = xmlObject.getDomNode();
     return node.getChildNodes().getLength() != 1
