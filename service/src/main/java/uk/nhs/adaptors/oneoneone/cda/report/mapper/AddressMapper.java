@@ -5,10 +5,16 @@ import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 
 import org.hl7.fhir.dstu3.model.Address;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AddressMapper {
 
-    public static Address mapAddress(AD itkAddress) {
+    @Autowired
+    PeriodMapper periodMapper;
+
+    public Address mapAddress(AD itkAddress) {
         Address address = new Address();
 
         Arrays.stream(itkAddress.getStreetAddressLineArray())
@@ -40,7 +46,7 @@ public class AddressMapper {
         }
 
         if (itkAddress.sizeOfUseablePeriodArray() > 0) {
-            address.setPeriod(PeriodMapper.mapPeriod((itkAddress.getUseablePeriodArray(0))));
+            address.setPeriod(periodMapper.mapPeriod((itkAddress.getUseablePeriodArray(0))));
         }
 
         return address;

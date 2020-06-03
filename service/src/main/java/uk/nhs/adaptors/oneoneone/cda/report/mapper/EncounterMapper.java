@@ -10,10 +10,17 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Period;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EncounterMapper {
+
+    @Autowired
+    PeriodMapper periodMapper;
+
+    @Autowired
+    ParticipantMapper participantMapper;
 
     public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
          /*
@@ -221,11 +228,11 @@ public class EncounterMapper {
             .getEncompassingEncounter()
             .getEffectiveTime();
 
-        return PeriodMapper.mapPeriod(effectiveTime);
+        return periodMapper.mapPeriod(effectiveTime);
     }
 
     private List<Encounter.EncounterParticipantComponent> getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        return ParticipantMapper
+        return participantMapper
             .mapEncounterParticipants(clinicalDocument
                 .getComponentOf()
                 .getEncompassingEncounter().getEncounterParticipantArray());

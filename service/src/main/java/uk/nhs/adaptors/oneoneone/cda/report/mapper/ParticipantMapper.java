@@ -10,29 +10,41 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncounterParticipant;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ParticipantMapper {
 
-    public static List<Encounter.EncounterParticipantComponent> mapEncounterParticipants(POCDMT000002UK01EncounterParticipant[] encounterParticipantArray) {
+    @Autowired
+    PeriodMapper periodMapper;
+
+    @Autowired
+    PractitionerMapper practitionerMapper;
+
+    @Autowired
+    ParticipantMapper participantMapper;
+
+    public List<Encounter.EncounterParticipantComponent> mapEncounterParticipants(POCDMT000002UK01EncounterParticipant[] encounterParticipantArray) {
         return Arrays.stream(encounterParticipantArray)
-            .map(ParticipantMapper::mapEncounterParticipant)
+            .map(participantMapper::mapEncounterParticipant)
             .collect(Collectors.toList());
     }
 
-    private static Encounter.EncounterParticipantComponent mapEncounterParticipant(POCDMT000002UK01EncounterParticipant encounterParticipant) {
+    private Encounter.EncounterParticipantComponent mapEncounterParticipant(POCDMT000002UK01EncounterParticipant encounterParticipant) {
         return new Encounter.EncounterParticipantComponent()
             .setType(retrieveEncounterTypeFromITK(encounterParticipant))
-            .setPeriod(PeriodMapper.mapPeriod(encounterParticipant.getTime()))
+            .setPeriod(periodMapper.mapPeriod(encounterParticipant.getTime()))
             .setIndividual(retrieveIndividualFromITK(encounterParticipant));
     }
 
-    private static List<CodeableConcept> retrieveEncounterTypeFromITK(POCDMT000002UK01EncounterParticipant encounterParticipant) {
+    private List<CodeableConcept> retrieveEncounterTypeFromITK(POCDMT000002UK01EncounterParticipant encounterParticipant) {
         return Collections.singletonList(new CodeableConcept()
             .setText(encounterParticipant.getTypeCode().toString()));
     }
 
-    private static Reference retrieveIndividualFromITK(POCDMT000002UK01EncounterParticipant encounterParticipant) {
-        return new Reference(PractitionerMapper
+    private Reference retrieveIndividualFromITK(POCDMT000002UK01EncounterParticipant encounterParticipant) {
+        return new Reference(practitionerMapper
             .mapPractitioner(encounterParticipant.getAssignedEntity()));
     }
 }
