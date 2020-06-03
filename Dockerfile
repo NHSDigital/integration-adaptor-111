@@ -1,7 +1,7 @@
 FROM gradle:jdk11 AS build
 COPY --chown=gradle:gradle ./service /home/gradle/service
 WORKDIR /home/gradle/service
-RUN ./gradlew --build-cache bootJar
+RUN ./gradlew test --build-cache bootJar
 
 FROM adoptopenjdk/openjdk11-openj9:jre
 
