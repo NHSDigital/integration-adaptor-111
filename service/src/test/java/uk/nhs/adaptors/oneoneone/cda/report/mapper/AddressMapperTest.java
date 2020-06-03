@@ -36,16 +36,10 @@ public class AddressMapperTest {
     public static final String DESCRIPTION = "test description";
     public static final String STATE = "Small County";
     public static final String DISTRICT = "Little District";
-    public static final String PERIOD_START_ITK = "201105191945+00";
-    public static final String PERIOD_END_ITK = "201105192015+00";
-    public static final String PERIOD_START_FHIR = "2011-05-19T19:45:00.00Z";
-    public static final String PERIOD_END_FHIR = "2011-05-19T20:15:00.00Z";
-
-    private AD ad;
 
     @Test
     public void mapAddress() {
-        ad = AD.Factory.newInstance();
+        AD ad = AD.Factory.newInstance();
         ad.addNewStreetAddressLine().set(XmlString.Factory.newValue(ADDRESS_LINE));
         ad.addNewCity().set(XmlString.Factory.newValue(CITY));
         ad.addNewPostalCode().set(XmlString.Factory.newValue(POSTAL_CODE));

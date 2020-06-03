@@ -3,9 +3,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.extern.apachecommons.CommonsLog;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
-
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

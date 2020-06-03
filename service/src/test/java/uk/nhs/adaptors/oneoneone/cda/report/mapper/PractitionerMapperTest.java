@@ -3,8 +3,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Array;
-
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
@@ -48,15 +46,9 @@ public class PractitionerMapperTest {
     @Mock
     Address address;
 
-    private POCDMT000002UK01Person person;
-    private POCDMT000002UK01AssignedEntity assignedEntity;
-    private PN pn;
-    private TEL tel;
-    private AD ad;
-
     @Test
     public void mapPractitioner() {
-        assignedEntity = POCDMT000002UK01AssignedEntity.Factory.newInstance();
+        POCDMT000002UK01AssignedEntity assignedEntity = POCDMT000002UK01AssignedEntity.Factory.newInstance();
         assignedEntity.setAssignedPerson(createPerson());
         assignedEntity.setTelecomArray(createTelecomArray());
         assignedEntity.setAddrArray(createAddrArray());
@@ -75,19 +67,19 @@ public class PractitionerMapperTest {
     }
 
     private AD[] createAddrArray() {
-        ad = AD.Factory.newInstance();
-        return new AD[] {ad};
+        AD ad = AD.Factory.newInstance();
+        return new AD[] { ad };
     }
 
     private TEL[] createTelecomArray() {
-        tel = TEL.Factory.newInstance();
-        return new TEL[] {tel};
+        TEL tel = TEL.Factory.newInstance();
+        return new TEL[] { tel };
     }
 
     private POCDMT000002UK01Person createPerson() {
-        person = POCDMT000002UK01Person.Factory.newInstance();
-        pn = PN.Factory.newInstance();
-        PN[] pnArray = {pn};
+        POCDMT000002UK01Person person = POCDMT000002UK01Person.Factory.newInstance();
+        PN pn = PN.Factory.newInstance();
+        PN[] pnArray = { pn };
         person.setNameArray(pnArray);
         return person;
     }
