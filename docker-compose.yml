@@ -1,7 +1,7 @@
 version: '3'
 
 services:
- test-111:
+  test-111:
     image: local/111-tests:${BUILD_TAG}
     command: ./gradlew -i --build-cache integrationTest
     ports:
