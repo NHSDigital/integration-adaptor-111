@@ -1,4 +1,4 @@
 FROM gradle:jdk11 AS build
 COPY --chown=gradle:gradle ./service /home/gradle/service
 WORKDIR /home/gradle/service
-RUN ./gradlew --illegal-access=warn integrationTest 
+RUN ./gradlew -i integrationTest 
