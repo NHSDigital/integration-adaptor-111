@@ -27,11 +27,11 @@ pipeline {
                 stage('Run Tests') {
                     steps {
                         script {
-                            sh label: 'Start RabbitMQ', script: 'docker-compose -f ops/local/docker-compose.yml up -d rabbitmq'
+                            sh label: 'Start RabbitMQ', script: 'docker-compose -f ./docker-compose.yml up -d rabbitmq'
                             sleep(20)
                             sh label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .'
-                            //sh label: 'Running tests', script: 'docker run local/111-tests:${BUILD_TAG}'
-                            sh label: 'Stop RabbitMQ', script: 'docker-compose -f ops/local/docker-compose.yml stop rabbitmq'
+                            sh label: 'Running tests', script: 'docker-compose -f ./docker-compose.yml up test-111'
+                            sh label: 'Stop RabbitMQ', script: 'docker-compose -f ./docker-compose.yml stop test-111 rabbitmq'
                         }
                     }
                 }
