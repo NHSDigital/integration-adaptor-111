@@ -20,6 +20,17 @@ pipeline {
         stage('Build and Test Locally') {
             stages {
 
+                stage('Run Tests') {
+                    steps {
+                        script {
+                            sh label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .'
+                            sh label: 'Start RabbitMQ', script 'docker-compose -f ops/local/docker-compose.yml up rabbitmq'
+                            sh label: 'Running tests', script: 'docker run local/111-tests:${BUILD_TAG}'
+                            sh label: 'Stop RabbitMQ', script: 'docker-compose -f ops/local/docker-compose.yml stop rabbitmq'
+                        }
+                    }
+                }
+
                 stage('Build Docker Images') {
                     steps {
                         script {
@@ -27,14 +38,6 @@ pipeline {
                         }
                     }
                 }
-                // stage('Run Tests') {
-                //     steps {
-                //         script {
-                //             sh label: 'Build tests', script: 'docker build -t local/nhais-tests:${BUILD_TAG} -f Dockerfile.tests .'
-                //             sh label: 'Running tests', script: 'docker run -v /var/run/docker.sock:/var/run/docker.sock local/nhais-tests:${BUILD_TAG} gradle check -i'
-                //         }
-                //     }
-                // }
 
                 stage('Push image') {
                     when {
