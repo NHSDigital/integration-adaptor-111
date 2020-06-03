@@ -1,8 +1,9 @@
-package uk.nhs.adaptors.oneoneone.cda.report.mapper;
+package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +22,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ServiceProviderMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,7 +52,7 @@ public class EncounterReportBundleServiceTest {
 
     @Before
     public void setUp() {
-        when(encounterMapper.mapEncounter()).thenReturn(ENCOUNTER);
+        when(encounterMapper.mapEncounter(any())).thenReturn(ENCOUNTER);
         when(serviceProviderMapper.mapServiceProvider()).thenReturn(ORGANIZATION);
     }
 

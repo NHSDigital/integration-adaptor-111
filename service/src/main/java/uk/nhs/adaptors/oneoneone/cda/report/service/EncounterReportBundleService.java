@@ -1,4 +1,4 @@
-package uk.nhs.adaptors.oneoneone.cda.report.mapper;
+package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 
@@ -9,6 +9,8 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ServiceProviderMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Component
@@ -24,7 +26,7 @@ public class EncounterReportBundleService {
         Bundle bundle = new Bundle();
         bundle.setType(TRANSACTION);
 
-        Encounter encounter = encounterMapper.mapEncounter();
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocumentDocument);
 
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
