@@ -33,14 +33,17 @@ pipeline {
                             sh label: 'Running tests', script: 'BUILD_TAG=${BUILD_TAG} docker-compose -f ./docker-compose.yml up test-111'
                             sh label: 'Stop RabbitMQ', script: 'docker-compose -f ./docker-compose.yml stop test-111 rabbitmq'
                             sh label: 'Show output from container:',script: 'ls -laR build'
-                            publishHTML(target:[
+                            publishHTML(
+                              target:[
                                 allowMissing: true,
                                 alwaysLinkToLastBuild: true,
                                 keepAll: false,
                                 reportDir: "build/reports/tests/integrationTest",
                                 reportFiles: "index.html",
                                 reportName: "Integration Test"
-                            }
+                              ]
+                            )
+                        }
                     }
                 }
 
@@ -70,7 +73,6 @@ pipeline {
                     sh label: 'Copy 111 container logs', script: 'docker-compose logs test-111 > logs/test-111.log'
                     sh label: 'Copy rabbitmq logs', script: 'docker-compose logs rabbitmq > logs/rabbitmq.log'
                     archiveArtifacts artifacts: 'logs/*.log', fingerprint: true
-                    ])
                 }
             }
         }
