@@ -51,7 +51,7 @@ public class ParticipantMapperTest {
 
         Encounter.EncounterParticipantComponent participantComponent = participantMapper.mapEncounterParticipant(encounterParticipant);
 
-        assertThat(participantComponent.getIndividual().getResource()).isEqualTo(practitioner);
+        assertThat(participantComponent.getIndividualTarget()).isEqualTo(practitioner);
         assertThat(participantComponent.getPeriod()).isEqualTo(period);
         assertThat(participantComponent.getType().get(0).getText()).isEqualTo("CON");
     }
