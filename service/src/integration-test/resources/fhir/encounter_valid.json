@@ -1,21 +1,46 @@
 {
-    "resourceType": "Bundle",
-    "type": "transaction",
+    "resourceType":"Bundle",
+    "type":"transaction",
     "entry": [
         {
-            "fullUrl": "urn:uuid:14200fa9-00f9-4106-8ce2-11a09c446a93",
+            "fullUrl":"urn:uuid:2a419779-f827-4fef-8b08-1796104b07c9",
             "resource": {
-                "resourceType": "Encounter",
-                "status": "finished",
-                "serviceProvider": {
-                    "reference": "urn:uuid:23b2c1e7-ebb4-48a0-8e18-1e2716b85752"
+                "resourceType":"Encounter",
+                "status":"finished",
+                "participant": [
+                    {
+                        "type": [
+                            {
+                                "text":"CON"
+                            }
+                        ],
+                        "period":
+                        {
+                            "start":"2011-05-19T21:45:00+02:00",
+                            "end":"2011-05-19T22:15:00+02:00"
+                        },
+                        "individual":
+                        {
+                            "reference":"urn:uuid:6face1cd-52a4-4117-8270-46311d2d83cf"
+                        }
+                    }
+                ],
+                "period":
+                {
+                    "start":"2011-05-19T21:45:00+02:00",
+                    "end":"2011-05-19T22:15:00+02:00"
+                },
+                "serviceProvider":
+                {
+                    "reference":"urn:uuid:52c9e3d3-d243-462c-a96e-c17d8e6bb901"
                 }
             }
         },
         {
-            "fullUrl": "urn:uuid:23b2c1e7-ebb4-48a0-8e18-1e2716b85752",
-            "resource": {
-                "resourceType": "Organization"
+            "fullUrl":"urn:uuid:52c9e3d3-d243-462c-a96e-c17d8e6bb901",
+            "resource":
+            {
+                "resourceType":"Organization"
             }
         }
     ]
