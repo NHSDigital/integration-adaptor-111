@@ -14,14 +14,14 @@ public class ContactPointMapper {
     @Autowired
     PeriodMapper periodMapper;
 
-    private static Map<String, ContactPoint.ContactPointUse> map = new HashMap<>();
+    private static final Map<String, ContactPoint.ContactPointUse> CONTACT_POINT_USE_MAP = new HashMap<>();
 
     static {
-        map.put("H", ContactPoint.ContactPointUse.HOME);
-        map.put("HV", ContactPoint.ContactPointUse.HOME);
-        map.put("MC", ContactPoint.ContactPointUse.MOBILE);
-        map.put("EC", ContactPoint.ContactPointUse.TEMP);
-        map.put("WP", ContactPoint.ContactPointUse.WORK);
+        CONTACT_POINT_USE_MAP.put("H", ContactPoint.ContactPointUse.HOME);
+        CONTACT_POINT_USE_MAP.put("HV", ContactPoint.ContactPointUse.HOME);
+        CONTACT_POINT_USE_MAP.put("MC", ContactPoint.ContactPointUse.MOBILE);
+        CONTACT_POINT_USE_MAP.put("EC", ContactPoint.ContactPointUse.TEMP);
+        CONTACT_POINT_USE_MAP.put("WP", ContactPoint.ContactPointUse.WORK);
     }
 
     public ContactPoint mapContactPoint(TEL itkTelecom) {
@@ -32,7 +32,7 @@ public class ContactPointMapper {
         }
 
         if (itkTelecom.isSetUse()) {
-            contactPoint.setUse(map.get(itkTelecom.getUse().get(0).toString()));
+            contactPoint.setUse(CONTACT_POINT_USE_MAP.get(itkTelecom.getUse().get(0).toString()));
         }
 
         if (itkTelecom.isSetValue()) {

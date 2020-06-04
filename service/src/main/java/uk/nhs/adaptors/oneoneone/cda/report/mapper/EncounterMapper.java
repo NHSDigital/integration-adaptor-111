@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncompassingEncounter;
 
 import org.hl7.fhir.dstu3.model.Encounter;
