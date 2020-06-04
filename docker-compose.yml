@@ -6,16 +6,15 @@ services:
     command: ./gradlew -i --build-cache integrationTest
     networks:
       - dbnetwork
-    # ports:
-    #   - "8080:8080"
+    volumes:
+      - logs/testreport:/home/gradle/service/build/test-results/integrationTest
+
 
   rabbitmq:
     image: 'rabbitmq:3.6-management-alpine'
     networks:
       - dbnetwork
-    # ports:
-    #   - '5672:5672'
-    #   - '15672:15672'
+
 
 networks:
   dbnetwork:
