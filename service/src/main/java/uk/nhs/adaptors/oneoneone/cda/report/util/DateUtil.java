@@ -11,9 +11,7 @@ import org.apache.commons.lang3.time.DateUtils;
 public class DateUtil {
 
   private static final String[] FORMATS = {
-      "yyyyMMddHHmmssZ",
-      "yyyyMMddHHmmX",
-      "yyyyMMdd"
+      "yyyyMMddHHmmX"
   };
 
   public static Date parse(String date) {
