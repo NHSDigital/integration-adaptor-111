@@ -1,6 +1,6 @@
 FROM gradle:jdk11 AS build
 COPY --chown=gradle:gradle ./service /home/gradle/service
 WORKDIR /home/gradle/service
-RUN sed -i 's/localhost/rabbitmq' src/integration-test/resources/application.yml
+RUN sed -i 's/localhost/rabbitmq/' src/integration-test/resources/application.yml
 
 # RUN ./gradlew -i --build-cache integrationTest 
