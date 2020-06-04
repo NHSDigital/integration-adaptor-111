@@ -7,7 +7,7 @@ services:
     networks:
       - dbnetwork
     volumes:
-      - "logs/testreport:/home/gradle/service/build/test-results/integrationTest"
+      - ./build:/home/gradle/service/build/:rw
 
 
   rabbitmq:

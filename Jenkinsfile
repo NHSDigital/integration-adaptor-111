@@ -27,7 +27,7 @@ pipeline {
                 stage('Run Tests') {
                     steps {
                         script {
-                            sh label: 'Create logs directory', script: 'mkdir -p logs/testreport'
+                            sh label: 'Create logs directory', script: 'mkdir -p logs build'
                             sh label: 'Start RabbitMQ', script: 'docker-compose -f ./docker-compose.yml up -d rabbitmq'
                             sh label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .'
                             sh label: 'Running tests', script: 'BUILD_TAG=${BUILD_TAG} docker-compose -f ./docker-compose.yml up test-111'
@@ -59,14 +59,14 @@ pipeline {
             }
             post {
                 always {
-                    sh label: 'Copy nhais container logs', script: 'docker-compose logs test-111 > logs/test-111.log'
+                    sh label: 'Copy 111 container logs', script: 'docker-compose logs test-111 > logs/test-111.log'
                     sh label: 'Copy rabbitmq logs', script: 'docker-compose logs rabbitmq > logs/rabbitmq.log'
                     archiveArtifacts artifacts: 'logs/*.log', fingerprint: true
                     publishHTML(target:[
                         allowMissing: true,
                         alwaysLinkToLastBuild: true,
                         keepAll: false,
-                        reportDir: "logs/testreport",
+                        reportDir: "build/reports/tests/integrationTest",
                         reportFiles: "index.html",
                         reportName: "Integration Test"
                     ])
