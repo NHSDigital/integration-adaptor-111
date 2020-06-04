@@ -1,9 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncounterParticipant;
 
