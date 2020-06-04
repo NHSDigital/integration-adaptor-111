@@ -6,15 +6,10 @@ services:
     command: ./gradlew -i --build-cache integrationTest
     networks:
       - dbnetwork
-    volumes:
-      - ./build:/home/gradle/service/build/:rw
-
-
   rabbitmq:
     image: 'rabbitmq:3.6-management-alpine'
     networks:
       - dbnetwork
-
 
 networks:
   dbnetwork:

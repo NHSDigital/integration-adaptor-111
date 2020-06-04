@@ -31,18 +31,8 @@ pipeline {
                             sh label: 'Start RabbitMQ', script: 'docker-compose -f ./docker-compose.yml up -d rabbitmq'
                             sh label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .'
                             sh label: 'Running tests', script: 'BUILD_TAG=${BUILD_TAG} docker-compose -f ./docker-compose.yml up test-111'
-                            sh label: 'Stop RabbitMQ', script: 'docker-compose -f ./docker-compose.yml stop test-111 rabbitmq'
                             sh label: 'Show output from container:',script: 'ls -laR build'
-                            publishHTML(
-                              target:[
-                                allowMissing: true,
-                                alwaysLinkToLastBuild: true,
-                                keepAll: false,
-                                reportDir: "build/reports/tests/integrationTest",
-                                reportFiles: "index.html",
-                                reportName: "Integration Test"
-                              ]
-                            )
+                            sh label: 'Stop RabbitMQ', script: 'docker-compose -f ./docker-compose.yml stop test-111 rabbitmq'
                         }
                     }
                 }
