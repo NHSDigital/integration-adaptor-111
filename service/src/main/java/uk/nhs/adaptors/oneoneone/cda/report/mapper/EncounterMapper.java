@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncompassingEncounter;
 
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Period;
@@ -24,7 +25,7 @@ public class EncounterMapper {
     @Autowired
     ParticipantMapper participantMapper;
 
-    public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+    public Encounter mapEncounter(POCDMT000002UK01EncompassingEncounter encompassingEncounter) {
          /*
         class:      Encounter
         usage:      carrying information arising from an interaction between a patient and healthcare provider(s)
@@ -165,7 +166,7 @@ public class EncounterMapper {
         usage:      SHOULD be populated with the details of the Emergency Care Department system users (Practitioner)
                     during this Encounter and any third parties answering questions on behalf of the patient (RelatedPerson)
          */
-        encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument));
+        encounter.setParticipant(getEncounterParticipantComponents(encompassingEncounter));
 
         /*
         field:      appointment : Reference (UEC Appointment)
@@ -181,7 +182,7 @@ public class EncounterMapper {
         number:     0..1
          */
         //TODO: 2020-05-29: NIAD-294 extract this snippet to separate method
-        encounter.setPeriod(getPeriod(clinicalDocument));
+        encounter.setPeriod(getPeriod(encompassingEncounter));
 
         /*
         field:      length : Duration
@@ -225,18 +226,15 @@ public class EncounterMapper {
         return encounter;
     }
 
-    private Period getPeriod(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        IVLTS effectiveTime = clinicalDocument.getComponentOf()
-            .getEncompassingEncounter()
+    private Period getPeriod(POCDMT000002UK01EncompassingEncounter encompassingEncounter) {
+        IVLTS effectiveTime = encompassingEncounter
             .getEffectiveTime();
 
         return periodMapper.mapPeriod(effectiveTime);
     }
 
-    private List<Encounter.EncounterParticipantComponent> getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        return Arrays.stream(clinicalDocument
-            .getComponentOf()
-            .getEncompassingEncounter()
+    private List<Encounter.EncounterParticipantComponent> getEncounterParticipantComponents(POCDMT000002UK01EncompassingEncounter encompassingEncounter) {
+        return Arrays.stream(encompassingEncounter
             .getEncounterParticipantArray())
             .map(participantMapper::mapEncounterParticipant)
             .collect(Collectors.toList());

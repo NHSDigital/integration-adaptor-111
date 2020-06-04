@@ -48,7 +48,7 @@ public class EncounterMapperTest {
         String doc =new String(readAllBytes(Paths.get(resource.getPath())));
         POCDMT000002UK01ClinicalDocument1 clinicalDocument = extractClinicalDocument(doc);
 
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument.getComponentOf().getEncompassingEncounter());
         assertThat(encounter.getIdElement().getValue()).startsWith("urn:uuid:");
         assertThat(encounter.getStatus()).isEqualTo(FINISHED);
         assertThat(encounter.getPeriod().getStart()).isEqualTo(Date.from(Instant.parse("2011-05-19T19:45:00.00Z")));

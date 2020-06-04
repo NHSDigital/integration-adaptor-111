@@ -26,7 +26,9 @@ public class EncounterReportBundleService {
         Bundle bundle = new Bundle();
         bundle.setType(TRANSACTION);
 
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocumentDocument);
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocumentDocument
+            .getComponentOf()
+            .getEncompassingEncounter());
 
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
