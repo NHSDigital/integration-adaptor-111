@@ -62,6 +62,7 @@ pipeline {
                     sh label: 'Copy 111 container logs', script: 'docker-compose logs test-111 > logs/test-111.log'
                     sh label: 'Copy rabbitmq logs', script: 'docker-compose logs rabbitmq > logs/rabbitmq.log'
                     archiveArtifacts artifacts: 'logs/*.log', fingerprint: true
+                    sh label: 'Show output from container:',script: 'ls -laR build'
                     publishHTML(target:[
                         allowMissing: true,
                         alwaysLinkToLastBuild: true,
