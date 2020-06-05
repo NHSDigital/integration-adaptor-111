@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ServiceProviderMapper {
+
     public Organization mapServiceProvider() {
         Organization organization = new Organization();
         organization.setIdElement(newRandomUuid());

@@ -1,33 +1,39 @@
-package uk.nhs.adaptors.oneoneone.cda.report.mapper;
+package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
+
+import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ServiceProviderMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Component
+@AllArgsConstructor
 public class EncounterReportBundleService {
 
-    @Autowired
     private EncounterMapper encounterMapper;
 
-    @Autowired
     private ServiceProviderMapper serviceProviderMapper;
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument) {
         Bundle bundle = new Bundle();
         bundle.setType(TRANSACTION);
 
-        Encounter encounter = encounterMapper.mapEncounter();
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocumentDocument
+            .getComponentOf()
+            .getEncompassingEncounter());
 
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
+        addIndividual(bundle, encounter);
 
         return bundle;
     }
@@ -46,5 +52,14 @@ public class EncounterReportBundleService {
             .setResource(organization);
         encounter.setServiceProvider(new Reference(organization));
 
+    }
+
+    private void addIndividual(Bundle bundle, Encounter encounter) {
+        List<Encounter.EncounterParticipantComponent> participantComponents = encounter.getParticipant();
+        for (Encounter.EncounterParticipantComponent participantComponent : participantComponents) {
+            bundle.addEntry()
+                .setFullUrl(participantComponent.getIndividualTarget().getIdElement().getValue())
+                .setResource(participantComponent.getIndividualTarget());
+        }
     }
 }

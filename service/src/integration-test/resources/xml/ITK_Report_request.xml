@@ -236,6 +236,32 @@
                                 </representedOrganization>
                             </assignedEntity>
                         </responsibleParty>
+                        <encounterParticipant typeCode="CON">
+                            <time>
+                                <low value="201105191945+00"/>
+                                <high value="201105192015+00"/>
+                            </time>
+                            <assignedEntity classCode="ASSIGNED">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145210GB01#AssignedEntity"/>
+                                <id nullFlavor="NI"/>
+                                <code code="R0010" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.196" displayName="Medical Director"/>
+                                <telecom value="tel:01634775667" use="H"/>
+                                <telecom value="tel:01634451628" use="HV"/>
+                                <telecom value="mailto:Joe.Blogg@emailfree.co.uk" use="H"/>
+                                <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145210GB01#assignedPerson"/>
+                                    <name>
+                                        <given>Dave</given>
+                                        <family>Cornwell</family>
+                                    </name>
+                                </assignedPerson>
+                                <representedOrganization classCode="ORG" determinerCode="INSTANCE">
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145210GB01#representedOrganization"/>
+                                    <id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="VDE232323"/>
+                                    <name>Medway South Out of Hours Centre</name>
+                                </representedOrganization>
+                            </assignedEntity>
+                        </encounterParticipant>
                         <location typeCode="LOC">
                             <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146232GB01#location"/>
                             <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145222GB02#HealthCareFacility"/>
