@@ -1,10 +1,10 @@
 version: '3'
 
 services:
-  test-111:
-    image: local/111-tests:${BUILD_TAG}
+  integration-adaptor-111:
+    image: uk.nhs/integration-adaptor-111:0.0.1-SNAPSHOT
     ports:
-      - "8080:8080"
+      - "10001:8080"
 
   rabbitmq:
     image: 'rabbitmq:3.6-management-alpine'
