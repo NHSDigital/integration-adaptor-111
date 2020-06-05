@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  test-111:
+    image: local/111-tests:${BUILD_TAG}
+    command: ./gradlew -i --build-cache integrationTest
+    networks:
+      - dbnetwork
+  rabbitmq:
+    image: 'rabbitmq:3.6-management-alpine'
+    networks:
+      - dbnetwork
+
+networks:
+  dbnetwork:
+
