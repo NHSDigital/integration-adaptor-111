@@ -292,6 +292,32 @@
                             <section classCode="DOCSECT" moodCode="EVN">
                                 <id root="7AFDCAD6-1CE3-45A6-A176-DDAC27F46C87"/>
                                 <entry typeCode="COMP" contextConductionInd="true">
+                                    <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146093GB01#AppointmentReference"/>
+                                    <encounter classCode="ENC" moodCode="APT">
+                                        <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146093GB01#AppointmentReference"/>
+                                        <id root="2.16.840.1.113883.2.1.3.2.4.17.541" extension="eb4f7f21-3962-4416-9a29-a46dd6ee5f17"/>
+                                        <code code="01" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.542" displayName="Patient convenience appointment"/>
+                                        <effectiveTime value="201706011400+00"/>
+                                        <participant typeCode="LOC" contextControlCode="OP">
+                                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146093GB01#location"/>
+                                            <participantRole classCode="ASSIGNED">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146093GB01#assignedEntity"/>
+                                                <id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="Q36"/>
+                                                <addr use="WP">
+                                                    <streetAddressLine>Great George Street</streetAddressLine>
+                                                    <city>Leeds</city>
+                                                    <postalCode>LE13EX</postalCode>
+                                                </addr>
+                                                <playingEntity classCode="ORG" determinerCode="INSTANCE">
+                                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146093GB01#assignedOrganization"/>
+                                                    <name>CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST</name>
+                                                    <desc>Psychiatric Community Care Services</desc>
+                                                </playingEntity>
+                                            </participantRole>
+                                        </participant>
+                                    </encounter>
+                                </entry>
+                                <entry typeCode="COMP" contextConductionInd="true">
                                     <npfitlc:contentId extension="COCD_TP146002GB01#ObservationMedia" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
                                     <observationMedia classCode="OBS" moodCode="EVN">
                                         <templateId extension="COCD_TP146002GB01#ObservationMedia" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
@@ -414,6 +440,22 @@
                                         <title>Patient Special Notes</title>
                                         <text>
                                             <content>Patient has history of violence towards health care professionals</content>
+                                        </text>
+                                    </section>
+                                </component>
+                                <component typeCode="COMP" contextConductionInd="true">
+                                    <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146246GB01#Section1"/>
+                                    <section classCode="DOCSECT" moodCode="EVN">
+                                        <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146246GB01#Section1"/>
+                                        <id root="8271D2F1-126F-4A14-A1AC-C6C8023243FF"/>
+                                        <code code="749001000000101" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Appointment"/>
+                                        <title>Appointment Reference</title>
+                                        <text>
+                                            <content>
+                                                Date/Time: 01 June 2017 14:00
+                                                Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST
+                                                Psychiatric Community Care Service
+                                            </content>
                                         </text>
                                     </section>
                                 </component>

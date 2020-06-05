@@ -3,7 +3,7 @@
   "type": "transaction",
   "entry": [
     {
-      "fullUrl": "urn:uuid:6ffb876c-f23f-4746-ab00-c8d4e162b58d",
+      "fullUrl": "urn:uuid:6aed1b61-950b-4598-b3b1-ad77f38fffb1",
       "resource": {
         "resourceType": "Encounter",
         "status": "finished",
@@ -19,27 +19,30 @@
               "end": "2011-05-19T22:15:00+02:00"
             },
             "individual": {
-              "reference": "urn:uuid:4ed74e7f-f415-4526-8dfd-66c10e0d7d45"
+              "reference": "urn:uuid:91948f22-47fe-4196-8d50-c25c5e56e87d"
             }
           }
         ],
+        "appointment": {
+          "reference": "urn:uuid:d99a7129-9291-4288-857e-29cf01b6af8b"
+        },
         "period": {
           "start": "2011-05-19T21:45:00+02:00",
           "end": "2011-05-19T22:15:00+02:00"
         },
         "serviceProvider": {
-          "reference": "urn:uuid:1218954c-ec64-4037-ad44-f53ee9eaab79"
+          "reference": "urn:uuid:7bb0732a-460f-4b22-ab79-1f852d8854c8"
         }
       }
     },
     {
-      "fullUrl": "urn:uuid:1218954c-ec64-4037-ad44-f53ee9eaab79",
+      "fullUrl": "urn:uuid:7bb0732a-460f-4b22-ab79-1f852d8854c8",
       "resource": {
         "resourceType": "Organization"
       }
     },
     {
-      "fullUrl": "urn:uuid:4ed74e7f-f415-4526-8dfd-66c10e0d7d45",
+      "fullUrl": "urn:uuid:91948f22-47fe-4196-8d50-c25c5e56e87d",
       "resource": {
         "resourceType": "Practitioner",
         "active": true,
@@ -63,6 +66,45 @@
           {
             "value": "mailto:Joe.Blogg@emailfree.co.uk",
             "use": "home"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:d99a7129-9291-4288-857e-29cf01b6af8b",
+      "resource": {
+        "resourceType": "Appointment",
+        "contained": [
+          {
+            "resourceType": "Location",
+            "id": "1",
+            "name": "CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST",
+            "description": "Psychiatric Community Care Services",
+            "address": {
+              "line": [
+                "Great George Street"
+              ],
+              "city": "Leeds",
+              "postalCode": "LE13EX"
+            }
+          }
+        ],
+        "status": "booked",
+        "description": "Appointment Reference",
+        "start": "2017-06-01T16:00:00.000+02:00",
+        "end": "2017-06-01T16:10:00.000+02:00",
+        "comment": "\n Date/Time: 01 June 2017 14:00\n Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n Psychiatric Community Care Service\n",
+        "participant": [
+          {
+            "required": "required",
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "#1"
+            },
+            "required": "required",
+            "status": "accepted"
           }
         ]
       }
