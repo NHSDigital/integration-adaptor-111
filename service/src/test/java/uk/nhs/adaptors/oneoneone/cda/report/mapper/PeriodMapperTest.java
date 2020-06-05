@@ -13,17 +13,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
 public class PeriodMapperTest {
 
     @InjectMocks
-    PeriodMapper periodMapper;
+    private PeriodMapper periodMapper;
 
-    public static final String PERIOD_START_ITK = "201105191945+00";
-    public static final String PERIOD_END_ITK = "201105192015+00";
+    private  static final String PERIOD_START_ITK = "201105191945+00";
+    private static final String PERIOD_END_ITK = "201105192015+00";
 
     @Test
     public void mapPeriod() {

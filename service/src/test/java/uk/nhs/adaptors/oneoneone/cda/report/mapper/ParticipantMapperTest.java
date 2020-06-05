@@ -15,26 +15,24 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
 public class ParticipantMapperTest {
 
     @Mock
-    PractitionerMapper practitionerMapper;
+    private PractitionerMapper practitionerMapper;
 
     @Mock
-    PeriodMapper periodMapper;
+    private PeriodMapper periodMapper;
 
     @InjectMocks
-    ParticipantMapper participantMapper;
+    private ParticipantMapper participantMapper;
 
     @Mock
-    Practitioner practitioner;
+    private Practitioner practitioner;
 
     @Mock
-    Period period;
+    private Period period;
 
     private POCDMT000002UK01EncounterParticipant encounterParticipant;
 

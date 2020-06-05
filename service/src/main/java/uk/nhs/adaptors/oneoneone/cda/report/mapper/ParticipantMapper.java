@@ -9,17 +9,19 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ParticipantMapper {
 
-    @Autowired
-    PeriodMapper periodMapper;
+    private PeriodMapper periodMapper;
 
-    @Autowired
-    PractitionerMapper practitionerMapper;
+    private PractitionerMapper practitionerMapper;
+
+    public ParticipantMapper(PeriodMapper periodMapper, PractitionerMapper practitionerMapper) {
+        this.periodMapper = periodMapper;
+        this.practitionerMapper = practitionerMapper;
+    }
 
     public Encounter.EncounterParticipantComponent mapEncounterParticipant(POCDMT000002UK01EncounterParticipant encounterParticipant) {
         Practitioner practitioner = practitionerMapper

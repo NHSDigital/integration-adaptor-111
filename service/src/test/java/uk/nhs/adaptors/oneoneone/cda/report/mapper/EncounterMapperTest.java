@@ -14,27 +14,24 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
 public class EncounterMapperTest {
 
     @Mock
-    ParticipantMapper participantMapper;
+    private ParticipantMapper participantMapper;
 
     @Mock
-    PeriodMapper periodMapper;
+    private PeriodMapper periodMapper;
 
     @InjectMocks
-    EncounterMapper encounterMapper;
+    private EncounterMapper encounterMapper;
 
     @Mock
-    Period period;
+    private Period period;
 
     @Mock
-    Encounter.EncounterParticipantComponent encounterParticipantComponent;
-
+    private Encounter.EncounterParticipantComponent encounterParticipantComponent;
 
     @Test
     public void mapEncounter(){

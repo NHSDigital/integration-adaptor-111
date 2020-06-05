@@ -4,14 +4,16 @@ import java.util.stream.Stream;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 import org.hl7.fhir.dstu3.model.HumanName;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class HumanNameMapper {
 
-    @Autowired
-    PeriodMapper periodMapper;
+    private PeriodMapper periodMapper;
+
+    public HumanNameMapper(PeriodMapper periodMapper) {
+        this.periodMapper = periodMapper;
+    }
 
     public HumanName mapHumanName(PN itkPersonName) {
         HumanName humanName = new HumanName();

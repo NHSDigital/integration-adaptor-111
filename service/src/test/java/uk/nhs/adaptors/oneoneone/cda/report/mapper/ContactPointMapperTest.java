@@ -15,23 +15,21 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
 public class ContactPointMapperTest {
 
     @Mock
-    PeriodMapper periodMapper;
+    private PeriodMapper periodMapper;
 
     @InjectMocks
-    ContactPointMapper contactPointMapper;
+    private ContactPointMapper contactPointMapper;
 
     @Mock
-    Period period;
+    private Period period;
 
-    public static final String TEL_NUMBER = "1357962783";
-    public static final String USE_ITK = "H";
+    private static final String TEL_NUMBER = "1357962783";
+    private static final String USE_ITK = "H";
 
     @Test
     public void mapContactPoint() {

@@ -14,28 +14,26 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
 public class AddressMapperTest {
 
     @Mock
-    PeriodMapper periodMapper;
+    private PeriodMapper periodMapper;
 
     @InjectMocks
-    AddressMapper addressMapper;
+    private AddressMapper addressMapper;
 
     @Mock
-    Period period;
+    private Period period;
 
-    public static final String CITY = "Small City";
-    public static final String ADDRESS_LINE = "Magnolia Crescent 1";
-    public static final String POSTAL_CODE = "BS2 RF2";
-    public static final String COUNTRY = "United Kingdom";
-    public static final String DESCRIPTION = "test description";
-    public static final String STATE = "Small County";
-    public static final String DISTRICT = "Little District";
+    private static final String CITY = "Small City";
+    private static final String ADDRESS_LINE = "Magnolia Crescent 1";
+    private static final String POSTAL_CODE = "BS2 RF2";
+    private static final String COUNTRY = "United Kingdom";
+    private static final String DESCRIPTION = "test description";
+    private static final String STATE = "Small County";
+    private static final String DISTRICT = "Little District";
 
     @Test
     public void mapAddress() {
@@ -49,12 +47,10 @@ public class AddressMapperTest {
         ad.addNewPrecinct().set(XmlString.Factory.newValue(DISTRICT));
         ad.addNewUseablePeriod();
 
-
         when(periodMapper.mapPeriod(ArgumentMatchers.any()))
             .thenReturn(period);
 
         Address address = addressMapper.mapAddress(ad);
-        System.out.println();
 
         assertThat(address.getLine().get(0).getValue()).isEqualTo(ADDRESS_LINE);
         assertThat(address.getCity()).isEqualTo(CITY);

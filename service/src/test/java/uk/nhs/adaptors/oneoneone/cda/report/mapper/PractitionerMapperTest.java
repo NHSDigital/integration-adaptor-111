@@ -19,32 +19,30 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
 public class PractitionerMapperTest {
 
     @Mock
-    HumanNameMapper humanNameMapper;
+    private HumanNameMapper humanNameMapper;
 
     @Mock
-    ContactPointMapper contactPointMapper;
+    private ContactPointMapper contactPointMapper;
 
     @Mock
-    AddressMapper addressMapper;
+    private AddressMapper addressMapper;
 
     @InjectMocks
-    PractitionerMapper practitionerMapper;
+    private PractitionerMapper practitionerMapper;
 
     @Mock
-    HumanName humanName;
+    private HumanName humanName;
 
     @Mock
-    ContactPoint contactPoint;
+    private ContactPoint contactPoint;
 
     @Mock
-    Address address;
+    private Address address;
 
     @Test
     public void mapPractitioner() {

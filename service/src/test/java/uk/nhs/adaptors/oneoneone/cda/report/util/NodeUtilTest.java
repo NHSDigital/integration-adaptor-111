@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.w3c.dom.Node;
 
 public class NodeUtilTest {
+
     @Test
     public void getNodeString_nullNode() {
         var xmlObject = mock(XmlObject.class);

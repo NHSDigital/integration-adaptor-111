@@ -14,24 +14,22 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
 public class HumanNameMapperTest {
 
     @Mock
-    PeriodMapper periodMapper;
+    private PeriodMapper periodMapper;
 
     @InjectMocks
-    HumanNameMapper humanNameMapper;
+    private HumanNameMapper humanNameMapper;
 
     @Mock
-    Period period;
-    public static final String GIVEN = "John";
-    public static final String PREFIX = "sir";
-    public static final String SUFFIX = "de Windermere";
-    public static final String FAMILY = "Lloyd";
+    private Period period;
+    private static final String GIVEN = "John";
+    private static final String PREFIX = "sir";
+    private static final String SUFFIX = "de Windermere";
+    private static final String FAMILY = "Lloyd";
 
     @Test
     public void mapHumanName() {

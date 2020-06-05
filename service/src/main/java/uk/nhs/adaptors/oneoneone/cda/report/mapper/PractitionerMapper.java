@@ -16,24 +16,22 @@ import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Practitioner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PractitionerMapper {
 
-    @Autowired
-    HumanNameMapper humanNameMapper;
+    private HumanNameMapper humanNameMapper;
 
-    @Autowired
-    ContactPointMapper contactPointMapper;
+    private ContactPointMapper contactPointMapper;
 
-    @Autowired
-    AddressMapper addressMapper;
+    private AddressMapper addressMapper;
 
-    /*
-    Practitioner - a person with a formal responsibility in the provisioning of healthcare or related services
-     */
+    public PractitionerMapper(HumanNameMapper humanNameMapper, ContactPointMapper contactPointMapper, AddressMapper addressMapper) {
+        this.humanNameMapper = humanNameMapper;
+        this.contactPointMapper = contactPointMapper;
+        this.addressMapper = addressMapper;
+    }
 
     public Practitioner mapPractitioner(POCDMT000002UK01AssignedEntity assignedEntity) {
         Practitioner practitioner = new Practitioner();
@@ -55,7 +53,7 @@ public class PractitionerMapper {
         } else return Collections.emptyList();
     }
 
-    private  List<ContactPoint> getTelecomFromITK(POCDMT000002UK01AssignedEntity assignedEntity) {
+    private List<ContactPoint> getTelecomFromITK(POCDMT000002UK01AssignedEntity assignedEntity) {
         TEL[] itkTelecom = assignedEntity.getTelecomArray();
         return Arrays.stream(itkTelecom)
             .map(contactPointMapper::mapContactPoint)

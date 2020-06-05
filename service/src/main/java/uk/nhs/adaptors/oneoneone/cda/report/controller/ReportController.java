@@ -9,7 +9,6 @@ import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportReques
 import static uk.nhs.adaptors.oneoneone.xml.XmlValidator.validate;
 
 import org.apache.xmlbeans.XmlException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,8 +23,11 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 @RestController
 public class ReportController {
 
-    @Autowired
     private EncounterReportService encounterReportService;
+
+    public ReportController(EncounterReportService encounterReportService) {
+        this.encounterReportService = encounterReportService;
+    }
 
     @PostMapping(value = "/report", consumes = { TEXT_XML_VALUE, APPLICATION_XML_VALUE })
     @ResponseStatus(value = ACCEPTED)

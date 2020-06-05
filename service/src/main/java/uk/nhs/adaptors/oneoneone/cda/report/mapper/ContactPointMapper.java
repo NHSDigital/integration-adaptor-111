@@ -5,14 +5,12 @@ import java.util.Map;
 
 import uk.nhs.connect.iucds.cda.ucr.TEL;
 import org.hl7.fhir.dstu3.model.ContactPoint;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ContactPointMapper {
 
-    @Autowired
-    PeriodMapper periodMapper;
+    private PeriodMapper periodMapper;
 
     private static final Map<String, ContactPoint.ContactPointUse> CONTACT_POINT_USE_MAP = new HashMap<>();
 
@@ -22,6 +20,10 @@ public class ContactPointMapper {
         CONTACT_POINT_USE_MAP.put("MC", ContactPoint.ContactPointUse.MOBILE);
         CONTACT_POINT_USE_MAP.put("EC", ContactPoint.ContactPointUse.TEMP);
         CONTACT_POINT_USE_MAP.put("WP", ContactPoint.ContactPointUse.WORK);
+    }
+
+    public ContactPointMapper(PeriodMapper periodMapper) {
+        this.periodMapper = periodMapper;
     }
 
     public ContactPoint mapContactPoint(TEL itkTelecom) {
