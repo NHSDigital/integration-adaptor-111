@@ -1,6 +1,8 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import java.util.Arrays;
+
+import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 
@@ -8,13 +10,10 @@ import org.hl7.fhir.dstu3.model.Address;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class AddressMapper {
 
     private PeriodMapper periodMapper;
-
-    public AddressMapper(PeriodMapper periodMapper) {
-        this.periodMapper = periodMapper;
-    }
 
     public Address mapAddress(AD itkAddress) {
         Address address = new Address();

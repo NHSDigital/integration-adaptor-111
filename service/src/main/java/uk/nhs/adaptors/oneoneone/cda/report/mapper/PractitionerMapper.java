@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
@@ -19,6 +20,7 @@ import org.hl7.fhir.dstu3.model.Practitioner;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class PractitionerMapper {
 
     private HumanNameMapper humanNameMapper;
@@ -26,12 +28,6 @@ public class PractitionerMapper {
     private ContactPointMapper contactPointMapper;
 
     private AddressMapper addressMapper;
-
-    public PractitionerMapper(HumanNameMapper humanNameMapper, ContactPointMapper contactPointMapper, AddressMapper addressMapper) {
-        this.humanNameMapper = humanNameMapper;
-        this.contactPointMapper = contactPointMapper;
-        this.addressMapper = addressMapper;
-    }
 
     public Practitioner mapPractitioner(POCDMT000002UK01AssignedEntity assignedEntity) {
         Practitioner practitioner = new Practitioner();

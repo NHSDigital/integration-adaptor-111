@@ -7,15 +7,13 @@ import ca.uhn.fhir.validation.FhirValidator;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.SchemaBaseValidator;
 import ca.uhn.fhir.validation.ValidationResult;
+import lombok.AllArgsConstructor;
 
 @Component
+@AllArgsConstructor
 public class FhirJsonValidator {
 
     private FhirContext ctx;
-
-    public FhirJsonValidator(FhirContext ctx) {
-        this.ctx = ctx;
-    }
 
     public boolean isValid(String message) {
         FhirValidator validator = ctx.newValidator();

@@ -10,21 +10,18 @@ import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
+import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ServiceProviderMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Component
+@AllArgsConstructor
 public class EncounterReportBundleService {
 
     private EncounterMapper encounterMapper;
 
     private ServiceProviderMapper serviceProviderMapper;
-
-    public EncounterReportBundleService(EncounterMapper encounterMapper, ServiceProviderMapper serviceProviderMapper) {
-        this.encounterMapper = encounterMapper;
-        this.serviceProviderMapper = serviceProviderMapper;
-    }
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument) {
         Bundle bundle = new Bundle();

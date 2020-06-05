@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncompassingEncounter;
 
@@ -15,16 +16,12 @@ import org.hl7.fhir.dstu3.model.Period;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class EncounterMapper {
 
     private PeriodMapper periodMapper;
 
     private ParticipantMapper participantMapper;
-
-    public EncounterMapper(PeriodMapper periodMapper, ParticipantMapper participantMapper) {
-        this.periodMapper = periodMapper;
-        this.participantMapper = participantMapper;
-    }
 
     public Encounter mapEncounter(POCDMT000002UK01EncompassingEncounter encompassingEncounter) {
         Encounter encounter = new Encounter();

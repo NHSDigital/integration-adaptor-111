@@ -1,19 +1,18 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import java.util.stream.Stream;
+
+import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class HumanNameMapper {
 
     private PeriodMapper periodMapper;
-
-    public HumanNameMapper(PeriodMapper periodMapper) {
-        this.periodMapper = periodMapper;
-    }
 
     public HumanName mapHumanName(PN itkPersonName) {
         HumanName humanName = new HumanName();
