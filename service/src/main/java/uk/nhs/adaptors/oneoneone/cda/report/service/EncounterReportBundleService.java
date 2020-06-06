@@ -23,13 +23,11 @@ public class EncounterReportBundleService {
 
     private ServiceProviderMapper serviceProviderMapper;
 
-    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument) {
+    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
         bundle.setType(TRANSACTION);
 
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocumentDocument
-            .getComponentOf()
-            .getEncompassingEncounter());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
 
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
