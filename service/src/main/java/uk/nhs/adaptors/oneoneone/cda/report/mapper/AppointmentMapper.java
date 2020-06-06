@@ -35,7 +35,8 @@ public class AppointmentMapper {
             .setStatus(Appointment.AppointmentStatus.BOOKED)
             .addIncomingReferral(referralRequest)
             .setStart(startDate)
-            .setEnd(endDate);
+            .setEnd(endDate)
+            .setMinutesDuration(10);
         appointment.setIdElement(IdType.newRandomUuid());
 
         if (matchingSection != null) {
