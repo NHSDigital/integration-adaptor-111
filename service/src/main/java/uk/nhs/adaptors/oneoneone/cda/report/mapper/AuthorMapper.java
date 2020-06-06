@@ -26,6 +26,7 @@ public class AuthorMapper {
 
         Encounter.EncounterParticipantComponent component = new Encounter.EncounterParticipantComponent();
         component.setType(retrieveTypeFromITK(author));
+        component.setPeriod(periodMapper.mapPeriod(author.getTime()));
         component.setIndividualTarget(practitioner);
         component.setIndividual(new Reference(practitioner));
         return component;
