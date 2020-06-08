@@ -88,11 +88,6 @@ public class EncounterReportBundleServiceTest {
     @Test
     public void createEncounterBundle() {
         POCDMT000002UK01ClinicalDocument1 document = mock(POCDMT000002UK01ClinicalDocument1.class);
-        POCDMT000002UK01Component1 component = mock(POCDMT000002UK01Component1 .class);
-        POCDMT000002UK01EncompassingEncounter encompassingEncounter = mock(POCDMT000002UK01EncompassingEncounter.class);
-
-        when(document.getComponentOf()).thenReturn(component);
-        when(component.getEncompassingEncounter()).thenReturn(encompassingEncounter);;
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
 

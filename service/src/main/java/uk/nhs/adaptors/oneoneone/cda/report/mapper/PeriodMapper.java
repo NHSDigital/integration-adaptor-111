@@ -4,6 +4,7 @@ import java.util.Date;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
+import uk.nhs.connect.iucds.cda.ucr.TS;
 
 import org.hl7.fhir.dstu3.model.Period;
 import org.springframework.stereotype.Component;
@@ -18,5 +19,10 @@ public class PeriodMapper {
         return new Period()
             .setStart(low)
             .setEnd(high);
+    }
+
+    public Period mapPeriod(TS ts) {
+        Date time = DateUtil.parse(ts.getValue());
+        return new Period().setStart(time);
     }
 }

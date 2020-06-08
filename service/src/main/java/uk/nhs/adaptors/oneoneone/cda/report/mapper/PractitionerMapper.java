@@ -10,7 +10,10 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.PN;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedAuthor;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssociatedEntity;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Person;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
 
 import org.hl7.fhir.dstu3.model.Address;
@@ -29,35 +32,56 @@ public class PractitionerMapper {
 
     private AddressMapper addressMapper;
 
-    public Practitioner mapPractitioner(POCDMT000002UK01AssignedEntity assignedEntity) {
+    public Practitioner mapPractitioner(POCDMT000002UK01AssociatedEntity associatedEntity) {
         Practitioner practitioner = new Practitioner();
         practitioner.setIdElement(newRandomUuid());
         practitioner.setActive(true);
-        practitioner.setName(getHumanNameFromITK(assignedEntity));
-        practitioner.setTelecom(getTelecomFromITK(assignedEntity));
-        practitioner.setAddress(getAddressesFromITK(assignedEntity));
+        practitioner.setName(getHumanNameFromITK(associatedEntity.getAssociatedPerson()));
+        practitioner.setTelecom(getTelecomFromITK(associatedEntity.getTelecomArray()));
+        practitioner.setAddress(getAddressesFromITK(associatedEntity.getAddrArray()));
 
         return practitioner;
     }
 
-    private List<HumanName> getHumanNameFromITK(POCDMT000002UK01AssignedEntity assignedEntity) {
+    public Practitioner mapPractitioner(POCDMT000002UK01AssignedEntity assignedEntity) {
+        Practitioner practitioner = new Practitioner();
+        practitioner.setIdElement(newRandomUuid());
+        practitioner.setActive(true);
         if (assignedEntity.isSetAssignedPerson()) {
-            PN[] itkPersonName = assignedEntity.getAssignedPerson().getNameArray();
-            return Arrays.stream(itkPersonName)
-                .map(humanNameMapper::mapHumanName)
-                .collect(Collectors.toList());
-        } else return Collections.emptyList();
+            practitioner.setName(getHumanNameFromITK(assignedEntity.getAssignedPerson()));
+        }
+        practitioner.setTelecom(getTelecomFromITK(assignedEntity.getTelecomArray()));
+        practitioner.setAddress(getAddressesFromITK(assignedEntity.getAddrArray()));
+
+        return practitioner;
     }
 
-    private List<ContactPoint> getTelecomFromITK(POCDMT000002UK01AssignedEntity assignedEntity) {
-        TEL[] itkTelecom = assignedEntity.getTelecomArray();
+    public Practitioner mapPractitioner(POCDMT000002UK01AssignedAuthor assignedAuthor) {
+        Practitioner practitioner = new Practitioner();
+        practitioner.setIdElement(newRandomUuid());
+        practitioner.setActive(true);
+        practitioner.setName(getHumanNameFromITK(assignedAuthor.getAssignedPerson()));
+        practitioner.setTelecom(getTelecomFromITK(assignedAuthor.getTelecomArray()));
+        practitioner.setAddress(getAddressesFromITK(assignedAuthor.getAddrArray()));
+
+        return practitioner;
+    }
+
+    private List<HumanName> getHumanNameFromITK(POCDMT000002UK01Person associatedPerson) {
+        if (associatedPerson == null) return Collections.emptyList();
+        PN[] itkPersonName = associatedPerson.getNameArray();
+        return Arrays.stream(itkPersonName)
+            .map(humanNameMapper::mapHumanName)
+            .collect(Collectors.toList());
+    }
+
+    private List<ContactPoint> getTelecomFromITK(TEL[] itkTelecom) {
         return Arrays.stream(itkTelecom)
             .map(contactPointMapper::mapContactPoint)
             .collect(Collectors.toList());
     }
 
-    private List<Address> getAddressesFromITK(POCDMT000002UK01AssignedEntity assignedEntity) {
-        AD[] itkAddressArray = assignedEntity.getAddrArray();
+    private List<Address> getAddressesFromITK(AD[] itkAddressArray) {
         return Arrays.stream(itkAddressArray)
             .map(addressMapper::mapAddress)
             .collect(Collectors.toList());
