@@ -36,7 +36,7 @@ public class EncounterReportBundleService {
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
-        addAppointment(bundle, encounter, clinicalDocument);
+        addAppointment(bundle, encounter);
 
         return bundle;
     }
@@ -66,17 +66,14 @@ public class EncounterReportBundleService {
         }
     }
 
-    private void addAppointment(Bundle bundle, Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        Reference referralRequest = encounter.getIncomingReferralFirstRep();
-        Reference patient = encounter.getSubject();
-
-        Optional<Appointment> appointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument);
-        if (appointment.isPresent()) {
+    private void addAppointment(Bundle bundle, Encounter encounter) {
+        Appointment appointment = encounter.getAppointmentTarget();
+        if (appointment != null) {
             bundle.addEntry()
-                .setFullUrl(appointment.get().getIdElement().getValue())
-                .setResource(appointment.get());
-            encounter.setAppointment(new Reference(appointment.get()));
-            encounter.setAppointmentTarget(appointment.get());
+                .setFullUrl(appointment.getIdElement().getValue())
+                .setResource(appointment);
+            encounter.setAppointment(new Reference(appointment));
+            encounter.setAppointmentTarget(appointment);
         }
     }
 }

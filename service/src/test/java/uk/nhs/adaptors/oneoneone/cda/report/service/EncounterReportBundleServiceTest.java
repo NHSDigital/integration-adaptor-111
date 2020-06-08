@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
@@ -31,8 +30,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ServiceProviderMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component1;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncompassingEncounter;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EncounterReportBundleServiceTest {
@@ -44,9 +41,6 @@ public class EncounterReportBundleServiceTest {
 
     @Mock
     private ServiceProviderMapper serviceProviderMapper;
-
-    @Mock
-    private AppointmentService appointmentService;
 
     private static final Encounter ENCOUNTER;
     private static final IdType ENCOUNTER_ID = newRandomUuid();
@@ -76,13 +70,13 @@ public class EncounterReportBundleServiceTest {
         ENCOUNTER.setParticipant(Collections.singletonList(ENCOUNTER_PARTICIPANT_COMPONENT));
         APPOINTMENT = new Appointment();
         APPOINTMENT.setIdElement(APPOINTMENT_ID);
+        ENCOUNTER.setAppointmentTarget(APPOINTMENT);
     }
 
     @Before
     public void setUp() {
         when(encounterMapper.mapEncounter(any())).thenReturn(ENCOUNTER);
         when(serviceProviderMapper.mapServiceProvider()).thenReturn(ORGANIZATION);
-        when(appointmentService.retrieveAppointment(any(), any(), any())).thenReturn(Optional.of(APPOINTMENT));
     }
 
     @Test

@@ -9,11 +9,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
+import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,12 +33,15 @@ public class EncounterMapper {
 
     private DataEntererMapper dataEntererMapper;
 
+    private AppointmentService appointmentService;
+
     public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Encounter encounter = new Encounter();
         encounter.setIdElement(newRandomUuid());
         encounter.setStatus(FINISHED);
         encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));
+        getAppointment(encounter, clinicalDocument);
         return encounter;
     }
 
@@ -67,5 +73,16 @@ public class EncounterMapper {
                 .mapDataEntererIntoParticipantComponent(clinicalDocument.getDataEnterer()));
         }
         return encounterParticipantComponents;
+    }
+
+    private void getAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        Reference referralRequest = encounter.getIncomingReferralFirstRep();
+        Reference patient = encounter.getSubject();
+
+        Optional<Appointment> appointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument);
+        if (appointment.isPresent()) {
+            encounter.setAppointment(new Reference(appointment.get()));
+            encounter.setAppointmentTarget(appointment.get());
+        }
     }
 }

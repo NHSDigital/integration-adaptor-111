@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
+import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Author;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01DataEnterer;
@@ -15,6 +16,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
+import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Period;
 import org.junit.Test;
@@ -42,6 +44,9 @@ public class EncounterMapperTest {
     @Mock
     private DataEntererMapper dataEntererMapper;
 
+    @Mock
+    private AppointmentService appointmentService;
+
     @InjectMocks
     private EncounterMapper encounterMapper;
 
@@ -50,6 +55,9 @@ public class EncounterMapperTest {
 
     @Mock
     private Encounter.EncounterParticipantComponent encounterParticipantComponent;
+
+    @Mock
+    private Appointment appointment;
 
     @Test
     public void mapEncounter(){
@@ -61,12 +69,14 @@ public class EncounterMapperTest {
 
         when(periodMapper.mapPeriod(ArgumentMatchers.isA(TS.class))).thenReturn(period);
         when(participantMapper.mapEncounterParticipant(any())).thenReturn(encounterParticipantComponent);
+        when(appointmentService.retrieveAppointment(any(),any(),any())).thenReturn(Optional.of(appointment));
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
         assertThat(encounter.getIdElement().getValue()).startsWith("urn:uuid:");
         assertThat(encounter.getStatus()).isEqualTo(FINISHED);
         assertThat(encounter.getPeriod()).isEqualTo(period);
         assertThat(encounter.getParticipantFirstRep()).isEqualTo(encounterParticipantComponent);
+        assertThat(encounter.getAppointmentTarget()).isEqualTo(appointment);
     }
 
     @Test
