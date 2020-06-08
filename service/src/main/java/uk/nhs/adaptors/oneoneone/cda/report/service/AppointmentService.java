@@ -51,7 +51,11 @@ public class AppointmentService {
                 && entry.getContentId().getExtension().equals(APPOINTMENT_REFERENCE))
             .collect(Collectors.toList());
 
-        return Optional.ofNullable(appointmentEntries.get(0));
+        if (appointmentEntries.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(appointmentEntries.get(0));
+        }
     }
 
     private Optional<POCDMT000002UK01Section> getAppointmentSection(POCDMT000002UK01Component3[] components) {
@@ -64,6 +68,10 @@ public class AppointmentService {
                 && section.getCode().getCodeSystem().equals(SNOMED))
             .collect(Collectors.toList());
 
-        return Optional.ofNullable(appointmentSections.get(0));
+        if (appointmentSections.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(appointmentSections.get(0));
+        }
     }
 }

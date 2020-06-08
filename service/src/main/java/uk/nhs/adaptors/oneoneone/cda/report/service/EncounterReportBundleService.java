@@ -69,9 +69,7 @@ public class EncounterReportBundleService {
     }
 
     private void addAppointment(Bundle bundle, Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        //TODO 2020-06-05 referallRequest should not be null, but be taken from the fhitEncounter
-        //TODO to be corrected after referallRequest is mapped: NIAD-279 IncommingReferal ?
-        Reference referralRequest = null;
+        Reference referralRequest = encounter.getIncomingReferralFirstRep();
         Reference patient = encounter.getSubject();
 
         Optional<Appointment> appointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument);

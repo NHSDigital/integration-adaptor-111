@@ -14,6 +14,8 @@ public class LocationMapper {
 
     private AddressMapper addressMapper;
 
+    private HumanNameMapper humanNameMapper;
+
     public Location mapRoleToLocation(POCDMT000002UK01ParticipantRole role) {
         Location location = new Location();
         if (role.sizeOfAddrArray() > 0) {
@@ -22,7 +24,7 @@ public class LocationMapper {
 
         if (role.isSetPlayingEntity()) {
             POCDMT000002UK01PlayingEntity playingEntity = role.getPlayingEntity();
-            location.setName(NodeUtil.getNodeValueString(playingEntity.getNameArray(0)));
+            location.setName(humanNameMapper.mapHumanName(playingEntity.getNameArray(0)).getText());
             location.setDescription(NodeUtil.getNodeValueString(playingEntity.getDesc()));
         }
         return location;
