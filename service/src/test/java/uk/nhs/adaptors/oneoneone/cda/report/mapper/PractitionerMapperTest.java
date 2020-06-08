@@ -5,7 +5,9 @@ import static org.mockito.Mockito.when;
 
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.PN;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedAuthor;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssociatedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Person;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
 
@@ -45,7 +47,7 @@ public class PractitionerMapperTest {
     private Address address;
 
     @Test
-    public void mapPractitioner() {
+    public void mapPractitionerFromAssignedEntity() {
         POCDMT000002UK01AssignedEntity assignedEntity = POCDMT000002UK01AssignedEntity.Factory.newInstance();
         assignedEntity.setAssignedPerson(createPerson());
         assignedEntity.setTelecomArray(createTelecomArray());
@@ -56,6 +58,46 @@ public class PractitionerMapperTest {
         when(addressMapper.mapAddress(ArgumentMatchers.any())).thenReturn(address);
 
         Practitioner practitioner = practitionerMapper.mapPractitioner(assignedEntity);
+
+        assertThat(practitioner.getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(practitioner.getActive()).isEqualTo(true);
+        assertThat(practitioner.getNameFirstRep()).isEqualTo(humanName);
+        assertThat(practitioner.getTelecomFirstRep()).isEqualTo(contactPoint);
+        assertThat(practitioner.getAddressFirstRep()).isEqualTo(address);
+    }
+
+    @Test
+    public void mapPractitionerFromAssociatedEntity() {
+        POCDMT000002UK01AssociatedEntity associatedEntity = POCDMT000002UK01AssociatedEntity.Factory.newInstance();
+        associatedEntity.setAssociatedPerson(createPerson());
+        associatedEntity.setTelecomArray(createTelecomArray());
+        associatedEntity.setAddrArray(createAddrArray());
+
+        when(humanNameMapper.mapHumanName(ArgumentMatchers.any())).thenReturn(humanName);
+        when(contactPointMapper.mapContactPoint(ArgumentMatchers.any())).thenReturn(contactPoint);
+        when(addressMapper.mapAddress(ArgumentMatchers.any())).thenReturn(address);
+
+        Practitioner practitioner = practitionerMapper.mapPractitioner(associatedEntity);
+
+        assertThat(practitioner.getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(practitioner.getActive()).isEqualTo(true);
+        assertThat(practitioner.getNameFirstRep()).isEqualTo(humanName);
+        assertThat(practitioner.getTelecomFirstRep()).isEqualTo(contactPoint);
+        assertThat(practitioner.getAddressFirstRep()).isEqualTo(address);
+    }
+
+    @Test
+    public void mapPractitionerForAssignedAuthor() {
+        POCDMT000002UK01AssignedAuthor associatedEntity = POCDMT000002UK01AssignedAuthor.Factory.newInstance();
+        associatedEntity.setAssignedPerson(createPerson());
+        associatedEntity.setTelecomArray(createTelecomArray());
+        associatedEntity.setAddrArray(createAddrArray());
+
+        when(humanNameMapper.mapHumanName(ArgumentMatchers.any())).thenReturn(humanName);
+        when(contactPointMapper.mapContactPoint(ArgumentMatchers.any())).thenReturn(contactPoint);
+        when(addressMapper.mapAddress(ArgumentMatchers.any())).thenReturn(address);
+
+        Practitioner practitioner = practitionerMapper.mapPractitioner(associatedEntity);
 
         assertThat(practitioner.getIdElement().getValue()).startsWith("urn:uuid:");
         assertThat(practitioner.getActive()).isEqualTo(true);

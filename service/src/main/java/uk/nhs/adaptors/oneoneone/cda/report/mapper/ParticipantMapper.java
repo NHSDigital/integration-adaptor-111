@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncounterParticipant;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
@@ -20,19 +20,19 @@ public class ParticipantMapper {
 
     private PractitionerMapper practitionerMapper;
 
-    public Encounter.EncounterParticipantComponent mapEncounterParticipant(POCDMT000002UK01EncounterParticipant encounterParticipant) {
+    public Encounter.EncounterParticipantComponent mapEncounterParticipant(POCDMT000002UK01Participant1 encounterParticipant) {
         Practitioner practitioner = practitionerMapper
-            .mapPractitioner(encounterParticipant.getAssignedEntity());
+            .mapPractitioner(encounterParticipant.getAssociatedEntity());
 
         return new Encounter.EncounterParticipantComponent()
-            .setType(retrieveEncounterTypeFromITK(encounterParticipant))
+            .setType(retrieveTypeFromITK(encounterParticipant))
             .setPeriod(periodMapper.mapPeriod(encounterParticipant.getTime()))
             .setIndividual(new Reference(practitioner))
             .setIndividualTarget(practitioner);
     }
 
-    private List<CodeableConcept> retrieveEncounterTypeFromITK(POCDMT000002UK01EncounterParticipant encounterParticipant) {
+    private List<CodeableConcept> retrieveTypeFromITK(POCDMT000002UK01Participant1 encounterParticipant) {
         return Collections.singletonList(new CodeableConcept()
-            .setText(encounterParticipant.getTypeCode().toString()));
+            .setText(encounterParticipant.getTypeCode()));
     }
 }

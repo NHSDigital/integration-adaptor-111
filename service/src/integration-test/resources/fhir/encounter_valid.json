@@ -3,7 +3,7 @@
   "type": "transaction",
   "entry": [
     {
-      "fullUrl": "urn:uuid:6ffb876c-f23f-4746-ab00-c8d4e162b58d",
+      "fullUrl": "urn:uuid:b6c0ae3a-a611-40c5-b282-c1f33756759a",
       "resource": {
         "resourceType": "Encounter",
         "status": "finished",
@@ -11,7 +11,7 @@
           {
             "type": [
               {
-                "text": "CON"
+                "text": "REFT"
               }
             ],
             "period": {
@@ -19,50 +19,71 @@
               "end": "2011-05-19T22:15:00+02:00"
             },
             "individual": {
-              "reference": "urn:uuid:4ed74e7f-f415-4526-8dfd-66c10e0d7d45"
+              "reference": "urn:uuid:03265723-8500-4b29-b534-b2a7484aac8f"
+            }
+          },
+          {
+            "type": [
+              {
+                "text": "AUT"
+              }
+            ],
+            "period": {
+              "start": "2011-05-19T22:00:00+02:00"
+            },
+            "individual": {
+              "reference": "urn:uuid:11a7049e-801f-4870-91ad-9169e03d6dd6"
             }
           }
         ],
         "period": {
-          "start": "2011-05-19T21:45:00+02:00",
-          "end": "2011-05-19T22:15:00+02:00"
+          "start": "2011-05-19T22:00:00+02:00"
         },
         "serviceProvider": {
-          "reference": "urn:uuid:1218954c-ec64-4037-ad44-f53ee9eaab79"
+          "reference": "urn:uuid:bd8cc7af-571f-4a3d-bab9-530eb55bbdca"
         }
       }
     },
     {
-      "fullUrl": "urn:uuid:1218954c-ec64-4037-ad44-f53ee9eaab79",
+      "fullUrl": "urn:uuid:bd8cc7af-571f-4a3d-bab9-530eb55bbdca",
       "resource": {
         "resourceType": "Organization"
       }
     },
     {
-      "fullUrl": "urn:uuid:4ed74e7f-f415-4526-8dfd-66c10e0d7d45",
+      "fullUrl": "urn:uuid:03265723-8500-4b29-b534-b2a7484aac8f",
+      "resource": {
+        "resourceType": "Practitioner",
+        "active": true,
+        "telecom": [
+          {
+            "value": "tel:0123456789",
+            "use": "temp"
+          }
+        ],
+        "address": [
+          {
+            "line": [
+              "Church Street Walk in Centre",
+              "4 Church Street",
+              "Medway"
+            ],
+            "postalCode": "ME8 7TT"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:11a7049e-801f-4870-91ad-9169e03d6dd6",
       "resource": {
         "resourceType": "Practitioner",
         "active": true,
         "name": [
           {
-            "family": "Cornwell",
+            "family": "Jones",
             "given": [
-              "Dave"
+              "Mary"
             ]
-          }
-        ],
-        "telecom": [
-          {
-            "value": "tel:01634775667",
-            "use": "home"
-          },
-          {
-            "value": "tel:01634451628",
-            "use": "home"
-          },
-          {
-            "value": "mailto:Joe.Blogg@emailfree.co.uk",
-            "use": "home"
           }
         ]
       }

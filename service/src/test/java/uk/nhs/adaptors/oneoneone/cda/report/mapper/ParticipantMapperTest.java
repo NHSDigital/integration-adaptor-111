@@ -1,10 +1,12 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncounterParticipant;
-import uk.nhs.connect.iucds.cda.ucr.XEncounterParticipant;
+import uk.nhs.connect.iucds.cda.ucr.IVLTS;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssociatedEntity;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Period;
@@ -34,17 +36,18 @@ public class ParticipantMapperTest {
     @Mock
     private Period period;
 
-    private POCDMT000002UK01EncounterParticipant encounterParticipant;
-
     @Test
     public void mapParticipant() {
-        encounterParticipant = POCDMT000002UK01EncounterParticipant.Factory.newInstance();
-        encounterParticipant.setTypeCode(XEncounterParticipant.Enum.forString("CON"));
+        POCDMT000002UK01Participant1 encounterParticipant = mock(POCDMT000002UK01Participant1.class);
+        POCDMT000002UK01AssociatedEntity associatedEntity = mock(POCDMT000002UK01AssociatedEntity.class);
+        IVLTS time = mock(IVLTS.class);
 
-        when(periodMapper.mapPeriod(ArgumentMatchers.any()))
+        when(encounterParticipant.getTypeCode()).thenReturn("CON");
+        when(encounterParticipant.getAssociatedEntity()).thenReturn(associatedEntity);
+        when(encounterParticipant.getTime()).thenReturn(time);
+        when(periodMapper.mapPeriod(ArgumentMatchers.isA(IVLTS.class)))
             .thenReturn(period);
-
-        when(practitionerMapper.mapPractitioner(ArgumentMatchers.any()))
+        when(practitionerMapper.mapPractitioner(ArgumentMatchers.isA(POCDMT000002UK01AssociatedEntity.class)))
             .thenReturn(practitioner);
 
         Encounter.EncounterParticipantComponent participantComponent = participantMapper.mapEncounterParticipant(encounterParticipant);
