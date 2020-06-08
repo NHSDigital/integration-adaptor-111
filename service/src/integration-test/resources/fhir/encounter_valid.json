@@ -3,7 +3,7 @@
   "type": "transaction",
   "entry": [
     {
-      "fullUrl": "urn:uuid:3aa26edb-c2b3-49c0-9e30-99452f563f30",
+      "fullUrl": "urn:uuid:22d5f294-0cf4-4dbd-a195-8e4cfc2f18ef",
       "resource": {
         "resourceType": "Encounter",
         "status": "finished",
@@ -19,7 +19,7 @@
               "end": "2011-05-19T22:15:00+02:00"
             },
             "individual": {
-              "reference": "urn:uuid:790fe103-2d5c-495e-bdc1-f3ec92c4863c"
+              "reference": "urn:uuid:c31ef8fa-a24d-4299-b8bd-46a260c14e7d"
             }
           },
           {
@@ -32,29 +32,29 @@
               "start": "2011-05-19T22:00:00+02:00"
             },
             "individual": {
-              "reference": "urn:uuid:7b7c5a14-ea86-4c4d-a318-1ee7334eb409"
+              "reference": "urn:uuid:f36d3150-1875-4fdd-9178-273c0efeca82"
             }
           }
         ],
         "appointment": {
-          "reference": "urn:uuid:dc36f86e-e875-4265-95af-c055b2d6bd71"
+          "reference": "urn:uuid:2e4cffe1-2cfe-466b-a8b9-3155ceec9c9a"
         },
         "period": {
           "start": "2011-05-19T22:00:00+02:00"
         },
         "serviceProvider": {
-          "reference": "urn:uuid:facfaa81-648d-408c-95d1-ea05aa1d73a5"
+          "reference": "urn:uuid:392451d6-83ff-4d4c-8694-3c1f9c79aeaa"
         }
       }
     },
     {
-      "fullUrl": "urn:uuid:facfaa81-648d-408c-95d1-ea05aa1d73a5",
+      "fullUrl": "urn:uuid:392451d6-83ff-4d4c-8694-3c1f9c79aeaa",
       "resource": {
         "resourceType": "Organization"
       }
     },
     {
-      "fullUrl": "urn:uuid:790fe103-2d5c-495e-bdc1-f3ec92c4863c",
+      "fullUrl": "urn:uuid:c31ef8fa-a24d-4299-b8bd-46a260c14e7d",
       "resource": {
         "resourceType": "Practitioner",
         "active": true,
@@ -77,7 +77,7 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:7b7c5a14-ea86-4c4d-a318-1ee7334eb409",
+      "fullUrl": "urn:uuid:f36d3150-1875-4fdd-9178-273c0efeca82",
       "resource": {
         "resourceType": "Practitioner",
         "active": true,
@@ -92,30 +92,15 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:dc36f86e-e875-4265-95af-c055b2d6bd71",
+      "fullUrl": "urn:uuid:2e4cffe1-2cfe-466b-a8b9-3155ceec9c9a",
       "resource": {
         "resourceType": "Appointment",
-        "contained": [
-          {
-            "resourceType": "Location",
-            "id": "1",
-            "name": "CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST",
-            "description": "Psychiatric Community Care Services",
-            "address": {
-              "line": [
-                "Great George Street"
-              ],
-              "city": "Leeds",
-              "postalCode": "LE13EX"
-            }
-          }
-        ],
         "status": "booked",
         "description": "Appointment Reference",
         "start": "2017-06-01T16:00:00.000+02:00",
         "end": "2017-06-01T16:10:00.000+02:00",
         "minutesDuration": 10,
-        "comment": "\nDate/Time: 01 June 2017 14:00\nLocation: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\nPsychiatric Community Care Service\n                                            ",
+        "comment": "\n                                                Date/Time: 01 June 2017 14:00\n                                                Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                Psychiatric Community Care Service\n                                            ",
         "participant": [
           {
             "required": "required",
@@ -123,12 +108,27 @@
           },
           {
             "actor": {
-              "reference": "#1"
+              "reference": "urn:uuid:2471b274-2a28-49ae-a2e1-4ff0dc9ecc39"
             },
             "required": "required",
             "status": "accepted"
           }
         ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:2471b274-2a28-49ae-a2e1-4ff0dc9ecc39",
+      "resource": {
+        "resourceType": "Location",
+        "name": "CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST",
+        "description": "Psychiatric Community Care Services",
+        "address": {
+          "line": [
+            "Great George Street"
+          ],
+          "city": "Leeds",
+          "postalCode": "LE13EX"
+        }
       }
     }
   ]

@@ -5,6 +5,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
 
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Location;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ public class LocationMapper {
 
     public Location mapRoleToLocation(POCDMT000002UK01ParticipantRole role) {
         Location location = new Location();
+        location.setIdElement(IdType.newRandomUuid());
         if (role.sizeOfAddrArray() > 0) {
             location.setAddress(addressMapper.mapAddress(role.getAddrArray(0)));
         }

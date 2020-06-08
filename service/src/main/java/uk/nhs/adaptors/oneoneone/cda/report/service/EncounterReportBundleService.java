@@ -72,8 +72,15 @@ public class EncounterReportBundleService {
             bundle.addEntry()
                 .setFullUrl(appointment.getIdElement().getValue())
                 .setResource(appointment);
-            encounter.setAppointment(new Reference(appointment));
-            encounter.setAppointmentTarget(appointment);
+            if (appointment.hasParticipant()) {
+                for(Appointment.AppointmentParticipantComponent participant : appointment.getParticipant()) {
+                    if (participant.getActorTarget() != null){
+                        bundle.addEntry()
+                            .setFullUrl(participant.getActorTarget().getIdElement().getValue())
+                            .setResource(participant.getActorTarget());
+                    }
+                }
+            }
         }
     }
 }
