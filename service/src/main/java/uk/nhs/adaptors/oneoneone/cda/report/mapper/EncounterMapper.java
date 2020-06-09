@@ -41,7 +41,7 @@ public class EncounterMapper {
         encounter.setStatus(FINISHED);
         encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));
-        getAppointment(encounter, clinicalDocument);
+        setAppointment(encounter, clinicalDocument);
         return encounter;
     }
 
@@ -75,7 +75,7 @@ public class EncounterMapper {
         return encounterParticipantComponents;
     }
 
-    private void getAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+    private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Reference referralRequest = encounter.getIncomingReferralFirstRep();
         Reference patient = encounter.getSubject();
 

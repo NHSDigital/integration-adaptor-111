@@ -25,8 +25,6 @@ public class EncounterReportBundleService {
 
     private ServiceProviderMapper serviceProviderMapper;
 
-    private AppointmentService appointmentService;
-
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
         bundle.setType(TRANSACTION);
