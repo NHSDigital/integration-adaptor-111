@@ -3,7 +3,9 @@ package uk.nhs.adaptors.oneoneone.cda.report.service;
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Organization;
@@ -31,7 +33,8 @@ public class EncounterReportBundleService {
 
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
-        addIndividual(bundle, encounter);
+        addParticipants(bundle, encounter);
+        addAppointment(bundle, encounter);
 
         return bundle;
     }
@@ -52,12 +55,30 @@ public class EncounterReportBundleService {
 
     }
 
-    private void addIndividual(Bundle bundle, Encounter encounter) {
+    private void addParticipants(Bundle bundle, Encounter encounter) {
         List<Encounter.EncounterParticipantComponent> participantComponents = encounter.getParticipant();
         for (Encounter.EncounterParticipantComponent participantComponent : participantComponents) {
             bundle.addEntry()
                 .setFullUrl(participantComponent.getIndividualTarget().getIdElement().getValue())
                 .setResource(participantComponent.getIndividualTarget());
+        }
+    }
+
+    private void addAppointment(Bundle bundle, Encounter encounter) {
+        Appointment appointment = encounter.getAppointmentTarget();
+        if (appointment != null) {
+            bundle.addEntry()
+                .setFullUrl(appointment.getIdElement().getValue())
+                .setResource(appointment);
+            if (appointment.hasParticipant()) {
+                for(Appointment.AppointmentParticipantComponent participant : appointment.getParticipant()) {
+                    if (participant.getActorTarget() != null){
+                        bundle.addEntry()
+                            .setFullUrl(participant.getActorTarget().getIdElement().getValue())
+                            .setResource(participant.getActorTarget());
+                    }
+                }
+            }
         }
     }
 }

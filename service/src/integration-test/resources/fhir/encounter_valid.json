@@ -3,7 +3,7 @@
   "type": "transaction",
   "entry": [
     {
-      "fullUrl": "urn:uuid:b6c0ae3a-a611-40c5-b282-c1f33756759a",
+      "fullUrl": "urn:uuid:22d5f294-0cf4-4dbd-a195-8e4cfc2f18ef",
       "resource": {
         "resourceType": "Encounter",
         "status": "finished",
@@ -19,7 +19,7 @@
               "end": "2011-05-19T22:15:00+02:00"
             },
             "individual": {
-              "reference": "urn:uuid:03265723-8500-4b29-b534-b2a7484aac8f"
+              "reference": "urn:uuid:c31ef8fa-a24d-4299-b8bd-46a260c14e7d"
             }
           },
           {
@@ -32,26 +32,29 @@
               "start": "2011-05-19T22:00:00+02:00"
             },
             "individual": {
-              "reference": "urn:uuid:11a7049e-801f-4870-91ad-9169e03d6dd6"
+              "reference": "urn:uuid:f36d3150-1875-4fdd-9178-273c0efeca82"
             }
           }
         ],
+        "appointment": {
+          "reference": "urn:uuid:2e4cffe1-2cfe-466b-a8b9-3155ceec9c9a"
+        },
         "period": {
           "start": "2011-05-19T22:00:00+02:00"
         },
         "serviceProvider": {
-          "reference": "urn:uuid:bd8cc7af-571f-4a3d-bab9-530eb55bbdca"
+          "reference": "urn:uuid:392451d6-83ff-4d4c-8694-3c1f9c79aeaa"
         }
       }
     },
     {
-      "fullUrl": "urn:uuid:bd8cc7af-571f-4a3d-bab9-530eb55bbdca",
+      "fullUrl": "urn:uuid:392451d6-83ff-4d4c-8694-3c1f9c79aeaa",
       "resource": {
         "resourceType": "Organization"
       }
     },
     {
-      "fullUrl": "urn:uuid:03265723-8500-4b29-b534-b2a7484aac8f",
+      "fullUrl": "urn:uuid:c31ef8fa-a24d-4299-b8bd-46a260c14e7d",
       "resource": {
         "resourceType": "Practitioner",
         "active": true,
@@ -74,7 +77,7 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:11a7049e-801f-4870-91ad-9169e03d6dd6",
+      "fullUrl": "urn:uuid:f36d3150-1875-4fdd-9178-273c0efeca82",
       "resource": {
         "resourceType": "Practitioner",
         "active": true,
@@ -86,6 +89,46 @@
             ]
           }
         ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:2e4cffe1-2cfe-466b-a8b9-3155ceec9c9a",
+      "resource": {
+        "resourceType": "Appointment",
+        "status": "booked",
+        "description": "Appointment Reference",
+        "start": "2017-06-01T16:00:00.000+02:00",
+        "end": "2017-06-01T16:10:00.000+02:00",
+        "minutesDuration": 10,
+        "comment": "\n                                                Date/Time: 01 June 2017 14:00\n                                                Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                Psychiatric Community Care Service\n                                            ",
+        "participant": [
+          {
+            "required": "required",
+            "status": "accepted"
+          },
+          {
+            "actor": {
+              "reference": "urn:uuid:2471b274-2a28-49ae-a2e1-4ff0dc9ecc39"
+            },
+            "required": "required",
+            "status": "accepted"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:2471b274-2a28-49ae-a2e1-4ff0dc9ecc39",
+      "resource": {
+        "resourceType": "Location",
+        "name": "CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST",
+        "description": "Psychiatric Community Care Services",
+        "address": {
+          "line": [
+            "Great George Street"
+          ],
+          "city": "Leeds",
+          "postalCode": "LE13EX"
+        }
       }
     }
   ]

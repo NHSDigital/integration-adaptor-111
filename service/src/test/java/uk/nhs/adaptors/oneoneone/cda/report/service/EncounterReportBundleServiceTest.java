@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.List;
 
+import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.dstu3.model.Encounter;
@@ -29,8 +30,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ServiceProviderMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component1;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncompassingEncounter;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EncounterReportBundleServiceTest {
@@ -51,6 +50,8 @@ public class EncounterReportBundleServiceTest {
     private static final Practitioner PRACTITIONER;
     private static final IdType PRACTITIONER_ID = newRandomUuid();
     private static final HumanName PRACTITIONER_NAME;
+    private static final Appointment APPOINTMENT;
+    private static final IdType APPOINTMENT_ID = newRandomUuid();
 
     static {
         ENCOUNTER = new Encounter();
@@ -67,6 +68,9 @@ public class EncounterReportBundleServiceTest {
         ENCOUNTER_PARTICIPANT_COMPONENT.setIndividual(new Reference(PRACTITIONER));
         ENCOUNTER_PARTICIPANT_COMPONENT.setIndividualTarget(PRACTITIONER);
         ENCOUNTER.setParticipant(Collections.singletonList(ENCOUNTER_PARTICIPANT_COMPONENT));
+        APPOINTMENT = new Appointment();
+        APPOINTMENT.setIdElement(APPOINTMENT_ID);
+        ENCOUNTER.setAppointmentTarget(APPOINTMENT);
     }
 
     @Before
@@ -81,11 +85,12 @@ public class EncounterReportBundleServiceTest {
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
 
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(3);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(4);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
         verifyEntry(entries.get(1), ORGANIZATION_ID.getValue(), ResourceType.Organization);
         verifyEntry(entries.get(2), PRACTITIONER_ID.getValue(), ResourceType.Practitioner);
+        verifyEntry(entries.get(3), APPOINTMENT_ID.getValue(), ResourceType.Appointment);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {
