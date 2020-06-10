@@ -18,6 +18,7 @@ import uk.nhs.connect.iucds.cda.ucr.TS;
 
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Period;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +46,9 @@ public class EncounterMapperTest {
     private DataEntererMapper dataEntererMapper;
 
     @Mock
+    private ServiceProviderMapper serviceProviderMapper;
+
+    @Mock
     private AppointmentService appointmentService;
 
     @InjectMocks
@@ -55,6 +59,9 @@ public class EncounterMapperTest {
 
     @Mock
     private Encounter.EncounterParticipantComponent encounterParticipantComponent;
+
+    @Mock
+    private Organization serviceProvider;
 
     @Mock
     private Appointment appointment;
@@ -69,6 +76,7 @@ public class EncounterMapperTest {
 
         when(periodMapper.mapPeriod(ArgumentMatchers.isA(TS.class))).thenReturn(period);
         when(participantMapper.mapEncounterParticipant(any())).thenReturn(encounterParticipantComponent);
+        when(serviceProviderMapper.mapServiceProvider(any())).thenReturn(serviceProvider);
         when(appointmentService.retrieveAppointment(any(),any(),any())).thenReturn(Optional.of(appointment));
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
@@ -77,6 +85,7 @@ public class EncounterMapperTest {
         assertThat(encounter.getPeriod()).isEqualTo(period);
         assertThat(encounter.getParticipantFirstRep()).isEqualTo(encounterParticipantComponent);
         assertThat(encounter.getAppointmentTarget()).isEqualTo(appointment);
+        assertThat(encounter.getServiceProviderTarget()).isEqualTo(serviceProvider);
     }
 
     @Test
@@ -102,11 +111,13 @@ public class EncounterMapperTest {
         when(authorMapper.mapAuthorIntoParticipantComponent(any())).thenReturn(encounterParticipantComponent);
         when(informantMapper.mapInformantIntoParticipantComponent(any())).thenReturn(Optional.of(encounterParticipantComponent));
         when(dataEntererMapper.mapDataEntererIntoParticipantComponent(any())).thenReturn(encounterParticipantComponent);
+        when(serviceProviderMapper.mapServiceProvider(any())).thenReturn(serviceProvider);
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
         assertThat(encounter.getIdElement().getValue()).startsWith("urn:uuid:");
         assertThat(encounter.getStatus()).isEqualTo(FINISHED);
         assertThat(encounter.getPeriod()).isEqualTo(period);
+        assertThat(encounter.getServiceProviderTarget()).isEqualTo(serviceProvider);
         assertThat(encounter.getParticipant().size()).isEqualTo(4);
         for (Encounter.EncounterParticipantComponent component : encounter.getParticipant()) {
             assertThat(component).isEqualTo(encounterParticipantComponent);
