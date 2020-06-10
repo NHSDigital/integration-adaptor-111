@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import uk.nhs.connect.iucds.cda.ucr.AD;
-import uk.nhs.connect.iucds.cda.ucr.CO;
 import uk.nhs.connect.iucds.cda.ucr.ON;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedCustodian;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Custodian;
@@ -14,7 +13,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01CustodianOrganization;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
 
 import org.hl7.fhir.dstu3.model.Address;
-import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.junit.Test;

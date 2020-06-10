@@ -3,7 +3,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -12,8 +11,6 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RecordTarget;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
 import org.hl7.fhir.dstu3.model.Appointment;

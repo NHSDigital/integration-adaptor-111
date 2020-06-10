@@ -2,9 +2,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
