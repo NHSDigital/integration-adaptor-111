@@ -41,43 +41,51 @@ public class EncounterReportBundleServiceTest {
 
     private static final Encounter ENCOUNTER;
     private static final IdType ENCOUNTER_ID = newRandomUuid();
+
     private static final Organization SERVICE_PROVIDER;
     private static final IdType SERVICE_PROVIDER_ID = newRandomUuid();
+
     private static final Encounter.EncounterParticipantComponent ENCOUNTER_PARTICIPANT_COMPONENT;
     private static final Practitioner PRACTITIONER;
     private static final IdType PRACTITIONER_ID = newRandomUuid();
     private static final HumanName PRACTITIONER_NAME;
+
     private static final Appointment APPOINTMENT;
     private static final IdType APPOINTMENT_ID = newRandomUuid();
+
     private static final Location LOCATION;
     private static final IdType LOCATION_ID = newRandomUuid();
     private static final Encounter.EncounterLocationComponent ENCOUNTER_LOCATION_COMPONENT;
 
     static {
-        ENCOUNTER = new Encounter();
-        ENCOUNTER.setStatus(FINISHED);
-        ENCOUNTER.setIdElement(ENCOUNTER_ID);
         SERVICE_PROVIDER = new Organization();
         SERVICE_PROVIDER.setIdElement(SERVICE_PROVIDER_ID);
-        ENCOUNTER_PARTICIPANT_COMPONENT = new Encounter.EncounterParticipantComponent();
+
         PRACTITIONER = new Practitioner();
         PRACTITIONER.setIdElement(PRACTITIONER_ID);
         PRACTITIONER.setActive(true);
         PRACTITIONER_NAME = new HumanName();
         PRACTITIONER.setName(Collections.singletonList(PRACTITIONER_NAME));
+        ENCOUNTER_PARTICIPANT_COMPONENT = new Encounter.EncounterParticipantComponent();
         ENCOUNTER_PARTICIPANT_COMPONENT.setIndividual(new Reference(PRACTITIONER));
         ENCOUNTER_PARTICIPANT_COMPONENT.setIndividualTarget(PRACTITIONER);
-        ENCOUNTER.setParticipant(Collections.singletonList(ENCOUNTER_PARTICIPANT_COMPONENT));
+
         APPOINTMENT = new Appointment();
         APPOINTMENT.setIdElement(APPOINTMENT_ID);
-        ENCOUNTER.setAppointment(new Reference(APPOINTMENT));
-        ENCOUNTER.setAppointmentTarget(APPOINTMENT);
-        ENCOUNTER.setServiceProviderTarget(SERVICE_PROVIDER);
+
         LOCATION = new Location();
         LOCATION.setIdElement(LOCATION_ID);
         ENCOUNTER_LOCATION_COMPONENT = new Encounter.EncounterLocationComponent();
         ENCOUNTER_LOCATION_COMPONENT.setLocation(new Reference(LOCATION));
         ENCOUNTER_LOCATION_COMPONENT.setLocationTarget(LOCATION);
+
+        ENCOUNTER = new Encounter();
+        ENCOUNTER.setStatus(FINISHED);
+        ENCOUNTER.setIdElement(ENCOUNTER_ID);
+        ENCOUNTER.setParticipant(Collections.singletonList(ENCOUNTER_PARTICIPANT_COMPONENT));
+        ENCOUNTER.setServiceProviderTarget(SERVICE_PROVIDER);
+        ENCOUNTER.setAppointment(new Reference(APPOINTMENT));
+        ENCOUNTER.setAppointmentTarget(APPOINTMENT);
         ENCOUNTER.setLocation(Collections.singletonList(ENCOUNTER_LOCATION_COMPONENT));
     }
 
