@@ -23,8 +23,6 @@ public class EncounterReportBundleService {
 
     private EncounterMapper encounterMapper;
 
-    private ServiceProviderMapper serviceProviderMapper;
-
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
         bundle.setType(TRANSACTION);
@@ -46,13 +44,10 @@ public class EncounterReportBundleService {
     }
 
     private void addServiceProvider(Bundle bundle, Encounter encounter) {
-        Organization organization = serviceProviderMapper.mapServiceProvider();
-
+        Organization organization = encounter.getServiceProviderTarget();
         bundle.addEntry()
             .setFullUrl(organization.getIdElement().getValue())
             .setResource(organization);
-        encounter.setServiceProvider(new Reference(organization));
-
     }
 
     private void addParticipants(Bundle bundle, Encounter encounter) {

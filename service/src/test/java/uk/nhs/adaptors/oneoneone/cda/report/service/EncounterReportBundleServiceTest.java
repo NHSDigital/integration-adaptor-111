@@ -30,6 +30,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ServiceProviderMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Custodian;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EncounterReportBundleServiceTest {
@@ -44,8 +45,8 @@ public class EncounterReportBundleServiceTest {
 
     private static final Encounter ENCOUNTER;
     private static final IdType ENCOUNTER_ID = newRandomUuid();
-    private static final Organization ORGANIZATION;
-    private static final IdType ORGANIZATION_ID = newRandomUuid();
+    private static final Organization SERVICE_PROVIDER;
+    private static final IdType SERVICE_PROVIDER_ID = newRandomUuid();
     private static final Encounter.EncounterParticipantComponent ENCOUNTER_PARTICIPANT_COMPONENT;
     private static final Practitioner PRACTITIONER;
     private static final IdType PRACTITIONER_ID = newRandomUuid();
@@ -57,8 +58,8 @@ public class EncounterReportBundleServiceTest {
         ENCOUNTER = new Encounter();
         ENCOUNTER.setStatus(FINISHED);
         ENCOUNTER.setIdElement(ENCOUNTER_ID);
-        ORGANIZATION = new Organization();
-        ORGANIZATION.setIdElement(ORGANIZATION_ID);
+        SERVICE_PROVIDER = new Organization();
+        SERVICE_PROVIDER.setIdElement(SERVICE_PROVIDER_ID);
         ENCOUNTER_PARTICIPANT_COMPONENT = new Encounter.EncounterParticipantComponent();
         PRACTITIONER = new Practitioner();
         PRACTITIONER.setIdElement(PRACTITIONER_ID);
@@ -71,12 +72,12 @@ public class EncounterReportBundleServiceTest {
         APPOINTMENT = new Appointment();
         APPOINTMENT.setIdElement(APPOINTMENT_ID);
         ENCOUNTER.setAppointmentTarget(APPOINTMENT);
+        ENCOUNTER.setServiceProviderTarget(SERVICE_PROVIDER);
     }
 
     @Before
     public void setUp() {
         when(encounterMapper.mapEncounter(any())).thenReturn(ENCOUNTER);
-        when(serviceProviderMapper.mapServiceProvider()).thenReturn(ORGANIZATION);
     }
 
     @Test
@@ -88,7 +89,7 @@ public class EncounterReportBundleServiceTest {
         assertThat(encounterBundle.getEntry().size()).isEqualTo(4);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
-        verifyEntry(entries.get(1), ORGANIZATION_ID.getValue(), ResourceType.Organization);
+        verifyEntry(entries.get(1), SERVICE_PROVIDER_ID.getValue(), ResourceType.Organization);
         verifyEntry(entries.get(2), PRACTITIONER_ID.getValue(), ResourceType.Practitioner);
         verifyEntry(entries.get(3), APPOINTMENT_ID.getValue(), ResourceType.Appointment);
     }

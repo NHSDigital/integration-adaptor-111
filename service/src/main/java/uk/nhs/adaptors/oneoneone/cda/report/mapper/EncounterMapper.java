@@ -15,6 +15,7 @@ import uk.nhs.connect.iucds.cda.ucr.TS;
 
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,8 @@ public class EncounterMapper {
 
     private DataEntererMapper dataEntererMapper;
 
+    private ServiceProviderMapper serviceProviderMapper;
+
     private AppointmentService appointmentService;
 
     public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -41,6 +44,7 @@ public class EncounterMapper {
         encounter.setStatus(FINISHED);
         encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));
+        setServiceProvider(encounter, clinicalDocument);
         setAppointment(encounter, clinicalDocument);
         return encounter;
     }
@@ -84,5 +88,12 @@ public class EncounterMapper {
             encounter.setAppointment(new Reference(appointment.get()));
             encounter.setAppointmentTarget(appointment.get());
         }
+    }
+
+    private void setServiceProvider(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
+        Organization serviceProviderOrganization = serviceProviderMapper.mapServiceProvider(clinicalDocument1.getCustodian());
+        Reference serviceProvider = new Reference(serviceProviderOrganization);
+        encounter.setServiceProvider(serviceProvider);
+        encounter.setServiceProviderTarget(serviceProviderOrganization);
     }
 }
