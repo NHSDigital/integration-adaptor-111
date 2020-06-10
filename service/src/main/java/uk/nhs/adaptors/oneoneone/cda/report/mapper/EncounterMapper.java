@@ -3,6 +3,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,8 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RecordTarget;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
 import org.hl7.fhir.dstu3.model.Appointment;
@@ -36,6 +39,8 @@ public class EncounterMapper {
 
     private ServiceProviderMapper serviceProviderMapper;
 
+    private LocationMapper locationMapper;
+
     private AppointmentService appointmentService;
 
     public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -43,6 +48,7 @@ public class EncounterMapper {
         encounter.setIdElement(newRandomUuid());
         encounter.setStatus(FINISHED);
         encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument));
+        encounter.setLocation(getLocationComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));
         setServiceProvider(encounter, clinicalDocument);
         setAppointment(encounter, clinicalDocument);
@@ -77,6 +83,13 @@ public class EncounterMapper {
                 .mapDataEntererIntoParticipantComponent(clinicalDocument.getDataEnterer()));
         }
         return encounterParticipantComponents;
+    }
+
+    private List<Encounter.EncounterLocationComponent>  getLocationComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
+        return Arrays.stream(clinicalDocument1.getRecordTargetArray())
+            .map(recordTarget -> recordTarget.getPatientRole().getProviderOrganization())
+            .map(locationMapper::mapOrganizationToLocationComponent)
+            .collect(Collectors.toList());
     }
 
     private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {

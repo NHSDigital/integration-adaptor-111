@@ -1,12 +1,21 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
 
+import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,6 +25,8 @@ public class LocationMapper {
     private AddressMapper addressMapper;
 
     private HumanNameMapper humanNameMapper;
+
+    private OrganizationMapper organizationMapper;
 
     public Location mapRoleToLocation(POCDMT000002UK01ParticipantRole role) {
         Location location = new Location();
@@ -31,5 +42,22 @@ public class LocationMapper {
         }
         return location;
     }
+
+    public Encounter.EncounterLocationComponent mapOrganizationToLocationComponent(POCDMT000002UK01Organization organization) {
+        Encounter.EncounterLocationComponent encounterLocationComponent = new Encounter.EncounterLocationComponent();
+        encounterLocationComponent.setStatus(Encounter.EncounterLocationStatus.ACTIVE);
+
+        Location location = new Location();
+        location.setIdElement(newRandomUuid());
+        Organization managingOrganization = organizationMapper.mapOrganization(organization);
+        location.setManagingOrganization(new Reference(managingOrganization));
+        location.setManagingOrganizationTarget(managingOrganization);
+
+        encounterLocationComponent.setLocation(new Reference(location));
+        encounterLocationComponent.setLocationTarget(location);
+
+        return encounterLocationComponent;
+    }
+
 
 }

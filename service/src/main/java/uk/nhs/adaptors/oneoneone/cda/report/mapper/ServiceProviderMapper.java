@@ -4,17 +4,14 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedCustodian;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Custodian;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01CustodianOrganization;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.springframework.stereotype.Component;
 
