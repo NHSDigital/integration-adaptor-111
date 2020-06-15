@@ -3,18 +3,16 @@ package uk.nhs.adaptors.oneoneone.cda.report.service;
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.ServiceProviderMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Component
@@ -33,6 +31,7 @@ public class EncounterReportBundleService {
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
         addAppointment(bundle, encounter);
+        addLocation(bundle, encounter);
 
         return bundle;
     }
@@ -60,20 +59,44 @@ public class EncounterReportBundleService {
     }
 
     private void addAppointment(Bundle bundle, Encounter encounter) {
-        Appointment appointment = encounter.getAppointmentTarget();
-        if (appointment != null) {
+        if (encounter.hasAppointment()) {
+            Appointment appointment = encounter.getAppointmentTarget();
             bundle.addEntry()
                 .setFullUrl(appointment.getIdElement().getValue())
                 .setResource(appointment);
             if (appointment.hasParticipant()) {
-                for(Appointment.AppointmentParticipantComponent participant : appointment.getParticipant()) {
-                    if (participant.getActorTarget() != null){
+                for (Appointment.AppointmentParticipantComponent participant : appointment.getParticipant()) {
+                    if (participant.hasActor()) {
                         bundle.addEntry()
                             .setFullUrl(participant.getActorTarget().getIdElement().getValue())
                             .setResource(participant.getActorTarget());
                     }
                 }
             }
+        }
+    }
+
+    private void addLocation(Bundle bundle, Encounter encounter) {
+        List<Encounter.EncounterLocationComponent> locationComponents = encounter.getLocation();
+        for (Encounter.EncounterLocationComponent component : locationComponents) {
+            if (component.hasLocation()) {
+                Location location = component.getLocationTarget();
+                bundle.addEntry()
+                    .setFullUrl(component.getLocationTarget().getIdElement().getValue())
+                    .setResource(component.getLocationTarget());
+                if (location.hasManagingOrganization()) {
+                    addOrganization(bundle, location.getManagingOrganizationTarget());
+                }
+            }
+        }
+    }
+
+    private void addOrganization(Bundle bundle, Organization organization) {
+        bundle.addEntry()
+            .setFullUrl(organization.getIdElement().getValue())
+            .setResource(organization);
+        if (organization.hasPartOf()) {
+            addOrganization(bundle, organization.getPartOfTarget());
         }
     }
 }

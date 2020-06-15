@@ -3,7 +3,7 @@
   "type": "transaction",
   "entry": [
     {
-      "fullUrl": "urn:uuid:1eac5615-057e-4da0-804b-7a33edae53c5",
+      "fullUrl": "urn:uuid:a2b7ed42-d78c-4d25-9049-aa7faf033dda",
       "resource": {
         "resourceType": "Encounter",
         "status": "finished",
@@ -19,7 +19,7 @@
               "end": "2011-05-19T22:15:00+02:00"
             },
             "individual": {
-              "reference": "urn:uuid:ec9eb3e0-1d67-4013-bd7d-80f0ecb5d103"
+              "reference": "urn:uuid:5ca7782d-6e54-42b1-810e-45c6d319a23f"
             }
           },
           {
@@ -32,23 +32,31 @@
               "start": "2011-05-19T22:00:00+02:00"
             },
             "individual": {
-              "reference": "urn:uuid:481d8975-d7c9-4288-a42d-4f29b868e9b6"
+              "reference": "urn:uuid:edf2fa5e-b327-433c-aa19-b7363d57ed73"
             }
           }
         ],
         "appointment": {
-          "reference": "urn:uuid:37298953-2f86-4f1b-a829-7026246b3319"
+          "reference": "urn:uuid:e27223a7-b0e3-4668-8993-52dc96a5d155"
         },
         "period": {
           "start": "2011-05-19T22:00:00+02:00"
         },
+        "location": [
+          {
+            "location": {
+              "reference": "urn:uuid:981b1585-e6b8-4d15-8804-f5515e1f6da6"
+            },
+            "status": "active"
+          }
+        ],
         "serviceProvider": {
-          "reference": "urn:uuid:0fcfe6ab-0306-4192-b7f5-21655077e6be"
+          "reference": "urn:uuid:9b11b3cb-a8fa-44d7-89da-2ce993988246"
         }
       }
     },
     {
-      "fullUrl": "urn:uuid:0fcfe6ab-0306-4192-b7f5-21655077e6be",
+      "fullUrl": "urn:uuid:9b11b3cb-a8fa-44d7-89da-2ce993988246",
       "resource": {
         "resourceType": "Organization",
         "active": true,
@@ -78,7 +86,7 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:ec9eb3e0-1d67-4013-bd7d-80f0ecb5d103",
+      "fullUrl": "urn:uuid:5ca7782d-6e54-42b1-810e-45c6d319a23f",
       "resource": {
         "resourceType": "Practitioner",
         "active": true,
@@ -101,7 +109,7 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:481d8975-d7c9-4288-a42d-4f29b868e9b6",
+      "fullUrl": "urn:uuid:edf2fa5e-b327-433c-aa19-b7363d57ed73",
       "resource": {
         "resourceType": "Practitioner",
         "active": true,
@@ -116,7 +124,7 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:37298953-2f86-4f1b-a829-7026246b3319",
+      "fullUrl": "urn:uuid:e27223a7-b0e3-4668-8993-52dc96a5d155",
       "resource": {
         "resourceType": "Appointment",
         "status": "booked",
@@ -132,7 +140,7 @@
           },
           {
             "actor": {
-              "reference": "urn:uuid:c091fab6-a76b-49ec-be31-ae7d2744790d"
+              "reference": "urn:uuid:ab9370bf-0fae-4984-97f3-1f6aa8c0e6a1"
             },
             "required": "required",
             "status": "accepted"
@@ -141,7 +149,7 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:c091fab6-a76b-49ec-be31-ae7d2744790d",
+      "fullUrl": "urn:uuid:ab9370bf-0fae-4984-97f3-1f6aa8c0e6a1",
       "resource": {
         "resourceType": "Location",
         "name": "CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST",
@@ -153,6 +161,42 @@
           "city": "Leeds",
           "postalCode": "LE13EX"
         }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:981b1585-e6b8-4d15-8804-f5515e1f6da6",
+      "resource": {
+        "resourceType": "Location",
+        "managingOrganization": {
+          "reference": "urn:uuid:f97ceb70-5a11-485c-8aa6-7e5c9b927235"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:f97ceb70-5a11-485c-8aa6-7e5c9b927235",
+      "resource": {
+        "resourceType": "Organization",
+        "type": [
+          {
+            "text": "GP Practice"
+          }
+        ],
+        "name": "Medway Medical Practice",
+        "telecom": [
+          {
+            "value": "tel:01634111222",
+            "use": "work"
+          }
+        ],
+        "address": [
+          {
+            "line": [
+              "Springer Street"
+            ],
+            "city": "Medway",
+            "postalCode": "ME5 5TY"
+          }
+        ]
       }
     }
   ]
