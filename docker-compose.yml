@@ -6,8 +6,8 @@ services:
     command: ./gradlew -i --build-cache integrationTest
     networks:
       - dbnetwork
-  rabbitmq:
-    image: 'rabbitmq:3.6-management-alpine'
+  activemq:
+    image: rmohr/activemq:5.15.9
     networks:
       - dbnetwork
 
