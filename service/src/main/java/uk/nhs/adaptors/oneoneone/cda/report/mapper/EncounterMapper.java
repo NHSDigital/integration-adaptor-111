@@ -36,6 +36,8 @@ public class EncounterMapper {
 
     private ServiceProviderMapper serviceProviderMapper;
 
+    private LocationMapper locationMapper;
+
     private AppointmentService appointmentService;
 
     public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -43,6 +45,7 @@ public class EncounterMapper {
         encounter.setIdElement(newRandomUuid());
         encounter.setStatus(FINISHED);
         encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument));
+        encounter.setLocation(getLocationComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));
         setServiceProvider(encounter, clinicalDocument);
         setAppointment(encounter, clinicalDocument);
@@ -77,6 +80,13 @@ public class EncounterMapper {
                 .mapDataEntererIntoParticipantComponent(clinicalDocument.getDataEnterer()));
         }
         return encounterParticipantComponents;
+    }
+
+    private List<Encounter.EncounterLocationComponent>  getLocationComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
+        return Arrays.stream(clinicalDocument1.getRecordTargetArray())
+            .map(recordTarget -> recordTarget.getPatientRole().getProviderOrganization())
+            .map(locationMapper::mapOrganizationToLocationComponent)
+            .collect(Collectors.toList());
     }
 
     private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
