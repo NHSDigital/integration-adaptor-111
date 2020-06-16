@@ -4,6 +4,8 @@ services:
   test-111:
     image: local/111-tests:${BUILD_TAG}
     command: ./gradlew -i --build-cache integrationTest
+    environment:
+      - PEM111_AMQP_BROKER=amqp://activemq:5672
     networks:
       - dbnetwork
   activemq:
