@@ -5,10 +5,12 @@ services:
     image: uk.nhs/integration-adaptor-111:0.0.1-SNAPSHOT
     ports:
       - "10001:8080"
+    environment:
+      - PEM111_AMQP_BROKER=amqp://activemq:5672
 
-  rabbitmq:
-    image: 'rabbitmq:3.6-management-alpine'
+  activemq:
+    image: rmohr/activemq:5.15.9
     ports:
-      - '5672:5672'
-      - '15672:15672'
+      - "8161:8161"
+      - "5672:5672"
   
