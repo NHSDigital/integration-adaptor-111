@@ -11,7 +11,7 @@ National Integration Adaptors - Adaptor for NHS 111 Post Event Message
 
 The above script builds necessary docker images and starts the SpringBoot service and RabbitMQ
 * REST service `localhost:100001`
-* RabbitMQ: `localhost:5672`
+* ActiveMQ: `localhost:5672`
 
 ## How to run unit tests:
 * Navigate to `service`
