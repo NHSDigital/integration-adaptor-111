@@ -12,8 +12,8 @@ public final class ReportRequestUtils {
 
     private static final String CLINICAL_DOCUMENT_NODE_NAME = "ClinicalDocument";
 
-    public static POCDMT000002UK01ClinicalDocument1 extractClinicalDocument(String reportXmlRequest) throws XmlException {
-        DistributionEnvelopeDocument envelopedDocument = DistributionEnvelopeDocument.Factory.parse(reportXmlRequest);
+    public static POCDMT000002UK01ClinicalDocument1 extractClinicalDocument(String distributionEnvelopXml) throws XmlException {
+        DistributionEnvelopeDocument envelopedDocument = DistributionEnvelopeDocument.Factory.parse(distributionEnvelopXml);
         POCDMT000002UK01ClinicalDocument1 clinicalDocument = ClinicalDocumentDocument1.Factory
             .parse(findClinicalDoc(envelopedDocument))
             .getClinicalDocument();

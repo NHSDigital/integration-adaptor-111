@@ -44,6 +44,7 @@ public class ParticipantMapperTest {
 
         when(encounterParticipant.getTypeCode()).thenReturn("CON");
         when(encounterParticipant.getAssociatedEntity()).thenReturn(associatedEntity);
+        when(encounterParticipant.isSetTime()).thenReturn(true);
         when(encounterParticipant.getTime()).thenReturn(time);
         when(periodMapper.mapPeriod(ArgumentMatchers.isA(IVLTS.class)))
             .thenReturn(period);
