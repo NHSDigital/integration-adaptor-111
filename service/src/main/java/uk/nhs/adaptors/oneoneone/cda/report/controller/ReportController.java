@@ -42,19 +42,28 @@ public class ReportController {
         try {
             SAXReader reader = new SAXReader();
             Document document = reader.read(new StringReader(reportXml));
-            Node distributionEnvelopeNode = document.selectSingleNode("//*[local-name()='DistributionEnvelope']");
-            String distributionEnvelope = distributionEnvelopeNode.asXML();
+
+            String distributionEnvelope = getDistributionEnvelope(document);
+            //TODO: this message id will be used in response
+            String messageId = getMessageId(document);
+
             POCDMT000002UK01ClinicalDocument1 clinicalDocument = extractClinicalDocument(distributionEnvelope);
             validate(clinicalDocument);
-
-            Node headerNode = document.selectSingleNode("//*[local-name()='Header']");
-            Node messageIdNode = headerNode.selectSingleNode("//*[local-name()='MessageID']");
-            String messageId = messageIdNode.getText();
-            //TODO: this message id will be used in response
 
             encounterReportService.transformAndPopulateToGP(clinicalDocument);
         } catch (XmlException | DocumentException e) {
             throw new ResponseStatusException(BAD_REQUEST, e.getMessage());
         }
+    }
+
+    private String getMessageId(Document document) {
+        Node headerNode = document.selectSingleNode("//*[local-name()='Header']");
+        Node messageIdNode = headerNode.selectSingleNode("//*[local-name()='MessageID']");
+        return messageIdNode.getText();
+    }
+
+    private String getDistributionEnvelope(Document document) {
+        Node distributionEnvelopeNode = document.selectSingleNode("//*[local-name()='DistributionEnvelope']");
+        return distributionEnvelopeNode.asXML();
     }
 }
