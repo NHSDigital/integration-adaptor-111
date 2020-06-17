@@ -28,11 +28,11 @@ pipeline {
                     steps {
                         script {
                             sh label: 'Create logs directory', script: 'mkdir -p logs build'
-                            sh label: 'Start RabbitMQ', script: 'docker-compose -f ./docker-compose.yml up -d rabbitmq'
+                            sh label: 'Start ActiveMQ', script: 'docker-compose -f ./docker-compose.yml up -d activemq'
                             sh label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .'
                             sh label: 'Running tests', script: 'BUILD_TAG=${BUILD_TAG} docker-compose -f ./docker-compose.yml up test-111'
                             sh label: 'Show output from container:',script: 'ls -laR build'
-                            sh label: 'Stop RabbitMQ', script: 'docker-compose -f ./docker-compose.yml stop test-111 rabbitmq'
+                            sh label: 'Stop ActiveMQ', script: 'docker-compose -f ./docker-compose.yml stop test-111 activemq'
                         }
                     }
                 }
@@ -61,7 +61,7 @@ pipeline {
             post {
                 always {
                     sh label: 'Copy 111 container logs', script: 'docker-compose logs test-111 > logs/test-111.log'
-                    sh label: 'Copy rabbitmq logs', script: 'docker-compose logs rabbitmq > logs/rabbitmq.log'
+                    sh label: 'Copy activemq logs', script: 'docker-compose logs activemq > logs/activemq.log'
                     archiveArtifacts artifacts: 'logs/*.log', fingerprint: true
                 }
             }
