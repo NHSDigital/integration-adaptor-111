@@ -1,6 +1,8 @@
 String tfProject     = "nia"
 String tfEnvironment = "build1" // change for ptl, vp goes here
-String tfComponent   = "111"  // this defines the application - nhais, mhs, 111 etc
+String tfComponent   = "OneOneOne"  // this defines the application - nhais, mhs, 111 etc
+
+Map<String,String> tfOutputs = [:] //map for collecting values from tfOutput
 
 pipeline {
     agent{
@@ -15,7 +17,7 @@ pipeline {
     environment {
         BUILD_TAG = sh label: 'Generating build tag', returnStdout: true, script: 'python3 scripts/tag.py ${GIT_BRANCH} ${BUILD_NUMBER} ${GIT_COMMIT}'
         BUILD_TAG_LOWER = sh label: 'Lowercase build tag', returnStdout: true, script: "echo -n ${BUILD_TAG} | tr '[:upper:]' '[:lower:]'"
-        ENVIRONMENT_ID = "build1"
+        ENVIRONMENT_ID = "build2"
         ECR_REPO_DIR = "111"
         DOCKER_IMAGE = "${DOCKER_REGISTRY}/${ECR_REPO_DIR}:${BUILD_TAG}"
     }    
@@ -74,34 +76,41 @@ pipeline {
               lock("${tfProject}-${tfEnvironment}-${tfComponent}")
             }
             stages {
-                stage('Deploy using Terraform') {
-                    steps {
-                      echo "TODO TF step to be run after TF code for 111 is created"
-                    //     script {
-                    //         String tfCodeBranch  = "develop"
-                    //         String tfCodeRepo    = "https://github.com/nhsconnect/integration-adaptors"
-                    //         String tfRegion      = TF_STATE_BUCKET_REGION
+              stage('Deploy using Terraform') {
+                steps {
+                  script {
+                    String tfCodeBranch  = "feature/NIAD-357-111-component"
+                    String tfCodeRepo    = "https://github.com/nhsconnect/integration-adaptors"
+                    String tfRegion      = TF_STATE_BUCKET_REGION
 
-                    //         List<String> tfParams = []
-                    //         Map<String,String> tfVariables = ["build_id": BUILD_TAG]
+                    List<String> tfParams = []
+                    Map<String,String> tfVariables = ["${tfComponent}_build_id": BUILD_TAG]
 
-                    //         dir ("integration-adaptors") {
-                    //           // Clone repository with terraform
-                    //           git (branch: tfCodeBranch, url: tfCodeRepo)
-                    //           dir ("terraform/aws") {
-                    //             // Run TF Init
-                    //             if (terraformInit(TF_STATE_BUCKET, tfProject, tfEnvironment, tfComponent, tfRegion) !=0) { error("Terraform init failed")}
+                    dir ("integration-adaptors") {
+                      // Clone repository with terraform
+                      git (branch: tfCodeBranch, url: tfCodeRepo)
+                      dir ("terraform/aws") {
+                        // Run TF Init
+                        if (terraformInit(TF_STATE_BUCKET, tfProject, tfEnvironment, tfComponent, tfRegion) !=0) { error("Terraform init failed")}
 
-                    //             // Run TF Plan
-                    //             if (terraform('plan', TF_STATE_BUCKET, tfProject, tfEnvironment, tfComponent, tfRegion, tfVariables) !=0 ) { error("Terraform Plan failed")}
+                        // Run TF Plan
+                        if (terraform('plan', TF_STATE_BUCKET, tfProject, tfEnvironment, tfComponent, tfRegion, tfVariables) !=0 ) { error("Terraform Plan failed")}
 
-                    //             //Run TF Apply
-                    //             if (terraform('apply', TF_STATE_BUCKET, tfProject, tfEnvironment, tfComponent, tfRegion, tfVariables) !=0 ) { error("Terraform Apply failed")}
-                    //           } // dir terraform/aws
-                    //         } // dir integration-adaptors
-                    //     } //script
-                    } //steps
+                        //Run TF Apply
+                        if (terraform('apply', TF_STATE_BUCKET, tfProject, tfEnvironment, tfComponent, tfRegion, tfVariables) !=0 ) { error("Terraform Apply failed")}
+                        tfOutputs = collectTfOutputs(tfComponent)
+                      } // dir terraform/aws
+                        } // dir integration-adaptors
+                    } //script
+                  } //steps
                 } //stage
+                stage ('Verify AWS Deployment') {
+                  steps {
+                    script {
+                      if (checkLbTargetGroupHealth(tfOutputs["${tfComponent}_lb_target_group_arn"], TF_STATE_BUCKET_REGION) != 0) { error("AWS healthcheck failed, check the CloudWatch logs")}
+                    } //script
+                  } //steps
+                }
                 stage('Run integration tests') {
                     steps {
                         echo 'TODO run integration tests'
@@ -165,4 +174,37 @@ int ecrLogin(String aws_region) {
     String ecrCommand = "aws ecr get-login --region ${aws_region}"
     String dockerLogin = sh (label: "Getting Docker login from ECR", script: ecrCommand, returnStdout: true).replace("-e none","") // some parameters that AWS provides and docker does not recognize
     return sh(label: "Logging in with Docker", script: dockerLogin, returnStatus: true)
+}
+
+int checkLbTargetGroupHealth(String lbTargetGroupName, String region, int retries=30, int wait=15) {
+  String getLBsCommand = "aws elbv2 describe-target-health --region ${region} --target-group-arn ${lbTargetGroupName} --query TargetHealthDescriptions[].[Target.Id,TargetHealth.State] --output text"
+  List<String> lbStatusList = []
+  int retriesLeft = retries
+  int lbStatus = 1
+  while (retriesLeft>0 && lbStatus == 1) {
+    lbStatusList = sh (script: getLBsCommand, returnStdout: true).split('/n')
+    int allHosts = lbStatusList.size()
+    int healthyHosts= lbStatusList.count {it.contains('healthy')}
+    println lbStatusList
+    if (allHosts == healthyHosts) {
+      println("All hosts are healthy")
+      lbStatus = 0
+    } else {
+      retriesLeft = retriesLeft -1
+      sleep(wait)
+    }
+  }
+  println "Finished checking"
+  return lbStatus
+}
+
+Map<String,String> collectTfOutputs(String component) {
+  Map<String,String> returnMap = [:]
+  dir("components/${component}") {
+    List<String> outputsList = sh (label: "Listing TF outputs", script: "terraform output", returnStdout: true).split("\n")
+    outputsList.each {
+      returnMap.put(it.split("=")[0].trim(),it.split("=")[1].trim())
+    }
+  } // dir
+  return returnMap
 }
