@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -32,20 +33,20 @@ public class ReportControllerTest {
     private EncounterReportService encounterReportService;
 
     @Test
-    public void postReportValidRequest() throws JsonProcessingException {
+    public void postReportValidRequest() {
         String validRequest = getValidReportRequest();
 
         reportController.postReport(validRequest);
 
         ArgumentCaptor<POCDMT000002UK01ClinicalDocument1> captor = ArgumentCaptor.forClass(POCDMT000002UK01ClinicalDocument1.class);
-        verify(encounterReportService).transformAndPopulateToGP(captor.capture());
+        verify(encounterReportService).transformAndPopulateToGP(captor.capture(), ArgumentMatchers.anyString());
         POCDMT000002UK01ClinicalDocument1 clinicalDocument = captor.getValue();
         assertThat(clinicalDocument.getId().getRoot()).isEqualTo("A709A442-3CF4-476E-8377-376500E829C9");
         assertThat(clinicalDocument.getSetId().getRoot()).isEqualTo("411910CF-1A76-4330-98FE-C345DDEE5553");
     }
 
     @Test
-    public void postReportInvalidRequest() throws JsonProcessingException {
+    public void postReportInvalidRequest() {
         String invalidRequest = "<invalid>";
 
         boolean exceptionThrown = false;

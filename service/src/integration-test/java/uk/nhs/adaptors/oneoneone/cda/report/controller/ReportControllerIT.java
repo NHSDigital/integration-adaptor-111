@@ -70,6 +70,8 @@ public class ReportControllerIT {
         Message jmsMessage = jmsTemplate.receive(amqpProperties.getQueueName());
         String messageBody = jmsMessage.getBody(String.class);
         assertThat(validator.isValid(messageBody)).isEqualTo(true);
+
+        assertThat(jmsMessage.getStringProperty("messageId")).isEqualTo("2B77B3F5-3016-4A6D-821F-152CE420E58D");
     }
 
     private String getResourceAsString(String path) {
