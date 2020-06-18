@@ -31,6 +31,7 @@ public class EncounterReportServiceTest {
 
     private static final String ENCOUNTER_REPORT_MAPPING = "<encounter-report-mapping>";
     private static final String QUEUE_NAME = "Encounter-Report";
+    private static final String MESSAGE_ID = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
 
     @InjectMocks
     private EncounterReportService encounterReportService;
@@ -57,7 +58,6 @@ public class EncounterReportServiceTest {
 
     @Test
     public void transformAndPopulateToGP() throws JMSException {
-        String messageId = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
         POCDMT000002UK01ClinicalDocument1 clinicalDoc = mock(POCDMT000002UK01ClinicalDocument1.class);
         Bundle encounterBundle = mock(Bundle.class);
         when(encounterReportBundleService.createEncounterBundle(clinicalDoc)).thenReturn(encounterBundle);
@@ -67,7 +67,7 @@ public class EncounterReportServiceTest {
         Session session = mock(Session.class);
         when(session.createTextMessage(any())).thenReturn(textMessage);
 
-        encounterReportService.transformAndPopulateToGP(clinicalDoc, messageId);
+        encounterReportService.transformAndPopulateToGP(clinicalDoc, MESSAGE_ID);
 
         ArgumentCaptor<MessageCreator> argumentCaptor = ArgumentCaptor.forClass(MessageCreator.class);
         verify(jmsTemplate).send(eq(QUEUE_NAME), argumentCaptor.capture());

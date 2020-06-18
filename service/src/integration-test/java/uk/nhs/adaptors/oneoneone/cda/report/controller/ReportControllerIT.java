@@ -31,6 +31,8 @@ import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class ReportControllerIT {
 
+    public static final String MESSAGE_ID_VALUE = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
+    public static final String MESSAGE_ID = "messageId";
     @Autowired
     private FhirJsonValidator validator;
 
@@ -71,7 +73,7 @@ public class ReportControllerIT {
         String messageBody = jmsMessage.getBody(String.class);
         assertThat(validator.isValid(messageBody)).isEqualTo(true);
 
-        assertThat(jmsMessage.getStringProperty("messageId")).isEqualTo("2B77B3F5-3016-4A6D-821F-152CE420E58D");
+        assertThat(jmsMessage.getStringProperty(MESSAGE_ID)).isEqualTo(MESSAGE_ID_VALUE);
     }
 
     private String getResourceAsString(String path) {
