@@ -79,7 +79,7 @@ pipeline {
               stage('Deploy using Terraform') {
                 steps {
                   script {
-                    String tfCodeBranch  = "feature/NIAD-357-111-component"
+                    String tfCodeBranch  = "develop"
                     String tfCodeRepo    = "https://github.com/nhsconnect/integration-adaptors"
                     String tfRegion      = TF_STATE_BUCKET_REGION
 
