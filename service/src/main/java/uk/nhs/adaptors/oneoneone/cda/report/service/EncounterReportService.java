@@ -15,6 +15,8 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 @AllArgsConstructor
 public class EncounterReportService {
 
+    public static final String MESSAGE_ID = "messageId";
+
     private EncounterReportBundleService encounterReportBundleService;
 
     private JmsTemplate jmsTemplate;
@@ -28,7 +30,7 @@ public class EncounterReportService {
 
         jmsTemplate.send(amqpProperties.getQueueName(), session -> {
             TextMessage message = session.createTextMessage(toJsonString(encounterBundle));
-            message.setStringProperty("messageId", messageId);
+            message.setStringProperty(MESSAGE_ID, messageId);
             return message;
         });
     }

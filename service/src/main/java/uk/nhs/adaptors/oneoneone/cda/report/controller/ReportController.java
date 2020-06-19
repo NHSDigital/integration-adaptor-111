@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportParserUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -33,13 +34,13 @@ public class ReportController {
     @ResponseStatus(value = ACCEPTED)
     public void postReport(@RequestBody String reportXml) {
         try {
-            Map<ReportParserUtil.ReportElement, String> reportElementsMap = ReportParserUtil.parseReportXml(reportXml);
+            Map<ReportElement, String> reportElementsMap = ReportParserUtil.parseReportXml(reportXml);
 
             POCDMT000002UK01ClinicalDocument1 clinicalDocument = extractClinicalDocument(reportElementsMap
-                .get(ReportParserUtil.ReportElement.DISTRIBUTION_ENVELOPE));
+                .get(ReportElement.DISTRIBUTION_ENVELOPE));
             validate(clinicalDocument);
 
-            encounterReportService.transformAndPopulateToGP(clinicalDocument, reportElementsMap.get(ReportParserUtil.ReportElement.MESSAGE_ID));
+            encounterReportService.transformAndPopulateToGP(clinicalDocument, reportElementsMap.get(ReportElement.MESSAGE_ID));
         } catch (XmlException | DocumentException e) {
             throw new ResponseStatusException(BAD_REQUEST, e.getMessage());
         }

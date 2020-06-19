@@ -11,10 +11,8 @@ import org.dom4j.io.SAXReader;
 
 public class ReportParserUtil {
 
-    public enum ReportElement{
-        MESSAGE_ID,
-        DISTRIBUTION_ENVELOPE
-    }
+    public static final String MESSAGE_ID_NODE = "//*[local-name()='MessageID']";
+    public static final String DISTRIBUTION_ENVELOPE_NODE = "//*[local-name()='DistributionEnvelope']";
 
     public static Map<ReportElement, String> parseReportXml(String reportXml) throws DocumentException {
 
@@ -29,12 +27,12 @@ public class ReportParserUtil {
     }
 
     private static String getMessageId(Document document) {
-        Node messageIdNode = document.selectSingleNode("//*[local-name()='MessageID']");
+        Node messageIdNode = document.selectSingleNode(MESSAGE_ID_NODE);
         return messageIdNode.getText();
     }
 
     private static String getDistributionEnvelope(Document document) {
-        Node distributionEnvelopeNode = document.selectSingleNode("//*[local-name()='DistributionEnvelope']");
+        Node distributionEnvelopeNode = document.selectSingleNode(DISTRIBUTION_ENVELOPE_NODE);
         return distributionEnvelopeNode.asXML();
     }
 }
