@@ -107,7 +107,7 @@ pipeline {
                 stage ('Verify AWS Deployment') {
                   steps {
                     script {
-                      sleep(30)
+                      sleep(60)
                       if (checkLbTargetGroupHealth(tfOutputs["${tfComponent}_lb_target_group_arn"], TF_STATE_BUCKET_REGION) != 0) { error("AWS healthcheck failed, check the CloudWatch logs")}
                     } //script
                   } //steps
