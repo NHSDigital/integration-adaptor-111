@@ -79,7 +79,7 @@ pipeline {
               stage('Deploy using Terraform') {
                 steps {
                   script {
-                    String tfCodeBranch  = "feature/NIAD-357-111-component"
+                    String tfCodeBranch  = "develop"
                     String tfCodeRepo    = "https://github.com/nhsconnect/integration-adaptors"
                     String tfRegion      = TF_STATE_BUCKET_REGION
 
@@ -107,6 +107,7 @@ pipeline {
                 stage ('Verify AWS Deployment') {
                   steps {
                     script {
+                      sleep(60)
                       if (checkLbTargetGroupHealth(tfOutputs["${tfComponent}_lb_target_group_arn"], TF_STATE_BUCKET_REGION) != 0) { error("AWS healthcheck failed, check the CloudWatch logs")}
                     } //script
                   } //steps
