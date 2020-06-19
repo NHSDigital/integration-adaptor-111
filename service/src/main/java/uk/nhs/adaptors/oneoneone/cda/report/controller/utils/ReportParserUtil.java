@@ -11,8 +11,8 @@ import org.dom4j.io.SAXReader;
 
 public class ReportParserUtil {
 
-    public static final String MESSAGE_ID_NODE = "//*[local-name()='MessageID']";
-    public static final String DISTRIBUTION_ENVELOPE_NODE = "//*[local-name()='DistributionEnvelope']";
+    private static final String MESSAGE_ID_NODE = "//*[local-name()='MessageID']";
+    private static final String DISTRIBUTION_ENVELOPE_NODE = "//*[local-name()='DistributionEnvelope']";
 
     public static Map<ReportElement, String> parseReportXml(String reportXml) throws DocumentException {
 

@@ -15,7 +15,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 @AllArgsConstructor
 public class EncounterReportService {
 
-    public static final String MESSAGE_ID = "messageId";
+    private static final String MESSAGE_ID = "messageId";
 
     private EncounterReportBundleService encounterReportBundleService;
 
