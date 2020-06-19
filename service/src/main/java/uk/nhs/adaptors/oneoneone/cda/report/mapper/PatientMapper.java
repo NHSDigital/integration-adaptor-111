@@ -6,86 +6,121 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Enumerations;
 import org.hl7.fhir.dstu3.model.Extension;
+import org.hl7.fhir.dstu3.model.HumanName;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.StringType;
 import org.springframework.stereotype.Component;
-import uk.nhs.connect.iucds.cda.ucr.AD;
-import uk.nhs.connect.iucds.cda.ucr.CE;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Guardian;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Patient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
-import uk.nhs.connect.iucds.cda.ucr.TEL;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
 public class PatientMapper {
+
     private AddressMapper addressMapper;
     private ContactPointMapper contactPointMapper;
     private PeriodMapper periodMapper;
-    private GaurdianMapper gaurdianMapper;
+    private GuardianMapper gaurdianMapper;
+    private HumanNameMapper humanNameMapper;
 
     public Patient mapPatient(POCDMT000002UK01PatientRole patientRole) {
-        Patient fhirPatient = new Patient();
-
-        List<Address> addressList = new ArrayList<>();
-        if (patientRole.sizeOfAddrArray() > 0) {
-            for (AD itkAddress : patientRole.getAddrArray()) {
-                Address address = addressMapper.mapAddress(itkAddress);
-                addressList.add(address);
-            }
-        }
-        fhirPatient.setAddress(addressList);
-
-        patientRole.getTelecomArray();
-        List<ContactPoint> contactPoints = new ArrayList<>();
-        if (patientRole.sizeOfTelecomArray() > 0) {
-            for (TEL itkTel : patientRole.getTelecomArray()) {
-                ContactPoint contactPoint = contactPointMapper.mapContactPoint(itkTel);
-                contactPoints.add(contactPoint);
-            }
-        }
-        fhirPatient.setTelecom(contactPoints);
-
         POCDMT000002UK01Patient itkPatient = patientRole.getPatient();
 
-        CE aGenderCode = itkPatient.getAdministrativeGenderCode();
-        fhirPatient.setGender(Enumerations.AdministrativeGender.fromCode(aGenderCode.getCode()));
+        Patient fhirPatient = new Patient();
+        fhirPatient.setIdElement(IdType.newRandomUuid());
+        fhirPatient.setActive(true);
+        fhirPatient.setName(getNames(itkPatient));
+        fhirPatient.setAddress(getAddresses(patientRole));
+        fhirPatient.setTelecom(getContactPoints(patientRole));
+        fhirPatient.setContact(getContactComponents(itkPatient));
+        fhirPatient.setExtension(getExtensions(itkPatient));
 
-        fhirPatient.setBirthDate(periodMapper.mapPeriod(itkPatient.getBirthTime()).getStart());
+        if (itkPatient.isSetBirthTime()) {
+            fhirPatient.setBirthDate(periodMapper.mapPeriod(itkPatient.getBirthTime()).getStart());
+        }
+        if (itkPatient.isSetAdministrativeGenderCode()) {
+            fhirPatient.setGender(Enumerations.AdministrativeGender
+                .fromCode(itkPatient.getAdministrativeGenderCode().getCode()));
+        }
+        if (itkPatient.isSetMaritalStatusCode()) {
+            fhirPatient.setMaritalStatus(getMaritalStatus(itkPatient));
+        }
+        return fhirPatient;
+    }
 
-        CodeableConcept cConcept = new CodeableConcept();
-        cConcept.setText(itkPatient.getMaritalStatusCode().getDisplayName());
-        fhirPatient.setMaritalStatus(cConcept);
+    private List<Address> getAddresses(POCDMT000002UK01PatientRole patientRole) {
+        if (patientRole.sizeOfAddrArray() > 0) {
+            return Arrays.stream(patientRole.getAddrArray())
+                .map(addressMapper::mapAddress).collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
+    }
 
-        List<Patient.ContactComponent> contactComponents = new ArrayList<>();
+    private List<ContactPoint> getContactPoints(POCDMT000002UK01PatientRole patientRole) {
+        if (patientRole.sizeOfTelecomArray() > 0) {
+            return Arrays.stream(patientRole.getTelecomArray())
+                .map(contactPointMapper::mapContactPoint)
+                .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private List<HumanName> getNames(POCDMT000002UK01Patient itkPatient) {
+        if (itkPatient.sizeOfNameArray() > 0) {
+            return Arrays.stream(itkPatient.getNameArray())
+                .map(humanNameMapper::mapHumanName).collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private CodeableConcept getMaritalStatus(POCDMT000002UK01Patient itkPatient) {
+        CodeableConcept maritalStatus = new CodeableConcept();
+        maritalStatus.setText(itkPatient.getMaritalStatusCode().getDisplayName());
+        return maritalStatus;
+    }
+
+    private List<Patient.ContactComponent> getContactComponents(POCDMT000002UK01Patient itkPatient) {
         if (itkPatient.sizeOfGuardianArray() > 0) {
-            Arrays.stream(itkPatient.getGuardianArray())
+            return Arrays.stream(itkPatient.getGuardianArray())
                     .map(gaurdianMapper::mapGuardian)
                     .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
         }
-        fhirPatient.setContact(contactComponents);
+    }
 
-        //START extensions
+    private List<Extension> getExtensions(POCDMT000002UK01Patient itkPatient) {
         List<Extension> extensionList = new ArrayList<>();
-        extensionList.add(createExtension("https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-EthnicCategory-1",
-                                          itkPatient.getEthnicGroupCode().getCode()));
-        extensionList.add(createExtension(null, itkPatient.getReligiousAffiliationCode().getCode()));
-        extensionList.add(createExtension(null, itkPatient.getBirthplace().toString()));
-        fhirPatient.setExtension(extensionList);
-        //END extensions
-
-        return fhirPatient;
+        if (itkPatient.isSetEthnicGroupCode()) {
+            extensionList.add(createExtension("https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-EthnicCategory-1",
+                itkPatient.getEthnicGroupCode().getCode()));
+        }
+        if (itkPatient.isSetReligiousAffiliationCode()) {
+            extensionList.add(createExtension("https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-ReligiousAffiliation-1",
+                itkPatient.getReligiousAffiliationCode().getCode()));
+        }
+        if (itkPatient.isSetBirthplace()) {
+            extensionList.add(createExtension("http://hl7.org/fhir/StructureDefinition/birthPlace",
+                itkPatient.getBirthplace().toString()));
+        }
+        return extensionList;
     }
 
     private Extension createExtension(String strUrl, String id) {
         Extension extension = new Extension();
-        if (!strUrl.isEmpty()) extension.setUrl(strUrl);
-
+        if (!strUrl.isEmpty()) {
+            extension.setUrl(strUrl);
+        }
         StringType stringType = new StringType();
         stringType.setId(id);
         extension.setValue(stringType);
