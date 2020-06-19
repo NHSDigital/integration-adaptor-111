@@ -7,8 +7,10 @@ import java.util.List;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Patient;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -32,6 +34,7 @@ public class EncounterReportBundleService {
         addParticipants(bundle, encounter);
         addAppointment(bundle, encounter);
         addLocation(bundle, encounter);
+        addSubject(bundle, encounter);
 
         return bundle;
     }
@@ -97,6 +100,26 @@ public class EncounterReportBundleService {
             .setResource(organization);
         if (organization.hasPartOf()) {
             addOrganization(bundle, organization.getPartOfTarget());
+        }
+    }
+
+    private void addSubject(Bundle bundle, Encounter encounter) {
+        if (encounter.getSubjectTarget() instanceof Patient) {
+            Patient patient = (Patient) encounter.getSubjectTarget();
+            bundle.addEntry()
+                    .setFullUrl(patient.getIdElement().getValue())
+                    .setResource(patient);
+        }
+        if (encounter.getSubjectTarget() instanceof Group) {
+            Group group = (Group) encounter.getSubjectTarget();
+            bundle.addEntry()
+                    .setFullUrl(group.getIdElement().getValue())
+                    .setResource(group);
+            for (Group.GroupMemberComponent groupMemberComponent : group.getMember()) {
+                bundle.addEntry()
+                        .setFullUrl(groupMemberComponent.getIdElement().getValue())
+                        .setResource(groupMemberComponent.getEntityTarget());
+            }
         }
     }
 }

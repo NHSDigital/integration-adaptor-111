@@ -9,15 +9,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
-import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-import uk.nhs.connect.iucds.cda.ucr.TS;
-
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
+import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
+import uk.nhs.connect.iucds.cda.ucr.TS;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -38,6 +41,10 @@ public class EncounterMapper {
 
     private LocationMapper locationMapper;
 
+    private PatientMapper patientMapper;
+
+    private GroupMapper groupMapper;
+
     private AppointmentService appointmentService;
 
     public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -49,6 +56,7 @@ public class EncounterMapper {
         encounter.setPeriod(getPeriod(clinicalDocument));
         setServiceProvider(encounter, clinicalDocument);
         setAppointment(encounter, clinicalDocument);
+        setSubject(encounter, clinicalDocument);
         return encounter;
     }
 
@@ -105,5 +113,21 @@ public class EncounterMapper {
         Reference serviceProvider = new Reference(serviceProviderOrganization);
         encounter.setServiceProvider(serviceProvider);
         encounter.setServiceProviderTarget(serviceProviderOrganization);
+    }
+
+    private void setSubject(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
+        if (clinicalDocument1.sizeOfRecordTargetArray() == 1) {
+            POCDMT000002UK01PatientRole patientRole = clinicalDocument1.getRecordTargetArray(0).getPatientRole();
+            Patient patient = patientMapper.mapPatient(patientRole);
+            encounter.setSubject(new Reference(patient));
+            encounter.setSubjectTarget(patient);
+        } else if (clinicalDocument1.sizeOfRecordTargetArray() > 1){
+            Group group = groupMapper.mapGroup(clinicalDocument1.getRecordTargetArray());
+            Group.GroupMemberComponent groupMemberComponent = new Group.GroupMemberComponent();
+            groupMemberComponent.setEntity(groupMemberComponent.getEntity());
+            group.addMember(groupMemberComponent);
+            encounter.setSubject(new Reference(group));
+            encounter.setSubjectTarget(group);
+        }
     }
 }
