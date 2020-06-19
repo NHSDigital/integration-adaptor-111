@@ -8,16 +8,19 @@ import static org.springframework.http.MediaType.TEXT_XML_VALUE;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils.extractClinicalDocument;
 import static uk.nhs.adaptors.oneoneone.xml.XmlValidator.validate;
 
+import java.util.Map;
+
 import org.apache.xmlbeans.XmlException;
+import org.dom4j.DocumentException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportParserUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -29,12 +32,16 @@ public class ReportController {
 
     @PostMapping(value = "/report", consumes = { TEXT_XML_VALUE, APPLICATION_XML_VALUE })
     @ResponseStatus(value = ACCEPTED)
-    public void postReport(@RequestBody String reportXml) throws JsonProcessingException {
+    public void postReport(@RequestBody String reportXml) {
         try {
-            POCDMT000002UK01ClinicalDocument1 clinicalDocument = extractClinicalDocument(reportXml);
+            Map<ReportElement, String> reportElementsMap = ReportParserUtil.parseReportXml(reportXml);
+
+            POCDMT000002UK01ClinicalDocument1 clinicalDocument = extractClinicalDocument(reportElementsMap
+                .get(ReportElement.DISTRIBUTION_ENVELOPE));
             validate(clinicalDocument);
-            encounterReportService.transformAndPopulateToGP(clinicalDocument);
-        } catch (XmlException e) {
+
+            encounterReportService.transformAndPopulateToGP(clinicalDocument, reportElementsMap.get(ReportElement.MESSAGE_ID));
+        } catch (XmlException | DocumentException e) {
             throw new ResponseStatusException(BAD_REQUEST, e.getMessage());
         }
     }

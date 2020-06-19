@@ -24,11 +24,16 @@ public class ParticipantMapper {
         Practitioner practitioner = practitionerMapper
             .mapPractitioner(encounterParticipant.getAssociatedEntity());
 
-        return new Encounter.EncounterParticipantComponent()
+        Encounter.EncounterParticipantComponent encounterParticipantComponent = new Encounter.EncounterParticipantComponent()
             .setType(retrieveTypeFromITK(encounterParticipant))
-            .setPeriod(periodMapper.mapPeriod(encounterParticipant.getTime()))
             .setIndividual(new Reference(practitioner))
             .setIndividualTarget(practitioner);
+
+        if (encounterParticipant.isSetTime()) {
+            encounterParticipantComponent.setPeriod(periodMapper.mapPeriod(encounterParticipant.getTime()));
+        }
+
+        return encounterParticipantComponent;
     }
 
     private List<CodeableConcept> retrieveTypeFromITK(POCDMT000002UK01Participant1 encounterParticipant) {

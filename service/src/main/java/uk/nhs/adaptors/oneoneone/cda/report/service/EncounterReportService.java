@@ -1,5 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
+import javax.jms.TextMessage;
+
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 @AllArgsConstructor
 public class EncounterReportService {
 
+    private static final String MESSAGE_ID = "messageId";
+
     private EncounterReportBundleService encounterReportBundleService;
 
     private JmsTemplate jmsTemplate;
@@ -21,10 +25,14 @@ public class EncounterReportService {
 
     private AmqpProperties amqpProperties;
 
-    public void transformAndPopulateToGP(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument) {
+    public void transformAndPopulateToGP(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument, String messageId) {
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(clinicalDocumentDocument);
 
-        jmsTemplate.send(amqpProperties.getQueueName(), session -> session.createTextMessage(toJsonString(encounterBundle)));
+        jmsTemplate.send(amqpProperties.getQueueName(), session -> {
+            TextMessage message = session.createTextMessage(toJsonString(encounterBundle));
+            message.setStringProperty(MESSAGE_ID, messageId);
+            return message;
+        });
     }
 
     private String toJsonString(Bundle encounterBundle) {

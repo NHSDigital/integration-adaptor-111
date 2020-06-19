@@ -1,5 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -7,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import javax.jms.JMSException;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.junit.Before;
@@ -29,6 +31,7 @@ public class EncounterReportServiceTest {
 
     private static final String ENCOUNTER_REPORT_MAPPING = "<encounter-report-mapping>";
     private static final String QUEUE_NAME = "Encounter-Report";
+    private static final String MESSAGE_ID = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
 
     @InjectMocks
     private EncounterReportService encounterReportService;
@@ -45,6 +48,9 @@ public class EncounterReportServiceTest {
     @Mock
     private FhirContext fhirContext;
 
+    @Mock
+    private TextMessage textMessage;
+
     @Before
     public void setUp() {
         when(amqpProperties.getQueueName()).thenReturn(QUEUE_NAME);
@@ -59,8 +65,9 @@ public class EncounterReportServiceTest {
         when(fhirContext.newJsonParser()).thenReturn(parser);
         when(parser.encodeResourceToString(encounterBundle)).thenReturn(ENCOUNTER_REPORT_MAPPING);
         Session session = mock(Session.class);
+        when(session.createTextMessage(any())).thenReturn(textMessage);
 
-        encounterReportService.transformAndPopulateToGP(clinicalDoc);
+        encounterReportService.transformAndPopulateToGP(clinicalDoc, MESSAGE_ID);
 
         ArgumentCaptor<MessageCreator> argumentCaptor = ArgumentCaptor.forClass(MessageCreator.class);
         verify(jmsTemplate).send(eq(QUEUE_NAME), argumentCaptor.capture());
