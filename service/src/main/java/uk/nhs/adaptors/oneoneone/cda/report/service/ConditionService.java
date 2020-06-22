@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 
 public class ConditionService {
 
-    private final FhirStorageService storageService;
-
     public Reference create(Condition condition) {
-        return storageService.create(condition);
+        return new Reference(condition);
     }
 }

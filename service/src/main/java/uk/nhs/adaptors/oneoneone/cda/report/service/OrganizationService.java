@@ -13,10 +13,8 @@ public class OrganizationService {
 
     private final OrganizationMapper organizationMapper;
 
-    private final FhirStorageService storageService;
-
     public Reference createOrganization(POCDMT000002UK01Organization docOrg) {
         Organization organization = organizationMapper.mapOrganization(docOrg);
-        return storageService.create(organization);
+        return new Reference(organization);
     }
 }

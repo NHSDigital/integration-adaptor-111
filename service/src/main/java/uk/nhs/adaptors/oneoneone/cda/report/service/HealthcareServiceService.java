@@ -10,7 +10,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
 @Service
 @RequiredArgsConstructor
 public class HealthcareServiceService {
-    private final FhirStorageService storageService;
     private final HealthcareServiceMapper healthcareServiceTransformer;
 
     public Reference createHealthcareService(POCDMT000002UK01InformationRecipient recipient) {
@@ -21,6 +20,6 @@ public class HealthcareServiceService {
     }
 
     public Reference createHealthcareService(HealthcareService healthcareService) {
-        return storageService.create(healthcareService);
+        return new Reference(healthcareService);
     }
 }
