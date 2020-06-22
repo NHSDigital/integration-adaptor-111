@@ -1,5 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
@@ -7,18 +8,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import uk.nhs.connect.iucds.cda.ucr.AD;
-import uk.nhs.connect.iucds.cda.ucr.ED;
-import uk.nhs.connect.iucds.cda.ucr.PN;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
+import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.instance.model.api.IIdType;
+import uk.nhs.connect.iucds.cda.ucr.*;
 
-import org.hl7.fhir.dstu3.model.Address;
-import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.HumanName;
-import org.hl7.fhir.dstu3.model.Location;
-import org.hl7.fhir.dstu3.model.Organization;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -90,6 +83,18 @@ public class LocationMapperTest {
 
         assertThat(encounterLocationComponent.getLocationTarget().getIdElement().getValue()).startsWith("urn:uuid:");
         assertThat(encounterLocationComponent.getLocationTarget().getManagingOrganizationTarget()).isEqualTo(organization);
+    }
+
+    @Test
+    public void mapRecipientToLocation() {
+        POCDMT000002UK01IntendedRecipient itkIntendedRecipient = mock(POCDMT000002UK01IntendedRecipient.class);
+
+        when(addressMapper.mapAddress(isA(AD.class))).thenReturn(address);
+
+        Location referenceRecipientToLocation = locationMapper
+                .mapRecipientToLocation(itkIntendedRecipient);
+
+        assertThat(referenceRecipientToLocation.getId().startsWith("urn:uuid:"));
     }
 
     private ED mockEntityDescription() {

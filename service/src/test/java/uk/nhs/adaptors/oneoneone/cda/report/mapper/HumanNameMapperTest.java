@@ -50,5 +50,6 @@ public class HumanNameMapperTest {
         assertThat(humanName.getSuffixAsSingleString()).isEqualTo(SUFFIX);
         assertThat(humanName.getFamily()).isEqualTo(FAMILY);
         assertThat(humanName.getPeriod()).isEqualTo(period);
+        assertThat(humanName.getUse()).isEqualTo(HumanName.NameUse.USUAL);
     }
 }

@@ -45,6 +45,7 @@ public class ContactPointMapperTest {
         assertThat(contactPoint.getValue()).isEqualTo(TEL_NUMBER);
         assertThat(contactPoint.getUse()).isEqualTo(ContactPoint.ContactPointUse.HOME);
         assertThat(contactPoint.getPeriod()).isEqualTo(period);
+        assertThat(contactPoint.getSystem()).isEqualTo(ContactPoint.ContactPointSystem.OTHER);
     }
 
 }

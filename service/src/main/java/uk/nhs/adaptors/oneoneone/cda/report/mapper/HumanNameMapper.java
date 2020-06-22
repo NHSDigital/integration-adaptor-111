@@ -41,6 +41,8 @@ public class HumanNameMapper {
             humanName.setPeriod(periodMapper.mapPeriod(itkPersonName.getValidTime()));
         }
 
+        humanName.setUse(HumanName.NameUse.USUAL);
+
         return humanName;
     }
 }

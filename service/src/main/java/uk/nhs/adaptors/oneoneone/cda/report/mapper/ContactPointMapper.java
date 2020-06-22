@@ -37,6 +37,7 @@ public class ContactPointMapper {
 
         if (itkTelecom.isSetValue()) {
             contactPoint.setValue(itkTelecom.getValue());
+            contactPoint.setSystem(ContactPoint.ContactPointSystem.OTHER);
         }
 
         return contactPoint;

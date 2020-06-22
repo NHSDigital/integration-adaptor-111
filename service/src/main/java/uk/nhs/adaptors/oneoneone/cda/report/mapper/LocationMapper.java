@@ -4,6 +4,7 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
@@ -56,5 +57,13 @@ public class LocationMapper {
         return encounterLocationComponent;
     }
 
+    public Location mapRecipientToLocation(POCDMT000002UK01IntendedRecipient intendedRecipient) {
+        Location location = new Location();
+        location.setIdElement(IdType.newRandomUuid());
+        if (intendedRecipient.sizeOfAddrArray() > 0) {
+            location.setAddress(addressMapper.mapAddress(intendedRecipient.getAddrArray(0)));
+        }
+        return location;
+    }
 
 }
