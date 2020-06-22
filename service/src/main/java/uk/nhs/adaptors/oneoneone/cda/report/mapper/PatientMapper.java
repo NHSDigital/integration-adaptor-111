@@ -3,9 +3,9 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.dstu3.model.Enumerations;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Reference;
 import uk.nhs.adaptors.oneoneone.cda.report.enums.MaritalStatus;
 import org.springframework.stereotype.Component;
-import uk.nhs.adaptors.oneoneone.cda.report.service.OrganizationService;
 import uk.nhs.connect.iucds.cda.ucr.*;
 
 import java.text.ParseException;
@@ -20,7 +20,7 @@ public class PatientMapper {
     private final AddressMapper addressMapper;
     private final HumanNameMapper humanNameMapper;
     private final ContactPointMapper contactPointMapper;
-    private final OrganizationService organizationService;
+    private final OrganizationMapper organizationMapper;
     public Patient transform(POCDMT000002UK01PatientRole patientRole) {
 
         var fhirPatient = new Patient();
@@ -35,7 +35,7 @@ public class PatientMapper {
 
         if (patientRole.isSetProviderOrganization()) {
             fhirPatient.addGeneralPractitioner(
-                    organizationService.createOrganization(patientRole.getProviderOrganization()));
+                    new Reference(organizationMapper.mapOrganization(patientRole.getProviderOrganization())));
         }
 
         var patientElement = patientRole.getPatient();

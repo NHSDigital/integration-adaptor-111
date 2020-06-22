@@ -52,7 +52,7 @@ public class ReferralRequestMapperTest {
                 .setServiceProvider(serviceProviderRef)
                 .setSubject(patientRef)
                 .setId("Encounter/1");
-        
+
         Mockito.when(encounterMapper.mapEncounter(any())).thenReturn(encounter);
         Mockito.when(healthcareServiceMapper
                 .transformRecipient(any()))

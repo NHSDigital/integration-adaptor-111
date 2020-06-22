@@ -1,17 +1,13 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import org.apache.xmlbeans.XmlException;
-import org.hl7.fhir.dstu3.model.ContactPoint;
-import org.hl7.fhir.dstu3.model.HealthcareService;
-import org.hl7.fhir.dstu3.model.Location;
-import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.nhs.adaptors.oneoneone.cda.report.service.OrganizationService;
 import uk.nhs.connect.iucds.cda.ucr.ClinicalDocumentDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
@@ -20,7 +16,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,7 +27,7 @@ public class HealthcareServiceMapperTest {
     private LocationMapper locationMapper;
 
     @Mock
-    private OrganizationService organizationService;
+    private OrganizationMapper organizationMapper;
 
     @Mock
     private ContactPointMapper contactPointMapper;
@@ -45,7 +40,7 @@ public class HealthcareServiceMapperTest {
 
     private ClinicalDocumentDocument1 clinicalDocument;
 
-    private Reference organizationRef = new Reference("Organization/1");
+    private Organization organization = new Organization();
     private Location locationRef = new Location();
 
     @Before
@@ -57,8 +52,8 @@ public class HealthcareServiceMapperTest {
                 .getInformationRecipientArray(0).getIntendedRecipient();
         when(locationMapper.mapRecipientToLocation(intendedRecipient))
                 .thenReturn(locationRef);
-        when(organizationService.createOrganization(intendedRecipient.getReceivedOrganization()))
-                .thenReturn(organizationRef);
+        when(organizationMapper.mapOrganization(intendedRecipient.getReceivedOrganization()))
+                .thenReturn(organization);
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
     }
 
@@ -70,13 +65,10 @@ public class HealthcareServiceMapperTest {
         HealthcareService healthcareService = healthcareServiceMapper
                 .transformRecipient(recipient);
 
-        verify(organizationService)
-                .createOrganization(recipient.getIntendedRecipient().getReceivedOrganization());
         verify(locationMapper).mapRecipientToLocation(recipient.getIntendedRecipient());
 
         assertEquals("name", "Thames Medical Practice", healthcareService.getName());
         assertEquals("active", true, healthcareService.getActive());
-        assertTrue("providedBy", organizationRef.equalsDeep(healthcareService.getProvidedBy()));
     }
 
 }
