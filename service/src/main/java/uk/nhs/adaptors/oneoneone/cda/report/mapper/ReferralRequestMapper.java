@@ -3,7 +3,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.dstu3.model.*;
 import org.springframework.stereotype.Component;
-import uk.nhs.adaptors.oneoneone.cda.report.service.HealthcareServiceService;
 
 import uk.nhs.connect.iucds.cda.ucr.*;
 
@@ -16,7 +15,7 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class ReferralRequestMapper {
 
-    private final HealthcareServiceService healthcareServiceService;
+    private final HealthcareServiceMapper healthcareServiceMapper;
     private final PatientMapper patientMapper;
     private final EncounterMapper encounterMapper;
 
@@ -64,7 +63,7 @@ public class ReferralRequestMapper {
 
         for (POCDMT000002UK01InformationRecipient recipient :
                 clinicalDocument.getInformationRecipientArray()) {
-            referralRequest.addRecipient(healthcareServiceService.createHealthcareService(recipient));
+            referralRequest.addRecipient(new Reference(healthcareServiceMapper.transformRecipient(recipient)));
         }
 
         return referralRequest;

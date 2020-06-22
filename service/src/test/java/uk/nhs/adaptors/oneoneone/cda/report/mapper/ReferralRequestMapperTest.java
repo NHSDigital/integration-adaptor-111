@@ -10,10 +10,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.nhs.adaptors.oneoneone.cda.report.service.ConditionService;
-import uk.nhs.adaptors.oneoneone.cda.report.service.HealthcareServiceService;
 import uk.nhs.connect.iucds.cda.ucr.ClinicalDocumentDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +26,7 @@ public class ReferralRequestMapperTest {
     @Mock
     private ConditionService conditionService;
     @Mock
-    private HealthcareServiceService healthcareServiceService;
+    private HealthcareServiceMapper healthcareServiceMapper;
     @Mock
     private PatientMapper patientMapper;
     @Mock
@@ -43,7 +41,7 @@ public class ReferralRequestMapperTest {
     private Reference patientRef = new Reference("Patient/1");
     private Reference deviceRef = new Reference("HealthcareService/1");
     private Reference conditionRef = new Reference("Condition/1");
-    private Reference healthcareServiceRef = new Reference("HealthcareService/1");
+    private HealthcareService healthcareService = new HealthcareService();
     private Reference serviceProviderRef = new Reference("HealthcareService/1");
 
     @Before
@@ -60,14 +58,14 @@ public class ReferralRequestMapperTest {
 
         Mockito.when(conditionService.create(any())).thenReturn(conditionRef);
         Mockito.when(encounterMapper.mapEncounter(any())).thenReturn(encounter);
-        Mockito.when(healthcareServiceService
-                .createHealthcareService((POCDMT000002UK01InformationRecipient) any()))
-                .thenReturn(healthcareServiceRef);
+        Mockito.when(healthcareServiceMapper
+                .transformRecipient(any()))
+                .thenReturn(healthcareService);
 
         Patient patient = new Patient();
         Mockito.when(patientMapper.transform(any())).thenReturn(patient);
 
-        referralRequestMapper = new ReferralRequestMapper(healthcareServiceService, patientMapper, encounterMapper);
+        referralRequestMapper = new ReferralRequestMapper(healthcareServiceMapper, patientMapper, encounterMapper);
     }
 
     @Test
@@ -87,8 +85,6 @@ public class ReferralRequestMapperTest {
                 deviceRef.equalsDeep(referralRequest.getRequester().getAgent()));
         assertTrue("requester.onBehalfOf",
                 encounter.getServiceProvider().equalsDeep(referralRequest.getRequester().getOnBehalfOf()));
-        assertTrue("recipient",
-                referralRequest.getRecipientFirstRep().equalsDeep(healthcareServiceRef));
         assertTrue("context",
                 new Reference(encounter).equalsDeep(referralRequest.getContext()));
         assertTrue("subject",
