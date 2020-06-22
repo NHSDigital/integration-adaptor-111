@@ -48,7 +48,7 @@ public class PatientMapperTest {
     }
 
     @Test
-    public void patientTest() {
+    public void validPatientTransformTest() {
         POCDMT000002UK01PatientRole patient = clinicalDocument.getRecordTargetArray(0).getPatientRole();
         Patient fhirPatient = patientMapper.transform(patient);
 
