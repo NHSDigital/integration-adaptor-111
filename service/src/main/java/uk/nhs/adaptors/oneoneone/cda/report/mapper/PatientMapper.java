@@ -16,6 +16,12 @@ import org.hl7.fhir.dstu3.model.Organization;
 import org.springframework.stereotype.Component;
 
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01LanguageCommunication;
+
+import org.hl7.fhir.dstu3.model.IdType;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.StringType;
+import org.springframework.stereotype.Component;
+
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Patient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 
@@ -44,10 +50,12 @@ public class PatientMapper {
 
         Patient fhirPatient = new Patient();
         fhirPatient.setIdElement(newRandomUuid());
+        fhirPatient.setIdElement(IdType.newRandomUuid());
         fhirPatient.setActive(true);
         fhirPatient.setName(getNames(itkPatient));
         fhirPatient.setAddress(getAddresses(patientRole));
         fhirPatient.setTelecom(getContactPoints(patientRole));
+
         fhirPatient.addGeneralPractitioner(getGeneralPractioner(patientRole));
 
         var patientElement = patientRole.getPatient();
@@ -56,9 +64,9 @@ public class PatientMapper {
                     .map(humanNameMapper::mapHumanName)
                     .forEach(fhirPatient::addName);
 
-            Stream.of(patientElement.getLanguageCommunicationArray())
-                    .map(this::getLanguageCommunicationCode)
-                    .forEach(fhirPatient::setLanguage);
+//            Stream.of(patientElement.getLanguageCommunicationArray())
+//                    .map(this::getLanguageCommunicationCode)
+//                    .forEach(fhirPatient::setLanguage);
 
             fhirPatient.setContact(getContactComponents(itkPatient));
             fhirPatient.setExtension(getExtensions(itkPatient));
@@ -88,9 +96,24 @@ public class PatientMapper {
         return ref;
     }
 
-    private String getLanguageCommunicationCode(POCDMT000002UK01LanguageCommunication languageCommunication){
-        return languageCommunication.getLanguageCode().getCode();
-    }
+//    private String getLanguageCommunicationCode(POCDMT000002UK01LanguageCommunication languageCommunication){
+//        return languageCommunication.getLanguageCode().getCode();
+//
+//        fhirPatient.setContact(getContactComponents(itkPatient));
+//        fhirPatient.setExtension(getExtensions(itkPatient));
+//
+//        if (itkPatient.isSetBirthTime()) {
+//            fhirPatient.setBirthDate(periodMapper.mapPeriod(itkPatient.getBirthTime()).getStart());
+//        }
+//        if (itkPatient.isSetAdministrativeGenderCode()) {
+//            fhirPatient.setGender(Enumerations.AdministrativeGender
+//                .fromCode(itkPatient.getAdministrativeGenderCode().getCode()));
+//        }
+//        if (itkPatient.isSetMaritalStatusCode()) {
+//            fhirPatient.setMaritalStatus(getMaritalStatus(itkPatient));
+//        }
+//        return fhirPatient;
+//    }
 
     private List<Address> getAddresses(POCDMT000002UK01PatientRole patientRole) {
         if (patientRole.sizeOfAddrArray() > 0) {
@@ -149,6 +172,15 @@ public class PatientMapper {
         if (itkPatient.isSetBirthplace()) {
             extensionList.add(createExtension("http://hl7.org/fhir/StructureDefinition/birthPlace",
                     itkPatient.getBirthplace().toString()));
+//                itkPatient.getEthnicGroupCode().getCode()));
+        }
+        if (itkPatient.isSetReligiousAffiliationCode()) {
+            extensionList.add(createExtension("https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-ReligiousAffiliation-1",
+                itkPatient.getReligiousAffiliationCode().getCode()));
+        }
+        if (itkPatient.isSetBirthplace()) {
+            extensionList.add(createExtension("http://hl7.org/fhir/StructureDefinition/birthPlace",
+                itkPatient.getBirthplace().toString()));
         }
         return extensionList;
     }
