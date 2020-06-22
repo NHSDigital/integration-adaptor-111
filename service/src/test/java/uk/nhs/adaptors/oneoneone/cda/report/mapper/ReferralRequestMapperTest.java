@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.nhs.adaptors.oneoneone.cda.report.service.ConditionService;
 import uk.nhs.connect.iucds.cda.ucr.ClinicalDocumentDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -23,8 +22,6 @@ import static org.mockito.ArgumentMatchers.any;
 @RunWith(MockitoJUnitRunner.class)
 public class ReferralRequestMapperTest {
 
-    @Mock
-    private ConditionService conditionService;
     @Mock
     private HealthcareServiceMapper healthcareServiceMapper;
     @Mock
@@ -55,8 +52,7 @@ public class ReferralRequestMapperTest {
                 .setServiceProvider(serviceProviderRef)
                 .setSubject(patientRef)
                 .setId("Encounter/1");
-
-        Mockito.when(conditionService.create(any())).thenReturn(conditionRef);
+        
         Mockito.when(encounterMapper.mapEncounter(any())).thenReturn(encounter);
         Mockito.when(healthcareServiceMapper
                 .transformRecipient(any()))
