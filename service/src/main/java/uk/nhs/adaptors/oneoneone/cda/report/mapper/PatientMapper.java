@@ -16,12 +16,6 @@ import org.hl7.fhir.dstu3.model.Organization;
 import org.springframework.stereotype.Component;
 
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01LanguageCommunication;
-
-import org.hl7.fhir.dstu3.model.IdType;
-import org.hl7.fhir.dstu3.model.Patient;
-import org.hl7.fhir.dstu3.model.StringType;
-import org.springframework.stereotype.Component;
-
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Patient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 
@@ -46,27 +40,22 @@ public class PatientMapper {
     private final OrganizationMapper orgMapper;
 
     public Patient mapPatient(POCDMT000002UK01PatientRole patientRole) {
-        POCDMT000002UK01Patient itkPatient = patientRole.getPatient();
-
         Patient fhirPatient = new Patient();
         fhirPatient.setIdElement(newRandomUuid());
-        fhirPatient.setIdElement(IdType.newRandomUuid());
-        fhirPatient.setActive(true);
-        fhirPatient.setName(getNames(itkPatient));
-        fhirPatient.setAddress(getAddresses(patientRole));
-        fhirPatient.setTelecom(getContactPoints(patientRole));
+        if (patientRole.isSetPatient()) {
+            POCDMT000002UK01Patient itkPatient = patientRole.getPatient();
+            fhirPatient.setActive(true);
+            fhirPatient.setName(getNames(itkPatient));
+            fhirPatient.setAddress(getAddresses(patientRole));
+            fhirPatient.setTelecom(getContactPoints(patientRole));
 
-        fhirPatient.addGeneralPractitioner(getGeneralPractioner(patientRole));
+            fhirPatient.addGeneralPractitioner(getGeneralPractioner(patientRole));
 
-        var patientElement = patientRole.getPatient();
-        if (patientElement != null) {
-            Stream.of(patientElement.getNameArray())
-                    .map(humanNameMapper::mapHumanName)
-                    .forEach(fhirPatient::addName);
-
-//            Stream.of(patientElement.getLanguageCommunicationArray())
-//                    .map(this::getLanguageCommunicationCode)
-//                    .forEach(fhirPatient::setLanguage);
+            if (itkPatient.sizeOfLanguageCommunicationArray() > 0) {
+                Stream.of(itkPatient.getLanguageCommunicationArray())
+                    .map(this::getLanguageCommunicationCode)
+                    .forEach(fhirPatient::setLanguage);
+            }
 
             fhirPatient.setContact(getContactComponents(itkPatient));
             fhirPatient.setExtension(getExtensions(itkPatient));
@@ -77,7 +66,7 @@ public class PatientMapper {
 
             if (itkPatient.isSetAdministrativeGenderCode()) {
                 fhirPatient.setGender(Enumerations.AdministrativeGender
-                        .fromCode(itkPatient.getAdministrativeGenderCode().getCode()));
+                    .fromCode(itkPatient.getAdministrativeGenderCode().getCode()));
             }
 
             if (itkPatient.isSetMaritalStatusCode()) {
@@ -96,24 +85,9 @@ public class PatientMapper {
         return ref;
     }
 
-//    private String getLanguageCommunicationCode(POCDMT000002UK01LanguageCommunication languageCommunication){
-//        return languageCommunication.getLanguageCode().getCode();
-//
-//        fhirPatient.setContact(getContactComponents(itkPatient));
-//        fhirPatient.setExtension(getExtensions(itkPatient));
-//
-//        if (itkPatient.isSetBirthTime()) {
-//            fhirPatient.setBirthDate(periodMapper.mapPeriod(itkPatient.getBirthTime()).getStart());
-//        }
-//        if (itkPatient.isSetAdministrativeGenderCode()) {
-//            fhirPatient.setGender(Enumerations.AdministrativeGender
-//                .fromCode(itkPatient.getAdministrativeGenderCode().getCode()));
-//        }
-//        if (itkPatient.isSetMaritalStatusCode()) {
-//            fhirPatient.setMaritalStatus(getMaritalStatus(itkPatient));
-//        }
-//        return fhirPatient;
-//    }
+    private String getLanguageCommunicationCode(POCDMT000002UK01LanguageCommunication languageCommunication){
+        return languageCommunication.getLanguageCode().getCode();
+    }
 
     private List<Address> getAddresses(POCDMT000002UK01PatientRole patientRole) {
         if (patientRole.sizeOfAddrArray() > 0) {
@@ -145,7 +119,7 @@ public class PatientMapper {
 
     private CodeableConcept getMaritalStatus(POCDMT000002UK01Patient itkPatient) {
         CodeableConcept maritalStatus = new CodeableConcept();
-        maritalStatus.setText(itkPatient.getMaritalStatusCode().getDisplayName());
+        maritalStatus.setText(itkPatient.getMaritalStatusCode().getCode());
         return maritalStatus;
     }
 
@@ -171,16 +145,9 @@ public class PatientMapper {
         }
         if (itkPatient.isSetBirthplace()) {
             extensionList.add(createExtension("http://hl7.org/fhir/StructureDefinition/birthPlace",
-                    itkPatient.getBirthplace().toString()));
-//                itkPatient.getEthnicGroupCode().getCode()));
-        }
-        if (itkPatient.isSetReligiousAffiliationCode()) {
-            extensionList.add(createExtension("https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-ReligiousAffiliation-1",
-                itkPatient.getReligiousAffiliationCode().getCode()));
-        }
-        if (itkPatient.isSetBirthplace()) {
-            extensionList.add(createExtension("http://hl7.org/fhir/StructureDefinition/birthPlace",
-                itkPatient.getBirthplace().toString()));
+                    itkPatient.getBirthplace().getPlace().getName().toString()));
+            //TODO: 2020-06-22 @Bob this toString() cannot be called, please map birthplace properly
+            //TODO: IMPORTANT -> in the test I assert temporary that there is no birthplace
         }
         return extensionList;
     }

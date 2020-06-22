@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Guardian;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Person;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,16 +33,13 @@ public class GuardianMapperTest {
     private Address address;
 
     @Mock
-    private Reference reference;
-
-    @Mock
     private Organization managingOrganization;
 
     @InjectMocks
     private GuardianMapper guardianMapper;
 
     @Mock
-    private OrganizationMapper orgMapper;
+    private OrganizationMapper organizationMapper;
 
     @Mock
     private HumanNameMapper humanNameMapper;
@@ -52,35 +50,39 @@ public class GuardianMapperTest {
     @Test
     public void mapGuardianTest() {
         POCDMT000002UK01Guardian guardian = mock(POCDMT000002UK01Guardian.class);
-        POCDMT000002UK01Person guardianPerson = mock(POCDMT000002UK01Person.class);
-        AD itkAddress = mock(AD.class);
-        PN personName = mock(PN.class);
 
-        guardian.addNewAddr();
-        guardian.addNewGuardianPerson();
-        guardian.addNewGuardianOrganization();
-
-        when(guardian.isSetGuardianOrganization()).thenReturn(true);
-        when(guardian.isSetGuardianPerson()).thenReturn(true);
-        when(guardian.getAddrArray()).thenReturn(new uk.nhs.connect.iucds.cda.ucr.AD[]{itkAddress});
-        when(guardianPerson.getNameArray(any())).thenReturn(personName);
-        when(orgMapper.mapOrganization(any())).thenReturn(managingOrganization);
-        when(humanNameMapper.mapHumanName(any())).thenReturn(humanName);
-        when(addressMapper.mapAddress(any())).thenReturn(address);
+        mockGuardianPerson(guardian);
+        mockAddress(guardian);
+        mockGuardianOrganization(guardian);
 
         Patient.ContactComponent mappedContactComponent = guardianMapper.mapGuardian(guardian);
 
         assertThat(mappedContactComponent.getName()).isEqualTo(humanName);
         assertThat(mappedContactComponent.getAddress()).isEqualTo(address);
-        assertThat(mappedContactComponent.getOrganization()).isEqualTo(reference);
+        assertThat(mappedContactComponent.getOrganization().getResource()).isEqualTo(managingOrganization);
         assertThat(mappedContactComponent.getOrganizationTarget()).isEqualTo(managingOrganization);
     }
 
-    private POCDMT000002UK01Person createPerson() {
-        POCDMT000002UK01Person person = POCDMT000002UK01Person.Factory.newInstance();
-        uk.nhs.connect.iucds.cda.ucr.PN pn = uk.nhs.connect.iucds.cda.ucr.PN.Factory.newInstance();
-        uk.nhs.connect.iucds.cda.ucr.PN[] pnArray = {pn};
-        person.setNameArray(pnArray);
-        return person;
+    void mockGuardianPerson(POCDMT000002UK01Guardian guardian) {
+        POCDMT000002UK01Person guardianPerson = mock(POCDMT000002UK01Person.class);
+        when(guardian.isSetGuardianPerson()).thenReturn(true);
+        when(guardian.getGuardianPerson()).thenReturn(guardianPerson);
+        PN personName = mock(PN.class);
+        when(guardianPerson.getNameArray(0)).thenReturn(personName);
+        when(humanNameMapper.mapHumanName(any())).thenReturn(humanName);
+    }
+
+    void mockAddress(POCDMT000002UK01Guardian guardian) {
+        when(guardian.sizeOfAddrArray()).thenReturn(1);
+        AD itkAddress = mock(AD.class);
+        when(guardian.getAddrArray(0)).thenReturn(itkAddress);
+        when(addressMapper.mapAddress(any())).thenReturn(address);
+    }
+
+    void mockGuardianOrganization(POCDMT000002UK01Guardian guardian) {
+        when(guardian.isSetGuardianOrganization()).thenReturn(true);
+        POCDMT000002UK01Organization itkOrganization = mock(POCDMT000002UK01Organization.class);
+        when(guardian.getGuardianOrganization()).thenReturn(itkOrganization);
+        when(organizationMapper.mapOrganization(any())).thenReturn(managingOrganization);
     }
 }
