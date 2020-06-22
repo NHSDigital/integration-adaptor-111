@@ -37,7 +37,6 @@ public class ReferralRequestMapperTest {
 
     private Reference patientRef = new Reference("Patient/1");
     private Reference deviceRef = new Reference("HealthcareService/1");
-    private Reference conditionRef = new Reference("Condition/1");
     private HealthcareService healthcareService = new HealthcareService();
     private Reference serviceProviderRef = new Reference("HealthcareService/1");
 
@@ -68,7 +67,7 @@ public class ReferralRequestMapperTest {
     public void transform() {
 
         ReferralRequest referralRequest = referralRequestMapper
-                .transform(clinicalDocument);
+                .mapPatient(clinicalDocument);
 
         assertEquals("Status", ReferralRequest.ReferralRequestStatus.ACTIVE, referralRequest.getStatus());
         assertEquals("Intent", ReferralRequest.ReferralCategory.PLAN, referralRequest.getIntent());

@@ -9,15 +9,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
+import org.hl7.fhir.dstu3.model.*;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
-import org.hl7.fhir.dstu3.model.Appointment;
-import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.Organization;
-import org.hl7.fhir.dstu3.model.Period;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -38,6 +34,8 @@ public class EncounterMapper {
 
     private LocationMapper locationMapper;
 
+    private ReferralRequestMapper referralRequestMapper;
+
     private AppointmentService appointmentService;
 
     public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -49,6 +47,7 @@ public class EncounterMapper {
         encounter.setPeriod(getPeriod(clinicalDocument));
         setServiceProvider(encounter, clinicalDocument);
         setAppointment(encounter, clinicalDocument);
+        setReferralRequest(encounter, clinicalDocument);
         return encounter;
     }
 
@@ -105,5 +104,11 @@ public class EncounterMapper {
         Reference serviceProvider = new Reference(serviceProviderOrganization);
         encounter.setServiceProvider(serviceProvider);
         encounter.setServiceProviderTarget(serviceProviderOrganization);
+    }
+
+    private void setReferralRequest(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        ReferralRequest referralRequest = referralRequestMapper.mapPatient(clinicalDocument);
+        Reference referralRequestRef = new Reference(referralRequest);
+        encounter.addIncomingReferral(referralRequestRef);
     }
 }

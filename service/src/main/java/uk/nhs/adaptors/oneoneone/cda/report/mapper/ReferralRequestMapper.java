@@ -10,6 +10,8 @@ import java.util.Date;
 
 import java.util.Base64;
 
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+
 
 @Component
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class ReferralRequestMapper {
     private final PatientMapper patientMapper;
     private final EncounterMapper encounterMapper;
 
-    public ReferralRequest transform(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+    public ReferralRequest mapPatient(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
 
         //TODO: Pathways - to discuss with team
 
@@ -33,6 +35,7 @@ public class ReferralRequestMapper {
 //        byte[] decoded = Base64.getDecoder().decode(subS.getBytes());
 
         ReferralRequest referralRequest = new ReferralRequest();
+        referralRequest.setIdElement(newRandomUuid());
         POCDMT000002UK01PatientRole patient = clinicalDocument.getRecordTargetArray(0).getPatientRole();
 
         Patient fhirPatient = patientMapper.transform(patient);
@@ -58,7 +61,7 @@ public class ReferralRequestMapper {
                 .setAuthoredOn(now)
                 .setRequester(new ReferralRequest.ReferralRequestRequesterComponent()
                         .setAgent(referenceCDSS)
-                        .setOnBehalfOf(encounter.getServiceProvider()))
+                        .setOnBehalfOf(new Reference(encounter.getServiceProvider().toString())))
                 .setDescription(cdss);
 
         for (POCDMT000002UK01InformationRecipient recipient :

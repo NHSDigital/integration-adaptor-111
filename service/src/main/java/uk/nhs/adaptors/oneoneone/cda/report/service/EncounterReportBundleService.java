@@ -4,11 +4,7 @@ import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 
 import java.util.List;
 
-import org.hl7.fhir.dstu3.model.Appointment;
-import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.Location;
-import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.*;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -32,6 +28,7 @@ public class EncounterReportBundleService {
         addParticipants(bundle, encounter);
         addAppointment(bundle, encounter);
         addLocation(bundle, encounter);
+        addIncomingReferral(bundle, encounter);
 
         return bundle;
     }
@@ -98,5 +95,12 @@ public class EncounterReportBundleService {
         if (organization.hasPartOf()) {
             addOrganization(bundle, organization.getPartOfTarget());
         }
+    }
+
+    private void addIncomingReferral(Bundle bundle, Encounter encounter) {
+        ReferralRequest referralRequest = (ReferralRequest) encounter.getIncomingReferralFirstRep().getResource();
+        bundle.addEntry()
+                .setFullUrl(referralRequest.getIdElement().getValue())
+                .setResource(referralRequest);
     }
 }
