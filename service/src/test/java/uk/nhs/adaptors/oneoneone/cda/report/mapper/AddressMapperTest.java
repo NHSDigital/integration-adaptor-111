@@ -61,6 +61,4 @@ public class AddressMapperTest {
         assertThat(address.getDistrict()).isEqualTo(DISTRICT);
         assertThat(address.getPeriod()).isEqualTo(period);
     }
-
-
 }

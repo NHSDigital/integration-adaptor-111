@@ -25,17 +25,14 @@ public class PatientMapper {
 
         var fhirPatient = new Patient();
 
-        // Patient Address
         Stream.of(patientRole.getAddrArray())
                 .map(addressMapper::mapAddress)
                 .forEach(fhirPatient::addAddress);
 
-        //telecom bitch
         Stream.of(patientRole.getTelecomArray())
                 .map(contactPointMapper::mapContactPoint)
                 .forEach(fhirPatient::addTelecom);
 
-        // organization
         if (patientRole.isSetProviderOrganization()) {
             fhirPatient.addGeneralPractitioner(
                     organizationService.createOrganization(patientRole.getProviderOrganization()));

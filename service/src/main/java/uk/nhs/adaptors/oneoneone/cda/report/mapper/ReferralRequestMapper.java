@@ -22,19 +22,16 @@ public class ReferralRequestMapper {
 
     public ReferralRequest transform(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
 
-        //testing
+        //TODO: Pathways - to discuss with team
 
-        String s = clinicalDocument.getComponent().getStructuredBody().getComponentArray(0)
-                .getSection().getEntryArray(0).getObservationMedia().getValue().xmlText();
-
-        int startPosition = s.indexOf(">\n                ") + ">\n                ".length();
-        int endPosition = s.indexOf("<", startPosition);
-        String subS = s.substring(startPosition, endPosition);
-
-        byte[] decoded = Base64.getDecoder().decode(subS.getBytes());
-
-
-        // testing
+//        String s = clinicalDocument.getComponent().getStructuredBody().getComponentArray(0)
+//                .getSection().getEntryArray(0).getObservationMedia().getValue().xmlText();
+//
+//        int startPosition = s.indexOf(">\n                ") + ">\n                ".length();
+//        int endPosition = s.indexOf("<", startPosition);
+//        String subS = s.substring(startPosition, endPosition);
+//
+//        byte[] decoded = Base64.getDecoder().decode(subS.getBytes());
 
         ReferralRequest referralRequest = new ReferralRequest();
         POCDMT000002UK01PatientRole patient = clinicalDocument.getRecordTargetArray(0).getPatientRole();
@@ -69,8 +66,6 @@ public class ReferralRequestMapper {
                 clinicalDocument.getInformationRecipientArray()) {
             referralRequest.addRecipient(healthcareServiceService.createHealthcareService(recipient));
         }
-
-//        referralRequest.setBasedOn()
 
         return referralRequest;
     }
