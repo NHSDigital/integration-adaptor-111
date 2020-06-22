@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
-import uk.nhs.adaptors.oneoneone.cda.report.service.OrganizationService;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.*;
 
@@ -13,7 +12,7 @@ import uk.nhs.connect.iucds.cda.ucr.*;
 @RequiredArgsConstructor
 public class HealthcareServiceMapper {
     private final LocationMapper locationMapper;
-    private final OrganizationService organizationService;
+    private final OrganizationMapper organizationMapper;
     private final ContactPointMapper contactPointMapper;
 
     public HealthcareService transformRecipient(
@@ -39,7 +38,7 @@ public class HealthcareServiceMapper {
             POCDMT000002UK01Organization receivedOrganization =
                     intendedRecipient.getReceivedOrganization();
 
-            healthcareService.setProvidedBy(organizationService.createOrganization(receivedOrganization));
+            healthcareService.setProvidedBy(new Reference(organizationMapper.mapOrganization(receivedOrganization)));
             if (receivedOrganization.sizeOfNameArray() > 0) {
                 ON name = receivedOrganization.getNameArray(0);
                 healthcareService.setName(NodeUtil.getAllText(name.getDomNode()));
