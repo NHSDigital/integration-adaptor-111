@@ -13,25 +13,38 @@ import static io.restassured.RestAssured.given;
 import java.net.URL;
 import java.nio.file.Paths;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
 import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class ReportControllerIT {
 
+    public static final String MESSAGE_ID_VALUE = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
+    public static final String MESSAGE_ID = "messageId";
     @Autowired
     private FhirJsonValidator validator;
 
     private static final String REPORT_ENDPOINT = "/report";
     @LocalServerPort
     private int port;
+
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
+    @Autowired
+    private AmqpProperties amqpProperties;
 
     @Test
     public void postReportInvalidBody() {
@@ -46,7 +59,7 @@ public class ReportControllerIT {
     }
 
     @Test
-    public void postReportValidBody() {
+    public void postReportValidBody() throws JMSException {
         given()
             .port(port)
             .contentType(APPLICATION_XML_VALUE)
@@ -56,9 +69,11 @@ public class ReportControllerIT {
             .then()
             .statusCode(ACCEPTED.value());
 
-        //TODO read message from queue instead of hardcoded resource
-        String message = getResourceAsString("/fhir/encounter_valid.json");
-        assertThat(validator.isValid(message)).isEqualTo(true);
+        Message jmsMessage = jmsTemplate.receive(amqpProperties.getQueueName());
+        String messageBody = jmsMessage.getBody(String.class);
+        assertThat(validator.isValid(messageBody)).isEqualTo(true);
+
+        assertThat(jmsMessage.getStringProperty(MESSAGE_ID)).isEqualTo(MESSAGE_ID_VALUE);
     }
 
     private String getResourceAsString(String path) {
