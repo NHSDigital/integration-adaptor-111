@@ -46,8 +46,8 @@ public class EncounterMapper {
         encounter.setLocation(getLocationComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));
         setServiceProvider(encounter, clinicalDocument);
-        setAppointment(encounter, clinicalDocument);
         setReferralRequest(encounter, clinicalDocument);
+        setAppointment(encounter, clinicalDocument);
         return encounter;
     }
 
@@ -107,7 +107,7 @@ public class EncounterMapper {
     }
 
     private void setReferralRequest(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        ReferralRequest referralRequest = referralRequestMapper.mapPatient(clinicalDocument);
+        ReferralRequest referralRequest = referralRequestMapper.mapPatient(clinicalDocument, encounter);
         Reference referralRequestRef = new Reference(referralRequest);
         encounter.addIncomingReferral(referralRequestRef);
     }

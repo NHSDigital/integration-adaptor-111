@@ -35,9 +35,10 @@ public class OrganizationMapper {
             .stream(itkOrganization.getTelecomArray())
             .map(contactPointMapper::mapContactPoint)
             .collect(Collectors.toList()));
-        fhirOrganization.setType(Collections.singletonList(new CodeableConcept()
-            .setText(itkOrganization.getStandardIndustryClassCode().getDisplayName())));
-
+        if(itkOrganization.isSetStandardIndustryClassCode()){
+            fhirOrganization.setType(Collections.singletonList(new CodeableConcept()
+                    .setText(itkOrganization.getStandardIndustryClassCode().getDisplayName())));
+        }
         if(itkOrganization.isSetAsOrganizationPartOf()) {
             Organization partOf = mapOrganization(itkOrganization);
             fhirOrganization.setPartOf(new Reference(partOf));
@@ -45,5 +46,4 @@ public class OrganizationMapper {
         }
         return fhirOrganization;
     }
-
 }

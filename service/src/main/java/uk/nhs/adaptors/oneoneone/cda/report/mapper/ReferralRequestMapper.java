@@ -8,8 +8,6 @@ import uk.nhs.connect.iucds.cda.ucr.*;
 
 import java.util.Date;
 
-import java.util.Base64;
-
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 
@@ -19,20 +17,10 @@ public class ReferralRequestMapper {
 
     private final HealthcareServiceMapper healthcareServiceMapper;
     private final PatientMapper patientMapper;
-    private final EncounterMapper encounterMapper;
 
-    public ReferralRequest mapPatient(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+    private Reference transformerDevice = new Reference("Device/1");
 
-        //TODO: Pathways - to discuss with team
-
-//        String s = clinicalDocument.getComponent().getStructuredBody().getComponentArray(0)
-//                .getSection().getEntryArray(0).getObservationMedia().getValue().xmlText();
-//
-//        int startPosition = s.indexOf(">\n                ") + ">\n                ".length();
-//        int endPosition = s.indexOf("<", startPosition);
-//        String subS = s.substring(startPosition, endPosition);
-//
-//        byte[] decoded = Base64.getDecoder().decode(subS.getBytes());
+    public ReferralRequest mapPatient(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
 
         ReferralRequest referralRequest = new ReferralRequest();
         referralRequest.setIdElement(newRandomUuid());
@@ -40,13 +28,6 @@ public class ReferralRequestMapper {
 
         Patient fhirPatient = patientMapper.transform(patient);
         Reference patientRef = new Reference(fhirPatient);
-
-        String cdss = clinicalDocument.getComponent().getStructuredBody().getComponentArray(0)
-                .getSection().getEntryArray(0).getObservationMedia().getParticipantArray(0)
-                .getParticipantRole().getPlayingDevice().getManufacturerModelName().getDisplayName();
-        Reference referenceCDSS = new Reference(cdss);
-
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
 
         Date now = new Date();
         referralRequest
@@ -60,9 +41,8 @@ public class ReferralRequestMapper {
                         .setEnd(Date.from(now.toInstant().plusSeconds(60 * 60))))
                 .setAuthoredOn(now)
                 .setRequester(new ReferralRequest.ReferralRequestRequesterComponent()
-                        .setAgent(referenceCDSS)
-                        .setOnBehalfOf(new Reference(encounter.getServiceProvider().toString())))
-                .setDescription(cdss);
+                        .setAgent(transformerDevice)
+                        .setOnBehalfOf(new Reference(encounter.getServiceProvider().toString())));
 
         for (POCDMT000002UK01InformationRecipient recipient :
                 clinicalDocument.getInformationRecipientArray()) {
