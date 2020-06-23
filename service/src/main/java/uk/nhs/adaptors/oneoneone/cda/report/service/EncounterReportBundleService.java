@@ -111,6 +111,12 @@ public class EncounterReportBundleService {
     private void addIncomingReferral(Bundle bundle, Encounter encounter) {
         ReferralRequest referralRequest = (ReferralRequest) encounter.getIncomingReferralFirstRep().getResource();
         addEntry(bundle, referralRequest);
+        if(referralRequest.hasSubject()){
+            addEntry(bundle, referralRequest.getSubjectTarget());
+        }
+        if(referralRequest.hasContext()){
+            addEntry(bundle, referralRequest.getContextTarget());
+        }
     }
 
     private static void addEntry(Bundle bundle, Resource resource) {

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.*;
 
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+
 
 @Component
 @RequiredArgsConstructor
@@ -15,7 +17,7 @@ public class HealthcareServiceMapper {
     private final OrganizationMapper organizationMapper;
     private final ContactPointMapper contactPointMapper;
 
-    public HealthcareService transformRecipient(
+    public HealthcareService mapHealthcareService(
             POCDMT000002UK01InformationRecipient informationRecipient) {
 
         POCDMT000002UK01IntendedRecipient intendedRecipient =
@@ -23,6 +25,8 @@ public class HealthcareServiceMapper {
 
         HealthcareService healthcareService = new HealthcareService()
                 .setActive(true);
+
+        healthcareService.setIdElement(newRandomUuid());
 
         Reference locationRef = new Reference(locationMapper.mapRecipientToLocation(intendedRecipient));
         healthcareService.addLocation(locationRef);

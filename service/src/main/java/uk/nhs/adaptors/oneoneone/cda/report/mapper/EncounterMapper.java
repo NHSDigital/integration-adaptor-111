@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.Appointment;
-import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Organization;
@@ -134,7 +133,7 @@ public class EncounterMapper {
     }
 
     private void setReferralRequest(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        ReferralRequest referralRequest = referralRequestMapper.mapPatient(clinicalDocument, encounter);
+        ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument, encounter);
         Reference referralRequestRef = new Reference(referralRequest);
         encounter.addIncomingReferral(referralRequestRef);
     }

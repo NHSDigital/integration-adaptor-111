@@ -20,7 +20,7 @@ public class ReferralRequestMapper {
 
     private Reference transformerDevice = new Reference("Device/1");
 
-    public ReferralRequest mapPatient(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
+    public ReferralRequest mapReferralRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
 
         ReferralRequest referralRequest = new ReferralRequest();
         referralRequest.setIdElement(newRandomUuid());
@@ -34,7 +34,9 @@ public class ReferralRequestMapper {
                 .setStatus(ReferralRequest.ReferralRequestStatus.ACTIVE)
                 .setIntent(ReferralRequest.ReferralCategory.PLAN)
                 .setPriority(ReferralRequest.ReferralPriority.ROUTINE)
+                .setSubjectTarget(fhirPatient)
                 .setSubject(patientRef)
+                .setContextTarget(encounter)
                 .setContext(new Reference(encounter))
                 .setOccurrence(new Period()
                         .setStart(now)
@@ -46,7 +48,7 @@ public class ReferralRequestMapper {
 
         for (POCDMT000002UK01InformationRecipient recipient :
                 clinicalDocument.getInformationRecipientArray()) {
-            referralRequest.addRecipient(new Reference(healthcareServiceMapper.transformRecipient(recipient)));
+            referralRequest.addRecipient(new Reference(healthcareServiceMapper.mapHealthcareService(recipient)));
         }
 
         return referralRequest;

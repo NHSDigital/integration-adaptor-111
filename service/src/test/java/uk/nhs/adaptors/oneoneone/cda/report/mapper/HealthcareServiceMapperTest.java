@@ -1,7 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import org.apache.xmlbeans.XmlException;
-import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.dstu3.model.ContactPoint;
+import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,7 +66,7 @@ public class HealthcareServiceMapperTest {
                 clinicalDocument.getClinicalDocument().getInformationRecipientArray(0);
 
         HealthcareService healthcareService = healthcareServiceMapper
-                .transformRecipient(recipient);
+                .mapHealthcareService(recipient);
 
         verify(locationMapper).mapRecipientToLocation(recipient.getIntendedRecipient());
 

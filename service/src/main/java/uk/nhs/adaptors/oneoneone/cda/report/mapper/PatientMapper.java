@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.stream.Stream;
 
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+
 @Component
 @RequiredArgsConstructor
 public class PatientMapper {
@@ -24,6 +26,8 @@ public class PatientMapper {
     public Patient mapPatient(POCDMT000002UK01PatientRole patientRole) {
 
         var fhirPatient = new Patient();
+
+        fhirPatient.setIdElement(newRandomUuid());
 
         Stream.of(patientRole.getAddrArray())
                 .map(addressMapper::mapAddress)

@@ -1,6 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
@@ -8,16 +7,24 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.hl7.fhir.dstu3.model.*;
-import org.hl7.fhir.instance.model.api.IIdType;
-import uk.nhs.connect.iucds.cda.ucr.*;
-
+import org.hl7.fhir.dstu3.model.Address;
+import org.hl7.fhir.dstu3.model.HumanName;
+import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.Encounter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.w3c.dom.Node;
+import uk.nhs.connect.iucds.cda.ucr.AD;
+import uk.nhs.connect.iucds.cda.ucr.PN;
+import uk.nhs.connect.iucds.cda.ucr.ED;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LocationMapperTest {

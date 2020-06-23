@@ -1,7 +1,11 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import org.apache.xmlbeans.XmlException;
-import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.HealthcareService;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,10 +37,11 @@ public class ReferralRequestMapperTest {
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
     private Encounter encounter;
 
-    private Reference patientRef = new Reference("Patient/1");
-    private Reference deviceRef = new Reference("HealthcareService/1");
+    private Reference patientRef = new Reference();
+    private Reference deviceRef = new Reference("Device/1");
     private HealthcareService healthcareService = new HealthcareService();
     private Reference serviceProviderRef = new Reference("HealthcareService/1");
+    private Reference encounterRef;
 
     @Before
     public void setup() throws IOException, XmlException {
@@ -50,8 +55,10 @@ public class ReferralRequestMapperTest {
                 .setSubject(patientRef)
                 .setId("Encounter/1");
 
+        encounterRef = new Reference(encounter.getServiceProvider().toString());
+
         Mockito.when(healthcareServiceMapper
-                .transformRecipient(any()))
+                .mapHealthcareService(any()))
                 .thenReturn(healthcareService);
 
         Patient patient = new Patient();
@@ -64,7 +71,7 @@ public class ReferralRequestMapperTest {
     public void transform() {
 
         ReferralRequest referralRequest = referralRequestMapper
-                .mapPatient(clinicalDocument, encounter);
+                .mapReferralRequest(clinicalDocument, encounter);
 
         assertEquals("Status", ReferralRequest.ReferralRequestStatus.ACTIVE, referralRequest.getStatus());
         assertEquals("Intent", ReferralRequest.ReferralCategory.PLAN, referralRequest.getIntent());
@@ -76,10 +83,10 @@ public class ReferralRequestMapperTest {
         assertTrue("requester.agent",
                 deviceRef.equalsDeep(referralRequest.getRequester().getAgent()));
         assertTrue("requester.onBehalfOf",
-                encounter.getServiceProvider().equalsDeep(referralRequest.getRequester().getOnBehalfOf()));
-//        assertTrue("context",
-//                new Reference(encounter).equalsDeep(referralRequest.getContext()));
+                encounterRef.equalsDeep(referralRequest.getRequester().getOnBehalfOf()));
+        assertTrue("context",
+                new Reference(encounter).equalsDeep(referralRequest.getContext()));
         assertTrue("subject",
-                encounter.getSubject().equalsDeep(referralRequest.getSubject()));
+                patientRef.equalsDeep(referralRequest.getSubject()));
     }
 }

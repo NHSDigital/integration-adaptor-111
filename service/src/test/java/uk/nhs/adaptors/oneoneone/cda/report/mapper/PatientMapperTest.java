@@ -10,7 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.nhs.connect.iucds.cda.ucr.*;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.ClinicalDocumentDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 
 import java.io.IOException;
 import java.net.URL;
