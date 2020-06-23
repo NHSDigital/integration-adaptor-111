@@ -192,7 +192,7 @@ public class EncounterMapperTest {
     }
 
     private void mockPatient() {
-        when(patientMapper.mapPatient()).thenReturn(patient);
+        when(patientMapper.mapPatient(any())).thenReturn(patient);
     }
 
     private void mockEpisodeOfCare() {
