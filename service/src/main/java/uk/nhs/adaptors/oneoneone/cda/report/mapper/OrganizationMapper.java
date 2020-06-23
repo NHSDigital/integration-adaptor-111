@@ -15,6 +15,10 @@ import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
+import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
+
 @Component
 @AllArgsConstructor
 public class OrganizationMapper {
@@ -35,10 +39,11 @@ public class OrganizationMapper {
             .stream(itkOrganization.getTelecomArray())
             .map(contactPointMapper::mapContactPoint)
             .collect(Collectors.toList()));
-        if(itkOrganization.isSetStandardIndustryClassCode()){
+        if (itkOrganization.isSetStandardIndustryClassCode()) {
             fhirOrganization.setType(Collections.singletonList(new CodeableConcept()
-                    .setText(itkOrganization.getStandardIndustryClassCode().getDisplayName())));
+                .setText(itkOrganization.getStandardIndustryClassCode().getDisplayName())));
         }
+
         if(itkOrganization.isSetAsOrganizationPartOf()) {
             Organization partOf = mapOrganization(itkOrganization);
             fhirOrganization.setPartOf(new Reference(partOf));
@@ -46,4 +51,5 @@ public class OrganizationMapper {
         }
         return fhirOrganization;
     }
+
 }
