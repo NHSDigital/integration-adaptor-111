@@ -10,8 +10,10 @@ import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import org.hl7.fhir.dstu3.model.Appointment;
+import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Group;
+import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
@@ -47,6 +49,8 @@ public class EncounterMapper {
 
     private AppointmentService appointmentService;
 
+    private EpisodeOfCareMapper episodeOfCareMapper;
+
     public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Encounter encounter = new Encounter();
         encounter.setIdElement(newRandomUuid());
@@ -57,7 +61,22 @@ public class EncounterMapper {
         setServiceProvider(encounter, clinicalDocument);
         setAppointment(encounter, clinicalDocument);
         setSubject(encounter, clinicalDocument);
+        setEpisodeOfCare(encounter, clinicalDocument);
+
         return encounter;
+    }
+
+//    private void setPatient(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+//        Patient patient = patientMapper.mapPatient();
+//        encounter.setSubjectTarget(patient);
+//        encounter.setSubject(new Reference(patient));
+//    }
+
+    private void setEpisodeOfCare(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        Optional<EpisodeOfCare> episodeOfCare = episodeOfCareMapper.mapEpisodeOfCare(clinicalDocument, encounter.getSubject());
+        if (episodeOfCare.isPresent()) {
+            encounter.addEpisodeOfCare(new Reference(episodeOfCare.get()));
+        }
     }
 
     private Period getPeriod(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -90,7 +109,7 @@ public class EncounterMapper {
         return encounterParticipantComponents;
     }
 
-    private List<Encounter.EncounterLocationComponent>  getLocationComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
+    private List<Encounter.EncounterLocationComponent> getLocationComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
         return Arrays.stream(clinicalDocument1.getRecordTargetArray())
             .map(recordTarget -> recordTarget.getPatientRole().getProviderOrganization())
             .map(locationMapper::mapOrganizationToLocationComponent)
