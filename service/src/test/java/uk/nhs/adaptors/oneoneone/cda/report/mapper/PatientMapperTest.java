@@ -50,7 +50,7 @@ public class PatientMapperTest {
     @Test
     public void validPatientTransformTest() {
         POCDMT000002UK01PatientRole patient = clinicalDocument.getRecordTargetArray(0).getPatientRole();
-        Patient fhirPatient = patientMapper.transform(patient);
+        Patient fhirPatient = patientMapper.mapPatient(patient);
 
         assertThat(fhirPatient.getBirthDate(), equalTo(dob));
         assertThat(fhirPatient.getLanguage(), equalTo("en"));
