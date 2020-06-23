@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import org.hl7.fhir.dstu3.model.Appointment;
-import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
@@ -65,12 +64,6 @@ public class EncounterMapper {
 
         return encounter;
     }
-
-//    private void setPatient(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-//        Patient patient = patientMapper.mapPatient();
-//        encounter.setSubjectTarget(patient);
-//        encounter.setSubject(new Reference(patient));
-//    }
 
     private void setEpisodeOfCare(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Optional<EpisodeOfCare> episodeOfCare = episodeOfCareMapper.mapEpisodeOfCare(clinicalDocument, encounter.getSubject());

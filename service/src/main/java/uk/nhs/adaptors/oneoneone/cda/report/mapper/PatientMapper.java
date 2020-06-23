@@ -78,12 +78,12 @@ public class PatientMapper {
     }
 
     private Reference getGeneralPractioner(POCDMT000002UK01PatientRole patientRole) {
-        Reference ref = null;
+        Reference reference = null;
         if (patientRole.isSetProviderOrganization()) {
             Organization organization = orgMapper.mapOrganization(patientRole.getProviderOrganization());
-            ref = new Reference(organization);
+            reference = new Reference(organization);
         }
-        return ref;
+        return reference;
     }
 
     private String getLanguageCommunicationCode(POCDMT000002UK01LanguageCommunication languageCommunication){
