@@ -6,14 +6,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import lombok.AllArgsConstructor;
-import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
-
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 
 @Component
 @AllArgsConstructor
@@ -35,8 +35,10 @@ public class OrganizationMapper {
             .stream(itkOrganization.getTelecomArray())
             .map(contactPointMapper::mapContactPoint)
             .collect(Collectors.toList()));
-        fhirOrganization.setType(Collections.singletonList(new CodeableConcept()
-            .setText(itkOrganization.getStandardIndustryClassCode().getDisplayName())));
+        if (itkOrganization.isSetStandardIndustryClassCode()) {
+            fhirOrganization.setType(Collections.singletonList(new CodeableConcept()
+                .setText(itkOrganization.getStandardIndustryClassCode().getDisplayName())));
+        }
 
         if(itkOrganization.isSetAsOrganizationPartOf()) {
             Organization partOf = mapOrganization(itkOrganization);

@@ -11,6 +11,11 @@ import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.EpisodeOfCare;
+import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Resource;
+
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -35,44 +40,51 @@ public class EncounterReportBundleService {
         addAppointment(bundle, encounter);
         addLocation(bundle, encounter);
         addSubject(bundle, encounter);
+        addEpisodeOfCare(bundle, encounter);
 
         return bundle;
     }
 
+    private void addPatient(Bundle bundle, Encounter encounter) {
+        addEntry(bundle, encounter.getSubjectTarget());
+    }
+
     private void addEncounter(Bundle bundle, Encounter encounter) {
-        bundle.addEntry()
-            .setFullUrl(encounter.getIdElement().getValue())
-            .setResource(encounter);
+        addEntry(bundle, encounter);
+    }
+
+    private void addEpisodeOfCare(Bundle bundle, Encounter encounter) {
+        if (encounter.hasEpisodeOfCare()) {
+            EpisodeOfCare episodeOfCare = (EpisodeOfCare) encounter.getEpisodeOfCareFirstRep().getResource();
+            addEntry(bundle, episodeOfCare);
+
+            if (episodeOfCare.hasCareManager()) {
+                addEntry(bundle, episodeOfCare.getCareManagerTarget());
+            }
+
+            if (episodeOfCare.hasManagingOrganization()) {
+                addEntry(bundle, episodeOfCare.getManagingOrganizationTarget());
+            }
+        }
     }
 
     private void addServiceProvider(Bundle bundle, Encounter encounter) {
-        Organization organization = encounter.getServiceProviderTarget();
-        bundle.addEntry()
-            .setFullUrl(organization.getIdElement().getValue())
-            .setResource(organization);
+        addEntry(bundle, encounter.getServiceProviderTarget());
     }
 
     private void addParticipants(Bundle bundle, Encounter encounter) {
         List<Encounter.EncounterParticipantComponent> participantComponents = encounter.getParticipant();
-        for (Encounter.EncounterParticipantComponent participantComponent : participantComponents) {
-            bundle.addEntry()
-                .setFullUrl(participantComponent.getIndividualTarget().getIdElement().getValue())
-                .setResource(participantComponent.getIndividualTarget());
-        }
+        participantComponents.stream().forEach(item -> addEntry(bundle, item.getIndividualTarget()));
     }
 
     private void addAppointment(Bundle bundle, Encounter encounter) {
         if (encounter.hasAppointment()) {
             Appointment appointment = encounter.getAppointmentTarget();
-            bundle.addEntry()
-                .setFullUrl(appointment.getIdElement().getValue())
-                .setResource(appointment);
+            addEntry(bundle, appointment);
             if (appointment.hasParticipant()) {
                 for (Appointment.AppointmentParticipantComponent participant : appointment.getParticipant()) {
                     if (participant.hasActor()) {
-                        bundle.addEntry()
-                            .setFullUrl(participant.getActorTarget().getIdElement().getValue())
-                            .setResource(participant.getActorTarget());
+                        addEntry(bundle, participant.getActorTarget());
                     }
                 }
             }
@@ -84,9 +96,7 @@ public class EncounterReportBundleService {
         for (Encounter.EncounterLocationComponent component : locationComponents) {
             if (component.hasLocation()) {
                 Location location = component.getLocationTarget();
-                bundle.addEntry()
-                    .setFullUrl(component.getLocationTarget().getIdElement().getValue())
-                    .setResource(component.getLocationTarget());
+                addEntry(bundle, location);
                 if (location.hasManagingOrganization()) {
                     addOrganization(bundle, location.getManagingOrganizationTarget());
                 }
@@ -95,9 +105,7 @@ public class EncounterReportBundleService {
     }
 
     private void addOrganization(Bundle bundle, Organization organization) {
-        bundle.addEntry()
-            .setFullUrl(organization.getIdElement().getValue())
-            .setResource(organization);
+        addEntry(bundle, organization);
         if (organization.hasPartOf()) {
             addOrganization(bundle, organization.getPartOfTarget());
         }
@@ -121,5 +129,10 @@ public class EncounterReportBundleService {
                         .setResource(groupMemberComponent.getEntityTarget());
             }
         }
+
+      private static void addEntry(Bundle bundle, Resource resource) {
+        bundle.addEntry()
+            .setFullUrl(resource.getIdElement().getValue())
+            .setResource(resource);
     }
 }
