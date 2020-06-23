@@ -12,7 +12,21 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.nhs.connect.iucds.cda.ucr.*;
+import uk.nhs.connect.iucds.cda.ucr.AD;
+import uk.nhs.connect.iucds.cda.ucr.CE;
+import uk.nhs.connect.iucds.cda.ucr.CS;
+import uk.nhs.connect.iucds.cda.ucr.PN;
+import uk.nhs.connect.iucds.cda.ucr.EN;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Guardian;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01LanguageCommunication;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Patient;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Birthplace;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Place;
+import uk.nhs.connect.iucds.cda.ucr.TEL;
+import uk.nhs.connect.iucds.cda.ucr.TS;
+
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -80,7 +94,8 @@ public class PatientMapperTest {
         mockLanguage(itkPatient);
         mockGuardian(itkPatient);
         mockExtensions(itkPatient);
-        mockBirthtime(itkPatient);
+        mockBirthTime(itkPatient);
+        mockBirthPlace(itkPatient);
         mockGender(itkPatient);
         mockMaritalStatus(itkPatient);
 
@@ -114,10 +129,10 @@ public class PatientMapperTest {
         when(administrativeGenderCodeEntity.getCode()).thenReturn("unknown");
     }
 
-    private void mockBirthtime(POCDMT000002UK01Patient itkPatient) {
+    private void mockBirthTime(POCDMT000002UK01Patient itkPatient) {
         when(itkPatient.isSetBirthTime()).thenReturn(true);
-        TS itkBirthtime = mock(TS.class);
-        when(itkPatient.getBirthTime()).thenReturn(itkBirthtime);
+        TS itkBirthTime = mock(TS.class);
+        when(itkPatient.getBirthTime()).thenReturn(itkBirthTime);
         when(periodMapper.mapPeriod(isA(TS.class))).thenReturn(period);
         when(period.getStart()).thenReturn(date);
     }
@@ -129,7 +144,14 @@ public class PatientMapperTest {
     }
 
     private void mockBirthPlace(POCDMT000002UK01Patient itkPatient) {
-        when(itkPatient.isSetBirthplace()).thenReturn(false);
+        when(itkPatient.isSetBirthplace()).thenReturn(true);
+        POCDMT000002UK01Birthplace birthPlace = mock(POCDMT000002UK01Birthplace.class);
+        POCDMT000002UK01Place place = mock(POCDMT000002UK01Place.class);
+        EN placeName = mock(EN.class);
+
+        when(itkPatient.getBirthplace()).thenReturn(birthPlace);
+        when(itkPatient.getBirthplace().getPlace()).thenReturn(place);
+        when(place.getName()).thenReturn(placeName);
     }
 
     private void mockReligiousAffiliation(POCDMT000002UK01Patient itkPatient) {

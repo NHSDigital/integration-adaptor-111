@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01LanguageCommunication;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Patient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -144,10 +145,9 @@ public class PatientMapper {
                     itkPatient.getReligiousAffiliationCode().getCode()));
         }
         if (itkPatient.isSetBirthplace()) {
+            String birthPlace = NodeUtil.getNodeValueString(itkPatient.getBirthplace().getPlace().getName());
             extensionList.add(createExtension("http://hl7.org/fhir/StructureDefinition/birthPlace",
-                    itkPatient.getBirthplace().getPlace().getName().toString()));
-            //TODO: 2020-06-22 @Bob this toString() cannot be called, please map birthplace properly
-            //TODO: IMPORTANT -> in the test I assert temporary that there is no birthplace
+                    birthPlace));
         }
         return extensionList;
     }
