@@ -55,7 +55,7 @@ public class ReferralRequestMapperTest {
                 .thenReturn(healthcareService);
 
         Patient patient = new Patient();
-        Mockito.when(patientMapper.transform(any())).thenReturn(patient);
+        Mockito.when(patientMapper.mapPatient(any())).thenReturn(patient);
 
         referralRequestMapper = new ReferralRequestMapper(healthcareServiceMapper, patientMapper);
     }

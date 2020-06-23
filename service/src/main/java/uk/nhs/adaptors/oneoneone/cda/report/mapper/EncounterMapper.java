@@ -66,7 +66,7 @@ public class EncounterMapper {
     }
 
     private void setPatient(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        Patient patient = patientMapper.mapPatient();
+        Patient patient = patientMapper.mapPatient(clinicalDocument.getRecordTargetArray(0).getPatientRole());
         encounter.setSubjectTarget(patient);
         encounter.setSubject(new Reference(patient));
     }

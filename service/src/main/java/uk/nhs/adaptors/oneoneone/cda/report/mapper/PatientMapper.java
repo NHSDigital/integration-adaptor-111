@@ -21,7 +21,7 @@ public class PatientMapper {
     private final HumanNameMapper humanNameMapper;
     private final ContactPointMapper contactPointMapper;
     private final OrganizationMapper organizationMapper;
-    public Patient transform(POCDMT000002UK01PatientRole patientRole) {
+    public Patient mapPatient(POCDMT000002UK01PatientRole patientRole) {
 
         var fhirPatient = new Patient();
 
