@@ -53,6 +53,7 @@ public class OrganizationMapperTest {
         when(itkOrganization.getNameArray(anyInt())).thenReturn(itkOrganizationName);
         when(itkOrganization.getAddrArray()).thenReturn(new AD[] {itkAddress});
         when(itkOrganization.getTelecomArray()).thenReturn(new TEL[] {itkTelecom});
+        when(itkOrganization.isSetStandardIndustryClassCode()).thenReturn(true);
         when(itkOrganization.getStandardIndustryClassCode()).thenReturn(codeEntity);
         when(codeEntity.getDisplayName()).thenReturn(GP_PRACTICE);
 
