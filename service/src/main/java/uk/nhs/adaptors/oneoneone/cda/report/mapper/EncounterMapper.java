@@ -62,7 +62,7 @@ public class EncounterMapper {
         encounter.setIdElement(newRandomUuid());
         encounter.setStatus(FINISHED);
         encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument));
-        encounter.setLocation(getLocationComponents(clinicalDocument).get());
+        encounter.setLocation(getLocationComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));
         setServiceProvider(encounter, clinicalDocument);
         setAppointment(encounter, clinicalDocument);
@@ -108,7 +108,7 @@ public class EncounterMapper {
         return encounterParticipantComponents;
     }
 
-    private Optional<List<Encounter.EncounterLocationComponent>>
+    private List<Encounter.EncounterLocationComponent>
     getLocationComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
         List<Encounter.EncounterLocationComponent> locations = new ArrayList<>();
         if (clinicalDocument1.sizeOfRecordTargetArray() > 0) {
@@ -117,7 +117,7 @@ public class EncounterMapper {
                     .map(locationMapper::mapOrganizationToLocationComponent)
                     .collect(Collectors.toList());
         }
-        return Optional.of(locations);
+        return locations;
     }
 
     private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
