@@ -3,6 +3,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
+import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.junit.Before;
@@ -14,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.ClinicalDocumentDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 
@@ -28,6 +30,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,6 +38,9 @@ public class PatientMapperTest {
 
     @Mock
     private AddressMapper addressMapper;
+
+    @Mock
+    private OrganizationMapper organizationMapper;
 
     @Mock
     private ContactPointMapper contactPointMapper;
@@ -63,6 +69,8 @@ public class PatientMapperTest {
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
         when(addressMapper.mapAddress(isA(AD.class))).thenReturn(address);
         when(humanNameMapper.mapHumanName(isA(PN.class))).thenReturn(humanName);
+        Organization fhirOrganization = mock(Organization.class);
+        when(organizationMapper.mapOrganization(any())).thenReturn(fhirOrganization);
         URL resource = getClass().getResource("/xml/example-clinical-doc.xml");
         clinicalDocument = ClinicalDocumentDocument1.Factory.parse(resource).getClinicalDocument();
         dob = new SimpleDateFormat("yyyy/MM/dd").parse("1989/01/01");

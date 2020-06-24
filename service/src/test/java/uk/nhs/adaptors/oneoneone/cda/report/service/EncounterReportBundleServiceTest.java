@@ -22,6 +22,7 @@ import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.ResourceType;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,6 +66,9 @@ public class EncounterReportBundleServiceTest {
     private static final EpisodeOfCare EPISODE_OF_CARE;
     private static final IdType EPISODE_OF_CARE_ID = newRandomUuid();
 
+    private static final ReferralRequest REFERRAL_REQUEST;
+    private static final IdType REFERRAL_REQUEST_ID = newRandomUuid();
+
     static {
         SERVICE_PROVIDER = new Organization();
         SERVICE_PROVIDER.setIdElement(SERVICE_PROVIDER_ID);
@@ -93,6 +97,9 @@ public class EncounterReportBundleServiceTest {
         EPISODE_OF_CARE = new EpisodeOfCare();
         EPISODE_OF_CARE.setId(EPISODE_OF_CARE_ID);
 
+        REFERRAL_REQUEST = new ReferralRequest();
+        REFERRAL_REQUEST.setId(REFERRAL_REQUEST_ID);
+
         ENCOUNTER = new Encounter();
         ENCOUNTER.setStatus(FINISHED);
         ENCOUNTER.setIdElement(ENCOUNTER_ID);
@@ -104,6 +111,7 @@ public class EncounterReportBundleServiceTest {
         ENCOUNTER.setSubject(new Reference(PATIENT));
         ENCOUNTER.setSubjectTarget(PATIENT);
         ENCOUNTER.addEpisodeOfCare(new Reference(EPISODE_OF_CARE));
+        ENCOUNTER.addIncomingReferral(new Reference(REFERRAL_REQUEST));
     }
 
     @Before
@@ -117,7 +125,7 @@ public class EncounterReportBundleServiceTest {
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
 
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(7);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(8);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
         verifyEntry(entries.get(1), SERVICE_PROVIDER_ID.getValue(), ResourceType.Organization);
@@ -126,6 +134,7 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(4), LOCATION_ID.getValue(), ResourceType.Location);
         verifyEntry(entries.get(5), PATIENT_ID.getValue(), ResourceType.Patient);
         verifyEntry(entries.get(6), EPISODE_OF_CARE_ID.getValue(), ResourceType.EpisodeOfCare);
+        verifyEntry(entries.get(7), REFERRAL_REQUEST_ID.getValue(), ResourceType.ReferralRequest);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {
