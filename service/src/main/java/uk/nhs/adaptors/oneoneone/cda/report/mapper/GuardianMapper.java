@@ -22,7 +22,7 @@ public class GuardianMapper {
         Patient.ContactComponent contactComponent = new Patient.ContactComponent();
         if (guardian.isSetGuardianPerson()) {
             POCDMT000002UK01Person guardianPerson = guardian.getGuardianPerson();
-            if (guardianPerson.getNameArray().length > 0) {
+            if ( guardianPerson.sizeOfNameArray() > 0 ) {
                 contactComponent.setName(humanNameMapper.mapHumanName(guardianPerson.getNameArray(0)));
             }
         }

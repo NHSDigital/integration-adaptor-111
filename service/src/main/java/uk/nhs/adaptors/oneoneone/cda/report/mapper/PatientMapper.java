@@ -66,8 +66,9 @@ public class PatientMapper {
             }
 
             if (itkPatient.isSetAdministrativeGenderCode()) {
-                fhirPatient.setGender(Enumerations.AdministrativeGender
-                    .fromCode(itkPatient.getAdministrativeGenderCode().getCode()));
+                String displayName = itkPatient.getAdministrativeGenderCode().getDisplayName();
+                if (displayName == null) displayName = "unknown";
+                fhirPatient.setGender(Enumerations.AdministrativeGender.fromCode(displayName.toLowerCase()));
             }
 
             if (itkPatient.isSetMaritalStatusCode()) {

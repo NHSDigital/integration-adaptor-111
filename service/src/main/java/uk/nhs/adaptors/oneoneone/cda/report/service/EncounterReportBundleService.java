@@ -43,10 +43,6 @@ public class EncounterReportBundleService {
         return bundle;
     }
 
-//    private void addPatient(Bundle bundle, Encounter encounter) {
-//        addEntry(bundle, encounter.getSubjectTarget());
-//    }
-
     private void addEncounter(Bundle bundle, Encounter encounter) {
         addEntry(bundle, encounter);
     }
@@ -109,12 +105,6 @@ public class EncounterReportBundleService {
         }
     }
 
-    private static void addEntry(Bundle bundle, Resource resource) {
-        bundle.addEntry()
-                .setFullUrl(resource.getIdElement().getValue())
-                .setResource(resource);
-    }
-
     private void addSubject(Bundle bundle, Encounter encounter) {
         if (encounter.getSubjectTarget() instanceof Patient) {
             Patient patient = (org.hl7.fhir.dstu3.model.Patient) encounter.getSubjectTarget();
@@ -124,11 +114,16 @@ public class EncounterReportBundleService {
             Group group = (Group) encounter.getSubjectTarget();
             addEntry(bundle, group);
             for (Group.GroupMemberComponent groupMemberComponent : group.getMember()) {
-//                addEntry(bundle, groupMemberComponent);
                 bundle.addEntry()
                         .setFullUrl(groupMemberComponent.getIdElement().getValue())
                         .setResource(groupMemberComponent.getEntityTarget());
             }
         }
+    }
+
+    private static void addEntry(Bundle bundle, Resource resource) {
+        bundle.addEntry()
+                .setFullUrl(resource.getIdElement().getValue())
+                .setResource(resource);
     }
 }

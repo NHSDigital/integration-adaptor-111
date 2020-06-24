@@ -81,7 +81,7 @@ public class PatientMapperTest {
     private Date date;
 
     @Test
-    public void testPeriodMapper(){
+    public void patientMapperTest(){
         POCDMT000002UK01PatientRole patientRole = mock(POCDMT000002UK01PatientRole.class);
         POCDMT000002UK01Patient itkPatient = mock(POCDMT000002UK01Patient.class);
         when(patientRole.isSetPatient()).thenReturn(true);
@@ -109,7 +109,7 @@ public class PatientMapperTest {
         assertThat(fhirPatient.getGeneralPractitionerFirstRep().getResource()).isEqualTo(organization);
         assertThat(fhirPatient.getLanguage()).isEqualTo("EN");
         assertThat(fhirPatient.getContactFirstRep()).isEqualTo(contactComponent);
-        assertThat(fhirPatient.getExtension().size()).isEqualTo(2);
+        assertThat(fhirPatient.getExtension().size()).isEqualTo(3);
         assertThat(fhirPatient.getBirthDate()).isEqualTo(date);
         assertThat(fhirPatient.getGender().toCode()).isEqualTo("unknown");
         assertThat(fhirPatient.getMaritalStatus().getText()).isEqualTo("MARRIED");
@@ -126,7 +126,6 @@ public class PatientMapperTest {
         when(itkPatient.isSetAdministrativeGenderCode()).thenReturn(true);
         CE administrativeGenderCodeEntity = mock(CE.class);
         when(itkPatient.getAdministrativeGenderCode()).thenReturn(administrativeGenderCodeEntity);
-        when(administrativeGenderCodeEntity.getCode()).thenReturn("unknown");
     }
 
     private void mockBirthTime(POCDMT000002UK01Patient itkPatient) {

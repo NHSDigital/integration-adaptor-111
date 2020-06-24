@@ -68,6 +68,7 @@ public class GuardianMapperTest {
         when(guardian.isSetGuardianPerson()).thenReturn(true);
         when(guardian.getGuardianPerson()).thenReturn(guardianPerson);
         PN personName = mock(PN.class);
+        when(guardianPerson.sizeOfNameArray()).thenReturn(1);
         when(guardianPerson.getNameArray(0)).thenReturn(personName);
         when(humanNameMapper.mapHumanName(any())).thenReturn(humanName);
     }

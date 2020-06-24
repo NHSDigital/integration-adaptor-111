@@ -32,10 +32,10 @@ public class EpisodeOfCareMapper {
 
     public Optional<EpisodeOfCare> mapEpisodeOfCare(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Reference subject) {
         POCDMT000002UK01EncompassingEncounter encompassingEncounter = clinicalDocument.getComponentOf()
-                .getEncompassingEncounter();
+            .getEncompassingEncounter();
 
         if (encompassingEncounter.isSetResponsibleParty() &&
-                encompassingEncounter.getResponsibleParty().getAssignedEntity() != null) {
+            encompassingEncounter.getResponsibleParty().getAssignedEntity() != null) {
             POCDMT000002UK01AssignedEntity assignedEntity = encompassingEncounter.getResponsibleParty().getAssignedEntity();
             EpisodeOfCare episodeOfCare = new EpisodeOfCare();
             episodeOfCare.setPatient(subject);
@@ -49,7 +49,7 @@ public class EpisodeOfCareMapper {
 
             if (assignedEntity.isSetRepresentedOrganization()) {
                 POCDMT000002UK01Organization representedOrganization = assignedEntity
-                        .getRepresentedOrganization();
+                    .getRepresentedOrganization();
 
                 Organization organization = organizationMapper.mapOrganization(representedOrganization);
                 episodeOfCare.setManagingOrganization(new Reference(organization));
