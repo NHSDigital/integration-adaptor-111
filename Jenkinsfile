@@ -41,7 +41,7 @@ pipeline {
                 stage('Build Docker Images') {
                     steps {
                         script {
-                            if (sh(label: 'Running docker build', script: 'docker build -t ${DOCKER_IMAGE} .' returnStatus: true) != 0) {error("Failed to build 111 Docker image")}
+                            if (sh(label: 'Running docker build', script: 'docker build -t ${DOCKER_IMAGE} .', returnStatus: true) != 0) {error("Failed to build 111 Docker image")}
                         }
                     }
                 }
