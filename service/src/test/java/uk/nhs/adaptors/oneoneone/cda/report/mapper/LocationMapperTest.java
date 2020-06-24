@@ -96,8 +96,6 @@ public class LocationMapperTest {
     public void mapRecipientToLocation() {
         POCDMT000002UK01IntendedRecipient itkIntendedRecipient = mock(POCDMT000002UK01IntendedRecipient.class);
 
-        when(addressMapper.mapAddress(isA(AD.class))).thenReturn(address);
-
         Location referenceRecipientToLocation = locationMapper
                 .mapRecipientToLocation(itkIntendedRecipient);
 
