@@ -32,7 +32,7 @@ pipeline {
                             sh label: 'Create logs directory', script: 'mkdir -p logs build'
                             if (sh(label: 'Start ActiveMQ', script: 'docker-compose -f ./docker-compose.yml up -d activemq', returnStatus: true) != 0) {error("Failed to start ActiveMQ container")}
                             if (sh(label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for tests")}
-                            if (sh(label: 'Running tests', script: 'BUILD_TAG=${BUILD_TAG} docker-compose -f ./docker-compose.yml up test-111', returnStatus: true) != 0) {error("Some tests failed, check the logs")}
+                            if (sh(label: 'Running tests', script: 'BUILD_TAG=${BUILD_TAG} docker-compose -f ./docker-compose.yml run test-111', returnStatus: true) != 0) {error("Some tests failed, check the logs")}
                             sh label: 'Stop ActiveMQ', script: 'docker-compose -f ./docker-compose.yml stop test-111 activemq'
                         }
                     }
