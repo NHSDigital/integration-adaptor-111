@@ -128,25 +128,21 @@ public class EncounterMapper {
     }
 
     private void setSubject(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
-        if (clinicalDocument1.sizeOfRecordTargetArray() == 1) {
-            Patient patient = getPatient(clinicalDocument1);
-            encounter.setSubject(new Reference(patient));
-            encounter.setSubjectTarget(patient);
-        } else if (clinicalDocument1.sizeOfRecordTargetArray() > 1) {
-            Patient patient = getPatient(clinicalDocument1);
-            Group.GroupMemberComponent groupMemberComponent = new Group.GroupMemberComponent();
-            groupMemberComponent.setEntity(new Reference(patient));
-            groupMemberComponent.setEntityTarget(patient);
-
-            Group group = groupMapper.mapGroup(clinicalDocument1.getRecordTargetArray());
-            group.addMember(groupMemberComponent);
-            encounter.setSubject(new Reference(group));
-            encounter.setSubjectTarget(group);
+        Patient patient = getPatient(clinicalDocument1);
+        if (patient != null) {
+            if (clinicalDocument1.sizeOfRecordTargetArray() == 1) {
+                encounter.setSubject(new Reference(patient));
+                encounter.setSubjectTarget(patient);
+            } else if (clinicalDocument1.sizeOfRecordTargetArray() > 1) {
+                Group group = groupMapper.mapGroup(clinicalDocument1.getRecordTargetArray());
+                encounter.setSubject(new Reference(group));
+                encounter.setSubjectTarget(group);
+            }
         }
     }
 
     private Patient getPatient(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
         POCDMT000002UK01PatientRole patientRole = clinicalDocument1.getRecordTargetArray(0).getPatientRole();
-        return patientMapper.mapPatient(patientRole);
+        return patientRole == null ? null : patientMapper.mapPatient(patientRole);
     }
 }

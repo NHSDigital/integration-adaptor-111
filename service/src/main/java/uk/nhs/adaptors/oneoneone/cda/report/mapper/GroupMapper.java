@@ -25,10 +25,12 @@ public class GroupMapper {
 
         for (POCDMT000002UK01RecordTarget recordTarget : recordTargetArr) {
             Group.GroupMemberComponent groupMemberComponent = new Group.GroupMemberComponent();
-            Patient fhirPatient = patientMapper.mapPatient(recordTarget.getPatientRole());
-            groupMemberComponent.setEntity(new Reference(fhirPatient));
-            groupMemberComponent.setEntityTarget(fhirPatient);
-            group.addMember(groupMemberComponent);
+            if (recordTarget.getPatientRole() != null) {
+                Patient fhirPatient = patientMapper.mapPatient(recordTarget.getPatientRole());
+                groupMemberComponent.setEntity(new Reference(fhirPatient));
+                groupMemberComponent.setEntityTarget(fhirPatient);
+                group.addMember(groupMemberComponent);
+            }
         }
 
         return group;
