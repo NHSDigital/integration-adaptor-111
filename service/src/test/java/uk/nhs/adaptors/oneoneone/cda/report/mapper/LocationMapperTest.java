@@ -1,6 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import org.hl7.fhir.dstu3.model.Address;
+import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Location;
@@ -18,6 +19,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
+import uk.nhs.connect.iucds.cda.ucr.TEL;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,6 +39,8 @@ public class LocationMapperTest {
     private HumanNameMapper humanNameMapper;
     @Mock
     private OrganizationMapper organizationMapper;
+    @Mock
+    private ContactPointMapper contactPointMapper;
     @InjectMocks
     private LocationMapper locationMapper;
     @Mock
@@ -45,6 +49,8 @@ public class LocationMapperTest {
     private HumanName humanName;
     @Mock
     private Organization organization;
+    @Mock
+    private ContactPoint contactPoint;
 
     @Test
     public void shouldMapRoleToLocation() {
@@ -88,6 +94,11 @@ public class LocationMapperTest {
     @Test
     public void shouldMapRecipientToLocation() {
         POCDMT000002UK01IntendedRecipient itkIntendedRecipient = mock(POCDMT000002UK01IntendedRecipient.class);
+
+        TEL itkTelecom = mock(TEL.class);
+
+        when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[]{itkTelecom});
+        when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
 
         Location referenceRecipientToLocation = locationMapper
                 .mapRecipientToLocation(itkIntendedRecipient);

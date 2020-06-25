@@ -13,6 +13,9 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 @Component
@@ -64,7 +67,10 @@ public class LocationMapper {
         if (intendedRecipient.sizeOfAddrArray() > 0) {
             location.setAddress(addressMapper.mapAddress(intendedRecipient.getAddrArray(0)));
         }
-        location.addTelecom(contactPointMapper.mapContactPoint(intendedRecipient.getTelecomArray(0)));
+        location.setTelecom(Arrays
+                .stream(intendedRecipient.getTelecomArray())
+                .map(contactPointMapper::mapContactPoint)
+                .collect(Collectors.toList()));
         return location;
     }
 
