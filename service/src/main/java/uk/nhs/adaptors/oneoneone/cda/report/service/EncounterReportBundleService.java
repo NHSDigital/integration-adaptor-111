@@ -138,13 +138,6 @@ public class EncounterReportBundleService {
         addEntry(bundle, referralRequest);
         if (referralRequest.hasSubject()) {
             addEntry(bundle, referralRequest.getSubjectTarget());
-            Patient patient = (Patient) referralRequest.getSubjectTarget();
-            if (patient.hasGeneralPractitioner()) {
-                for (Reference gp : patient.getGeneralPractitioner()){
-                    Organization organization = (Organization) gp.getResource();
-                    addEntry(bundle, organization);
-                }
-            }
         }
         if (referralRequest.hasRecipient()) {
             for (Reference recipient :
