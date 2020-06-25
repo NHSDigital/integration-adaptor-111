@@ -138,7 +138,7 @@ public class EncounterMapper {
 
     private void setSubject(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
         Optional<Patient> patient = getPatient(clinicalDocument1);
-        if (patient != null) {
+        if (patient.isPresent()) {
             if (clinicalDocument1.sizeOfRecordTargetArray() == 1) {
                 encounter.setSubject(new Reference(patient.get()));
                 encounter.setSubjectTarget(patient.get());
