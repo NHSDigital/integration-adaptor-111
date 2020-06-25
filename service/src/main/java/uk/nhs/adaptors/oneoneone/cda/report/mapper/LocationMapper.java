@@ -25,6 +25,8 @@ public class LocationMapper {
 
     private OrganizationMapper organizationMapper;
 
+    private ContactPointMapper contactPointMapper;
+
     public Location mapRoleToLocation(POCDMT000002UK01ParticipantRole role) {
         Location location = new Location();
         location.setIdElement(IdType.newRandomUuid());
@@ -62,6 +64,7 @@ public class LocationMapper {
         if (intendedRecipient.sizeOfAddrArray() > 0) {
             location.setAddress(addressMapper.mapAddress(intendedRecipient.getAddrArray(0)));
         }
+        location.addTelecom(contactPointMapper.mapContactPoint(intendedRecipient.getTelecomArray(0)));
         return location;
     }
 

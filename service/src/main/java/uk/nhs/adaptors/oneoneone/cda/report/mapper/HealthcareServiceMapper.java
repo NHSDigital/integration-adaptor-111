@@ -7,9 +7,11 @@ import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
-import uk.nhs.connect.iucds.cda.ucr.*;
-
-import java.util.List;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
+import uk.nhs.connect.iucds.cda.ucr.TEL;
+import uk.nhs.connect.iucds.cda.ucr.ON;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
@@ -37,7 +39,7 @@ public class HealthcareServiceMapper {
 
         if (intendedRecipient.sizeOfTelecomArray() > 0) {
             for (TEL tel : intendedRecipient.getTelecomArray()) {
-                contactPointMapper.mapContactPoint(tel);
+                healthcareService.addTelecom(contactPointMapper.mapContactPoint(tel));
             }
         }
 
