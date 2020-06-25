@@ -79,9 +79,9 @@ public class ReferralRequestMapperTest {
         assertThat(referralRequest.hasOccurrence()).isEqualTo(true);
         assertThat(referralRequest.hasAuthoredOn()).isEqualTo(true);
 
-        assertThat(deviceRef).isEqualTo(referralRequest.getRequester().getAgent());
-        assertThat(encounterRef).isEqualTo(referralRequest.getRequester().getOnBehalfOf());
-        assertThat(new Reference(encounter)).isEqualTo(referralRequest.getContext());
-        assertThat(patientRef).isEqualTo(referralRequest.getSubject());
+        assertThat(deviceRef.getReference()).isEqualTo(referralRequest.getRequester().getAgent().getReference());
+        assertThat(serviceProviderRef.getReference()).isEqualTo(referralRequest.getRequester().getOnBehalfOf().getReference());
+        assertThat(new Reference(encounter).getReference()).isEqualTo(referralRequest.getContext().getReference());
+        assertThat(patientRef.getReference()).isEqualTo(referralRequest.getSubject().getReference());
     }
 }

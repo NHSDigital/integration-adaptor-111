@@ -123,9 +123,9 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(2), PRACTITIONER_ID.getValue(), ResourceType.Practitioner);
         verifyEntry(entries.get(3), APPOINTMENT_ID.getValue(), ResourceType.Appointment);
         verifyEntry(entries.get(4), LOCATION_ID.getValue(), ResourceType.Location);
-        verifyEntry(entries.get(5), PATIENT_ID.getValue(), ResourceType.Patient);
-        verifyEntry(entries.get(6), EPISODE_OF_CARE_ID.getValue(), ResourceType.EpisodeOfCare);
-        verifyEntry(entries.get(7), REFERRAL_REQUEST_ID.getValue(), ResourceType.ReferralRequest);
+        verifyEntry(entries.get(5), REFERRAL_REQUEST_ID.getValue(), ResourceType.ReferralRequest);
+        verifyEntry(entries.get(6), PATIENT_ID.getValue(), ResourceType.Patient);
+        verifyEntry(entries.get(7), EPISODE_OF_CARE_ID.getValue(), ResourceType.EpisodeOfCare);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {
