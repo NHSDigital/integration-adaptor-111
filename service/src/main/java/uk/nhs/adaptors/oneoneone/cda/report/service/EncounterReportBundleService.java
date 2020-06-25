@@ -1,36 +1,34 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import lombok.AllArgsConstructor;
+import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
+
+import java.util.List;
+
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
+import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-
-import java.util.List;
-
-import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 
 @Component
 @AllArgsConstructor
 public class EncounterReportBundleService {
 
     private EncounterMapper encounterMapper;
-
-    private static void addEntry(Bundle bundle, Resource resource) {
-        bundle.addEntry()
-                .setFullUrl(resource.getIdElement().getValue())
-                .setResource(resource);
-    }
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
@@ -44,18 +42,10 @@ public class EncounterReportBundleService {
         addAppointment(bundle, encounter);
         addLocation(bundle, encounter);
         addIncomingReferral(bundle, encounter);
-        addPatient(bundle, encounter);
+        addSubject(bundle, encounter);
         addEpisodeOfCare(bundle, encounter);
 
         return bundle;
-    }
-
-    private void addPatient(Bundle bundle, Encounter encounter) {
-        Patient patient = (Patient) encounter.getSubject().getResource();
-        addEntry(bundle, encounter.getSubjectTarget());
-        if (patient.hasGeneralPractitioner()) {
-            addEntry(bundle, (Organization) patient.getGeneralPractitionerFirstRep().getResource());
-        }
     }
 
     private void addEncounter(Bundle bundle, Encounter encounter) {
@@ -120,6 +110,27 @@ public class EncounterReportBundleService {
         }
     }
 
+    private void addSubject(Bundle bundle, Encounter encounter) {
+        if (encounter.getSubjectTarget() instanceof Patient) {
+            Patient patient = (org.hl7.fhir.dstu3.model.Patient) encounter.getSubjectTarget();
+            addEntry(bundle, patient);
+
+            if (patient.hasGeneralPractitioner()) {
+                Organization organization = (Organization) patient.getGeneralPractitionerFirstRep().getResource();
+                addEntry(bundle, organization);
+            }
+        }
+        if (encounter.getSubjectTarget() instanceof Group) {
+            Group group = (Group) encounter.getSubjectTarget();
+            addEntry(bundle, group);
+            for (Group.GroupMemberComponent groupMemberComponent : group.getMember()) {
+                bundle.addEntry()
+                        .setFullUrl(groupMemberComponent.getIdElement().getValue())
+                        .setResource(groupMemberComponent.getEntityTarget());
+            }
+        }
+    }
+
     private void addIncomingReferral(Bundle bundle, Encounter encounter) {
         ReferralRequest referralRequest = (ReferralRequest) encounter.getIncomingReferralFirstRep().getResource();
         addEntry(bundle, referralRequest);
@@ -143,5 +154,11 @@ public class EncounterReportBundleService {
             addEntry(bundle, referralRequest.getRequester().getOnBehalfOfTarget());
         }
 
+    }
+
+    private static void addEntry(Bundle bundle, Resource resource) {
+        bundle.addEntry()
+                .setFullUrl(resource.getIdElement().getValue())
+                .setResource(resource);
     }
 }

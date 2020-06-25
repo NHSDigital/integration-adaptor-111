@@ -1,5 +1,14 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
@@ -8,6 +17,7 @@ import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
@@ -24,15 +34,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RecordTarget;
 import uk.nhs.connect.iucds.cda.ucr.TS;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EncounterMapperTest {
@@ -95,43 +96,51 @@ public class EncounterMapperTest {
     private EpisodeOfCareMapper episodeOfCareMapper;
 
     @Mock
-    private ReferralRequestMapper referralRequestMapper;
-
-    @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
 
-    @Test
-    public void shouldMapEncounter() {
-        POCDMT000002UK01ClinicalDocument1 clinicalDocument = mock(POCDMT000002UK01ClinicalDocument1.class);
+    @Mock
+    private ReferralRequestMapper referralRequestMapper;
+
+    @Before
+    public void setUp() {
+        POCDMT000002UK01RecordTarget recordTarget = mock(POCDMT000002UK01RecordTarget.class);
+        POCDMT000002UK01PatientRole patientRole = mock(POCDMT000002UK01PatientRole.class);
+        POCDMT000002UK01Organization organization = mock(POCDMT000002UK01Organization.class);
+
+        when(clinicalDocument.getRecordTargetArray()).thenReturn(new POCDMT000002UK01RecordTarget[] { recordTarget });
+        when(clinicalDocument.getRecordTargetArray(0)).thenReturn(recordTarget);
+        when(clinicalDocument.sizeOfRecordTargetArray()).thenReturn(1);
+        when(recordTarget.getPatientRole()).thenReturn(patientRole);
+        when(patientRole.getProviderOrganization()).thenReturn(organization);
 
         mockClinicalDocument(clinicalDocument);
         mockParticipant(clinicalDocument);
-        mockLocation(clinicalDocument);
+        mockLocation();
         mockPeriod(clinicalDocument);
         mockServiceProvider();
         mockAppointment();
-        mockPatient();
+        mockSubject();
         mockEpisodeOfCare();
         mockReferralRequest();
+        mockParticipantWithAuthorInformantAndDataEnterer(clinicalDocument);
+    }
+
+    @Test
+    public void shouldMapEncounter() {
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
+        verifyEncounter(encounter);
+    }
+
+    @Test
+    public void mapEncounterTest() {
+        mockParticipant(clinicalDocument);
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
         verifyEncounter(encounter);
     }
 
     @Test
-    public void shouldMapEncounterWhenAuthorInformantAndDataEntererArePresent() {
-        POCDMT000002UK01ClinicalDocument1 clinicalDocument = mock(POCDMT000002UK01ClinicalDocument1.class);
-
-        mockClinicalDocument(clinicalDocument);
-        mockParticipantWithAuthorInformantAndDataEnterer(clinicalDocument);
-        mockLocation(clinicalDocument);
-        mockPeriod(clinicalDocument);
-        mockServiceProvider();
-        mockAppointment();
-        mockPatient();
-        mockEpisodeOfCare();
-        mockReferralRequest();
-
+    public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
         verifyEncounter(encounter);
 
@@ -186,14 +195,7 @@ public class EncounterMapperTest {
         when(dataEntererMapper.mapDataEntererIntoParticipantComponent(any())).thenReturn(encounterParticipantComponent);
     }
 
-    private void mockLocation(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        POCDMT000002UK01RecordTarget recordTarget = mock(POCDMT000002UK01RecordTarget.class);
-        POCDMT000002UK01PatientRole patientRole = mock(POCDMT000002UK01PatientRole.class);
-        POCDMT000002UK01Organization organization = mock(POCDMT000002UK01Organization.class);
-
-        when(clinicalDocument.getRecordTargetArray()).thenReturn(new POCDMT000002UK01RecordTarget[]{recordTarget});
-        when(recordTarget.getPatientRole()).thenReturn(patientRole);
-        when(patientRole.getProviderOrganization()).thenReturn(organization);
+    private void mockLocation() {
         when(locationMapper.mapOrganizationToLocationComponent(any())).thenReturn(locationComponent);
     }
 
@@ -212,7 +214,7 @@ public class EncounterMapperTest {
         when(appointmentService.retrieveAppointment(any(), any(), any())).thenReturn(Optional.of(appointment));
     }
 
-    private void mockPatient() {
+    private void mockSubject() {
         when(patientMapper.mapPatient(any())).thenReturn(patient);
     }
 
