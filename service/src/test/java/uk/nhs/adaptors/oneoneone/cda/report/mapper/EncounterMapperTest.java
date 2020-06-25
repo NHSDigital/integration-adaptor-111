@@ -106,11 +106,11 @@ public class EncounterMapperTest {
         when(recordTarget.getPatientRole()).thenReturn(patientRole);
         when(patientRole.getProviderOrganization()).thenReturn(organization);
 
-        mockLocation(clinicalDocument);
+        mockLocation();
         mockPeriod(clinicalDocument);
         mockServiceProvider();
         mockAppointment();
-        mockSubject(clinicalDocument);
+        mockSubject();
         mockEpisodeOfCare();
     }
 
@@ -173,7 +173,7 @@ public class EncounterMapperTest {
         when(dataEntererMapper.mapDataEntererIntoParticipantComponent(any())).thenReturn(encounterParticipantComponent);
     }
 
-    private void mockLocation(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+    private void mockLocation() {
         when(locationMapper.mapOrganizationToLocationComponent(any())).thenReturn(locationComponent);
     }
 
@@ -192,7 +192,7 @@ public class EncounterMapperTest {
         when(appointmentService.retrieveAppointment(any(), any(), any())).thenReturn(Optional.of(appointment));
     }
 
-    private void mockSubject(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+    private void mockSubject() {
         when(patientMapper.mapPatient(any())).thenReturn(patient);
     }
 

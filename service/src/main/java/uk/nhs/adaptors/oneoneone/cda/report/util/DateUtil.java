@@ -14,7 +14,8 @@ public class DateUtil {
   static final String ISO_DATE_FORMAT     = "yyyyMMdd";
 
   private static final String[] FORMATS = {
-      "yyyyMMddHHmmX", "yyyyMMdd"
+      "yyyyMMddHHmmX",
+          "yyyyMMdd"
   };
 
   public static Date parseISODate(String date) {

@@ -63,7 +63,7 @@ public class GuardianMapperTest {
         assertThat(mappedContactComponent.getOrganizationTarget()).isEqualTo(managingOrganization);
     }
 
-    void mockGuardianPerson(POCDMT000002UK01Guardian guardian) {
+    private void mockGuardianPerson(POCDMT000002UK01Guardian guardian) {
         POCDMT000002UK01Person guardianPerson = mock(POCDMT000002UK01Person.class);
         when(guardian.isSetGuardianPerson()).thenReturn(true);
         when(guardian.getGuardianPerson()).thenReturn(guardianPerson);
@@ -73,14 +73,14 @@ public class GuardianMapperTest {
         when(humanNameMapper.mapHumanName(any())).thenReturn(humanName);
     }
 
-    void mockAddress(POCDMT000002UK01Guardian guardian) {
+    private void mockAddress(POCDMT000002UK01Guardian guardian) {
         when(guardian.sizeOfAddrArray()).thenReturn(1);
         AD itkAddress = mock(AD.class);
         when(guardian.getAddrArray(0)).thenReturn(itkAddress);
         when(addressMapper.mapAddress(any())).thenReturn(address);
     }
 
-    void mockGuardianOrganization(POCDMT000002UK01Guardian guardian) {
+    private void mockGuardianOrganization(POCDMT000002UK01Guardian guardian) {
         when(guardian.isSetGuardianOrganization()).thenReturn(true);
         POCDMT000002UK01Organization itkOrganization = mock(POCDMT000002UK01Organization.class);
         when(guardian.getGuardianOrganization()).thenReturn(itkOrganization);

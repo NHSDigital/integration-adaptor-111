@@ -8,12 +8,12 @@ import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
+import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
-import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.hl7.fhir.dstu3.model.Group;
-
+import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -109,6 +109,11 @@ public class EncounterReportBundleService {
         if (encounter.getSubjectTarget() instanceof Patient) {
             Patient patient = (org.hl7.fhir.dstu3.model.Patient) encounter.getSubjectTarget();
             addEntry(bundle, patient);
+
+            if (patient.hasGeneralPractitioner()) {
+                Organization organization = (Organization) patient.getGeneralPractitionerFirstRep().getResource();
+                addEntry(bundle, organization);
+            }
         }
         if (encounter.getSubjectTarget() instanceof Group) {
             Group group = (Group) encounter.getSubjectTarget();
