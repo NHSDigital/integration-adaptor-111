@@ -73,9 +73,7 @@ public class EncounterMapper {
 
     private void setEpisodeOfCare(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Optional<EpisodeOfCare> episodeOfCare = episodeOfCareMapper.mapEpisodeOfCare(clinicalDocument, encounter.getSubject());
-        if (episodeOfCare.isPresent()) {
-            encounter.addEpisodeOfCare(new Reference(episodeOfCare.get()));
-        }
+        episodeOfCare.ifPresent(ofCare -> encounter.addEpisodeOfCare(new Reference(ofCare)));
     }
 
     private Period getPeriod(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
