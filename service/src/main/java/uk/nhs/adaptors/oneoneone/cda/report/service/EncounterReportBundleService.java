@@ -1,28 +1,26 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
+import lombok.AllArgsConstructor;
+import org.hl7.fhir.dstu3.model.*;
+import org.springframework.stereotype.Component;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 import java.util.List;
 
-import org.hl7.fhir.dstu3.model.Appointment;
-import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.EpisodeOfCare;
-import org.hl7.fhir.dstu3.model.Location;
-import org.hl7.fhir.dstu3.model.Organization;
-import org.hl7.fhir.dstu3.model.Resource;
-import org.hl7.fhir.dstu3.model.ReferralRequest;
-import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 
 @Component
 @AllArgsConstructor
 public class EncounterReportBundleService {
 
     private EncounterMapper encounterMapper;
+
+    private static void addEntry(Bundle bundle, Resource resource) {
+        bundle.addEntry()
+                .setFullUrl(resource.getIdElement().getValue())
+                .setResource(resource);
+    }
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
@@ -35,15 +33,19 @@ public class EncounterReportBundleService {
         addParticipants(bundle, encounter);
         addAppointment(bundle, encounter);
         addLocation(bundle, encounter);
+        addIncomingReferral(bundle, encounter);
         addPatient(bundle, encounter);
         addEpisodeOfCare(bundle, encounter);
-        addIncomingReferral(bundle, encounter);
 
         return bundle;
     }
 
     private void addPatient(Bundle bundle, Encounter encounter) {
+        Patient patient = (Patient) encounter.getSubject().getResource();
         addEntry(bundle, encounter.getSubjectTarget());
+        if (patient.hasGeneralPractitioner()) {
+            addEntry(bundle, (Organization) patient.getGeneralPractitionerFirstRep().getResource());
+        }
     }
 
     private void addEncounter(Bundle bundle, Encounter encounter) {
@@ -111,17 +113,20 @@ public class EncounterReportBundleService {
     private void addIncomingReferral(Bundle bundle, Encounter encounter) {
         ReferralRequest referralRequest = (ReferralRequest) encounter.getIncomingReferralFirstRep().getResource();
         addEntry(bundle, referralRequest);
-        if(referralRequest.hasSubject()){
+        if (referralRequest.hasSubject()) {
             addEntry(bundle, referralRequest.getSubjectTarget());
         }
-        if(referralRequest.hasContext()){
-            addEntry(bundle, referralRequest.getContextTarget());
+        if (referralRequest.hasRecipient()) {
+            for (Reference recipient :
+                    referralRequest.getRecipient()) {
+                addEntry(bundle, (Resource) recipient.getResource());
+            }
         }
-    }
-
-    private static void addEntry(Bundle bundle, Resource resource) {
-        bundle.addEntry()
-            .setFullUrl(resource.getIdElement().getValue())
-            .setResource(resource);
+        if (referralRequest.hasRequester()) {
+            addEntry(bundle, referralRequest.getRequester().getOnBehalfOfTarget());
+        }
+//        if (referralRequest.hasRecipient()) {
+//            addEntry(bundle, (Resource) referralRequest.getRecipientFirstRep().getResource());
+//        }
     }
 }

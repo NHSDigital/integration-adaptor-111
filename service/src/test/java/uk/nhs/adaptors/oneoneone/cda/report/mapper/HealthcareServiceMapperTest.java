@@ -2,9 +2,9 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.ContactPoint;
+import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
-import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +18,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -61,7 +61,7 @@ public class HealthcareServiceMapperTest {
     }
 
     @Test
-    public void testTransform() {
+    public void mapHealthcareService() {
         POCDMT000002UK01InformationRecipient recipient =
                 clinicalDocument.getClinicalDocument().getInformationRecipientArray(0);
 
@@ -70,8 +70,8 @@ public class HealthcareServiceMapperTest {
 
         verify(locationMapper).mapRecipientToLocation(recipient.getIntendedRecipient());
 
-        assertEquals("name", "Thames Medical Practice", healthcareService.getName());
-        assertEquals("active", true, healthcareService.getActive());
+        assertThat("Thames Medical Practice").isEqualTo(healthcareService.getName());
+        assertThat(true).isEqualTo(healthcareService.getActive());
     }
 
 }

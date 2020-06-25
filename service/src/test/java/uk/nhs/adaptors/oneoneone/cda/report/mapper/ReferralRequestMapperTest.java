@@ -1,11 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import org.apache.xmlbeans.XmlException;
-import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.HealthcareService;
-import org.hl7.fhir.dstu3.model.Patient;
-import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.hl7.fhir.dstu3.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,8 +15,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -68,25 +63,21 @@ public class ReferralRequestMapperTest {
     }
 
     @Test
-    public void transform() {
+    public void mapPatient() {
 
         ReferralRequest referralRequest = referralRequestMapper
                 .mapReferralRequest(clinicalDocument, encounter);
 
-        assertEquals("Status", ReferralRequest.ReferralRequestStatus.ACTIVE, referralRequest.getStatus());
-        assertEquals("Intent", ReferralRequest.ReferralCategory.PLAN, referralRequest.getIntent());
-        assertEquals("Priority", ReferralRequest.ReferralPriority.ROUTINE, referralRequest.getPriority());
+        assertThat(ReferralRequest.ReferralRequestStatus.ACTIVE).isEqualTo(referralRequest.getStatus());
+        assertThat(ReferralRequest.ReferralCategory.PLAN).isEqualTo(referralRequest.getIntent());
+        assertThat(ReferralRequest.ReferralPriority.ROUTINE).isEqualTo(referralRequest.getPriority());
 
-        assertTrue("occurrence", referralRequest.hasOccurrence());
-        assertTrue("authoredOn", referralRequest.hasAuthoredOn());
+        assertThat(referralRequest.hasOccurrence()).isEqualTo(true);
+        assertThat(referralRequest.hasAuthoredOn()).isEqualTo(true);
 
-        assertTrue("requester.agent",
-                deviceRef.equalsDeep(referralRequest.getRequester().getAgent()));
-        assertTrue("requester.onBehalfOf",
-                encounterRef.equalsDeep(referralRequest.getRequester().getOnBehalfOf()));
-        assertTrue("context",
-                new Reference(encounter).equalsDeep(referralRequest.getContext()));
-        assertTrue("subject",
-                patientRef.equalsDeep(referralRequest.getSubject()));
+        assertThat(deviceRef).isEqualTo(referralRequest.getRequester().getAgent());
+        assertThat(encounterRef).isEqualTo(referralRequest.getRequester().getOnBehalfOf());
+        assertThat(new Reference(encounter)).isEqualTo(referralRequest.getContext());
+        assertThat(patientRef).isEqualTo(referralRequest.getSubject());
     }
 }

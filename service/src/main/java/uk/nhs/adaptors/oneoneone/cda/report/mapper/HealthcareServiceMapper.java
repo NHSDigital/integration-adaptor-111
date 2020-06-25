@@ -31,7 +31,6 @@ public class HealthcareServiceMapper {
         Reference locationRef = new Reference(locationMapper.mapRecipientToLocation(intendedRecipient));
         healthcareService.addLocation(locationRef);
 
-
         if (intendedRecipient.sizeOfTelecomArray() > 0) {
             for (TEL tel : intendedRecipient.getTelecomArray()) {
                 contactPointMapper.mapContactPoint(tel);

@@ -3,8 +3,9 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.dstu3.model.*;
 import org.springframework.stereotype.Component;
-
-import uk.nhs.connect.iucds.cda.ucr.*;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 
 import java.util.Date;
 
@@ -44,7 +45,7 @@ public class ReferralRequestMapper {
                 .setAuthoredOn(now)
                 .setRequester(new ReferralRequest.ReferralRequestRequesterComponent()
                         .setAgent(transformerDevice)
-                        .setOnBehalfOf(new Reference(encounter.getServiceProvider().toString())));
+                        .setOnBehalfOf(encounter.getServiceProvider()));
 
         for (POCDMT000002UK01InformationRecipient recipient :
                 clinicalDocument.getInformationRecipientArray()) {
