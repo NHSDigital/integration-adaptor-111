@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.nhs.connect.iucds.cda.ucr.CE;
-import uk.nhs.connect.iucds.cda.ucr.CO;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component1;
