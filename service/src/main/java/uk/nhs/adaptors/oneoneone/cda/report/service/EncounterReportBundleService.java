@@ -8,8 +8,11 @@ import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
+import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 
@@ -34,14 +37,10 @@ public class EncounterReportBundleService {
         addParticipants(bundle, encounter);
         addAppointment(bundle, encounter);
         addLocation(bundle, encounter);
-        addPatient(bundle, encounter);
+        addSubject(bundle, encounter);
         addEpisodeOfCare(bundle, encounter);
 
         return bundle;
-    }
-
-    private void addPatient(Bundle bundle, Encounter encounter) {
-        addEntry(bundle, encounter.getSubjectTarget());
     }
 
     private void addEncounter(Bundle bundle, Encounter encounter) {
@@ -106,9 +105,30 @@ public class EncounterReportBundleService {
         }
     }
 
+    private void addSubject(Bundle bundle, Encounter encounter) {
+        if (encounter.getSubjectTarget() instanceof Patient) {
+            Patient patient = (org.hl7.fhir.dstu3.model.Patient) encounter.getSubjectTarget();
+            addEntry(bundle, patient);
+
+            if (patient.hasGeneralPractitioner()) {
+                Organization organization = (Organization) patient.getGeneralPractitionerFirstRep().getResource();
+                addEntry(bundle, organization);
+            }
+        }
+        if (encounter.getSubjectTarget() instanceof Group) {
+            Group group = (Group) encounter.getSubjectTarget();
+            addEntry(bundle, group);
+            for (Group.GroupMemberComponent groupMemberComponent : group.getMember()) {
+                bundle.addEntry()
+                        .setFullUrl(groupMemberComponent.getIdElement().getValue())
+                        .setResource(groupMemberComponent.getEntityTarget());
+            }
+        }
+    }
+
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
-            .setFullUrl(resource.getIdElement().getValue())
-            .setResource(resource);
+                .setFullUrl(resource.getIdElement().getValue())
+                .setResource(resource);
     }
 }
