@@ -1,18 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.Collections;
-import java.util.List;
-
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.HumanName;
@@ -24,48 +13,45 @@ import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.ResourceType;
+import org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
+import java.util.Collections;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
 public class EncounterReportBundleServiceTest {
-    @InjectMocks
-    private EncounterReportBundleService encounterReportBundleService;
-
-    @Mock
-    private EncounterMapper encounterMapper;
-
     private static final Encounter ENCOUNTER;
     private static final IdType ENCOUNTER_ID = newRandomUuid();
-
     private static final Organization SERVICE_PROVIDER;
     private static final IdType SERVICE_PROVIDER_ID = newRandomUuid();
-
     private static final Encounter.EncounterParticipantComponent ENCOUNTER_PARTICIPANT_COMPONENT;
     private static final Practitioner PRACTITIONER;
     private static final IdType PRACTITIONER_ID = newRandomUuid();
     private static final HumanName PRACTITIONER_NAME;
-
     private static final Appointment APPOINTMENT;
     private static final IdType APPOINTMENT_ID = newRandomUuid();
-
     private static final Location LOCATION;
     private static final IdType LOCATION_ID = newRandomUuid();
     private static final Encounter.EncounterLocationComponent ENCOUNTER_LOCATION_COMPONENT;
-
     private static final Patient PATIENT;
     private static final IdType PATIENT_ID = newRandomUuid();
-
     private static final EpisodeOfCare EPISODE_OF_CARE;
     private static final IdType EPISODE_OF_CARE_ID = newRandomUuid();
-
     private static final ReferralRequest REFERRAL_REQUEST;
     private static final IdType REFERRAL_REQUEST_ID = newRandomUuid();
 
@@ -113,6 +99,11 @@ public class EncounterReportBundleServiceTest {
         ENCOUNTER.addEpisodeOfCare(new Reference(EPISODE_OF_CARE));
         ENCOUNTER.addIncomingReferral(new Reference(REFERRAL_REQUEST));
     }
+
+    @InjectMocks
+    private EncounterReportBundleService encounterReportBundleService;
+    @Mock
+    private EncounterMapper encounterMapper;
 
     @Before
     public void setUp() {

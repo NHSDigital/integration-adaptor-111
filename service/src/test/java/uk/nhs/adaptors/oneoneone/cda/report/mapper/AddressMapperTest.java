@@ -1,10 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
-import uk.nhs.connect.iucds.cda.ucr.AD;
-
 import org.apache.xmlbeans.XmlString;
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.Period;
@@ -14,18 +9,13 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import uk.nhs.connect.iucds.cda.ucr.AD;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AddressMapperTest {
-
-    @Mock
-    private PeriodMapper periodMapper;
-
-    @InjectMocks
-    private AddressMapper addressMapper;
-
-    @Mock
-    private Period period;
 
     private static final String CITY = "Small City";
     private static final String ADDRESS_LINE = "Magnolia Crescent 1";
@@ -34,6 +24,12 @@ public class AddressMapperTest {
     private static final String DESCRIPTION = "test description";
     private static final String STATE = "Small County";
     private static final String DISTRICT = "Little District";
+    @Mock
+    private PeriodMapper periodMapper;
+    @InjectMocks
+    private AddressMapper addressMapper;
+    @Mock
+    private Period period;
 
     @Test
     public void mapAddress() {
@@ -48,7 +44,7 @@ public class AddressMapperTest {
         ad.addNewUseablePeriod();
 
         when(periodMapper.mapPeriod(ArgumentMatchers.any()))
-            .thenReturn(period);
+                .thenReturn(period);
 
         Address address = addressMapper.mapAddress(ad);
 

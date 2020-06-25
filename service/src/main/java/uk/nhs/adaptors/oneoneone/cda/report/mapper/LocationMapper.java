@@ -1,20 +1,19 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-
 import lombok.AllArgsConstructor;
-import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
-
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
+
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 @Component
 @AllArgsConstructor

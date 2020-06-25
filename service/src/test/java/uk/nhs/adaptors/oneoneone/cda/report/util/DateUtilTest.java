@@ -1,12 +1,12 @@
 package uk.nhs.adaptors.oneoneone.cda.report.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 import java.time.Instant;
 import java.util.Date;
 
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DateUtilTest {
 

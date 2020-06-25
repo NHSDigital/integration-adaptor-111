@@ -1,12 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
-import java.util.Collections;
-
-import uk.nhs.connect.iucds.cda.ucr.TEL;
-
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Period;
 import org.junit.Test;
@@ -15,21 +8,24 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import uk.nhs.connect.iucds.cda.ucr.TEL;
+
+import java.util.Collections;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ContactPointMapperTest {
 
-    @Mock
-    private PeriodMapper periodMapper;
-
-    @InjectMocks
-    private ContactPointMapper contactPointMapper;
-
-    @Mock
-    private Period period;
-
     private static final String TEL_NUMBER = "1357962783";
     private static final String USE_ITK = "H";
+    @Mock
+    private PeriodMapper periodMapper;
+    @InjectMocks
+    private ContactPointMapper contactPointMapper;
+    @Mock
+    private Period period;
 
     @Test
     public void mapContactPoint() {

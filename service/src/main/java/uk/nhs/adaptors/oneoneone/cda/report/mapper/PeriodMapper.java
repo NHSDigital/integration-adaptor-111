@@ -1,13 +1,12 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import java.util.Date;
-
+import org.hl7.fhir.dstu3.model.Period;
+import org.springframework.stereotype.Component;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
-import org.hl7.fhir.dstu3.model.Period;
-import org.springframework.stereotype.Component;
+import java.util.Date;
 
 @Component
 public class PeriodMapper {
@@ -17,8 +16,8 @@ public class PeriodMapper {
         Date low = DateUtil.parse(ivlts.getLow().getValue());
 
         return new Period()
-            .setStart(low)
-            .setEnd(high);
+                .setStart(low)
+                .setEnd(high);
     }
 
     public Period mapPeriod(TS ts) {

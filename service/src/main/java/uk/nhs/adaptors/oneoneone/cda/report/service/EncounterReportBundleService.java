@@ -1,7 +1,16 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import lombok.AllArgsConstructor;
-import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.dstu3.model.Appointment;
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.EpisodeOfCare;
+import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Resource;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -125,8 +134,5 @@ public class EncounterReportBundleService {
         if (referralRequest.hasRequester()) {
             addEntry(bundle, referralRequest.getRequester().getOnBehalfOfTarget());
         }
-//        if (referralRequest.hasRecipient()) {
-//            addEntry(bundle, (Resource) referralRequest.getRecipientFirstRep().getResource());
-//        }
     }
 }

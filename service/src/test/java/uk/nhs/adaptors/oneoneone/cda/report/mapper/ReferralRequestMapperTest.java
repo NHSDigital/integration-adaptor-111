@@ -1,7 +1,11 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import org.apache.xmlbeans.XmlException;
-import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.HealthcareService;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

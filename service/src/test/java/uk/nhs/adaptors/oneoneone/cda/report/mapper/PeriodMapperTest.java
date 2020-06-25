@@ -1,27 +1,25 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.time.Instant;
-import java.util.Date;
-
-import uk.nhs.connect.iucds.cda.ucr.IVLTS;
-import uk.nhs.connect.iucds.cda.ucr.IVXBTS;
-
 import org.hl7.fhir.dstu3.model.Period;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
+import uk.nhs.connect.iucds.cda.ucr.IVLTS;
+import uk.nhs.connect.iucds.cda.ucr.IVXBTS;
+
+import java.time.Instant;
+import java.util.Date;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PeriodMapperTest {
 
+    private static final String PERIOD_START_ITK = "201105191945+00";
+    private static final String PERIOD_END_ITK = "201105192015+00";
     @InjectMocks
     private PeriodMapper periodMapper;
-
-    private  static final String PERIOD_START_ITK = "201105191945+00";
-    private static final String PERIOD_END_ITK = "201105192015+00";
 
     @Test
     public void mapPeriod() {

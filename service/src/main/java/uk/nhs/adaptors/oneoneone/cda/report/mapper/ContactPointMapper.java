@@ -1,18 +1,16 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import lombok.AllArgsConstructor;
-import uk.nhs.connect.iucds.cda.ucr.TEL;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.springframework.stereotype.Component;
+import uk.nhs.connect.iucds.cda.ucr.TEL;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @AllArgsConstructor
 public class ContactPointMapper {
-
-    private PeriodMapper periodMapper;
 
     private static final Map<String, ContactPoint.ContactPointUse> CONTACT_POINT_USE_MAP = new HashMap<>();
 
@@ -24,8 +22,10 @@ public class ContactPointMapper {
         CONTACT_POINT_USE_MAP.put("WP", ContactPoint.ContactPointUse.WORK);
     }
 
+    private PeriodMapper periodMapper;
+
     public ContactPoint mapContactPoint(TEL itkTelecom) {
-        ContactPoint contactPoint =  new ContactPoint();
+        ContactPoint contactPoint = new ContactPoint();
 
         if (itkTelecom.sizeOfUseablePeriodArray() > 0) {
             contactPoint.setPeriod(periodMapper.mapPeriod(itkTelecom.getUseablePeriodArray(0)));

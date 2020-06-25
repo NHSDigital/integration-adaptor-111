@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.dstu3.model.Enumerations;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Reference;
-import uk.nhs.adaptors.oneoneone.cda.report.enums.MaritalStatus;
 import org.springframework.stereotype.Component;
-import uk.nhs.connect.iucds.cda.ucr.*;
+import uk.nhs.adaptors.oneoneone.cda.report.enums.MaritalStatus;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01LanguageCommunication;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,6 +24,7 @@ public class PatientMapper {
     private final HumanNameMapper humanNameMapper;
     private final ContactPointMapper contactPointMapper;
     private final OrganizationMapper organizationMapper;
+
     public Patient mapPatient(POCDMT000002UK01PatientRole patientRole) {
 
         var fhirPatient = new Patient();
@@ -67,9 +69,9 @@ public class PatientMapper {
             if (patientElement.isSetBirthTime()) {
                 String dob = patientElement.getBirthTime().getValue();
                 StringBuilder str = new StringBuilder(dob);
-                str.insert(6,'/');
-                str.insert(4,'/');
-                Date date1= null;
+                str.insert(6, '/');
+                str.insert(4, '/');
+                Date date1 = null;
                 try {
                     date1 = new SimpleDateFormat("yyyy/MM/dd").parse(str.toString());
                 } catch (ParseException e) {
@@ -82,7 +84,7 @@ public class PatientMapper {
         return fhirPatient;
     }
 
-    private String getLanguageCommunicationCode(POCDMT000002UK01LanguageCommunication languageCommunication){
+    private String getLanguageCommunicationCode(POCDMT000002UK01LanguageCommunication languageCommunication) {
         return languageCommunication.getLanguageCode().getCode();
     }
 

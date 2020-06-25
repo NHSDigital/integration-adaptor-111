@@ -1,10 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
-import uk.nhs.connect.iucds.cda.ucr.PN;
-
 import org.apache.xmlbeans.XmlString;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Period;
@@ -14,22 +9,24 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import uk.nhs.connect.iucds.cda.ucr.PN;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HumanNameMapperTest {
 
-    @Mock
-    private PeriodMapper periodMapper;
-
-    @InjectMocks
-    private HumanNameMapper humanNameMapper;
-
-    @Mock
-    private Period period;
     private static final String GIVEN = "John";
     private static final String PREFIX = "sir";
     private static final String SUFFIX = "de Windermere";
     private static final String FAMILY = "Lloyd";
+    @Mock
+    private PeriodMapper periodMapper;
+    @InjectMocks
+    private HumanNameMapper humanNameMapper;
+    @Mock
+    private Period period;
 
     @Test
     public void mapHumanName() {
@@ -41,7 +38,7 @@ public class HumanNameMapperTest {
         pn.addNewValidTime();
 
         when(periodMapper.mapPeriod(ArgumentMatchers.any()))
-            .thenReturn(period);
+                .thenReturn(period);
 
         HumanName humanName = humanNameMapper.mapHumanName(pn);
 
