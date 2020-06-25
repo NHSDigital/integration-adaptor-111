@@ -17,7 +17,7 @@ pipeline {
     environment {
         BUILD_TAG = sh label: 'Generating build tag', returnStdout: true, script: 'python3 scripts/tag.py ${GIT_BRANCH} ${BUILD_NUMBER} ${GIT_COMMIT}'
         BUILD_TAG_LOWER = sh label: 'Lowercase build tag', returnStdout: true, script: "echo -n ${BUILD_TAG} | tr '[:upper:]' '[:lower:]'"
-        ENVIRONMENT_ID = "build2"
+        ENVIRONMENT_ID = "build1"
         ECR_REPO_DIR = "111"
         DOCKER_IMAGE = "${DOCKER_REGISTRY}/${ECR_REPO_DIR}:${BUILD_TAG}"
     }    
@@ -30,10 +30,9 @@ pipeline {
                     steps {
                         script {
                             sh label: 'Create logs directory', script: 'mkdir -p logs build'
-                            sh label: 'Start ActiveMQ', script: 'docker-compose -f ./docker-compose.yml up -d activemq'
-                            sh label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .'
-                            sh label: 'Running tests', script: 'BUILD_TAG=${BUILD_TAG} docker-compose -f ./docker-compose.yml up test-111'
-                            sh label: 'Show output from container:',script: 'ls -laR build'
+                            if (sh(label: 'Start ActiveMQ', script: 'docker-compose -f ./docker-compose.yml up -d activemq', returnStatus: true) != 0) {error("Failed to start ActiveMQ container")}
+                            if (sh(label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for tests")}
+                            if (sh(label: 'Running tests', script: 'BUILD_TAG=${BUILD_TAG} docker-compose -f ./docker-compose.yml run test-111', returnStatus: true) != 0) {error("Some tests failed, check the logs")}
                             sh label: 'Stop ActiveMQ', script: 'docker-compose -f ./docker-compose.yml stop test-111 activemq'
                         }
                     }
@@ -42,7 +41,7 @@ pipeline {
                 stage('Build Docker Images') {
                     steps {
                         script {
-                            sh label: 'Running docker build', script: 'docker build -t ${DOCKER_IMAGE} .'
+                            if (sh(label: 'Running docker build', script: 'docker build -t ${DOCKER_IMAGE} .', returnStatus: true) != 0) {error("Failed to build 111 Docker image")}
                         }
                     }
                 }
