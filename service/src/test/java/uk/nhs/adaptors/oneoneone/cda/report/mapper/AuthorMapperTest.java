@@ -36,7 +36,7 @@ public class AuthorMapperTest {
     private Period period;
 
     @Test
-    public void mapAuthorToParticipantComponent() {
+    public void shouldMapAuthorToParticipantComponent() {
         POCDMT000002UK01Author author = mock(POCDMT000002UK01Author.class);
         POCDMT000002UK01AssignedAuthor assignedAuthor = mock(POCDMT000002UK01AssignedAuthor.class);
         TS time = mock(TS.class);

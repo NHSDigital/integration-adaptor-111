@@ -32,7 +32,7 @@ public class AddressMapperTest {
     private Period period;
 
     @Test
-    public void mapAddress() {
+    public void shouldMapAddress() {
         AD ad = AD.Factory.newInstance();
         ad.addNewStreetAddressLine().set(XmlString.Factory.newValue(ADDRESS_LINE));
         ad.addNewCity().set(XmlString.Factory.newValue(CITY));

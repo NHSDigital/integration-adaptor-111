@@ -61,7 +61,7 @@ public class HealthcareServiceMapperTest {
     }
 
     @Test
-    public void mapHealthcareService() {
+    public void shouldMapHealthcareService() {
         POCDMT000002UK01InformationRecipient recipient =
                 clinicalDocument.getClinicalDocument().getInformationRecipientArray(0);
 

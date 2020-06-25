@@ -46,7 +46,7 @@ public class PractitionerMapperTest {
     private Address address;
 
     @Test
-    public void mapPractitionerFromAssignedEntity() {
+    public void shouldMapPractitionerFromAssignedEntity() {
         POCDMT000002UK01AssignedEntity assignedEntity = POCDMT000002UK01AssignedEntity.Factory.newInstance();
         assignedEntity.setAssignedPerson(createPerson());
         assignedEntity.setTelecomArray(createTelecomArray());
@@ -66,7 +66,7 @@ public class PractitionerMapperTest {
     }
 
     @Test
-    public void mapPractitionerFromAssociatedEntity() {
+    public void shouldMapPractitionerFromAssociatedEntity() {
         POCDMT000002UK01AssociatedEntity associatedEntity = POCDMT000002UK01AssociatedEntity.Factory.newInstance();
         associatedEntity.setAssociatedPerson(createPerson());
         associatedEntity.setTelecomArray(createTelecomArray());
@@ -86,7 +86,7 @@ public class PractitionerMapperTest {
     }
 
     @Test
-    public void mapPractitionerForAssignedAuthor() {
+    public void shouldMapPractitionerForAssignedAuthor() {
         POCDMT000002UK01AssignedAuthor associatedEntity = POCDMT000002UK01AssignedAuthor.Factory.newInstance();
         associatedEntity.setAssignedPerson(createPerson());
         associatedEntity.setTelecomArray(createTelecomArray());

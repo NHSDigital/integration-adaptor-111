@@ -28,7 +28,7 @@ public class ContactPointMapperTest {
     private Period period;
 
     @Test
-    public void mapContactPoint() {
+    public void shouldMapContactPoint() {
         TEL tel = TEL.Factory.newInstance();
         tel.setValue(TEL_NUMBER);
         tel.setUse(Collections.singletonList(USE_ITK));

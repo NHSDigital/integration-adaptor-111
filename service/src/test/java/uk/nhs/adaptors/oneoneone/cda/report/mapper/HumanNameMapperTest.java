@@ -29,7 +29,7 @@ public class HumanNameMapperTest {
     private Period period;
 
     @Test
-    public void mapHumanName() {
+    public void shouldMapHumanName() {
         PN pn = PN.Factory.newInstance();
         pn.addNewGiven().set(XmlString.Factory.newValue(GIVEN));
         pn.addNewPrefix().set(XmlString.Factory.newValue(PREFIX));

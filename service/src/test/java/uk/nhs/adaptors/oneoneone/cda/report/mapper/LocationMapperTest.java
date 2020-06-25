@@ -47,7 +47,7 @@ public class LocationMapperTest {
     private Organization organization;
 
     @Test
-    public void mapRoleToLocation() {
+    public void shouldMapRoleToLocation() {
         POCDMT000002UK01ParticipantRole participantRole = mock(POCDMT000002UK01ParticipantRole.class);
         POCDMT000002UK01PlayingEntity playingEntity = mock(POCDMT000002UK01PlayingEntity.class);
         AD itkAddress = mock(AD.class);
@@ -73,7 +73,7 @@ public class LocationMapperTest {
     }
 
     @Test
-    public void mapOrganizationToLocationComponent() {
+    public void shouldMapOrganizationToLocationComponent() {
         POCDMT000002UK01Organization itkOrganization = mock(POCDMT000002UK01Organization.class);
 
         when(organizationMapper.mapOrganization(any())).thenReturn(organization);
@@ -86,7 +86,7 @@ public class LocationMapperTest {
     }
 
     @Test
-    public void mapRecipientToLocation() {
+    public void shouldMapRecipientToLocation() {
         POCDMT000002UK01IntendedRecipient itkIntendedRecipient = mock(POCDMT000002UK01IntendedRecipient.class);
 
         Location referenceRecipientToLocation = locationMapper

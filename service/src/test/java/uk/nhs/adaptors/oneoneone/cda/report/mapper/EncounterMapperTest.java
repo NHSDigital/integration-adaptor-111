@@ -101,7 +101,7 @@ public class EncounterMapperTest {
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
 
     @Test
-    public void mapEncounter() {
+    public void shouldMapEncounter() {
         POCDMT000002UK01ClinicalDocument1 clinicalDocument = mock(POCDMT000002UK01ClinicalDocument1.class);
 
         mockClinicalDocument(clinicalDocument);
@@ -119,7 +119,7 @@ public class EncounterMapperTest {
     }
 
     @Test
-    public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
+    public void shouldMapEncounterWhenAuthorInformantAndDataEntererArePresent() {
         POCDMT000002UK01ClinicalDocument1 clinicalDocument = mock(POCDMT000002UK01ClinicalDocument1.class);
 
         mockClinicalDocument(clinicalDocument);

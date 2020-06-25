@@ -111,7 +111,7 @@ public class EncounterReportBundleServiceTest {
     }
 
     @Test
-    public void createEncounterBundle() {
+    public void shouldCreateEncounterBundle() {
         POCDMT000002UK01ClinicalDocument1 document = mock(POCDMT000002UK01ClinicalDocument1.class);
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
