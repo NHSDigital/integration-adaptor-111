@@ -68,9 +68,9 @@ public class EncounterMapper {
         encounter.setLocation(getLocationComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));
         setServiceProvider(encounter, clinicalDocument);
+        setSubject(encounter, clinicalDocument);
         setReferralRequest(encounter, clinicalDocument);
         setAppointment(encounter, clinicalDocument);
-        setSubject(encounter, clinicalDocument);
         setEpisodeOfCare(encounter, clinicalDocument);
         return encounter;
     }

@@ -6,6 +6,7 @@ import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
@@ -21,7 +22,6 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 public class ReferralRequestMapper {
 
     private final HealthcareServiceMapper healthcareServiceMapper;
-    private final PatientMapper patientMapper;
 
     private Reference transformerDevice = new Reference("Device/1");
 
@@ -30,16 +30,13 @@ public class ReferralRequestMapper {
         ReferralRequest referralRequest = new ReferralRequest();
         referralRequest.setIdElement(newRandomUuid());
 
-        Patient fhirPatient = (Patient) encounter.getSubjectTarget();
-        Reference patientRef = new Reference(fhirPatient);
-
         Date now = new Date();
         referralRequest
                 .setStatus(ReferralRequest.ReferralRequestStatus.ACTIVE)
                 .setIntent(ReferralRequest.ReferralCategory.PLAN)
                 .setPriority(ReferralRequest.ReferralPriority.ROUTINE)
-                .setSubjectTarget(fhirPatient)
-                .setSubject(patientRef)
+                .setSubjectTarget(encounter.getSubjectTarget())
+                .setSubject(encounter.getSubject())
                 .setContextTarget(encounter)
                 .setContext(new Reference(encounter))
                 .setOccurrence(new Period()

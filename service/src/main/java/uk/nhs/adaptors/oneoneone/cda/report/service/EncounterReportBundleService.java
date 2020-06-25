@@ -36,13 +36,13 @@ public class EncounterReportBundleService {
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
 
-        addIncomingReferral(bundle, encounter);
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
-        addAppointment(bundle, encounter);
         addLocation(bundle, encounter);
         addSubject(bundle, encounter);
+        addIncomingReferral(bundle, encounter);
+        addAppointment(bundle, encounter);
         addEpisodeOfCare(bundle, encounter);
 
         return bundle;

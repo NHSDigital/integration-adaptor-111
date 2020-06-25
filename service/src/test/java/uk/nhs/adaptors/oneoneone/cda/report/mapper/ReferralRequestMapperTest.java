@@ -27,8 +27,6 @@ public class ReferralRequestMapperTest {
 
     @Mock
     private HealthcareServiceMapper healthcareServiceMapper;
-    @Mock
-    private PatientMapper patientMapper;
 
     @InjectMocks
     private ReferralRequestMapper referralRequestMapper;
@@ -60,10 +58,7 @@ public class ReferralRequestMapperTest {
                 .mapHealthcareService(any()))
                 .thenReturn(healthcareService);
 
-        Patient patient = new Patient();
-        Mockito.when(patientMapper.mapPatient(any())).thenReturn(patient);
-
-        referralRequestMapper = new ReferralRequestMapper(healthcareServiceMapper, patientMapper);
+        referralRequestMapper = new ReferralRequestMapper(healthcareServiceMapper);
     }
 
     @Test
