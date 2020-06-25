@@ -36,12 +36,12 @@ public class EncounterReportBundleService {
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
 
+        addIncomingReferral(bundle, encounter);
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
         addAppointment(bundle, encounter);
         addLocation(bundle, encounter);
-        addIncomingReferral(bundle, encounter);
         addSubject(bundle, encounter);
         addEpisodeOfCare(bundle, encounter);
 
@@ -112,12 +112,14 @@ public class EncounterReportBundleService {
 
     private void addSubject(Bundle bundle, Encounter encounter) {
         if (encounter.getSubjectTarget() instanceof Patient) {
-            Patient patient = (org.hl7.fhir.dstu3.model.Patient) encounter.getSubjectTarget();
+            Patient patient = (Patient) encounter.getSubjectTarget();
             addEntry(bundle, patient);
 
             if (patient.hasGeneralPractitioner()) {
-                Organization organization = (Organization) patient.getGeneralPractitionerFirstRep().getResource();
-                addEntry(bundle, organization);
+                for (Reference gp : patient.getGeneralPractitioner()){
+                    Organization organization = (Organization) gp.getResource();
+                    addEntry(bundle, organization);
+                }
             }
         }
         if (encounter.getSubjectTarget() instanceof Group) {
@@ -136,6 +138,13 @@ public class EncounterReportBundleService {
         addEntry(bundle, referralRequest);
         if (referralRequest.hasSubject()) {
             addEntry(bundle, referralRequest.getSubjectTarget());
+            Patient patient = (Patient) referralRequest.getSubjectTarget();
+            if (patient.hasGeneralPractitioner()) {
+                for (Reference gp : patient.getGeneralPractitioner()){
+                    Organization organization = (Organization) gp.getResource();
+                    addEntry(bundle, organization);
+                }
+            }
         }
         if (referralRequest.hasRecipient()) {
             for (Reference recipient :
