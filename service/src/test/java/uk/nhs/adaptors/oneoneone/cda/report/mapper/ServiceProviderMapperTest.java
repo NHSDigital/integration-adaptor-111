@@ -51,7 +51,7 @@ public class ServiceProviderMapperTest {
     private ContactPoint telecom;
 
     @Test
-    public void mapServiceProvider() {
+    public void shouldMapServiceProvider() {
         POCDMT000002UK01Custodian custodian = mock(POCDMT000002UK01Custodian.class);
         POCDMT000002UK01AssignedCustodian assignedCustodian = mock(POCDMT000002UK01AssignedCustodian.class);
         POCDMT000002UK01CustodianOrganization custodianOrganization = mock(POCDMT000002UK01CustodianOrganization.class);

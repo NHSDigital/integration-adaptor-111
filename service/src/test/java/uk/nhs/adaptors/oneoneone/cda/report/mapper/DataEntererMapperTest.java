@@ -36,7 +36,7 @@ public class DataEntererMapperTest {
     private Period period;
 
     @Test
-    public void mapDataEntererToParticipantComponent() {
+    public void shouldMapDataEntererToParticipantComponent() {
         POCDMT000002UK01DataEnterer dataEnterer = mock(POCDMT000002UK01DataEnterer.class);
         POCDMT000002UK01AssignedEntity assignedEntity = mock(POCDMT000002UK01AssignedEntity.class);
         TS time = mock(TS.class);

@@ -36,7 +36,7 @@ public class ParticipantMapperTest {
     private Period period;
 
     @Test
-    public void mapParticipant() {
+    public void shouldMapParticipant() {
         POCDMT000002UK01Participant1 encounterParticipant = mock(POCDMT000002UK01Participant1.class);
         POCDMT000002UK01AssociatedEntity associatedEntity = mock(POCDMT000002UK01AssociatedEntity.class);
         IVLTS time = mock(IVLTS.class);

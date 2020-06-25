@@ -30,7 +30,7 @@ public class InformantMapperTest {
     private Practitioner practitioner;
 
     @Test
-    public void mapInformantToParticipantComponent() {
+    public void shouldMapInformantToParticipantComponent() {
         POCDMT000002UK01Informant12 informant = mock(POCDMT000002UK01Informant12.class);
         POCDMT000002UK01AssignedEntity assignedEntity = mock(POCDMT000002UK01AssignedEntity.class);
 

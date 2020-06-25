@@ -67,7 +67,7 @@ public class ReferralRequestMapperTest {
     }
 
     @Test
-    public void mapPatient() {
+    public void shouldMapReferralRequest() {
 
         ReferralRequest referralRequest = referralRequestMapper
                 .mapReferralRequest(clinicalDocument, encounter);

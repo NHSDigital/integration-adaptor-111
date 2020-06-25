@@ -56,7 +56,7 @@ public class EncounterReportServiceTest {
     }
 
     @Test
-    public void transformAndPopulateToGP() throws JMSException {
+    public void shouldTransformAndPopulateToGP() throws JMSException {
         POCDMT000002UK01ClinicalDocument1 clinicalDoc = mock(POCDMT000002UK01ClinicalDocument1.class);
         Bundle encounterBundle = mock(Bundle.class);
         when(encounterReportBundleService.createEncounterBundle(clinicalDoc)).thenReturn(encounterBundle);

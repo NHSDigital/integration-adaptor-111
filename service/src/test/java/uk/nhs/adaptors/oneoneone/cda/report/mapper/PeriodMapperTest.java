@@ -22,7 +22,7 @@ public class PeriodMapperTest {
     private PeriodMapper periodMapper;
 
     @Test
-    public void mapPeriod() {
+    public void shouldMapPeriod() {
 
         IVXBTS ivxbtsLow = IVXBTS.Factory.newInstance();
         ivxbtsLow.setValue(PERIOD_START_ITK);

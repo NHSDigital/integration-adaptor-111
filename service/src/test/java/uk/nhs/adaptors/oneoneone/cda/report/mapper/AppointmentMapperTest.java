@@ -42,7 +42,7 @@ public class AppointmentMapperTest {
     private Location location;
 
     @Test
-    public void mapAppointment() {
+    public void ShouldMapAppointment() {
         POCDMT000002UK01Entry entry = mockEntry();
         POCDMT000002UK01Section section = mockSection();
         Reference referralRequest = mock(Reference.class);

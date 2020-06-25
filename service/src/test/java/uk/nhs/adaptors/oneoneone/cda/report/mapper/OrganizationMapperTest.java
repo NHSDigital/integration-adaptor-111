@@ -42,7 +42,7 @@ public class OrganizationMapperTest {
     private Address address;
 
     @Test
-    public void mapOrganization() {
+    public void shouldMapOrganization() {
         POCDMT000002UK01Organization itkOrganization = mock(POCDMT000002UK01Organization.class);
         ON itkOrganizationName = mockOrganizationName();
         AD itkAddress = mock(AD.class);
