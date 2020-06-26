@@ -1,12 +1,12 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import java.util.stream.Stream;
-
 import lombok.AllArgsConstructor;
-import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
-import uk.nhs.connect.iucds.cda.ucr.PN;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.springframework.stereotype.Component;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.PN;
+
+import java.util.stream.Stream;
 
 @Component
 @AllArgsConstructor
@@ -22,16 +22,16 @@ public class HumanNameMapper {
         }
 
         Stream.of(itkPersonName.getGivenArray())
-            .map(NodeUtil::getNodeValueString)
-            .forEach(humanName::addGiven);
+                .map(NodeUtil::getNodeValueString)
+                .forEach(humanName::addGiven);
 
         Stream.of(itkPersonName.getPrefixArray())
-            .map(NodeUtil::getNodeValueString)
-            .forEach(humanName::addPrefix);
+                .map(NodeUtil::getNodeValueString)
+                .forEach(humanName::addPrefix);
 
         Stream.of(itkPersonName.getSuffixArray())
-            .map(NodeUtil::getNodeValueString)
-            .forEach(humanName::addSuffix);
+                .map(NodeUtil::getNodeValueString)
+                .forEach(humanName::addSuffix);
 
         if (itkPersonName.sizeOfFamilyArray() >= 1) {
             humanName.setFamily(NodeUtil.getNodeValueString(itkPersonName.getFamilyArray(0)));
@@ -40,6 +40,8 @@ public class HumanNameMapper {
         if (itkPersonName.isSetValidTime()) {
             humanName.setPeriod(periodMapper.mapPeriod(itkPersonName.getValidTime()));
         }
+
+        humanName.setUse(HumanName.NameUse.USUAL);
 
         return humanName;
     }

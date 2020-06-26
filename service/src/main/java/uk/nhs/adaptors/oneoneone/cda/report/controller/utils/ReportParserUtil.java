@@ -1,13 +1,13 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
+
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReportParserUtil {
 

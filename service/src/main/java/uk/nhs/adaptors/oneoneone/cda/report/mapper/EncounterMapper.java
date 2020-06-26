@@ -7,17 +7,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.Optional;
 import java.util.ArrayList;
 
 import org.hl7.fhir.dstu3.model.Appointment;
-import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.springframework.stereotype.Component;
 import org.hl7.fhir.dstu3.model.Group;
 
@@ -27,9 +26,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
-import java.util.List;
-import org.hl7.fhir.dstu3.model.Encounter;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.GroupMapper;
 
 @Component
 @AllArgsConstructor
@@ -49,6 +45,8 @@ public class EncounterMapper {
 
     private LocationMapper locationMapper;
 
+    private ReferralRequestMapper referralRequestMapper;
+
     private AppointmentService appointmentService;
 
     private EpisodeOfCareMapper episodeOfCareMapper;
@@ -65,8 +63,9 @@ public class EncounterMapper {
         encounter.setLocation(getLocationComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));
         setServiceProvider(encounter, clinicalDocument);
-        setAppointment(encounter, clinicalDocument);
         setSubject(encounter, clinicalDocument);
+        setReferralRequest(encounter, clinicalDocument);
+        setAppointment(encounter, clinicalDocument);
         setEpisodeOfCare(encounter, clinicalDocument);
         return encounter;
     }
@@ -150,6 +149,12 @@ public class EncounterMapper {
         }
     }
 
+    private void setReferralRequest(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument, encounter);
+        Reference referralRequestRef = new Reference(referralRequest);
+        encounter.addIncomingReferral(referralRequestRef);
+    }
+
     private Optional<Patient> getPatient(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
         Patient patient = new Patient();
         if (clinicalDocument1.sizeOfRecordTargetArray() > 0) {
@@ -158,4 +163,6 @@ public class EncounterMapper {
         }
         return Optional.of(patient);
     }
+
+
 }

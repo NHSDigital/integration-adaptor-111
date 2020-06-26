@@ -1,25 +1,25 @@
 package uk.nhs.adaptors.oneoneone.cda.report.util;
 
+import org.apache.xmlbeans.XmlObject;
+import org.junit.Test;
+import org.w3c.dom.Node;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.apache.xmlbeans.XmlObject;
-import org.junit.Test;
-import org.w3c.dom.Node;
-
 public class NodeUtilTest {
 
     @Test
-    public void getNodeString_nullNode() {
+    public void shouldGetNodeString_nullNode() {
         var xmlObject = mock(XmlObject.class);
 
         assertNull(NodeUtil.getNodeValueString(xmlObject));
     }
 
     @Test
-    public void getNodeString_nullChild() {
+    public void shouldGetNodeStringNullChild() {
         var xmlObject = mock(XmlObject.class);
         var innerNode = mock(Node.class);
         when(xmlObject.getDomNode()).thenReturn(innerNode);
@@ -28,7 +28,7 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void getNodeString_nullValue() {
+    public void shouldGetNodeStringNullValue() {
         var xmlObject = mock(XmlObject.class);
         var innerNode = mock(Node.class);
         when(xmlObject.getDomNode()).thenReturn(innerNode);
@@ -39,7 +39,7 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void getNodeString_happy() {
+    public void shouldGetNodeString_happy() {
         var xmlObject = mock(XmlObject.class);
         var innerNode = mock(Node.class);
         when(xmlObject.getDomNode()).thenReturn(innerNode);

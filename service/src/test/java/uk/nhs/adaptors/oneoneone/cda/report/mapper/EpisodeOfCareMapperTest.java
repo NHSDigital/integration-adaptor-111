@@ -2,6 +2,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hl7.fhir.dstu3.model.EpisodeOfCare.EpisodeOfCareStatus.ACTIVE;
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -20,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.nhs.connect.iucds.cda.ucr.CE;
+import uk.nhs.connect.iucds.cda.ucr.CO;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component1;
@@ -58,7 +60,7 @@ public class EpisodeOfCareMapperTest {
     }
 
     @Test
-    public void mapEpisodeOfCare() {
+    public void shouldMapEpisodeOfCare() {
         when(encompassingEncounter.isSetResponsibleParty()).thenReturn(true);
         POCDMT000002UK01ResponsibleParty responsibleParty = mock(POCDMT000002UK01ResponsibleParty.class);
         when(encompassingEncounter.getResponsibleParty()).thenReturn(responsibleParty);
@@ -89,11 +91,41 @@ public class EpisodeOfCareMapperTest {
     }
 
     @Test
-    public void mapEpisodeOfCareNoResponsibleParty() {
+    public void shouldMapEpisodeOfCareNoResponsibleParty() {
         when(encompassingEncounter.isSetResponsibleParty()).thenReturn(false);
 
         Optional<EpisodeOfCare> episodeOfCareOptional = episodeOfCareMapper.mapEpisodeOfCare(clinicalDocument, null);
 
         assertThat(episodeOfCareOptional).isEmpty();
+    }
+
+    public Optional<EpisodeOfCare> mapEpisodeOfCare(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Reference subject) {
+        POCDMT000002UK01EncompassingEncounter encompassingEncounter = clinicalDocument.getComponentOf()
+                .getEncompassingEncounter();
+
+        if (encompassingEncounter.isSetResponsibleParty() &&
+                encompassingEncounter.getResponsibleParty().getAssignedEntity() != null) {
+            POCDMT000002UK01AssignedEntity assignedEntity = encompassingEncounter.getResponsibleParty().getAssignedEntity();
+            EpisodeOfCare episodeOfCare = new EpisodeOfCare();
+            episodeOfCare.setPatient(subject);
+            episodeOfCare.setStatus(ACTIVE);
+            episodeOfCare.setId(newRandomUuid());
+            Practitioner practitioner = practitionerMapper.mapPractitioner(assignedEntity);
+            episodeOfCare.setCareManagerTarget(practitioner);
+            episodeOfCare.setCareManager(new Reference(practitioner));
+
+            if (assignedEntity.isSetRepresentedOrganization()) {
+                POCDMT000002UK01Organization representedOrganization = assignedEntity
+                        .getRepresentedOrganization();
+
+                Organization organization = organizationMapper.mapOrganization(representedOrganization);
+                episodeOfCare.setManagingOrganization(new Reference(organization));
+                episodeOfCare.setManagingOrganizationTarget(organization);
+            }
+
+            return Optional.of(episodeOfCare);
+        } else {
+            return Optional.empty();
+        }
     }
 }
