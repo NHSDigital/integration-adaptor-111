@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Group;
@@ -19,6 +20,7 @@ import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -27,12 +29,14 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 public class EncounterReportBundleService {
 
     private EncounterMapper encounterMapper;
+    private CompositionMapper compositionMapper;
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
         bundle.setType(TRANSACTION);
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
+        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter);
 
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
@@ -42,6 +46,7 @@ public class EncounterReportBundleService {
         addIncomingReferral(bundle, encounter);
         addAppointment(bundle, encounter);
         addEpisodeOfCare(bundle, encounter);
+        addComposition(bundle, composition);
 
         return bundle;
     }
@@ -153,7 +158,13 @@ public class EncounterReportBundleService {
         if (referralRequest.hasRequester()) {
             addEntry(bundle, referralRequest.getRequester().getOnBehalfOfTarget());
         }
+    }
 
+    private void addComposition(Bundle bundle, Composition composition) {
+        addEntry(bundle, composition);
+        if (composition.hasAuthor()) {
+            addEntry(bundle, (Resource) composition.getAuthor().get(0).getResource());
+        }
     }
 
     private static void addEntry(Bundle bundle, Resource resource) {

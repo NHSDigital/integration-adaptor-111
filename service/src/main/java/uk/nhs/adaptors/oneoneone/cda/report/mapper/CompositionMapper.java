@@ -8,12 +8,23 @@ import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.springframework.stereotype.Component;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Author;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component5;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+
+import java.io.StringWriter;
+import java.util.Date;
 
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
@@ -29,9 +40,13 @@ public class CompositionMapper {
 
         EpisodeOfCare episodeOfCare = (EpisodeOfCare) encounter.getEpisodeOfCareFirstRep().getResource();
 
-        Identifier identifier = new Identifier();
-        identifier.setUse(Identifier.IdentifierUse.USUAL);
-        identifier.setValue(clinicalDocument.getRelatedDocumentArray(0).getParentDocument().getIdArray(0).getRoot());
+        Identifier relatedDocIdentifier = new Identifier();
+        relatedDocIdentifier.setUse(Identifier.IdentifierUse.USUAL);
+        relatedDocIdentifier.setValue(clinicalDocument.getRelatedDocumentArray(0).getParentDocument().getIdArray(0).getRoot());
+
+        Identifier docIdentifier = new Identifier();
+        docIdentifier.setUse(Identifier.IdentifierUse.USUAL);
+        docIdentifier.setValue(clinicalDocument.getSetId().getRoot());
 
         Composition composition = new Composition();
         composition.setIdElement(newRandomUuid());
@@ -46,12 +61,13 @@ public class CompositionMapper {
             .setSubject(encounter.getSubject())
             .setSubjectTarget(encounter.getSubjectTarget())
             .setCustodian(episodeOfCare.getManagingOrganization())
-            .setCustodianTarget(episodeOfCare.getManagingOrganizationTarget());
+            .setCustodianTarget(episodeOfCare.getManagingOrganizationTarget())
+        .setDate(new Date())
+        .setIdentifier(docIdentifier);
 
         composition.addRelatesTo()
-            .setCode(Composition.DocumentRelationshipType.REPLACES);
-        composition.addRelatesTo()
-            .setTarget(identifier);
+            .setCode(Composition.DocumentRelationshipType.REPLACES)
+            .setTarget(relatedDocIdentifier);
 
         if (clinicalDocument.getAuthorArray() != null){
             for (POCDMT000002UK01Author author: clinicalDocument.getAuthorArray()){
@@ -62,17 +78,21 @@ public class CompositionMapper {
 
         if(clinicalDocument.getComponent().getStructuredBody().getComponentArray() != null){
             for (POCDMT000002UK01Component3 component3: clinicalDocument.getComponent().getStructuredBody().getComponentArray()){
-                POCDMT000002UK01Section section = component3.getSection();
-                Composition.SectionComponent sectionComponent = new Composition.SectionComponent();
-                sectionComponent.setTitle(section.getTitle().xmlText());
-                Narrative narrative = new Narrative();
-                narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
-                String divText = section.getText().xmlText();
-                XhtmlNode xhtmlNode = new XhtmlNode();
-                xhtmlNode.addText(divText);
-                narrative.setDiv(xhtmlNode);
-                sectionComponent.setText(narrative);
-                composition.addSection(sectionComponent);
+                    POCDMT000002UK01Section section = component3.getSection();
+                    for (POCDMT000002UK01Component5 component5 : section.getComponentArray()){
+                        POCDMT000002UK01Section sectionComponent5 = component5.getSection();
+                        Composition.SectionComponent sectionComponent = new Composition.SectionComponent();
+                        sectionComponent.setTitle(sectionComponent5.getTitle().xmlText());
+                        Narrative narrative = new Narrative();
+                        narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
+                        String divText = sectionComponent5.getText().xmlText();
+                        XhtmlNode xhtmlNode = new XhtmlNode();
+                        xhtmlNode.setNodeType(NodeType.Document);
+                        xhtmlNode.addText(divText);
+                        narrative.setDiv(xhtmlNode);
+                        sectionComponent.setText(narrative);
+                        composition.addSection(sectionComponent);
+                    }
             }
         }
 

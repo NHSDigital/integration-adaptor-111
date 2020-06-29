@@ -66,6 +66,7 @@ public class CompositionMapperTest {
         when(clinicalDocument.getRelatedDocumentArray(0)).thenReturn(relatedDocument1);
         when(relatedDocument1.getParentDocument()).thenReturn(parentDocument1);
         when(parentDocument1.getIdArray(0)).thenReturn(ii);
+        when(clinicalDocument.getSetId()).thenReturn(ii);
         when(ii.getRoot()).thenReturn("411910CF-1A76-4330-98FE-C345DDEE5553");
         when(clinicalDocument.getConfidentialityCode()).thenReturn(ce);
         when(ce.getCode()).thenReturn("V");
