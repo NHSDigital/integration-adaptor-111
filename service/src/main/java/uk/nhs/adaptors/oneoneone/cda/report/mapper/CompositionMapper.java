@@ -22,9 +22,8 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 @AllArgsConstructor
 public class CompositionMapper {
 
-    private final AuthorMapper authorMapper;
-
     private static final String SNOMED = "371531000";
+    private final AuthorMapper authorMapper;
 
     public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
 
@@ -54,23 +53,27 @@ public class CompositionMapper {
         composition.addRelatesTo()
             .setTarget(identifier);
 
-        for (POCDMT000002UK01Author author: clinicalDocument.getAuthorArray()){
-            Encounter.EncounterParticipantComponent authorComponent = (authorMapper.mapAuthorIntoParticipantComponent(author));
-            composition.addAuthor(authorComponent.getIndividual());
+        if (clinicalDocument.getAuthorArray() != null){
+            for (POCDMT000002UK01Author author: clinicalDocument.getAuthorArray()){
+                Encounter.EncounterParticipantComponent authorComponent = (authorMapper.mapAuthorIntoParticipantComponent(author));
+                composition.addAuthor(authorComponent.getIndividual());
+            }
         }
 
-        for (POCDMT000002UK01Component3 component3: clinicalDocument.getComponent().getStructuredBody().getComponentArray()){
-            POCDMT000002UK01Section section = component3.getSection();
-            Composition.SectionComponent sectionComponent = new Composition.SectionComponent();
-            sectionComponent.setTitle(section.getTitle().xmlText());
-            Narrative narrative = new Narrative();
-            narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
-            String divText = section.getText().xmlText();
-            XhtmlNode xhtmlNode = new XhtmlNode();
-            xhtmlNode.addText(divText);
-            narrative.setDiv(xhtmlNode);
-            sectionComponent.setText(narrative);
-            composition.addSection(sectionComponent);
+        if(clinicalDocument.getComponent().getStructuredBody().getComponentArray() != null){
+            for (POCDMT000002UK01Component3 component3: clinicalDocument.getComponent().getStructuredBody().getComponentArray()){
+                POCDMT000002UK01Section section = component3.getSection();
+                Composition.SectionComponent sectionComponent = new Composition.SectionComponent();
+                sectionComponent.setTitle(section.getTitle().xmlText());
+                Narrative narrative = new Narrative();
+                narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
+                String divText = section.getText().xmlText();
+                XhtmlNode xhtmlNode = new XhtmlNode();
+                xhtmlNode.addText(divText);
+                narrative.setDiv(xhtmlNode);
+                sectionComponent.setText(narrative);
+                composition.addSection(sectionComponent);
+            }
         }
 
         return composition;
