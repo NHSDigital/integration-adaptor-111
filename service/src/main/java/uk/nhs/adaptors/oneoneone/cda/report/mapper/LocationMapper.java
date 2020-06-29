@@ -1,19 +1,22 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-
 import lombok.AllArgsConstructor;
-import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
-
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 @Component
 @AllArgsConstructor
@@ -24,6 +27,8 @@ public class LocationMapper {
     private HumanNameMapper humanNameMapper;
 
     private OrganizationMapper organizationMapper;
+
+    private ContactPointMapper contactPointMapper;
 
     public Location mapRoleToLocation(POCDMT000002UK01ParticipantRole role) {
         Location location = new Location();
@@ -56,5 +61,17 @@ public class LocationMapper {
         return encounterLocationComponent;
     }
 
+    public Location mapRecipientToLocation(POCDMT000002UK01IntendedRecipient intendedRecipient) {
+        Location location = new Location();
+        location.setIdElement(IdType.newRandomUuid());
+        if (intendedRecipient.sizeOfAddrArray() > 0) {
+            location.setAddress(addressMapper.mapAddress(intendedRecipient.getAddrArray(0)));
+        }
+        location.setTelecom(Arrays
+                .stream(intendedRecipient.getTelecomArray())
+                .map(contactPointMapper::mapContactPoint)
+                .collect(Collectors.toList()));
+        return location;
+    }
 
 }

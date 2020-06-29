@@ -9,11 +9,13 @@ import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Group;
+import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -35,9 +37,10 @@ public class EncounterReportBundleService {
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
-        addAppointment(bundle, encounter);
         addLocation(bundle, encounter);
         addSubject(bundle, encounter);
+        addIncomingReferral(bundle, encounter);
+        addAppointment(bundle, encounter);
         addEpisodeOfCare(bundle, encounter);
 
         return bundle;
@@ -107,12 +110,14 @@ public class EncounterReportBundleService {
 
     private void addSubject(Bundle bundle, Encounter encounter) {
         if (encounter.getSubjectTarget() instanceof Patient) {
-            Patient patient = (org.hl7.fhir.dstu3.model.Patient) encounter.getSubjectTarget();
+            Patient patient = (Patient) encounter.getSubjectTarget();
             addEntry(bundle, patient);
 
             if (patient.hasGeneralPractitioner()) {
-                Organization organization = (Organization) patient.getGeneralPractitionerFirstRep().getResource();
-                addEntry(bundle, organization);
+                for (Reference gp : patient.getGeneralPractitioner()){
+                    Organization organization = (Organization) gp.getResource();
+                    addEntry(bundle, organization);
+                }
             }
         }
         if (encounter.getSubjectTarget() instanceof Group) {
@@ -124,6 +129,31 @@ public class EncounterReportBundleService {
                         .setResource(groupMemberComponent.getEntityTarget());
             }
         }
+    }
+
+    private void addIncomingReferral(Bundle bundle, Encounter encounter) {
+        ReferralRequest referralRequest = (ReferralRequest) encounter.getIncomingReferralFirstRep().getResource();
+        addEntry(bundle, referralRequest);
+        if (referralRequest.hasSubject()) {
+            addEntry(bundle, referralRequest.getSubjectTarget());
+        }
+        if (referralRequest.hasRecipient()) {
+            for (Reference recipient :
+                    referralRequest.getRecipient()) {
+                addEntry(bundle, (Resource) recipient.getResource());
+                HealthcareService healthcareService = (HealthcareService) recipient.getResource();
+                if (healthcareService.hasLocation()){
+                    addEntry(bundle, (Location) healthcareService.getLocationFirstRep().getResource());
+                }
+                if (healthcareService.hasProvidedBy()){
+                    addEntry(bundle, healthcareService.getProvidedByTarget());
+                }
+            }
+        }
+        if (referralRequest.hasRequester()) {
+            addEntry(bundle, referralRequest.getRequester().getOnBehalfOfTarget());
+        }
+
     }
 
     private static void addEntry(Bundle bundle, Resource resource) {

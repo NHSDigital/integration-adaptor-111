@@ -1,13 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import uk.nhs.connect.iucds.cda.ucr.IVLTS;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssociatedEntity;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
-
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Practitioner;
@@ -17,6 +9,13 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import uk.nhs.connect.iucds.cda.ucr.IVLTS;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssociatedEntity;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ParticipantMapperTest {
@@ -37,7 +36,7 @@ public class ParticipantMapperTest {
     private Period period;
 
     @Test
-    public void mapParticipant() {
+    public void shouldMapParticipant() {
         POCDMT000002UK01Participant1 encounterParticipant = mock(POCDMT000002UK01Participant1.class);
         POCDMT000002UK01AssociatedEntity associatedEntity = mock(POCDMT000002UK01AssociatedEntity.class);
         IVLTS time = mock(IVLTS.class);
@@ -47,9 +46,9 @@ public class ParticipantMapperTest {
         when(encounterParticipant.isSetTime()).thenReturn(true);
         when(encounterParticipant.getTime()).thenReturn(time);
         when(periodMapper.mapPeriod(ArgumentMatchers.isA(IVLTS.class)))
-            .thenReturn(period);
+                .thenReturn(period);
         when(practitionerMapper.mapPractitioner(ArgumentMatchers.isA(POCDMT000002UK01AssociatedEntity.class)))
-            .thenReturn(practitioner);
+                .thenReturn(practitioner);
 
         Encounter.EncounterParticipantComponent participantComponent = participantMapper.mapEncounterParticipant(encounterParticipant);
 

@@ -1,6 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 import java.text.ParseException;
 import java.time.Instant;
@@ -8,8 +9,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DateUtilTest {
     private final SimpleDateFormat isoDateformatter = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);

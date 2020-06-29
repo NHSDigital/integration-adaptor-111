@@ -1,24 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.time.Instant;
-import java.util.Date;
-import java.util.Optional;
-
-import uk.nhs.connect.iucds.cda.ucr.IVLTS;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant2;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
-import uk.nhs.connect.iucds.cda.ucr.ST;
-import uk.nhs.connect.iucds.cda.ucr.StrucDocContent;
-import uk.nhs.connect.iucds.cda.ucr.StrucDocText;
-
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Reference;
@@ -29,24 +10,39 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.w3c.dom.Node;
+import uk.nhs.connect.iucds.cda.ucr.IVLTS;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant2;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
+import uk.nhs.connect.iucds.cda.ucr.ST;
+import uk.nhs.connect.iucds.cda.ucr.StrucDocContent;
+import uk.nhs.connect.iucds.cda.ucr.StrucDocText;
+
+import java.time.Instant;
+import java.util.Date;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AppointmentMapperTest {
 
+    public static final String TITLE = "title";
+    public static final String COMMENT = "comment";
     @Mock
     private LocationMapper locationMapper;
-
     @InjectMocks
     private AppointmentMapper appointmentMapper;
-
     @Mock
     private Location location;
 
-    public static final String TITLE = "title";
-    public static final String COMMENT = "comment";
-
     @Test
-    public void mapAppointment() {
+    public void ShouldMapAppointment() {
         POCDMT000002UK01Entry entry = mockEntry();
         POCDMT000002UK01Section section = mockSection();
         Reference referralRequest = mock(Reference.class);
@@ -78,7 +74,7 @@ public class AppointmentMapperTest {
         POCDMT000002UK01ParticipantRole participantRole = mock(POCDMT000002UK01ParticipantRole.class);
         IVLTS time = mock(IVLTS.class);
         when(entry.getEncounter()).thenReturn(encounter);
-        when(encounter.getParticipantArray()).thenReturn(new POCDMT000002UK01Participant2[] { participant });
+        when(encounter.getParticipantArray()).thenReturn(new POCDMT000002UK01Participant2[]{participant});
         when(encounter.getEffectiveTime()).thenReturn(time);
         when(time.getValue()).thenReturn("201105191945+00");
         when(participant.getParticipantRole()).thenReturn(participantRole);

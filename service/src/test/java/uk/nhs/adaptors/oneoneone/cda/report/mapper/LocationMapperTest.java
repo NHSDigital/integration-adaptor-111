@@ -1,60 +1,59 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import uk.nhs.connect.iucds.cda.ucr.AD;
-import uk.nhs.connect.iucds.cda.ucr.ED;
-import uk.nhs.connect.iucds.cda.ucr.PN;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
-
 import org.hl7.fhir.dstu3.model.Address;
-import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.HumanName;
-import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.Encounter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.w3c.dom.Node;
+import uk.nhs.connect.iucds.cda.ucr.AD;
+import uk.nhs.connect.iucds.cda.ucr.PN;
+import uk.nhs.connect.iucds.cda.ucr.ED;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
+import uk.nhs.connect.iucds.cda.ucr.TEL;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LocationMapperTest {
 
-    @Mock
-    private AddressMapper addressMapper;
-
-    @Mock
-    private HumanNameMapper humanNameMapper;
-
-    @Mock
-    private OrganizationMapper organizationMapper;
-
-    @InjectMocks
-    private LocationMapper locationMapper;
-
-    @Mock
-    private Address address;
-
-    @Mock
-    private HumanName humanName;
-
-    @Mock
-    private Organization organization;
-
     public static final String DESCRIPTION = "description";
     public static final String NAME = "Mick Jones";
+    @Mock
+    private AddressMapper addressMapper;
+    @Mock
+    private HumanNameMapper humanNameMapper;
+    @Mock
+    private OrganizationMapper organizationMapper;
+    @Mock
+    private ContactPointMapper contactPointMapper;
+    @InjectMocks
+    private LocationMapper locationMapper;
+    @Mock
+    private Address address;
+    @Mock
+    private HumanName humanName;
+    @Mock
+    private Organization organization;
+    @Mock
+    private ContactPoint contactPoint;
 
     @Test
-    public void mapRoleToLocation() {
+    public void shouldMapRoleToLocation() {
         POCDMT000002UK01ParticipantRole participantRole = mock(POCDMT000002UK01ParticipantRole.class);
         POCDMT000002UK01PlayingEntity playingEntity = mock(POCDMT000002UK01PlayingEntity.class);
         AD itkAddress = mock(AD.class);
@@ -80,16 +79,31 @@ public class LocationMapperTest {
     }
 
     @Test
-    public void mapOrganizationToLocationComponent() {
+    public void shouldMapOrganizationToLocationComponent() {
         POCDMT000002UK01Organization itkOrganization = mock(POCDMT000002UK01Organization.class);
 
         when(organizationMapper.mapOrganization(any())).thenReturn(organization);
 
         Encounter.EncounterLocationComponent encounterLocationComponent = locationMapper
-            .mapOrganizationToLocationComponent(itkOrganization);
+                .mapOrganizationToLocationComponent(itkOrganization);
 
         assertThat(encounterLocationComponent.getLocationTarget().getIdElement().getValue()).startsWith("urn:uuid:");
         assertThat(encounterLocationComponent.getLocationTarget().getManagingOrganizationTarget()).isEqualTo(organization);
+    }
+
+    @Test
+    public void shouldMapRecipientToLocation() {
+        POCDMT000002UK01IntendedRecipient itkIntendedRecipient = mock(POCDMT000002UK01IntendedRecipient.class);
+
+        TEL itkTelecom = mock(TEL.class);
+
+        when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[]{itkTelecom});
+        when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
+
+        Location referenceRecipientToLocation = locationMapper
+                .mapRecipientToLocation(itkIntendedRecipient);
+
+        assertThat(referenceRecipientToLocation.getId().startsWith("urn:uuid:"));
     }
 
     private ED mockEntityDescription() {
