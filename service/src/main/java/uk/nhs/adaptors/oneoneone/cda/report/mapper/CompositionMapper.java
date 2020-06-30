@@ -27,7 +27,7 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 public class CompositionMapper {
 
     private static final String SNOMED = "371531000";
-    private static final String COMPOSITION_TITLE = "111 REPORT";
+    private static final String COMPOSITION_TITLE = "111 Report";
     private final AuthorMapper authorMapper;
 
     public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
