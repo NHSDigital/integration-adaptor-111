@@ -12,14 +12,15 @@ public class ReferenceUtil {
 
     /**
      * @param type DomainResource type
-     * @return Predicate which returns true if the FHIR Reference matches the name of the type <strong>exactly</strong>.
+     * @return Predicate which returns true if the FHIR Reference matches the name of the
+     * type <strong>exactly</strong>.
      */
     public static Predicate<Reference> ofType(Class<? extends DomainResource> type) {
         return ref -> {
             if(ref.getResource() != null) {
                 return type.isInstance(ref.getResource());
             }
-            else if (ref.hasReferenceElement()) {
+            else if (ref.hasReferenceElement() && ref.getReferenceElement().hasResourceType()) {
                 return ref.getReferenceElement().getResourceType().equals(type.getSimpleName());
             }
 

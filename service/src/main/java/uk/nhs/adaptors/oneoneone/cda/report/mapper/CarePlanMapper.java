@@ -1,10 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import lombok.AllArgsConstructor;
-
-import org.apache.commons.lang3.ArrayUtils;
 import org.hl7.fhir.dstu3.model.CarePlan;
-import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.Observation;
@@ -12,7 +9,6 @@ import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
-
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.SectionUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
@@ -28,21 +24,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanStatus.ACTIVE;
 import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanIntent.PLAN;
+import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanStatus.ACTIVE;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static uk.nhs.adaptors.oneoneone.cda.report.util.ReferenceUtil.ofTypes;
 
 @Component
 @AllArgsConstructor
 public class CarePlanMapper {
-    private final String SNOMED                   = "2.16.840.1.113883.2.1.3.2.4.15";
+    private final String SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
     private final String INFORMATION_ADVICE_GIVEN = "1052951000000105";
 
     private List<CarePlan> carePlansCreated = new ArrayList<>();
 
-    public List<Reference> mapCarePlan(POCDMT000002UK01ClinicalDocument1 clinicalDocument,
-                                       Encounter encounter) {
+    public List<CarePlan> mapCarePlan(POCDMT000002UK01ClinicalDocument1 clinicalDocument,
+                                      Encounter encounter) {
 
         POCDMT000002UK01StructuredBody structuredBody = SectionUtil.getStructuredBody(clinicalDocument);
 
@@ -51,7 +47,6 @@ public class CarePlanMapper {
                 .map(this::findCarePlanSections)
                 .flatMap(List::stream)
                 .map(section -> createCarePlanFromSection(section, encounter))
-                .map(cp -> create(cp))
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -62,28 +57,34 @@ public class CarePlanMapper {
         if (cpSection.isSetLanguageCode()) {
             carePlan.setLanguage(NodeUtil.getNodeValueString(cpSection.getLanguageCode()));
         }
-        carePlan.setTitle(NodeUtil.getNodeValueString(cpSection.getTitle()));
-        String cpTextContent = NodeUtil.getNodeValueString(cpSection.getText().getContentArray(0));
+        if (cpSection.isSetTitle()) {
+            carePlan.setTitle(NodeUtil.getNodeValueString(cpSection.getTitle()));
+        }
 
-        Narrative narrative = new Narrative();
-        narrative.setDivAsString(cpTextContent);
-        carePlan.setText(narrative);
-        carePlan.setDescription(cpTextContent);
+        if (cpSection.getText().sizeOfContentArray() > 0) {
+            String cpTextContent = NodeUtil.getNodeValueString(cpSection.getText().getContentArray(0));
+            Narrative narrative = new Narrative();
+            narrative.setDivAsString(cpTextContent);
+            if (cpSection.isSetText()) {
+                carePlan.setText(narrative);
+            }
+            carePlan.setDescription(cpTextContent);
+        }
         carePlan
-            .setIntent(PLAN)
-            .setSubject(encounter.getSubject())
-            .setSubjectTarget(encounter.getSubjectTarget())
-            .setStatus(ACTIVE)
-            .setContextTarget(encounter)
-            .setContext(new Reference(encounter))
-            .setPeriod(encounter.getPeriod());
+                .setIntent(PLAN)
+                .setSubject(encounter.getSubject())
+                .setSubjectTarget(encounter.getSubjectTarget())
+                .setStatus(ACTIVE)
+                .setContextTarget(encounter)
+                .setContext(new Reference(encounter))
+                .setPeriod(encounter.getPeriod());
 
-        getSupportingInfoFromITK(carePlan, cpSection);
+        getSupportingInfoFromITK(carePlan);
 
         return carePlan;
     }
 
-    private void getSupportingInfoFromITK(CarePlan carePlan, POCDMT000002UK01Section carePlanSection) {
+    private void getSupportingInfoFromITK(CarePlan carePlan) {
         carePlansCreated.stream()
                 .filter(ofTypes(QuestionnaireResponse.class, Observation.class))
                 .map(Resource::getIdElement)
@@ -91,19 +92,12 @@ public class CarePlanMapper {
                 .forEach(carePlan::addSupportingInfo);
     }
 
-    private Reference create(CarePlan carePlan) {
-        carePlansCreated.add(carePlan);
-        return new Reference(carePlan);
-    }
-
     private List<POCDMT000002UK01Section> findCarePlanSections(POCDMT000002UK01Section section) {
 
-        // Base case: If there are no nested sub components
-        if (ArrayUtils.isEmpty(section.getComponentArray())) {
+        if (section.sizeOfComponentArray() == 0) {
             return Collections.emptyList();
         }
 
-        // Find care plans at this level.
         List<POCDMT000002UK01Section> subSections = Arrays.stream(section.getComponentArray())
                 .map(POCDMT000002UK01Component5::getSection)
                 .collect(Collectors.toUnmodifiableList());
@@ -112,7 +106,6 @@ public class CarePlanMapper {
                 .filter(this::isCareAdvice)
                 .collect(Collectors.toList());
 
-        // Recursively find care plans in nested subsections.
         subSections.stream()
                 .map(this::findCarePlanSections)
                 .forEach(carePlanSections::addAll);
@@ -126,4 +119,4 @@ public class CarePlanMapper {
                 SNOMED.equals(code.getCode()) &&
                 INFORMATION_ADVICE_GIVEN.equals(code.getCodeSystem());
     }
- }
+}

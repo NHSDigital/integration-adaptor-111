@@ -117,8 +117,7 @@ public class EncounterReportBundleServiceTest {
     @Before
     public void setUp() {
         when(encounterMapper.mapEncounter(any())).thenReturn(ENCOUNTER);
-        when(carePlanMapper.mapCarePlan(any(), any()))
-                .thenReturn(Collections.singletonList(new Reference(CAREPLAN)));
+        when(carePlanMapper.mapCarePlan(any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
     }
 
     @Test

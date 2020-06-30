@@ -24,7 +24,7 @@ public class EncounterReportBundleService {
         bundle.setType(TRANSACTION);
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
-        List<Reference> carePlanRefs = carePlanMapper.mapCarePlan(clinicalDocument, encounter);
+        List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter);
 
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
@@ -34,7 +34,7 @@ public class EncounterReportBundleService {
         addIncomingReferral(bundle, encounter);
         addAppointment(bundle, encounter);
         addEpisodeOfCare(bundle, encounter);
-        addCarePlan(bundle, carePlanRefs);
+        addCarePlan(bundle, carePlans);
         return bundle;
     }
 
@@ -148,9 +148,9 @@ public class EncounterReportBundleService {
 
     }
 
-    private void addCarePlan(Bundle bundle, List<Reference> carePlanRefs) {
-        if (!carePlanRefs.isEmpty())
-            carePlanRefs.stream().forEach(carePlan -> addEntry(bundle, (Resource)carePlan.getResource()));
+    private void addCarePlan(Bundle bundle, List<CarePlan> carePlans) {
+        if (!carePlans.isEmpty())
+            carePlans.stream().forEach(carePlan -> addEntry(bundle, carePlan));
     }
 
     private static void addEntry(Bundle bundle, Resource resource) {

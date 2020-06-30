@@ -21,12 +21,10 @@ public class SectionFilterer {
 
     public List<POCDMT000002UK01Section> findValidSections(POCDMT000002UK01Section section) {
 
-        // Base case: If there are no nested sub components
         if (ArrayUtils.isEmpty(section.getComponentArray())) {
             return Collections.emptyList();
         }
 
-        // Find care plans at this level.
         List<POCDMT000002UK01Section> subSections = Arrays.stream(section.getComponentArray())
                 .map(POCDMT000002UK01Component5::getSection)
                 .collect(Collectors.toUnmodifiableList());
@@ -35,7 +33,6 @@ public class SectionFilterer {
                 .filter(this::isValidSection)
                 .collect(Collectors.toList());
 
-        // Recursively find care plans in nested subsections.
         subSections.stream()
                 .map(this::findValidSections)
                 .forEach(validSections::addAll);
@@ -45,7 +42,7 @@ public class SectionFilterer {
 
     private boolean isValidSection(POCDMT000002UK01Section section) {
         CE code = section.getCode();
-        return code != null &&
+        return code != null && section.isSetCode() &&
                 filterCodes.contains(code.getCode()) &&
                 filterCodes.contains(code.getCodeSystem());
     }
