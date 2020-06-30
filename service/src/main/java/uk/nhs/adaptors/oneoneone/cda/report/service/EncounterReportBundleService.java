@@ -4,21 +4,11 @@ import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 
 import java.util.List;
 
-import org.hl7.fhir.dstu3.model.Appointment;
-import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.EpisodeOfCare;
-import org.hl7.fhir.dstu3.model.Group;
-import org.hl7.fhir.dstu3.model.HealthcareService;
-import org.hl7.fhir.dstu3.model.Location;
-import org.hl7.fhir.dstu3.model.Organization;
-import org.hl7.fhir.dstu3.model.Patient;
-import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.Resource;
-import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.hl7.fhir.dstu3.model.*;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -27,12 +17,14 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 public class EncounterReportBundleService {
 
     private EncounterMapper encounterMapper;
+    private CarePlanMapper carePlanMapper;
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
         bundle.setType(TRANSACTION);
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
+        List<Reference> carePlanRefs = carePlanMapper.mapCarePlan(clinicalDocument, encounter);
 
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
@@ -42,7 +34,7 @@ public class EncounterReportBundleService {
         addIncomingReferral(bundle, encounter);
         addAppointment(bundle, encounter);
         addEpisodeOfCare(bundle, encounter);
-
+        addCarePlan(bundle, carePlanRefs);
         return bundle;
     }
 
@@ -154,6 +146,11 @@ public class EncounterReportBundleService {
             addEntry(bundle, referralRequest.getRequester().getOnBehalfOfTarget());
         }
 
+    }
+
+    private void addCarePlan(Bundle bundle, List<Reference> carePlanRefs) {
+        if (!carePlanRefs.isEmpty())
+            carePlanRefs.stream().forEach(carePlan -> addEntry(bundle, (Resource)carePlan.getResource()));
     }
 
     private static void addEntry(Bundle bundle, Resource resource) {

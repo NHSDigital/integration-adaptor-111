@@ -26,7 +26,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
-
 @Component
 @AllArgsConstructor
 public class EncounterMapper {
@@ -163,6 +162,4 @@ public class EncounterMapper {
         }
         return Optional.of(patient);
     }
-
-
 }
