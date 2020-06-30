@@ -2,6 +2,8 @@ package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent;
+import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.HumanName;
@@ -13,13 +15,13 @@ import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.ResourceType;
-import org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -54,6 +56,8 @@ public class EncounterReportBundleServiceTest {
     private static final IdType EPISODE_OF_CARE_ID = newRandomUuid();
     private static final ReferralRequest REFERRAL_REQUEST;
     private static final IdType REFERRAL_REQUEST_ID = newRandomUuid();
+    private static final Composition COMPOSITION;
+    private static final IdType COMPOSITION_ID = newRandomUuid();
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -86,6 +90,9 @@ public class EncounterReportBundleServiceTest {
         REFERRAL_REQUEST = new ReferralRequest();
         REFERRAL_REQUEST.setId(REFERRAL_REQUEST_ID);
 
+        COMPOSITION = new Composition();
+        COMPOSITION.setId(COMPOSITION_ID);
+
         ENCOUNTER = new Encounter();
         ENCOUNTER.setStatus(FINISHED);
         ENCOUNTER.setIdElement(ENCOUNTER_ID);
@@ -104,10 +111,13 @@ public class EncounterReportBundleServiceTest {
     private EncounterReportBundleService encounterReportBundleService;
     @Mock
     private EncounterMapper encounterMapper;
+    @Mock
+    private CompositionMapper compositionMapper;
 
     @Before
     public void setUp() {
         when(encounterMapper.mapEncounter(any())).thenReturn(ENCOUNTER);
+        when(compositionMapper.mapComposition(any(), any())).thenReturn(COMPOSITION);
     }
 
     @Test
@@ -116,7 +126,7 @@ public class EncounterReportBundleServiceTest {
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
 
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(8);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(9);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
         verifyEntry(entries.get(1), SERVICE_PROVIDER_ID.getValue(), ResourceType.Organization);
@@ -126,6 +136,7 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(5), REFERRAL_REQUEST_ID.getValue(), ResourceType.ReferralRequest);
         verifyEntry(entries.get(6), APPOINTMENT_ID.getValue(), ResourceType.Appointment);
         verifyEntry(entries.get(7), EPISODE_OF_CARE_ID.getValue(), ResourceType.EpisodeOfCare);
+        verifyEntry(entries.get(8), COMPOSITION_ID.getValue(), ResourceType.Composition);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {
