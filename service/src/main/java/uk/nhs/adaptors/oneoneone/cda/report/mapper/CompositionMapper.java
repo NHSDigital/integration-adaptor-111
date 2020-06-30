@@ -72,7 +72,6 @@ public class CompositionMapper {
                     .setTarget(relatedDocIdentifier);
         }
 
-
         if (clinicalDocument.sizeOfAuthorArray() > 0) {
             for (POCDMT000002UK01Author author : clinicalDocument.getAuthorArray()) {
                 Encounter.EncounterParticipantComponent authorComponent = (authorMapper.mapAuthorIntoParticipantComponent(author));
