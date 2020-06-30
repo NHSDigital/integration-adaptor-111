@@ -35,6 +35,13 @@ public class EncounterReportBundleService {
     private CompositionMapper compositionMapper;
     private ListMapper listMapper;
 
+    private static void addEntry(List<DomainResource> resourcesCreated, Bundle bundle, Resource resource) {
+        bundle.addEntry()
+                .setFullUrl(resource.getIdElement().getValue())
+                .setResource(resource);
+        resourcesCreated.add((DomainResource) resource);
+    }
+
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         List<DomainResource> resourcesCreated = new ArrayList<>();
         Bundle bundle = new Bundle();
@@ -128,7 +135,7 @@ public class EncounterReportBundleService {
             addEntry(resourcesCreated, bundle, patient);
 
             if (patient.hasGeneralPractitioner()) {
-                for (Reference gp : patient.getGeneralPractitioner()){
+                for (Reference gp : patient.getGeneralPractitioner()) {
                     Organization organization = (Organization) gp.getResource();
                     addEntry(resourcesCreated, bundle, organization);
                 }
@@ -156,10 +163,10 @@ public class EncounterReportBundleService {
                     referralRequest.getRecipient()) {
                 addEntry(resourcesCreated, bundle, (Resource) recipient.getResource());
                 HealthcareService healthcareService = (HealthcareService) recipient.getResource();
-                if (healthcareService.hasLocation()){
+                if (healthcareService.hasLocation()) {
                     addEntry(resourcesCreated, bundle, (Location) healthcareService.getLocationFirstRep().getResource());
                 }
-                if (healthcareService.hasProvidedBy()){
+                if (healthcareService.hasProvidedBy()) {
                     addEntry(resourcesCreated, bundle, healthcareService.getProvidedByTarget());
                 }
             }
@@ -180,12 +187,5 @@ public class EncounterReportBundleService {
         bundle.addEntry()
                 .setFullUrl(listResource.getIdElement().getValue())
                 .setResource(listResource);
-    }
-
-    private static void addEntry(List<DomainResource> resourcesCreated, Bundle bundle, Resource resource) {
-        bundle.addEntry()
-                .setFullUrl(resource.getIdElement().getValue())
-                .setResource(resource);
-        resourcesCreated.add((DomainResource) resource);
     }
 }
