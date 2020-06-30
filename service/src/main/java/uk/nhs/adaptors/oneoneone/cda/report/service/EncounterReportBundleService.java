@@ -162,7 +162,7 @@ public class EncounterReportBundleService {
     private void addComposition(Bundle bundle, Composition composition) {
         addEntry(bundle, composition);
         if (composition.hasAuthor()) {
-            addEntry(bundle, (Resource) composition.getAuthor().get(0).getResource());
+            addEntry(bundle, (Resource) composition.getAuthorFirstRep().getResource());
         }
     }
 
