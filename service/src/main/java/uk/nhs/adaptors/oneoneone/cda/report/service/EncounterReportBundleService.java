@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Composition;
-import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Group;
@@ -22,7 +21,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,12 +33,6 @@ public class EncounterReportBundleService {
     private EncounterMapper encounterMapper;
     private CompositionMapper compositionMapper;
     private ListMapper listMapper;
-
-    private static void addEntry(Bundle bundle, Resource resource) {
-        bundle.addEntry()
-                .setFullUrl(resource.getIdElement().getValue())
-                .setResource(resource);
-    }
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
@@ -59,13 +51,7 @@ public class EncounterReportBundleService {
         addEpisodeOfCare(bundle, encounter);
         addComposition(bundle, composition);
 
-
-        List<Resource> resourcesCreated = bundle.getEntry().stream().map(it -> it.getResource()).collect(Collectors.toList());
-
-
-
-
-
+        List<Resource> resourcesCreated = bundle.getEntry().stream().map(Bundle.BundleEntryComponent::getResource).collect(Collectors.toList());
         ListResource listResource = listMapper.mapList(clinicalDocument, encounter, resourcesCreated);
 
         addList(bundle, listResource);
@@ -190,8 +176,12 @@ public class EncounterReportBundleService {
     }
 
     private void addList(Bundle bundle, ListResource listResource) {
+        addEntry(bundle, listResource);
+    }
+
+    private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
-                .setFullUrl(listResource.getIdElement().getValue())
-                .setResource(listResource);
+                .setFullUrl(resource.getIdElement().getValue())
+                .setResource(resource);
     }
 }
