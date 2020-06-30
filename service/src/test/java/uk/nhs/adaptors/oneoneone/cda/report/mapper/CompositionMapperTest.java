@@ -72,9 +72,7 @@ public class CompositionMapperTest {
         when(ce.getCode()).thenReturn("V");
         when(encounter.getEpisodeOfCareFirstRep()).thenReturn(episodeOfCareRef);
         when(episodeOfCareRef.getResource()).thenReturn(episodeOfCareRefResource);
-        when(clinicalDocument.getAuthorArray()).thenReturn(authorArray);
         when(clinicalDocument.getComponent()).thenReturn(component2);
-        when(component2.getStructuredBody()).thenReturn(structuredBody);
         when(ce.isSetCode()).thenReturn(true);
         when(ii.isSetRoot()).thenReturn(true);
     }
