@@ -24,6 +24,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 
@@ -35,30 +36,35 @@ public class EncounterReportBundleService {
     private CompositionMapper compositionMapper;
     private ListMapper listMapper;
 
-    private static void addEntry(List<DomainResource> resourcesCreated, Bundle bundle, Resource resource) {
+    private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
                 .setFullUrl(resource.getIdElement().getValue())
                 .setResource(resource);
-        resourcesCreated.add((DomainResource) resource);
     }
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        List<DomainResource> resourcesCreated = new ArrayList<>();
         Bundle bundle = new Bundle();
         bundle.setType(TRANSACTION);
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
         Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter);
 
-        addEncounter(resourcesCreated, bundle, encounter);
-        addServiceProvider(resourcesCreated, bundle, encounter);
-        addParticipants(resourcesCreated, bundle, encounter);
-        addLocation(resourcesCreated, bundle, encounter);
-        addSubject(resourcesCreated, bundle, encounter);
-        addIncomingReferral(resourcesCreated, bundle, encounter);
-        addAppointment(resourcesCreated, bundle, encounter);
-        addEpisodeOfCare(resourcesCreated, bundle, encounter);
-        addComposition(resourcesCreated, bundle, composition);
+        addEncounter(bundle, encounter);
+        addServiceProvider(bundle, encounter);
+        addParticipants(bundle, encounter);
+        addLocation(bundle, encounter);
+        addSubject(bundle, encounter);
+        addIncomingReferral(bundle, encounter);
+        addAppointment(bundle, encounter);
+        addEpisodeOfCare(bundle, encounter);
+        addComposition(bundle, composition);
+
+
+        List<Resource> resourcesCreated = bundle.getEntry().stream().map(it -> it.getResource()).collect(Collectors.toList());
+
+
+
+
 
         ListResource listResource = listMapper.mapList(clinicalDocument, encounter, resourcesCreated);
 
@@ -67,83 +73,83 @@ public class EncounterReportBundleService {
         return bundle;
     }
 
-    private void addEncounter(List<DomainResource> resourcesCreated, Bundle bundle, Encounter encounter) {
-        addEntry(resourcesCreated, bundle, encounter);
+    private void addEncounter(Bundle bundle, Encounter encounter) {
+        addEntry(bundle, encounter);
     }
 
-    private void addEpisodeOfCare(List<DomainResource> resourcesCreated, Bundle bundle, Encounter encounter) {
+    private void addEpisodeOfCare(Bundle bundle, Encounter encounter) {
         if (encounter.hasEpisodeOfCare()) {
             EpisodeOfCare episodeOfCare = (EpisodeOfCare) encounter.getEpisodeOfCareFirstRep().getResource();
-            addEntry(resourcesCreated, bundle, episodeOfCare);
+            addEntry(bundle, episodeOfCare);
 
             if (episodeOfCare.hasCareManager()) {
-                addEntry(resourcesCreated, bundle, episodeOfCare.getCareManagerTarget());
+                addEntry(bundle, episodeOfCare.getCareManagerTarget());
             }
 
             if (episodeOfCare.hasManagingOrganization()) {
-                addEntry(resourcesCreated, bundle, episodeOfCare.getManagingOrganizationTarget());
+                addEntry(bundle, episodeOfCare.getManagingOrganizationTarget());
             }
         }
     }
 
-    private void addServiceProvider(List<DomainResource> resourcesCreated, Bundle bundle, Encounter encounter) {
-        addEntry(resourcesCreated, bundle, encounter.getServiceProviderTarget());
+    private void addServiceProvider(Bundle bundle, Encounter encounter) {
+        addEntry(bundle, encounter.getServiceProviderTarget());
     }
 
-    private void addParticipants(List<DomainResource> resourcesCreated, Bundle bundle, Encounter encounter) {
+    private void addParticipants(Bundle bundle, Encounter encounter) {
         List<Encounter.EncounterParticipantComponent> participantComponents = encounter.getParticipant();
-        participantComponents.stream().forEach(item -> addEntry(resourcesCreated, bundle, item.getIndividualTarget()));
+        participantComponents.stream().forEach(item -> addEntry(bundle, item.getIndividualTarget()));
     }
 
-    private void addAppointment(List<DomainResource> resourcesCreated, Bundle bundle, Encounter encounter) {
+    private void addAppointment(Bundle bundle, Encounter encounter) {
         if (encounter.hasAppointment()) {
             Appointment appointment = encounter.getAppointmentTarget();
-            addEntry(resourcesCreated, bundle, appointment);
+            addEntry(bundle, appointment);
             if (appointment.hasParticipant()) {
                 for (Appointment.AppointmentParticipantComponent participant : appointment.getParticipant()) {
                     if (participant.hasActor()) {
-                        addEntry(resourcesCreated, bundle, participant.getActorTarget());
+                        addEntry(bundle, participant.getActorTarget());
                     }
                 }
             }
         }
     }
 
-    private void addLocation(List<DomainResource> resourcesCreated, Bundle bundle, Encounter encounter) {
+    private void addLocation(Bundle bundle, Encounter encounter) {
         List<Encounter.EncounterLocationComponent> locationComponents = encounter.getLocation();
         for (Encounter.EncounterLocationComponent component : locationComponents) {
             if (component.hasLocation()) {
                 Location location = component.getLocationTarget();
-                addEntry(resourcesCreated, bundle, location);
+                addEntry(bundle, location);
                 if (location.hasManagingOrganization()) {
-                    addOrganization(resourcesCreated, bundle, location.getManagingOrganizationTarget());
+                    addOrganization(bundle, location.getManagingOrganizationTarget());
                 }
             }
         }
     }
 
-    private void addOrganization(List<DomainResource> resourcesCreated, Bundle bundle, Organization organization) {
-        addEntry(resourcesCreated, bundle, organization);
+    private void addOrganization(Bundle bundle, Organization organization) {
+        addEntry(bundle, organization);
         if (organization.hasPartOf()) {
-            addOrganization(resourcesCreated, bundle, organization.getPartOfTarget());
+            addOrganization(bundle, organization.getPartOfTarget());
         }
     }
 
-    private void addSubject(List<DomainResource> resourcesCreated, Bundle bundle, Encounter encounter) {
+    private void addSubject(Bundle bundle, Encounter encounter) {
         if (encounter.getSubjectTarget() instanceof Patient) {
             Patient patient = (Patient) encounter.getSubjectTarget();
-            addEntry(resourcesCreated, bundle, patient);
+            addEntry(bundle, patient);
 
             if (patient.hasGeneralPractitioner()) {
                 for (Reference gp : patient.getGeneralPractitioner()) {
                     Organization organization = (Organization) gp.getResource();
-                    addEntry(resourcesCreated, bundle, organization);
+                    addEntry(bundle, organization);
                 }
             }
         }
         if (encounter.getSubjectTarget() instanceof Group) {
             Group group = (Group) encounter.getSubjectTarget();
-            addEntry(resourcesCreated, bundle, group);
+            addEntry(bundle, group);
             for (Group.GroupMemberComponent groupMemberComponent : group.getMember()) {
                 bundle.addEntry()
                         .setFullUrl(groupMemberComponent.getIdElement().getValue())
@@ -152,34 +158,34 @@ public class EncounterReportBundleService {
         }
     }
 
-    private void addIncomingReferral(List<DomainResource> resourcesCreated, Bundle bundle, Encounter encounter) {
+    private void addIncomingReferral(Bundle bundle, Encounter encounter) {
         ReferralRequest referralRequest = (ReferralRequest) encounter.getIncomingReferralFirstRep().getResource();
-        addEntry(resourcesCreated, bundle, referralRequest);
+        addEntry(bundle, referralRequest);
         if (referralRequest.hasSubject()) {
-            addEntry(resourcesCreated, bundle, referralRequest.getSubjectTarget());
+            addEntry(bundle, referralRequest.getSubjectTarget());
         }
         if (referralRequest.hasRecipient()) {
             for (Reference recipient :
                     referralRequest.getRecipient()) {
-                addEntry(resourcesCreated, bundle, (Resource) recipient.getResource());
+                addEntry(bundle, (Resource) recipient.getResource());
                 HealthcareService healthcareService = (HealthcareService) recipient.getResource();
                 if (healthcareService.hasLocation()) {
-                    addEntry(resourcesCreated, bundle, (Location) healthcareService.getLocationFirstRep().getResource());
+                    addEntry(bundle, (Location) healthcareService.getLocationFirstRep().getResource());
                 }
                 if (healthcareService.hasProvidedBy()) {
-                    addEntry(resourcesCreated, bundle, healthcareService.getProvidedByTarget());
+                    addEntry(bundle, healthcareService.getProvidedByTarget());
                 }
             }
         }
         if (referralRequest.hasRequester()) {
-            addEntry(resourcesCreated, bundle, referralRequest.getRequester().getOnBehalfOfTarget());
+            addEntry(bundle, referralRequest.getRequester().getOnBehalfOfTarget());
         }
     }
 
-    private void addComposition(List<DomainResource> resourcesCreated, Bundle bundle, Composition composition) {
-        addEntry(resourcesCreated, bundle, composition);
+    private void addComposition(Bundle bundle, Composition composition) {
+        addEntry(bundle, composition);
         if (composition.hasAuthor()) {
-            addEntry(resourcesCreated, bundle, (Resource) composition.getAuthorFirstRep().getResource());
+            addEntry(bundle, (Resource) composition.getAuthorFirstRep().getResource());
         }
     }
 

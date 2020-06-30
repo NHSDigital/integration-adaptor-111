@@ -2,7 +2,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.ListResource;
@@ -25,7 +24,7 @@ public class ListMapper {
     private static final String ORDER_BY = "event-date";
     private static final Reference transformerDevice = new Reference("Device/1");
 
-    public ListResource mapList(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, List<DomainResource> resourcesCreated){
+    public ListResource mapList(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, List<Resource> resourcesCreated){
         ListResource listResource = new ListResource();
 
         listResource.setIdElement(newRandomUuid());
