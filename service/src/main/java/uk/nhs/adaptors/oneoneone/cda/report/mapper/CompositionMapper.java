@@ -27,24 +27,27 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 public class CompositionMapper {
 
     private static final String SNOMED = "371531000";
+    private static final String COMPOSITION_TITLE = "111 REPORT";
     private final AuthorMapper authorMapper;
 
     public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
 
-        EpisodeOfCare episodeOfCare = (EpisodeOfCare) encounter.getEpisodeOfCareFirstRep().getResource();
+        Composition composition = new Composition();
+        composition.setIdElement(newRandomUuid());
 
-        Identifier relatedDocIdentifier = new Identifier();
-        relatedDocIdentifier.setUse(Identifier.IdentifierUse.USUAL);
-        relatedDocIdentifier.setValue(clinicalDocument.getRelatedDocumentArray(0).getParentDocument().getIdArray(0).getRoot());
+        if (encounter.getEpisodeOfCareFirstRep().getResource() != null){
+            EpisodeOfCare episodeOfCare = (EpisodeOfCare) encounter.getEpisodeOfCareFirstRep().getResource();
+            composition
+                    .setCustodian(episodeOfCare.getManagingOrganization())
+                    .setCustodianTarget(episodeOfCare.getManagingOrganizationTarget());
+        }
 
         Identifier docIdentifier = new Identifier();
         docIdentifier.setUse(Identifier.IdentifierUse.USUAL);
         docIdentifier.setValue(clinicalDocument.getSetId().getRoot());
 
-        Composition composition = new Composition();
-        composition.setIdElement(newRandomUuid());
         composition
-                .setTitle("111 Report")
+                .setTitle(COMPOSITION_TITLE)
                 .setType(new CodeableConcept()
                         .setText(SNOMED))
                 .setStatus(Composition.CompositionStatus.FINAL)
@@ -53,14 +56,18 @@ public class CompositionMapper {
                 .setEncounterTarget(encounter)
                 .setSubject(encounter.getSubject())
                 .setSubjectTarget(encounter.getSubjectTarget())
-                .setCustodian(episodeOfCare.getManagingOrganization())
-                .setCustodianTarget(episodeOfCare.getManagingOrganizationTarget())
                 .setDate(new Date())
                 .setIdentifier(docIdentifier);
 
-        composition.addRelatesTo()
-                .setCode(Composition.DocumentRelationshipType.REPLACES)
-                .setTarget(relatedDocIdentifier);
+        if(clinicalDocument.getRelatedDocumentArray(0).getParentDocument().getIdArray(0).getRoot() != null){
+            Identifier relatedDocIdentifier = new Identifier();
+            relatedDocIdentifier.setUse(Identifier.IdentifierUse.USUAL);
+            relatedDocIdentifier.setValue(clinicalDocument.getRelatedDocumentArray(0).getParentDocument().getIdArray(0).getRoot());
+            composition.addRelatesTo()
+                    .setCode(Composition.DocumentRelationshipType.REPLACES)
+                    .setTarget(relatedDocIdentifier);
+        }
+
 
         if (clinicalDocument.getAuthorArray() != null) {
             for (POCDMT000002UK01Author author : clinicalDocument.getAuthorArray()) {
