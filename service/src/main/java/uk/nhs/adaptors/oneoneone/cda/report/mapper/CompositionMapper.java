@@ -17,13 +17,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component5;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-
-import java.io.StringWriter;
 import java.util.Date;
 
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
@@ -51,48 +44,48 @@ public class CompositionMapper {
         Composition composition = new Composition();
         composition.setIdElement(newRandomUuid());
         composition
-            .setTitle("111 Report")
-            .setType(new CodeableConcept()
-                    .setText(SNOMED))
-            .setStatus(Composition.CompositionStatus.FINAL)
-            .setConfidentiality(Composition.DocumentConfidentiality.valueOf(clinicalDocument.getConfidentialityCode().getCode()))
-            .setEncounter(new Reference(encounter))
-            .setEncounterTarget(encounter)
-            .setSubject(encounter.getSubject())
-            .setSubjectTarget(encounter.getSubjectTarget())
-            .setCustodian(episodeOfCare.getManagingOrganization())
-            .setCustodianTarget(episodeOfCare.getManagingOrganizationTarget())
-        .setDate(new Date())
-        .setIdentifier(docIdentifier);
+                .setTitle("111 Report")
+                .setType(new CodeableConcept()
+                        .setText(SNOMED))
+                .setStatus(Composition.CompositionStatus.FINAL)
+                .setConfidentiality(Composition.DocumentConfidentiality.valueOf(clinicalDocument.getConfidentialityCode().getCode()))
+                .setEncounter(new Reference(encounter))
+                .setEncounterTarget(encounter)
+                .setSubject(encounter.getSubject())
+                .setSubjectTarget(encounter.getSubjectTarget())
+                .setCustodian(episodeOfCare.getManagingOrganization())
+                .setCustodianTarget(episodeOfCare.getManagingOrganizationTarget())
+                .setDate(new Date())
+                .setIdentifier(docIdentifier);
 
         composition.addRelatesTo()
-            .setCode(Composition.DocumentRelationshipType.REPLACES)
-            .setTarget(relatedDocIdentifier);
+                .setCode(Composition.DocumentRelationshipType.REPLACES)
+                .setTarget(relatedDocIdentifier);
 
-        if (clinicalDocument.getAuthorArray() != null){
-            for (POCDMT000002UK01Author author: clinicalDocument.getAuthorArray()){
+        if (clinicalDocument.getAuthorArray() != null) {
+            for (POCDMT000002UK01Author author : clinicalDocument.getAuthorArray()) {
                 Encounter.EncounterParticipantComponent authorComponent = (authorMapper.mapAuthorIntoParticipantComponent(author));
                 composition.addAuthor(authorComponent.getIndividual());
             }
         }
 
-        if(clinicalDocument.getComponent().getStructuredBody().getComponentArray() != null){
-            for (POCDMT000002UK01Component3 component3: clinicalDocument.getComponent().getStructuredBody().getComponentArray()){
-                    POCDMT000002UK01Section section = component3.getSection();
-                    for (POCDMT000002UK01Component5 component5 : section.getComponentArray()){
-                        POCDMT000002UK01Section sectionComponent5 = component5.getSection();
-                        Composition.SectionComponent sectionComponent = new Composition.SectionComponent();
-                        sectionComponent.setTitle(sectionComponent5.getTitle().xmlText());
-                        Narrative narrative = new Narrative();
-                        narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
-                        String divText = sectionComponent5.getText().xmlText();
-                        XhtmlNode xhtmlNode = new XhtmlNode();
-                        xhtmlNode.setNodeType(NodeType.Document);
-                        xhtmlNode.addText(divText);
-                        narrative.setDiv(xhtmlNode);
-                        sectionComponent.setText(narrative);
-                        composition.addSection(sectionComponent);
-                    }
+        if (clinicalDocument.getComponent().getStructuredBody().getComponentArray() != null) {
+            for (POCDMT000002UK01Component3 component3 : clinicalDocument.getComponent().getStructuredBody().getComponentArray()) {
+                POCDMT000002UK01Section section = component3.getSection();
+                for (POCDMT000002UK01Component5 component5 : section.getComponentArray()) {
+                    POCDMT000002UK01Section sectionComponent5 = component5.getSection();
+                    Composition.SectionComponent sectionComponent = new Composition.SectionComponent();
+                    sectionComponent.setTitle(sectionComponent5.getTitle().xmlText());
+                    Narrative narrative = new Narrative();
+                    narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
+                    String divText = sectionComponent5.getText().xmlText();
+                    XhtmlNode xhtmlNode = new XhtmlNode();
+                    xhtmlNode.setNodeType(NodeType.Document);
+                    xhtmlNode.addText(divText);
+                    narrative.setDiv(xhtmlNode);
+                    sectionComponent.setText(narrative);
+                    composition.addSection(sectionComponent);
+                }
             }
         }
 

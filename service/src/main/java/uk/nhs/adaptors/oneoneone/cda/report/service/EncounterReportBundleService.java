@@ -1,9 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
-
-import java.util.List;
-
+import lombok.AllArgsConstructor;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Composition;
@@ -15,14 +12,16 @@ import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+
+import java.util.List;
+
+import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 
 @Component
 @AllArgsConstructor
