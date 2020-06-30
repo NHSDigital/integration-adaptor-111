@@ -35,7 +35,7 @@ public class CompositionMapper {
         Composition composition = new Composition();
         composition.setIdElement(newRandomUuid());
 
-        if (encounter.getEpisodeOfCareFirstRep().getResource() != null){
+        if (encounter.getEpisodeOfCareFirstRep().getResource() != null) {
             EpisodeOfCare episodeOfCare = (EpisodeOfCare) encounter.getEpisodeOfCareFirstRep().getResource();
             composition
                     .setCustodian(episodeOfCare.getManagingOrganization())
@@ -51,7 +51,6 @@ public class CompositionMapper {
                 .setType(new CodeableConcept()
                         .setText(SNOMED))
                 .setStatus(Composition.CompositionStatus.FINAL)
-                .setConfidentiality(Composition.DocumentConfidentiality.valueOf(clinicalDocument.getConfidentialityCode().getCode()))
                 .setEncounter(new Reference(encounter))
                 .setEncounterTarget(encounter)
                 .setSubject(encounter.getSubject())
@@ -59,7 +58,12 @@ public class CompositionMapper {
                 .setDate(new Date())
                 .setIdentifier(docIdentifier);
 
-        if(clinicalDocument.getRelatedDocumentArray(0).getParentDocument().getIdArray(0).getRoot() != null){
+        if (clinicalDocument.getConfidentialityCode().isSetCode()) {
+            composition
+                    .setConfidentiality(Composition.DocumentConfidentiality.valueOf(clinicalDocument.getConfidentialityCode().getCode()));
+        }
+
+        if (clinicalDocument.getRelatedDocumentArray(0).getParentDocument().getIdArray(0).isSetRoot()) {
             Identifier relatedDocIdentifier = new Identifier();
             relatedDocIdentifier.setUse(Identifier.IdentifierUse.USUAL);
             relatedDocIdentifier.setValue(clinicalDocument.getRelatedDocumentArray(0).getParentDocument().getIdArray(0).getRoot());
@@ -69,20 +73,22 @@ public class CompositionMapper {
         }
 
 
-        if (clinicalDocument.getAuthorArray() != null) {
+        if (clinicalDocument.sizeOfAuthorArray() > 0) {
             for (POCDMT000002UK01Author author : clinicalDocument.getAuthorArray()) {
                 Encounter.EncounterParticipantComponent authorComponent = (authorMapper.mapAuthorIntoParticipantComponent(author));
                 composition.addAuthor(authorComponent.getIndividual());
             }
         }
 
-        if (clinicalDocument.getComponent().getStructuredBody().getComponentArray() != null) {
+        if (clinicalDocument.getComponent().isSetStructuredBody()) {
             for (POCDMT000002UK01Component3 component3 : clinicalDocument.getComponent().getStructuredBody().getComponentArray()) {
                 POCDMT000002UK01Section section = component3.getSection();
                 for (POCDMT000002UK01Component5 component5 : section.getComponentArray()) {
                     POCDMT000002UK01Section sectionComponent5 = component5.getSection();
                     Composition.SectionComponent sectionComponent = new Composition.SectionComponent();
-                    sectionComponent.setTitle(sectionComponent5.getTitle().xmlText());
+                    if (sectionComponent5.isSetTitle()) {
+                        sectionComponent.setTitle(sectionComponent5.getTitle().xmlText());
+                    }
                     Narrative narrative = new Narrative();
                     narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
                     String divText = sectionComponent5.getText().xmlText();
