@@ -11,6 +11,7 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.springframework.stereotype.Component;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Author;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
@@ -86,7 +87,7 @@ public class CompositionMapper {
                     POCDMT000002UK01Section sectionComponent5 = component5.getSection();
                     Composition.SectionComponent sectionComponent = new Composition.SectionComponent();
                     if (sectionComponent5.isSetTitle()) {
-                        sectionComponent.setTitle(sectionComponent5.getTitle().xmlText());
+                        sectionComponent.setTitle(NodeUtil.getAllText(sectionComponent5.getTitle().getDomNode()));
                     }
                     Narrative narrative = new Narrative();
                     narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
