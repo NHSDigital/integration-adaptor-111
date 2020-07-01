@@ -1,16 +1,27 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
-
-import java.util.List;
-
-import org.hl7.fhir.dstu3.model.*;
-import org.springframework.stereotype.Component;
-
 import lombok.AllArgsConstructor;
+import org.hl7.fhir.dstu3.model.Appointment;
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.CarePlan;
+import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.EpisodeOfCare;
+import org.hl7.fhir.dstu3.model.Group;
+import org.hl7.fhir.dstu3.model.HealthcareService;
+import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.hl7.fhir.dstu3.model.Resource;
+import org.springframework.stereotype.Component;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+
+import java.util.List;
+
+import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 
 @Component
 @AllArgsConstructor
@@ -106,7 +117,7 @@ public class EncounterReportBundleService {
             addEntry(bundle, patient);
 
             if (patient.hasGeneralPractitioner()) {
-                for (Reference gp : patient.getGeneralPractitioner()){
+                for (Reference gp : patient.getGeneralPractitioner()) {
                     Organization organization = (Organization) gp.getResource();
                     addEntry(bundle, organization);
                 }
@@ -134,10 +145,10 @@ public class EncounterReportBundleService {
                     referralRequest.getRecipient()) {
                 addEntry(bundle, (Resource) recipient.getResource());
                 HealthcareService healthcareService = (HealthcareService) recipient.getResource();
-                if (healthcareService.hasLocation()){
+                if (healthcareService.hasLocation()) {
                     addEntry(bundle, (Location) healthcareService.getLocationFirstRep().getResource());
                 }
-                if (healthcareService.hasProvidedBy()){
+                if (healthcareService.hasProvidedBy()) {
                     addEntry(bundle, healthcareService.getProvidedByTarget());
                 }
             }

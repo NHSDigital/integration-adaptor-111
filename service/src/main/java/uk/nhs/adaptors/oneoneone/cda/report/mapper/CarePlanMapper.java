@@ -2,6 +2,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import lombok.AllArgsConstructor;
 import org.hl7.fhir.dstu3.model.CarePlan;
+import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.Observation;
@@ -10,9 +11,9 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
-import uk.nhs.adaptors.oneoneone.cda.report.util.SectionUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component2;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component5;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
@@ -22,12 +23,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanIntent.PLAN;
 import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanStatus.ACTIVE;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ReferenceUtil.ofTypes;
 
 @Component
 @AllArgsConstructor
@@ -40,7 +42,7 @@ public class CarePlanMapper {
     public List<CarePlan> mapCarePlan(POCDMT000002UK01ClinicalDocument1 clinicalDocument,
                                       Encounter encounter) {
 
-        POCDMT000002UK01StructuredBody structuredBody = SectionUtil.getStructuredBody(clinicalDocument);
+        POCDMT000002UK01StructuredBody structuredBody = getStructuredBody(clinicalDocument);
 
         return Arrays.stream(structuredBody.getComponentArray())
                 .map(POCDMT000002UK01Component3::getSection)
@@ -53,6 +55,14 @@ public class CarePlanMapper {
     public CarePlan createCarePlanFromSection(POCDMT000002UK01Section cpSection, Encounter encounter) {
         CarePlan carePlan = new CarePlan();
         carePlan.setIdElement(newRandomUuid());
+        carePlan
+                .setIntent(PLAN)
+                .setSubject(encounter.getSubject())
+                .setSubjectTarget(encounter.getSubjectTarget())
+                .setStatus(ACTIVE)
+                .setContextTarget(encounter)
+                .setContext(new Reference(encounter))
+                .setPeriod(encounter.getPeriod());
 
         if (cpSection.isSetLanguageCode()) {
             carePlan.setLanguage(NodeUtil.getNodeValueString(cpSection.getLanguageCode()));
@@ -70,16 +80,9 @@ public class CarePlanMapper {
             }
             carePlan.setDescription(cpTextContent);
         }
-        carePlan
-                .setIntent(PLAN)
-                .setSubject(encounter.getSubject())
-                .setSubjectTarget(encounter.getSubjectTarget())
-                .setStatus(ACTIVE)
-                .setContextTarget(encounter)
-                .setContext(new Reference(encounter))
-                .setPeriod(encounter.getPeriod());
 
-        getSupportingInfoFromITK(carePlan);
+        // Missing from the data
+//        getSupportingInfoFromITK(carePlan);
 
         return carePlan;
     }
@@ -90,6 +93,22 @@ public class CarePlanMapper {
                 .map(Resource::getIdElement)
                 .map(Reference::new)
                 .forEach(carePlan::addSupportingInfo);
+    }
+
+    private POCDMT000002UK01StructuredBody getStructuredBody(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        return Optional.ofNullable(clinicalDocument)
+                .map(POCDMT000002UK01ClinicalDocument1::getComponent)
+                .map(POCDMT000002UK01Component2::getStructuredBody)
+                .orElse(null);
+    }
+
+    @SafeVarargs
+    public static Predicate<DomainResource> ofTypes(Class<? extends DomainResource>... types) {
+        return Arrays.stream(types)
+                .map(type -> (Predicate<DomainResource>) type::isInstance)
+                .reduce(Predicate::or)
+                .orElse(x -> false);
+
     }
 
     private List<POCDMT000002UK01Section> findCarePlanSections(POCDMT000002UK01Section section) {
@@ -116,7 +135,7 @@ public class CarePlanMapper {
     private boolean isCareAdvice(POCDMT000002UK01Section section) {
         CE code = section.getCode();
         return code != null &&
-                SNOMED.equals(code.getCode()) &&
-                INFORMATION_ADVICE_GIVEN.equals(code.getCodeSystem());
+                SNOMED.equals(code.getCodeSystem()) &&
+                INFORMATION_ADVICE_GIVEN.equals(code.getCode());
     }
 }
