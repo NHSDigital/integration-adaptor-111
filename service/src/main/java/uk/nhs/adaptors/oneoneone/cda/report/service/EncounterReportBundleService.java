@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.CarePlan;
+import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Group;
@@ -16,8 +17,8 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -53,12 +54,12 @@ public class EncounterReportBundleService {
         addAppointment(bundle, encounter);
         addEpisodeOfCare(bundle, encounter);
         addComposition(bundle, composition);
-        addCarePlan(bundle, carePlans);
 
         List<Resource> resourcesCreated = bundle.getEntry().stream().map(Bundle.BundleEntryComponent::getResource).collect(Collectors.toList());
         ListResource listResource = listMapper.mapList(clinicalDocument, encounter, resourcesCreated);
 
         addList(bundle, listResource);
+        addCarePlan(bundle, carePlans);
 
         return bundle;
     }
