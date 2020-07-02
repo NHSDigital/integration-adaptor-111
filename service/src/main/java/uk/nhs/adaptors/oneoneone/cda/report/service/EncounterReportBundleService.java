@@ -54,12 +54,12 @@ public class EncounterReportBundleService {
         addAppointment(bundle, encounter);
         addEpisodeOfCare(bundle, encounter);
         addComposition(bundle, composition);
+        addCarePlan(bundle, carePlans);
 
         List<Resource> resourcesCreated = bundle.getEntry().stream().map(Bundle.BundleEntryComponent::getResource).collect(Collectors.toList());
         ListResource listResource = listMapper.mapList(clinicalDocument, encounter, resourcesCreated);
 
         addList(bundle, listResource);
-        addCarePlan(bundle, carePlans);
 
         return bundle;
     }

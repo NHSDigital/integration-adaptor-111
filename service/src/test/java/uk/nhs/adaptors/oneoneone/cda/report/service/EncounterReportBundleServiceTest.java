@@ -157,8 +157,8 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(6), APPOINTMENT_ID.getValue(), ResourceType.Appointment);
         verifyEntry(entries.get(7), EPISODE_OF_CARE_ID.getValue(), ResourceType.EpisodeOfCare);
         verifyEntry(entries.get(8), COMPOSITION_ID.getValue(), ResourceType.Composition);
-        verifyEntry(entries.get(9), LIST_RESOURCE_ID.getValue(), ResourceType.List);
-        verifyEntry(entries.get(10), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
+        verifyEntry(entries.get(9), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
+        verifyEntry(entries.get(10), LIST_RESOURCE_ID.getValue(), ResourceType.List);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {

@@ -28,20 +28,19 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 @Component
 @AllArgsConstructor
 public class CarePlanMapper {
-    private final String SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
-    private final String INFORMATION_ADVICE_GIVEN = "1052951000000105";
+    public List<CarePlan> mapCarePlan(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
+        if (clinicalDocument.getComponent().isSetStructuredBody()) {
+            POCDMT000002UK01StructuredBody structuredBody = getStructuredBody(clinicalDocument);
 
-    public List<CarePlan> mapCarePlan(POCDMT000002UK01ClinicalDocument1 clinicalDocument,
-                                      Encounter encounter) {
-
-        POCDMT000002UK01StructuredBody structuredBody = getStructuredBody(clinicalDocument);
-
-        return Arrays.stream(structuredBody.getComponentArray())
-                .map(POCDMT000002UK01Component3::getSection)
-                .map(this::findCarePlanSections)
-                .flatMap(List::stream)
-                .map(section -> createCarePlanFromSection(section, encounter))
-                .collect(Collectors.toUnmodifiableList());
+            return Arrays.stream(structuredBody.getComponentArray())
+                    .map(POCDMT000002UK01Component3::getSection)
+                    .map(this::findCarePlanSections)
+                    .flatMap(List::stream)
+                    .map(section -> createCarePlanFromSection(section, encounter))
+                    .collect(Collectors.toUnmodifiableList());
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public CarePlan createCarePlanFromSection(POCDMT000002UK01Section cpSection, Encounter encounter) {
@@ -106,6 +105,9 @@ public class CarePlanMapper {
     }
 
     private boolean isCareAdvice(POCDMT000002UK01Section section) {
+        final String SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
+        final String INFORMATION_ADVICE_GIVEN = "1052951000000105";
+
         CE code = section.getCode();
         return code != null &&
                 SNOMED.equals(code.getCodeSystem()) &&
