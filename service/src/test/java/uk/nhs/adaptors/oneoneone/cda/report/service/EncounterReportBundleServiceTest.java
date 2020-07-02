@@ -3,10 +3,12 @@ package uk.nhs.adaptors.oneoneone.cda.report.service;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent;
+import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.IdType;
+import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -21,8 +23,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 import java.util.Collections;
@@ -56,6 +60,10 @@ public class EncounterReportBundleServiceTest {
     private static final IdType EPISODE_OF_CARE_ID = newRandomUuid();
     private static final ReferralRequest REFERRAL_REQUEST;
     private static final IdType REFERRAL_REQUEST_ID = newRandomUuid();
+    private static final Composition COMPOSITION;
+    private static final IdType COMPOSITION_ID = newRandomUuid();
+    private static final ListResource LIST_RESOURCE;
+    private static final IdType LIST_RESOURCE_ID = newRandomUuid();
     private static final CarePlan CAREPLAN;
     private static final IdType CAREPLAN_ID = newRandomUuid();
 
@@ -90,6 +98,12 @@ public class EncounterReportBundleServiceTest {
         REFERRAL_REQUEST = new ReferralRequest();
         REFERRAL_REQUEST.setId(REFERRAL_REQUEST_ID);
 
+        COMPOSITION = new Composition();
+        COMPOSITION.setId(COMPOSITION_ID);
+
+        LIST_RESOURCE = new ListResource();
+        LIST_RESOURCE.setId(LIST_RESOURCE_ID);
+
         CAREPLAN = new CarePlan();
         CAREPLAN.setId(CAREPLAN_ID);
 
@@ -112,11 +126,17 @@ public class EncounterReportBundleServiceTest {
     @Mock
     private EncounterMapper encounterMapper;
     @Mock
+    private CompositionMapper compositionMapper;
+    @Mock
+    private ListMapper listMapper;
+    @Mock
     private CarePlanMapper carePlanMapper;
 
     @Before
     public void setUp() {
         when(encounterMapper.mapEncounter(any())).thenReturn(ENCOUNTER);
+        when(compositionMapper.mapComposition(any(), any())).thenReturn(COMPOSITION);
+        when(listMapper.mapList(any(), any(), any())).thenReturn(LIST_RESOURCE);
         when(carePlanMapper.mapCarePlan(any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
     }
 
@@ -126,7 +146,7 @@ public class EncounterReportBundleServiceTest {
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
 
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(9);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(11);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
         verifyEntry(entries.get(1), SERVICE_PROVIDER_ID.getValue(), ResourceType.Organization);
@@ -136,7 +156,9 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(5), REFERRAL_REQUEST_ID.getValue(), ResourceType.ReferralRequest);
         verifyEntry(entries.get(6), APPOINTMENT_ID.getValue(), ResourceType.Appointment);
         verifyEntry(entries.get(7), EPISODE_OF_CARE_ID.getValue(), ResourceType.EpisodeOfCare);
-        verifyEntry(entries.get(8), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
+        verifyEntry(entries.get(8), COMPOSITION_ID.getValue(), ResourceType.Composition);
+        verifyEntry(entries.get(9), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+        verifyEntry(entries.get(10), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {

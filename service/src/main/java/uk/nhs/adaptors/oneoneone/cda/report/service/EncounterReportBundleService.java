@@ -8,6 +8,7 @@ import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.HealthcareService;
+import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -15,11 +16,14 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 
@@ -28,6 +32,8 @@ import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 public class EncounterReportBundleService {
 
     private EncounterMapper encounterMapper;
+    private CompositionMapper compositionMapper;
+    private ListMapper listMapper;
     private CarePlanMapper carePlanMapper;
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -35,6 +41,7 @@ public class EncounterReportBundleService {
         bundle.setType(TRANSACTION);
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
+        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter);
 
         addEncounter(bundle, encounter);
@@ -45,7 +52,14 @@ public class EncounterReportBundleService {
         addIncomingReferral(bundle, encounter);
         addAppointment(bundle, encounter);
         addEpisodeOfCare(bundle, encounter);
+        addComposition(bundle, composition);
         addCarePlan(bundle, carePlans);
+
+        List<Resource> resourcesCreated = bundle.getEntry().stream().map(Bundle.BundleEntryComponent::getResource).collect(Collectors.toList());
+        ListResource listResource = listMapper.mapList(clinicalDocument, encounter, resourcesCreated);
+
+        addList(bundle, listResource);
+
         return bundle;
     }
 
@@ -156,6 +170,17 @@ public class EncounterReportBundleService {
         if (referralRequest.hasRequester()) {
             addEntry(bundle, referralRequest.getRequester().getOnBehalfOfTarget());
         }
+    }
+
+    private void addComposition(Bundle bundle, Composition composition) {
+        addEntry(bundle, composition);
+        if (composition.hasAuthor()) {
+            addEntry(bundle, (Resource) composition.getAuthorFirstRep().getResource());
+        }
+    }
+
+    private void addList(Bundle bundle, ListResource listResource) {
+        addEntry(bundle, listResource);
     }
 
     private void addCarePlan(Bundle bundle, List<CarePlan> carePlans) {
