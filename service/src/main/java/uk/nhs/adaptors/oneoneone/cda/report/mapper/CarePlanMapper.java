@@ -82,18 +82,7 @@ public class CarePlanMapper {
             carePlan.setDescription(cpTextContent);
         }
 
-        // Missing from the data
-//        getSupportingInfoFromITK(carePlan);
-
         return carePlan;
-    }
-
-    private void getSupportingInfoFromITK(CarePlan carePlan) {
-        carePlansCreated.stream()
-                .filter(ofTypes(QuestionnaireResponse.class, Observation.class))
-                .map(Resource::getIdElement)
-                .map(Reference::new)
-                .forEach(carePlan::addSupportingInfo);
     }
 
     private POCDMT000002UK01StructuredBody getStructuredBody(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
