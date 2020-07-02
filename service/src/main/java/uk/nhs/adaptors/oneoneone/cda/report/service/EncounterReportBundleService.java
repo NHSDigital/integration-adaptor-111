@@ -23,6 +23,8 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,12 @@ public class EncounterReportBundleService {
     private CompositionMapper compositionMapper;
     private ListMapper listMapper;
     private CarePlanMapper carePlanMapper;
+
+    private static void addEntry(Bundle bundle, Resource resource) {
+        bundle.addEntry()
+                .setFullUrl(resource.getIdElement().getValue())
+                .setResource(resource);
+    }
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
@@ -56,12 +64,18 @@ public class EncounterReportBundleService {
         addComposition(bundle, composition);
         addCarePlan(bundle, carePlans);
 
-        List<Resource> resourcesCreated = bundle.getEntry().stream().map(Bundle.BundleEntryComponent::getResource).collect(Collectors.toList());
-        ListResource listResource = listMapper.mapList(clinicalDocument, encounter, resourcesCreated);
+        ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
 
         addList(bundle, listResource);
 
         return bundle;
+    }
+
+    private ListResource getReferenceFromBundle(Bundle bundle, POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
+        List<Resource> resourcesCreated = new ArrayList<>(
+                new HashSet<>(
+                        bundle.getEntry().stream().map(Bundle.BundleEntryComponent::getResource).collect(Collectors.toList())));
+        return listMapper.mapList(clinicalDocument, encounter, resourcesCreated);
     }
 
     private void addEncounter(Bundle bundle, Encounter encounter) {
@@ -186,11 +200,5 @@ public class EncounterReportBundleService {
 
     private void addCarePlan(Bundle bundle, List<CarePlan> carePlans) {
         carePlans.stream().forEach(carePlan -> addEntry(bundle, carePlan));
-    }
-
-    private static void addEntry(Bundle bundle, Resource resource) {
-        bundle.addEntry()
-                .setFullUrl(resource.getIdElement().getValue())
-                .setResource(resource);
     }
 }
