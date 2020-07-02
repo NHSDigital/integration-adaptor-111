@@ -16,6 +16,7 @@ import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.ResourceType;
+import org.hl7.fhir.dstu3.model.CarePlan;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +26,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 import java.util.Collections;
@@ -62,6 +64,8 @@ public class EncounterReportBundleServiceTest {
     private static final IdType COMPOSITION_ID = newRandomUuid();
     private static final ListResource LIST_RESOURCE;
     private static final IdType LIST_RESOURCE_ID = newRandomUuid();
+    private static final CarePlan CAREPLAN;
+    private static final IdType CAREPLAN_ID = newRandomUuid();
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -100,6 +104,9 @@ public class EncounterReportBundleServiceTest {
         LIST_RESOURCE = new ListResource();
         LIST_RESOURCE.setId(LIST_RESOURCE_ID);
 
+        CAREPLAN = new CarePlan();
+        CAREPLAN.setId(CAREPLAN_ID);
+
         ENCOUNTER = new Encounter();
         ENCOUNTER.setStatus(FINISHED);
         ENCOUNTER.setIdElement(ENCOUNTER_ID);
@@ -122,12 +129,15 @@ public class EncounterReportBundleServiceTest {
     private CompositionMapper compositionMapper;
     @Mock
     private ListMapper listMapper;
+    @Mock
+    private CarePlanMapper carePlanMapper;
 
     @Before
     public void setUp() {
         when(encounterMapper.mapEncounter(any())).thenReturn(ENCOUNTER);
         when(compositionMapper.mapComposition(any(), any())).thenReturn(COMPOSITION);
         when(listMapper.mapList(any(), any(), any())).thenReturn(LIST_RESOURCE);
+        when(carePlanMapper.mapCarePlan(any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
     }
 
     @Test
@@ -136,7 +146,7 @@ public class EncounterReportBundleServiceTest {
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
 
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(10);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(11);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
         verifyEntry(entries.get(1), SERVICE_PROVIDER_ID.getValue(), ResourceType.Organization);
@@ -147,7 +157,8 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(6), APPOINTMENT_ID.getValue(), ResourceType.Appointment);
         verifyEntry(entries.get(7), EPISODE_OF_CARE_ID.getValue(), ResourceType.EpisodeOfCare);
         verifyEntry(entries.get(8), COMPOSITION_ID.getValue(), ResourceType.Composition);
-        verifyEntry(entries.get(9), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+        verifyEntry(entries.get(9), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
+        verifyEntry(entries.get(10), LIST_RESOURCE_ID.getValue(), ResourceType.List);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {
