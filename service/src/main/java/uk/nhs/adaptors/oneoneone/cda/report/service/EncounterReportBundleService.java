@@ -156,12 +156,10 @@ public class EncounterReportBundleService {
         if (referralRequest.hasRequester()) {
             addEntry(bundle, referralRequest.getRequester().getOnBehalfOfTarget());
         }
-
     }
 
     private void addCarePlan(Bundle bundle, List<CarePlan> carePlans) {
-        if (!carePlans.isEmpty())
-            carePlans.stream().forEach(carePlan -> addEntry(bundle, carePlan));
+        carePlans.stream().forEach(carePlan -> addEntry(bundle, carePlan));
     }
 
     private static void addEntry(Bundle bundle, Resource resource) {

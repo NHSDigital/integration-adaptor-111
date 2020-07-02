@@ -108,7 +108,7 @@ public class CarePlanMapperTest {
 
         CarePlan carePlan = carePlans.get(0);
         assertThat(carePlan.getIdElement().getValue()).startsWith(URN_UUID);
-        assertThat(carePlan.getStatus()).isEqualTo(CarePlan.CarePlanStatus.ACTIVE);
+        assertThat(carePlan.getStatus()).isEqualTo(CarePlan.CarePlanStatus.COMPLETED);
 
         assertThat(carePlan.getIntent()).isEqualTo(CarePlan.CarePlanIntent.PLAN);
         assertThat(carePlan.getContext().getResource()).isEqualTo(encounter);

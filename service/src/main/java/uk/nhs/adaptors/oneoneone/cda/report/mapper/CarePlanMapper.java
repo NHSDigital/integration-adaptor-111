@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanIntent.PLAN;
-import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanStatus.ACTIVE;
+import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanStatus.COMPLETED;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 @Component
@@ -51,7 +51,7 @@ public class CarePlanMapper {
                 .setIntent(PLAN)
                 .setSubject(encounter.getSubject())
                 .setSubjectTarget(encounter.getSubjectTarget())
-                .setStatus(ACTIVE)
+                .setStatus(COMPLETED)
                 .setContextTarget(encounter)
                 .setContext(new Reference(encounter))
                 .setPeriod(encounter.getPeriod());
@@ -73,9 +73,6 @@ public class CarePlanMapper {
             }
             carePlan.setDescription(cpTextContent);
         }
-
-        // TODO 2020-07-02: CarePlan.Category required
-        // TODO 2020-07-02: CarePlan.SupportingInfo required
 
         return carePlan;
     }
