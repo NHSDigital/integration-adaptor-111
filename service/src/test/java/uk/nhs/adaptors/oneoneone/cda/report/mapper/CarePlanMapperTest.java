@@ -1,11 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-
 import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -19,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.w3c.dom.Node;
-
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.CS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -32,8 +25,15 @@ import uk.nhs.connect.iucds.cda.ucr.ST;
 import uk.nhs.connect.iucds.cda.ucr.StrucDocContent;
 import uk.nhs.connect.iucds.cda.ucr.StrucDocText;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
 public class CarePlanMapperTest {
+    public static final String URN_UUID = "urn:uuid:";
     private static final String LANG = "EN";
     private static final String SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
     private static final String INFORMATION_ADVICE_GIVEN = "1052951000000105";
@@ -85,11 +85,11 @@ public class CarePlanMapperTest {
         when(component2.getStructuredBody()).thenReturn(structuredBody);
         when(component3.getSection()).thenReturn(section);
         when(component5.getSection()).thenReturn(section);
-        when(structuredBody.getComponentArray()).thenReturn(new POCDMT000002UK01Component3[] { component3 });
+        when(structuredBody.getComponentArray()).thenReturn(new POCDMT000002UK01Component3[]{component3});
 
         encounter.setPeriod(period);
-        title.setLanguage("EN");
-        cs.setCode("EN");
+        title.setLanguage(LANG);
+        cs.setCode(LANG);
         mockLanguageXmlStructure(cs);
 
         Patient subject = mock(Patient.class);
@@ -107,8 +107,9 @@ public class CarePlanMapperTest {
         assertThat(carePlans).isNotEmpty();
 
         CarePlan carePlan = carePlans.get(0);
-        assertThat(carePlan.getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(carePlan.getIdElement().getValue()).startsWith(URN_UUID);
         assertThat(carePlan.getStatus()).isEqualTo(CarePlan.CarePlanStatus.ACTIVE);
+
         assertThat(carePlan.getIntent()).isEqualTo(CarePlan.CarePlanIntent.PLAN);
         assertThat(carePlan.getContext().getResource()).isEqualTo(encounter);
         assertThat(carePlan.getContextTarget()).isEqualTo(encounter);
@@ -124,7 +125,7 @@ public class CarePlanMapperTest {
 
     private void mockSection() {
         when(section.sizeOfComponentArray()).thenReturn(2).thenReturn(0);
-        when(section.getComponentArray()).thenReturn(new POCDMT000002UK01Component5[] { component5, component5 });
+        when(section.getComponentArray()).thenReturn(new POCDMT000002UK01Component5[]{component5, component5});
         when(section.getCode()).thenReturn(code);
         when(section.isSetLanguageCode()).thenReturn(true);
         when(section.isSetTitle()).thenReturn(true);

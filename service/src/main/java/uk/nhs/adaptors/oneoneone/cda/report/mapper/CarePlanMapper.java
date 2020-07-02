@@ -2,13 +2,9 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import lombok.AllArgsConstructor;
 import org.hl7.fhir.dstu3.model.CarePlan;
-import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Narrative;
-import org.hl7.fhir.dstu3.model.Observation;
-import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
@@ -19,12 +15,10 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component5;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanIntent.PLAN;
@@ -36,8 +30,6 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 public class CarePlanMapper {
     private final String SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
     private final String INFORMATION_ADVICE_GIVEN = "1052951000000105";
-
-    private List<CarePlan> carePlansCreated = new ArrayList<>();
 
     public List<CarePlan> mapCarePlan(POCDMT000002UK01ClinicalDocument1 clinicalDocument,
                                       Encounter encounter) {
@@ -82,6 +74,9 @@ public class CarePlanMapper {
             carePlan.setDescription(cpTextContent);
         }
 
+        // TODO 2020-07-02: CarePlan.Category required
+        // TODO 2020-07-02: CarePlan.SupportingInfo required
+
         return carePlan;
     }
 
@@ -90,15 +85,6 @@ public class CarePlanMapper {
                 .map(POCDMT000002UK01ClinicalDocument1::getComponent)
                 .map(POCDMT000002UK01Component2::getStructuredBody)
                 .orElse(null);
-    }
-
-    @SafeVarargs
-    public static Predicate<DomainResource> ofTypes(Class<? extends DomainResource>... types) {
-        return Arrays.stream(types)
-                .map(type -> (Predicate<DomainResource>) type::isInstance)
-                .reduce(Predicate::or)
-                .orElse(x -> false);
-
     }
 
     private List<POCDMT000002UK01Section> findCarePlanSections(POCDMT000002UK01Section section) {
