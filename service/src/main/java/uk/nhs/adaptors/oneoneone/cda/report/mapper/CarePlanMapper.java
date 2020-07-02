@@ -75,6 +75,7 @@ public class CarePlanMapper {
             String cpTextContent = NodeUtil.getNodeValueString(cpSection.getText().getContentArray(0));
             Narrative narrative = new Narrative();
             narrative.setDivAsString(cpTextContent);
+            narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
             if (cpSection.isSetText()) {
                 carePlan.setText(narrative);
             }
