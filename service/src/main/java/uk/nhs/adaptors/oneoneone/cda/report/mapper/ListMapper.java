@@ -10,8 +10,8 @@ import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
@@ -24,7 +24,7 @@ public class ListMapper {
     private static final String ORDER_BY = "event-date";
     private static final Reference transformerDevice = new Reference("Device/1");
 
-    public ListResource mapList(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, List<Resource> resourcesCreated){
+    public ListResource mapList(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, Collection<Resource> resourcesCreated){
         ListResource listResource = new ListResource();
 
         listResource.setIdElement(newRandomUuid());
