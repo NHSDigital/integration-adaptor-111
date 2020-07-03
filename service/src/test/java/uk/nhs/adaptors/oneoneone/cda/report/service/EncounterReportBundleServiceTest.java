@@ -4,6 +4,7 @@ import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.dstu3.model.Composition;
+import org.hl7.fhir.dstu3.model.Consent;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.HumanName;
@@ -24,6 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
@@ -66,7 +68,8 @@ public class EncounterReportBundleServiceTest {
     private static final IdType LIST_RESOURCE_ID = newRandomUuid();
     private static final CarePlan CAREPLAN;
     private static final IdType CAREPLAN_ID = newRandomUuid();
-
+    private static final Consent CONSENT;
+    private static final IdType CONSENT_ID = newRandomUuid();
     static {
         SERVICE_PROVIDER = new Organization();
         SERVICE_PROVIDER.setIdElement(SERVICE_PROVIDER_ID);
@@ -107,6 +110,9 @@ public class EncounterReportBundleServiceTest {
         CAREPLAN = new CarePlan();
         CAREPLAN.setId(CAREPLAN_ID);
 
+        CONSENT = new Consent();
+        CONSENT.setId(CONSENT_ID);
+
         ENCOUNTER = new Encounter();
         ENCOUNTER.setStatus(FINISHED);
         ENCOUNTER.setIdElement(ENCOUNTER_ID);
@@ -131,6 +137,8 @@ public class EncounterReportBundleServiceTest {
     private ListMapper listMapper;
     @Mock
     private CarePlanMapper carePlanMapper;
+    @Mock
+    private ConsentMapper consentMapper;
 
     @Before
     public void setUp() {
@@ -138,6 +146,7 @@ public class EncounterReportBundleServiceTest {
         when(compositionMapper.mapComposition(any(), any())).thenReturn(COMPOSITION);
         when(listMapper.mapList(any(), any(), any())).thenReturn(LIST_RESOURCE);
         when(carePlanMapper.mapCarePlan(any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
+        when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
     }
 
     @Test
@@ -146,7 +155,7 @@ public class EncounterReportBundleServiceTest {
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
 
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(11);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(12);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
         verifyEntry(entries.get(1), SERVICE_PROVIDER_ID.getValue(), ResourceType.Organization);
@@ -158,7 +167,10 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(7), EPISODE_OF_CARE_ID.getValue(), ResourceType.EpisodeOfCare);
         verifyEntry(entries.get(8), COMPOSITION_ID.getValue(), ResourceType.Composition);
         verifyEntry(entries.get(9), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
-        verifyEntry(entries.get(10), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+        verifyEntry(entries.get(10), CONSENT_ID.getValue(), ResourceType.Consent);
+
+        // Note: All other entries must be added before the List Resource
+        verifyEntry(entries.get(11), LIST_RESOURCE_ID.getValue(), ResourceType.List);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {
