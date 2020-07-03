@@ -1,6 +1,12 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import lombok.AllArgsConstructor;
+import static java.util.stream.Collectors.toSet;
+
+import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
+
+import java.util.Collection;
+import java.util.List;
+
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.CarePlan;
@@ -17,16 +23,13 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 
 @Component
 @AllArgsConstructor
@@ -36,6 +39,12 @@ public class EncounterReportBundleService {
     private CompositionMapper compositionMapper;
     private ListMapper listMapper;
     private CarePlanMapper carePlanMapper;
+
+    private static void addEntry(Bundle bundle, Resource resource) {
+        bundle.addEntry()
+            .setFullUrl(resource.getIdElement().getValue())
+            .setResource(resource);
+    }
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
@@ -56,12 +65,15 @@ public class EncounterReportBundleService {
         addComposition(bundle, composition);
         addCarePlan(bundle, carePlans);
 
-        List<Resource> resourcesCreated = bundle.getEntry().stream().map(Bundle.BundleEntryComponent::getResource).collect(Collectors.toList());
-        ListResource listResource = listMapper.mapList(clinicalDocument, encounter, resourcesCreated);
-
+        ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
         addList(bundle, listResource);
 
         return bundle;
+    }
+
+    private ListResource getReferenceFromBundle(Bundle bundle, POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
+        Collection<Resource> resourcesCreated = bundle.getEntry().stream().map(it -> it.getResource()).collect(toSet());
+        return listMapper.mapList(clinicalDocument, encounter, resourcesCreated);
     }
 
     private void addEncounter(Bundle bundle, Encounter encounter) {
@@ -143,8 +155,8 @@ public class EncounterReportBundleService {
             addEntry(bundle, group);
             for (Group.GroupMemberComponent groupMemberComponent : group.getMember()) {
                 bundle.addEntry()
-                        .setFullUrl(groupMemberComponent.getIdElement().getValue())
-                        .setResource(groupMemberComponent.getEntityTarget());
+                    .setFullUrl(groupMemberComponent.getIdElement().getValue())
+                    .setResource(groupMemberComponent.getEntityTarget());
             }
         }
     }
@@ -157,7 +169,7 @@ public class EncounterReportBundleService {
         }
         if (referralRequest.hasRecipient()) {
             for (Reference recipient :
-                    referralRequest.getRecipient()) {
+                referralRequest.getRecipient()) {
                 addEntry(bundle, (Resource) recipient.getResource());
                 HealthcareService healthcareService = (HealthcareService) recipient.getResource();
                 if (healthcareService.hasLocation()) {
@@ -186,11 +198,5 @@ public class EncounterReportBundleService {
 
     private void addCarePlan(Bundle bundle, List<CarePlan> carePlans) {
         carePlans.stream().forEach(carePlan -> addEntry(bundle, carePlan));
-    }
-
-    private static void addEntry(Bundle bundle, Resource resource) {
-        bundle.addEntry()
-                .setFullUrl(resource.getIdElement().getValue())
-                .setResource(resource);
     }
 }
