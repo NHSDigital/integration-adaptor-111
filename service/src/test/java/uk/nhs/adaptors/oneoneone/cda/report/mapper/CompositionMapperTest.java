@@ -13,12 +13,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.II;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Author;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component2;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParentDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RelatedDocument1;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -27,39 +25,25 @@ import static org.mockito.Mockito.when;
 public class CompositionMapperTest {
 
 
+    private final IBaseResource episodeOfCareRefResource = new EpisodeOfCare();
     @InjectMocks
     private CompositionMapper compositionMapper;
-
     @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
-
     @Mock
     private POCDMT000002UK01RelatedDocument1 relatedDocument1;
-
     @Mock
     private POCDMT000002UK01ParentDocument1 parentDocument1;
-
     @Mock
     private II ii;
-
     @Mock
     private CE ce;
-
     @Mock
     private Encounter encounter;
-
     @Mock
     private Reference episodeOfCareRef;
-
     @Mock
     private POCDMT000002UK01Component2 component2;
-
-    @Mock
-    private POCDMT000002UK01StructuredBody structuredBody;
-
-    private POCDMT000002UK01Author[] authorArray;
-
-    private final IBaseResource episodeOfCareRefResource = new EpisodeOfCare();
 
     @Before
     public void setUp() {

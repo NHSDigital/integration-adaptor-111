@@ -21,7 +21,10 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AppointmentMapper {
 
-    private LocationMapper locationMapper;
+    private final LocationMapper locationMapper;
+
+    private final NodeUtil nodeUtil;
+
 
     public Optional<Appointment> mapAppointment(POCDMT000002UK01Entry entry, POCDMT000002UK01Section matchingSection, Reference referralRequest, Reference patient) {
         POCDMT000002UK01Encounter itkEncounter = entry.getEncounter();
@@ -37,8 +40,8 @@ public class AppointmentMapper {
 
         if (matchingSection != null) {
             appointment
-                    .setDescription(NodeUtil.getNodeValueString(matchingSection.getTitle()))
-                    .setComment(NodeUtil.getNodeValueString(matchingSection.getText().getContentArray(0)));
+                    .setDescription(nodeUtil.getNodeValueString(matchingSection.getTitle()))
+                    .setComment(nodeUtil.getNodeValueString(matchingSection.getText().getContentArray(0)));
         }
 
         appointment.addParticipant(new Appointment.AppointmentParticipantComponent()

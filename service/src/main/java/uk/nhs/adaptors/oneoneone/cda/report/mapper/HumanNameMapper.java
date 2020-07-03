@@ -12,29 +12,31 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class HumanNameMapper {
 
-    private PeriodMapper periodMapper;
+    private final PeriodMapper periodMapper;
+
+    private final NodeUtil nodeUtil;
 
     public HumanName mapHumanName(PN itkPersonName) {
         HumanName humanName = new HumanName();
 
-        if (!NodeUtil.hasSubNodes(itkPersonName)) {
-            return humanName.setText(NodeUtil.getNodeValueString(itkPersonName));
+        if (!nodeUtil.hasSubNodes(itkPersonName)) {
+            return humanName.setText(nodeUtil.getNodeValueString(itkPersonName));
         }
 
         Stream.of(itkPersonName.getGivenArray())
-                .map(NodeUtil::getNodeValueString)
+                .map(nodeUtil::getNodeValueString)
                 .forEach(humanName::addGiven);
 
         Stream.of(itkPersonName.getPrefixArray())
-                .map(NodeUtil::getNodeValueString)
+                .map(nodeUtil::getNodeValueString)
                 .forEach(humanName::addPrefix);
 
         Stream.of(itkPersonName.getSuffixArray())
-                .map(NodeUtil::getNodeValueString)
+                .map(nodeUtil::getNodeValueString)
                 .forEach(humanName::addSuffix);
 
         if (itkPersonName.sizeOfFamilyArray() >= 1) {
-            humanName.setFamily(NodeUtil.getNodeValueString(itkPersonName.getFamilyArray(0)));
+            humanName.setFamily(nodeUtil.getNodeValueString(itkPersonName.getFamilyArray(0)));
         }
 
         if (itkPersonName.isSetValidTime()) {

@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.w3c.dom.Node;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.CS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -68,6 +69,9 @@ public class CarePlanMapperTest {
     @Mock
     private StrucDocText strucDocText;
 
+    @Mock
+    private NodeUtil nodeUtil;
+
     @InjectMocks
     private CarePlanMapper carePlanMapper;
 
@@ -91,7 +95,6 @@ public class CarePlanMapperTest {
         encounter.setPeriod(period);
         title.setLanguage(LANG);
         cs.setCode(LANG);
-        mockLanguageXmlStructure(cs);
 
         Patient subject = mock(Patient.class);
         Reference subjectReference = new Reference(subject);
@@ -135,38 +138,18 @@ public class CarePlanMapperTest {
         when(section.getText().sizeOfContentArray()).thenReturn(1);
 
         when(section.getTitle()).thenReturn(title);
-        mockTitleXmlStructure(title);
+        when(nodeUtil.getNodeValueString(section.getTitle())).thenReturn(TITLE);
 
         when(section.getText()).thenReturn(strucDocText);
-        mockDescriptionXmlStructure(strucDocText);
 
         when(section.getLanguageCode()).thenReturn(cs);
+        when(nodeUtil.getNodeValueString(cs)).thenReturn(LANG);
+
+        when(nodeUtil.getNodeValueString(section.getText().getContentArray(0))).thenReturn(DESCRIPTION);
     }
 
-    private void mockDescriptionXmlStructure(StrucDocText description) {
-        StrucDocContent structuredContent = mock(StrucDocContent.class);
-        when(description.getContentArray(ArgumentMatchers.anyInt())).thenReturn(structuredContent);
 
-        Node structuredContentNode = mock(Node.class);
-        when(structuredContent.getDomNode()).thenReturn(structuredContentNode);
-        when(structuredContentNode.getFirstChild()).thenReturn(structuredContentNode);
-        when(structuredContentNode.getNodeValue()).thenReturn(DESCRIPTION);
-    }
 
-    private void mockTitleXmlStructure(ST title) {
-        Node node = mock(Node.class);
-        when(title.getDomNode()).thenReturn(node);
-        mockNodeValue(node, TITLE);
-    }
 
-    private void mockLanguageXmlStructure(CS cs) {
-        Node node = mock(Node.class);
-        when(cs.getDomNode()).thenReturn(node);
-        mockNodeValue(node, LANG);
-    }
 
-    private void mockNodeValue(Node node, String retValue) {
-        when(node.getFirstChild()).thenReturn(node);
-        when(node.getNodeValue()).thenReturn(retValue);
-    }
 }

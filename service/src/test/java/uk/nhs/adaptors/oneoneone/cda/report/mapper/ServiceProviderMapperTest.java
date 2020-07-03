@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.w3c.dom.Node;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.ON;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedCustodian;
@@ -50,6 +51,9 @@ public class ServiceProviderMapperTest {
     @Mock
     private ContactPoint telecom;
 
+    @Mock
+    private NodeUtil nodeUtil;
+
     @Test
     public void shouldMapServiceProvider() {
         POCDMT000002UK01Custodian custodian = mock(POCDMT000002UK01Custodian.class);
@@ -70,8 +74,7 @@ public class ServiceProviderMapperTest {
 
         when(addressMapper.mapAddress(any())).thenReturn(address);
         when(contactPointMapper.mapContactPoint(any())).thenReturn(telecom);
-
-        mockOrganizationNameXmlStructure();
+        when(nodeUtil.getNodeValueString(any())).thenReturn(PROVIDER_NAME);
 
         Organization organization = serviceProviderMapper.mapServiceProvider(custodian);
 
@@ -81,13 +84,5 @@ public class ServiceProviderMapperTest {
         assertThat(organization.getTelecomFirstRep()).isEqualTo(telecom);
         assertThat(organization.getType().get(0).getText()).isEqualTo(CODE);
         assertThat(organization.getName()).isEqualTo(PROVIDER_NAME);
-    }
-
-    private void mockOrganizationNameXmlStructure() {
-        Node titleNode = mock(Node.class);
-        Node titleSubnode = mock(Node.class);
-        when(organizationName.getDomNode()).thenReturn(titleNode);
-        when(titleNode.getFirstChild()).thenReturn(titleSubnode);
-        when(titleSubnode.getNodeValue()).thenReturn(PROVIDER_NAME);
     }
 }

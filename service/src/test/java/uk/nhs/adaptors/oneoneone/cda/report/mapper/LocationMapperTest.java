@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.w3c.dom.Node;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 import uk.nhs.connect.iucds.cda.ucr.ED;
@@ -51,6 +52,8 @@ public class LocationMapperTest {
     private Organization organization;
     @Mock
     private ContactPoint contactPoint;
+    @Mock
+    private NodeUtil nodeUtil;
 
     @Test
     public void shouldMapRoleToLocation() {
@@ -58,7 +61,6 @@ public class LocationMapperTest {
         POCDMT000002UK01PlayingEntity playingEntity = mock(POCDMT000002UK01PlayingEntity.class);
         AD itkAddress = mock(AD.class);
         PN personName = mock(PN.class);
-        ED entityDescription = mockEntityDescription();
 
         when(participantRole.sizeOfAddrArray()).thenReturn(1);
         when(participantRole.isSetPlayingEntity()).thenReturn(true);
@@ -66,10 +68,10 @@ public class LocationMapperTest {
         when(participantRole.getPlayingEntity()).thenReturn(playingEntity);
 
         when(playingEntity.getNameArray(anyInt())).thenReturn(personName);
-        when(playingEntity.getDesc()).thenReturn(entityDescription);
         when(humanNameMapper.mapHumanName(isA(PN.class))).thenReturn(humanName);
         when(addressMapper.mapAddress(isA(AD.class))).thenReturn(address);
         when(humanName.getText()).thenReturn(NAME);
+        when(nodeUtil.getNodeValueString(playingEntity.getDesc())).thenReturn(DESCRIPTION);
 
         Location location = locationMapper.mapRoleToLocation(participantRole);
 
@@ -104,15 +106,5 @@ public class LocationMapperTest {
                 .mapRecipientToLocation(itkIntendedRecipient);
 
         assertThat(referenceRecipientToLocation.getId().startsWith("urn:uuid:"));
-    }
-
-    private ED mockEntityDescription() {
-        ED entityDescription = mock(ED.class);
-        Node edNode = mock(Node.class);
-        Node edSubnode = mock(Node.class);
-        when(entityDescription.getDomNode()).thenReturn(edNode);
-        when(edNode.getFirstChild()).thenReturn(edSubnode);
-        when(edSubnode.getNodeValue()).thenReturn(DESCRIPTION);
-        return entityDescription;
     }
 }

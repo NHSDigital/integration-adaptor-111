@@ -1,12 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import static java.util.stream.Collectors.toSet;
-
-import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
-
-import java.util.Collection;
-import java.util.List;
-
+import lombok.AllArgsConstructor;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.CarePlan;
@@ -24,14 +18,19 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+
+import java.util.Collection;
+import java.util.List;
+
+import static java.util.stream.Collectors.toSet;
+import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
 
 @Component
 @AllArgsConstructor
@@ -42,12 +41,14 @@ public class EncounterReportBundleService {
     private ListMapper listMapper;
     private CarePlanMapper carePlanMapper;
     private ConsentMapper consentMapper;
+    private HealthcareServiceMapper healthcareServiceMapper;
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
         bundle.setType(TRANSACTION);
 
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
+        List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
         Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter);
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
@@ -57,6 +58,7 @@ public class EncounterReportBundleService {
         addParticipants(bundle, encounter);
         addLocation(bundle, encounter);
         addSubject(bundle, encounter);
+        addHealthcareService(bundle, healthcareServiceList);
         addIncomingReferral(bundle, encounter);
         addAppointment(bundle, encounter);
         addEpisodeOfCare(bundle, encounter);
@@ -100,7 +102,7 @@ public class EncounterReportBundleService {
 
     private void addParticipants(Bundle bundle, Encounter encounter) {
         List<Encounter.EncounterParticipantComponent> participantComponents = encounter.getParticipant();
-        participantComponents.stream().forEach(item -> addEntry(bundle, item.getIndividualTarget()));
+        participantComponents.forEach(item -> addEntry(bundle, item.getIndividualTarget()));
     }
 
     private void addAppointment(Bundle bundle, Encounter encounter) {
@@ -166,19 +168,6 @@ public class EncounterReportBundleService {
         if (referralRequest.hasSubject()) {
             addEntry(bundle, referralRequest.getSubjectTarget());
         }
-        if (referralRequest.hasRecipient()) {
-            for (Reference recipient :
-                referralRequest.getRecipient()) {
-                addEntry(bundle, (Resource) recipient.getResource());
-                HealthcareService healthcareService = (HealthcareService) recipient.getResource();
-                if (healthcareService.hasLocation()) {
-                    addEntry(bundle, (Location) healthcareService.getLocationFirstRep().getResource());
-                }
-                if (healthcareService.hasProvidedBy()) {
-                    addEntry(bundle, healthcareService.getProvidedByTarget());
-                }
-            }
-        }
         if (referralRequest.hasRequester()) {
             addEntry(bundle, referralRequest.getRequester().getOnBehalfOfTarget());
         }
@@ -197,6 +186,19 @@ public class EncounterReportBundleService {
 
     private void addCarePlan(Bundle bundle, List<CarePlan> carePlans) {
         carePlans.stream().forEach(carePlan -> addEntry(bundle, carePlan));
+    }
+
+    private void addHealthcareService(Bundle bundle, List<HealthcareService> healthcareServiceList) {
+        for (HealthcareService healthcareService :
+                healthcareServiceList){
+            addEntry(bundle, healthcareService);
+            if (healthcareService.hasLocation()) {
+                addEntry(bundle, (Location) healthcareService.getLocationFirstRep().getResource());
+            }
+            if (healthcareService.hasProvidedBy()) {
+                addEntry(bundle, healthcareService.getProvidedByTarget());
+            }
+        }
     }
 
     private void addConsent(Bundle bundle, Consent consent) {

@@ -19,14 +19,16 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 @AllArgsConstructor
 public class OrganizationMapper {
 
-    private ContactPointMapper contactPointMapper;
+    private final ContactPointMapper contactPointMapper;
 
-    private AddressMapper addressMapper;
+    private final AddressMapper addressMapper;
+
+    private final NodeUtil nodeUtil;
 
     public Organization mapOrganization(POCDMT000002UK01Organization itkOrganization) {
         Organization fhirOrganization = new Organization();
         fhirOrganization.setIdElement(newRandomUuid());
-        fhirOrganization.setName(NodeUtil.getNodeValueString(itkOrganization.getNameArray(0)));
+        fhirOrganization.setName(nodeUtil.getNodeValueString(itkOrganization.getNameArray(0)));
         fhirOrganization.setAddress(Arrays
                 .stream(itkOrganization.getAddrArray())
                 .map(addressMapper::mapAddress)

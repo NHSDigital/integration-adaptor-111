@@ -2,16 +2,20 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.dstu3.model.HealthcareService;
-import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.ON;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
-import uk.nhs.connect.iucds.cda.ucr.TEL;
-import uk.nhs.connect.iucds.cda.ucr.ON;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
+import uk.nhs.connect.iucds.cda.ucr.TEL;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
@@ -22,8 +26,21 @@ public class HealthcareServiceMapper {
     private final LocationMapper locationMapper;
     private final OrganizationMapper organizationMapper;
     private final ContactPointMapper contactPointMapper;
+    private final NodeUtil nodeUtil;
 
-    public HealthcareService mapHealthcareService(
+    public List<HealthcareService> mapHealthcareService(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+
+        List<HealthcareService> healthcareServiceList = new ArrayList<>();
+
+        for (POCDMT000002UK01InformationRecipient recipient :
+                clinicalDocument.getInformationRecipientArray()) {
+            healthcareServiceList.add(mapSingleHealthcareService(recipient));
+        }
+
+        return healthcareServiceList;
+    }
+
+    private HealthcareService mapSingleHealthcareService(
             POCDMT000002UK01InformationRecipient informationRecipient) {
 
         POCDMT000002UK01IntendedRecipient intendedRecipient =
@@ -46,13 +63,12 @@ public class HealthcareServiceMapper {
         if (intendedRecipient.isSetReceivedOrganization()) {
             POCDMT000002UK01Organization receivedOrganization =
                     intendedRecipient.getReceivedOrganization();
-
             Organization organization = organizationMapper.mapOrganization(receivedOrganization);
             healthcareService.setProvidedBy(new Reference(organization));
             healthcareService.setProvidedByTarget(organization);
             if (receivedOrganization.sizeOfNameArray() > 0) {
                 ON name = receivedOrganization.getNameArray(0);
-                healthcareService.setName(NodeUtil.getAllText(name.getDomNode()));
+                healthcareService.setName(nodeUtil.getAllText(name.getDomNode()));
             }
         }
 

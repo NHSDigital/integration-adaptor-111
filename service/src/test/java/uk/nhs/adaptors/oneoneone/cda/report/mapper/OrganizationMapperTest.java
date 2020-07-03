@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.w3c.dom.Node;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.ON;
@@ -41,15 +42,16 @@ public class OrganizationMapperTest {
     @Mock
     private Address address;
 
+    @Mock
+    private NodeUtil nodeUtil;
+
     @Test
     public void shouldMapOrganization() {
         POCDMT000002UK01Organization itkOrganization = mock(POCDMT000002UK01Organization.class);
-        ON itkOrganizationName = mockOrganizationName();
         AD itkAddress = mock(AD.class);
         TEL itkTelecom = mock(TEL.class);
         CE codeEntity = mock(CE.class);
 
-        when(itkOrganization.getNameArray(anyInt())).thenReturn(itkOrganizationName);
         when(itkOrganization.getAddrArray()).thenReturn(new AD[]{itkAddress});
         when(itkOrganization.getTelecomArray()).thenReturn(new TEL[]{itkTelecom});
         when(itkOrganization.isSetStandardIndustryClassCode()).thenReturn(true);
@@ -58,6 +60,7 @@ public class OrganizationMapperTest {
 
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
         when(addressMapper.mapAddress(any())).thenReturn(address);
+        when(nodeUtil.getNodeValueString(itkOrganization.getNameArray(0))).thenReturn(ORGANIZATION_NAME);
 
         Organization organization = organizationMapper.mapOrganization(itkOrganization);
 
@@ -65,17 +68,5 @@ public class OrganizationMapperTest {
         assertThat(organization.getAddressFirstRep()).isEqualTo(address);
         assertThat(organization.getTelecomFirstRep()).isEqualTo(contactPoint);
         assertThat(organization.getTypeFirstRep().getText()).isEqualTo(GP_PRACTICE);
-
-    }
-
-    private ON mockOrganizationName() {
-        ON organizationName = mock(ON.class);
-        Node edNode = mock(Node.class);
-        Node edSubnode = mock(Node.class);
-        when(organizationName.getDomNode()).thenReturn(edNode);
-        when(edNode.getFirstChild()).thenReturn(edSubnode);
-        when(edSubnode.getNodeValue()).thenReturn(ORGANIZATION_NAME);
-
-        return organizationName;
     }
 }

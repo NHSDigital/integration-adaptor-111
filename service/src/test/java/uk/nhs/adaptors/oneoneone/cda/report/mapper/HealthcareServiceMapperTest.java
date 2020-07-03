@@ -1,7 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import org.apache.xmlbeans.XmlException;
-import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
@@ -11,66 +9,76 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.nhs.connect.iucds.cda.ucr.ClinicalDocumentDocument1;
+import org.w3c.dom.Node;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.ON;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 
-import java.io.IOException;
-import java.net.URL;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HealthcareServiceMapperTest {
 
-    @Mock
-    private LocationMapper locationMapper;
-
-    @Mock
-    private OrganizationMapper organizationMapper;
-
-    @Mock
-    private ContactPointMapper contactPointMapper;
-
-    @Mock
-    private ContactPoint contactPoint;
-
+    private static final String HEALTHCARE_SERVICE_NAME = "Thames Medical Practice";
     @InjectMocks
     private HealthcareServiceMapper healthcareServiceMapper;
-
-    private ClinicalDocumentDocument1 clinicalDocument;
-
-    private Organization organization = new Organization();
-    private Location locationRef = new Location();
+    @Mock
+    private LocationMapper locationMapper;
+    @Mock
+    private OrganizationMapper organizationMapper;
+    @Mock
+    private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
+    @Mock
+    private POCDMT000002UK01IntendedRecipient intendedRecipient;
+    @Mock
+    private POCDMT000002UK01InformationRecipient informationRecipient;
+    @Mock
+    private POCDMT000002UK01Organization receivedOrganization;
+    @Mock
+    private ON name;
+    @Mock
+    private Node node;
+    @Mock
+    private NodeUtil nodeUtil;
+    @Mock
+    private Organization organization;
+    @Mock
+    private Location location;
 
     @Before
-    public void setup() throws IOException, XmlException {
-        URL resource = getClass().getResource("/xml/example-clinical-doc.xml");
-        clinicalDocument = ClinicalDocumentDocument1.Factory.parse(resource);
-
-        POCDMT000002UK01IntendedRecipient intendedRecipient = clinicalDocument.getClinicalDocument()
-                .getInformationRecipientArray(0).getIntendedRecipient();
+    public void setup() {
         when(locationMapper.mapRecipientToLocation(intendedRecipient))
-                .thenReturn(locationRef);
-        when(organizationMapper.mapOrganization(intendedRecipient.getReceivedOrganization()))
+                .thenReturn(location);
+        when(organizationMapper.mapOrganization(any()))
                 .thenReturn(organization);
-        when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
+        POCDMT000002UK01InformationRecipient[] informationRecipientArray = new POCDMT000002UK01InformationRecipient[1];
+        informationRecipientArray[0] = informationRecipient;
+        when(clinicalDocument.getInformationRecipientArray()).thenReturn(informationRecipientArray);
+        when(informationRecipient.getIntendedRecipient()).thenReturn(intendedRecipient);
+        when(intendedRecipient.isSetReceivedOrganization()).thenReturn(true);
+        when(intendedRecipient.getReceivedOrganization()).thenReturn(receivedOrganization);
+        when(receivedOrganization.sizeOfNameArray()).thenReturn(1);
+        when(receivedOrganization.getNameArray(0)).thenReturn(name);
+        when(name.getDomNode()).thenReturn(node);
+        when(nodeUtil.getAllText(name.getDomNode())).thenReturn(HEALTHCARE_SERVICE_NAME);
     }
 
     @Test
     public void shouldMapHealthcareService() {
-        POCDMT000002UK01InformationRecipient recipient =
-                clinicalDocument.getClinicalDocument().getInformationRecipientArray(0);
+        List<HealthcareService> healthcareServiceList = healthcareServiceMapper
+                .mapHealthcareService(clinicalDocument);
 
-        HealthcareService healthcareService = healthcareServiceMapper
-                .mapHealthcareService(recipient);
+        HealthcareService healthcareService = healthcareServiceList.get(0);
 
-        verify(locationMapper).mapRecipientToLocation(recipient.getIntendedRecipient());
-
-        assertThat("Thames Medical Practice").isEqualTo(healthcareService.getName());
+        assertThat(organization).isEqualTo(healthcareService.getProvidedByTarget());
+        assertThat(HEALTHCARE_SERVICE_NAME).isEqualTo(healthcareService.getName());
         assertThat(true).isEqualTo(healthcareService.getActive());
     }
 
