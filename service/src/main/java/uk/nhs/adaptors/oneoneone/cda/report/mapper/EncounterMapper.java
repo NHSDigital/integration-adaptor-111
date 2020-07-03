@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Encounter.DiagnosisComponent;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -54,6 +55,8 @@ public class EncounterMapper {
 
     private GroupMapper groupMapper;
 
+    private DiagnosisMapper diagnosisMapper;
+
     public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Encounter encounter = new Encounter();
         encounter.setIdElement(newRandomUuid());
@@ -66,6 +69,7 @@ public class EncounterMapper {
         setReferralRequest(encounter, clinicalDocument);
         setAppointment(encounter, clinicalDocument);
         setEpisodeOfCare(encounter, clinicalDocument);
+        setDiagnosis(encounter, clinicalDocument);
         return encounter;
     }
 
@@ -161,5 +165,10 @@ public class EncounterMapper {
             patient = patientMapper.mapPatient(patientRole);
         }
         return Optional.of(patient);
+    }
+
+    private void setDiagnosis(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        DiagnosisComponent diagnosis = diagnosisMapper.mapDiagnosis(clinicalDocument);
+        encounter.addDiagnosis(diagnosis);
     }
 }
