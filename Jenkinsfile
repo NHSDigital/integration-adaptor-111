@@ -78,6 +78,7 @@ pipeline {
               stage('Deploy using Terraform') {
                 steps {
                   script {
+                    deleteDir()
                     String tfCodeBranch  = "develop"
                     String tfCodeRepo    = "https://github.com/nhsconnect/integration-adaptors"
                     String tfRegion      = TF_STATE_BUCKET_REGION
