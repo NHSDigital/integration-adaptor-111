@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 public class ConsentMapperTest {
     private static final String URN_UUID = "urn:uuid:";
     private static final String LANG = "EN";
-    private static final String SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
+    private static final String ITK_SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
     private static final String INFORMATION_ADVICE_GIVEN = "887031000000108";
     private static final String OPT_OUT_URI = "http://hl7.org/fhir/ConsentPolicy/opt-out";
     private static final String ROOT_ID = "411910CF-1A76-4330-98FE-C345DDEE5553";
@@ -86,7 +86,7 @@ public class ConsentMapperTest {
         POCDMT000002UK01StructuredBody structuredBody = mock(POCDMT000002UK01StructuredBody.class);
 
         code = CE.Factory.newInstance();
-        code.setCodeSystem(SNOMED);
+        code.setCodeSystem(ITK_SNOMED);
         code.setCode(INFORMATION_ADVICE_GIVEN);
 
         title.setLanguage(LANG);
