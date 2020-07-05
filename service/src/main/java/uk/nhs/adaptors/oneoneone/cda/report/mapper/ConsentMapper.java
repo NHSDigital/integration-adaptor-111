@@ -147,7 +147,7 @@ public class ConsentMapper {
     }
 
     private List<POCDMT000002UK01Section> getSectionsOfType(POCDMT000002UK01StructuredBody structuredBody,
-                                                           String system, String code) {
+                                                            String system, String code) {
         if (structuredBody == null) return Collections.emptyList();
 
         return Arrays.stream(structuredBody.getComponentArray())
@@ -159,7 +159,7 @@ public class ConsentMapper {
     }
 
     private List<POCDMT000002UK01Entry> getEntriesOfType(POCDMT000002UK01StructuredBody structuredBody,
-                                                        String template) {
+                                                         String template) {
         if (structuredBody == null) return Collections.emptyList();
 
         return Arrays.stream(structuredBody.getComponentArray())
