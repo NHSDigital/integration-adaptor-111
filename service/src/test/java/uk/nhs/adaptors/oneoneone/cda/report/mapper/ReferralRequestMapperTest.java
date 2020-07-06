@@ -1,71 +1,52 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.HealthcareService;
-import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.nhs.connect.iucds.cda.ucr.ClinicalDocumentDocument1;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
-import java.io.IOException;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReferralRequestMapperTest {
 
-    @Mock
-    private HealthcareServiceMapper healthcareServiceMapper;
-
+    private final Reference patientRef = new Reference();
+    private final Reference deviceRef = new Reference("Device/1");
+    private final Reference serviceProviderRef = new Reference("HealthcareService/1");
     @InjectMocks
     private ReferralRequestMapper referralRequestMapper;
-
-    private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
+    @Mock
+    private HealthcareService healthcareService;
+    @Mock
+    private List<HealthcareService> healthcareServiceList;
     private Encounter encounter;
 
-    private Reference patientRef = new Reference();
-    private Reference deviceRef = new Reference("Device/1");
-    private HealthcareService healthcareService = new HealthcareService();
-    private Reference serviceProviderRef = new Reference("HealthcareService/1");
-    private Reference encounterRef;
-
     @Before
-    public void setup() throws IOException, XmlException {
-        URL resource = getClass().getResource("/xml/example-clinical-doc.xml");
-
-        clinicalDocument = ClinicalDocumentDocument1.Factory.parse(resource).getClinicalDocument();
+    public void setup() {
+        healthcareServiceList = new ArrayList<>();
+        healthcareServiceList.add(healthcareService);
 
         encounter = new Encounter();
+        String encounterId = "Encounter/1";
         encounter
                 .setServiceProvider(serviceProviderRef)
                 .setSubject(patientRef)
-                .setId("Encounter/1");
-
-        encounterRef = new Reference(encounter.getServiceProvider().toString());
-
-        Mockito.when(healthcareServiceMapper
-                .mapHealthcareService(any()))
-                .thenReturn(healthcareService);
-
-        referralRequestMapper = new ReferralRequestMapper(healthcareServiceMapper);
+                .setId(encounterId);
     }
 
     @Test
     public void shouldMapReferralRequest() {
-
         ReferralRequest referralRequest = referralRequestMapper
-                .mapReferralRequest(clinicalDocument, encounter);
+                .mapReferralRequest(encounter, healthcareServiceList);
 
         assertThat(ReferralRequest.ReferralRequestStatus.ACTIVE).isEqualTo(referralRequest.getStatus());
         assertThat(ReferralRequest.ReferralCategory.PLAN).isEqualTo(referralRequest.getIntent());

@@ -9,9 +9,11 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -27,6 +29,10 @@ public class HumanNameMapperTest {
     private HumanNameMapper humanNameMapper;
     @Mock
     private Period period;
+    @Mock
+    private NodeUtil nodeUtil;
+    @Mock
+    private PN itkPersonName;
 
     @Test
     public void shouldMapHumanName() {
@@ -40,7 +46,19 @@ public class HumanNameMapperTest {
         when(periodMapper.mapPeriod(ArgumentMatchers.any()))
                 .thenReturn(period);
 
-        HumanName humanName = humanNameMapper.mapHumanName(pn);
+        when(nodeUtil.hasSubNodes(any())).thenReturn(true);
+        when(itkPersonName.getGivenArray()).thenReturn(pn.getGivenArray());
+        when(nodeUtil.getNodeValueString(pn.getGivenArray(0))).thenReturn(GIVEN);
+        when(itkPersonName.getPrefixArray()).thenReturn(pn.getPrefixArray());
+        when(nodeUtil.getNodeValueString(pn.getPrefixArray(0))).thenReturn(PREFIX);
+        when(itkPersonName.getSuffixArray()).thenReturn(pn.getSuffixArray());
+        when(nodeUtil.getNodeValueString(pn.getSuffixArray(0))).thenReturn(SUFFIX);
+        when(itkPersonName.sizeOfFamilyArray()).thenReturn(1);
+        when(itkPersonName.getFamilyArray(0)).thenReturn(pn.getFamilyArray(0));
+        when(nodeUtil.getNodeValueString(pn.getFamilyArray(0))).thenReturn(FAMILY);
+        when(itkPersonName.isSetValidTime()).thenReturn(true);
+
+        HumanName humanName = humanNameMapper.mapHumanName(itkPersonName);
 
         assertThat(humanName.getGivenAsSingleString()).isEqualTo(GIVEN);
         assertThat(humanName.getPrefixAsSingleString()).isEqualTo(PREFIX);

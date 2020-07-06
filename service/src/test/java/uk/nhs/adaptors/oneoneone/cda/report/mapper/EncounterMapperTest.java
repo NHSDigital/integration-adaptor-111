@@ -4,6 +4,7 @@ import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.DiagnosisComponent;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
+import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
@@ -27,6 +28,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RecordTarget;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -85,6 +87,8 @@ public class EncounterMapperTest {
     private DiagnosisMapper diagnosisMapper;
     @Mock
     private DiagnosisComponent diagnosis;
+    @Mock
+    private List<HealthcareService> healthcareServiceList;
 
     @Before
     public void setUp() {
@@ -113,7 +117,7 @@ public class EncounterMapperTest {
 
     @Test
     public void shouldMapEncounter() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
         verifyEncounter(encounter);
     }
 
@@ -121,13 +125,13 @@ public class EncounterMapperTest {
     public void mapEncounterTest() {
         mockParticipant(clinicalDocument);
 
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
         verifyEncounter(encounter);
     }
 
     @Test
     public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
         verifyEncounter(encounter);
 
         assertThat(encounter.getParticipant().size()).isEqualTo(4);
@@ -212,7 +216,7 @@ public class EncounterMapperTest {
     }
 
     private void mockReferralRequest() {
-        when(referralRequestMapper.mapReferralRequest(any(POCDMT000002UK01ClinicalDocument1.class), any()))
+        when(referralRequestMapper.mapReferralRequest(any(), any()))
                 .thenReturn(referralRequest);
     }
 

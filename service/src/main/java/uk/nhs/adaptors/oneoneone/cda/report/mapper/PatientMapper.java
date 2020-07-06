@@ -15,10 +15,10 @@ import org.hl7.fhir.dstu3.model.Organization;
 
 import org.springframework.stereotype.Component;
 
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01LanguageCommunication;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Patient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
-import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +39,7 @@ public class PatientMapper {
     private final GuardianMapper guardianMapper;
     private final HumanNameMapper humanNameMapper;
     private final OrganizationMapper orgMapper;
+    private final NodeUtil nodeUtil;
 
     public Patient mapPatient(POCDMT000002UK01PatientRole patientRole) {
         Patient fhirPatient = new Patient();
@@ -146,7 +147,7 @@ public class PatientMapper {
                     itkPatient.getReligiousAffiliationCode().getCode()));
         }
         if (itkPatient.isSetBirthplace()) {
-            String birthPlace = NodeUtil.getNodeValueString(itkPatient.getBirthplace().getPlace().getName());
+            String birthPlace = nodeUtil.getNodeValueString(itkPatient.getBirthplace().getPlace().getName());
             extensionList.add(createExtension("http://hl7.org/fhir/StructureDefinition/birthPlace",
                     birthPlace));
         }

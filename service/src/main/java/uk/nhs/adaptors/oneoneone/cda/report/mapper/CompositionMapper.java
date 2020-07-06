@@ -30,6 +30,7 @@ public class CompositionMapper {
     private static final String SNOMED = "371531000";
     private static final String COMPOSITION_TITLE = "111 Report";
     private final AuthorMapper authorMapper;
+    private final NodeUtil nodeUtil;
 
     public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
 
@@ -87,7 +88,7 @@ public class CompositionMapper {
                     POCDMT000002UK01Section sectionComponent5 = component5.getSection();
                     Composition.SectionComponent sectionComponent = new Composition.SectionComponent();
                     if (sectionComponent5.isSetTitle()) {
-                        sectionComponent.setTitle(NodeUtil.getAllText(sectionComponent5.getTitle().getDomNode()));
+                        sectionComponent.setTitle(nodeUtil.getAllText(sectionComponent5.getTitle().getDomNode()));
                     }
                     Narrative narrative = new Narrative();
                     narrative.setStatus(Narrative.NarrativeStatus.GENERATED);

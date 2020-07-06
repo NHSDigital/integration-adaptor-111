@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.CS;
@@ -79,6 +80,9 @@ public class PatientMapperTest {
 
     @Mock
     private Date date;
+
+    @Mock
+    private NodeUtil nodeUtil;
 
     @Test
     public void patientMapperTest(){

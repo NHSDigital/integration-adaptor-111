@@ -25,11 +25,11 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 @AllArgsConstructor
 public class PractitionerMapper {
 
-    private HumanNameMapper humanNameMapper;
+    private final HumanNameMapper humanNameMapper;
 
-    private ContactPointMapper contactPointMapper;
+    private final ContactPointMapper contactPointMapper;
 
-    private AddressMapper addressMapper;
+    private final AddressMapper addressMapper;
 
     public Practitioner mapPractitioner(POCDMT000002UK01AssociatedEntity associatedEntity) {
         Practitioner practitioner = new Practitioner();

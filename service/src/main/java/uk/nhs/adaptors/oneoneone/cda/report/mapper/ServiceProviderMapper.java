@@ -18,9 +18,11 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 @AllArgsConstructor
 public class ServiceProviderMapper {
 
-    private AddressMapper addressMapper;
+    private final AddressMapper addressMapper;
 
-    private ContactPointMapper contactPointMapper;
+    private final ContactPointMapper contactPointMapper;
+
+    private final NodeUtil nodeUtil;
 
     public Organization mapServiceProvider(POCDMT000002UK01Custodian custodian) {
         POCDMT000002UK01AssignedCustodian assignedCustodian = custodian.getAssignedCustodian();
@@ -45,7 +47,7 @@ public class ServiceProviderMapper {
         }
 
         if (custodianOrganization.isSetName()) {
-            serviceProviderOrganization.setName(NodeUtil.getNodeValueString(custodianOrganization.getName()));
+            serviceProviderOrganization.setName(nodeUtil.getNodeValueString(custodianOrganization.getName()));
         }
 
         return serviceProviderOrganization;

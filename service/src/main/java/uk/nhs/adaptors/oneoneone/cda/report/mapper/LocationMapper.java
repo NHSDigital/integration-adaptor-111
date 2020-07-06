@@ -22,13 +22,15 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 @AllArgsConstructor
 public class LocationMapper {
 
-    private AddressMapper addressMapper;
+    private final AddressMapper addressMapper;
 
-    private HumanNameMapper humanNameMapper;
+    private final HumanNameMapper humanNameMapper;
 
-    private OrganizationMapper organizationMapper;
+    private final OrganizationMapper organizationMapper;
 
-    private ContactPointMapper contactPointMapper;
+    private final ContactPointMapper contactPointMapper;
+
+    private final NodeUtil nodeUtil;
 
     public Location mapRoleToLocation(POCDMT000002UK01ParticipantRole role) {
         Location location = new Location();
@@ -40,7 +42,7 @@ public class LocationMapper {
         if (role.isSetPlayingEntity()) {
             POCDMT000002UK01PlayingEntity playingEntity = role.getPlayingEntity();
             location.setName(humanNameMapper.mapHumanName(playingEntity.getNameArray(0)).getText());
-            location.setDescription(NodeUtil.getNodeValueString(playingEntity.getDesc()));
+            location.setDescription(nodeUtil.getNodeValueString(playingEntity.getDesc()));
         }
         return location;
     }

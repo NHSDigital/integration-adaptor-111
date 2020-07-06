@@ -28,6 +28,9 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 @Component
 @AllArgsConstructor
 public class CarePlanMapper {
+
+    private final NodeUtil nodeUtil;
+
     public List<CarePlan> mapCarePlan(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
         if (clinicalDocument.getComponent().isSetStructuredBody()) {
             POCDMT000002UK01StructuredBody structuredBody = getStructuredBody(clinicalDocument);
@@ -56,14 +59,14 @@ public class CarePlanMapper {
                 .setPeriod(encounter.getPeriod());
 
         if (cpSection.isSetLanguageCode()) {
-            carePlan.setLanguage(NodeUtil.getNodeValueString(cpSection.getLanguageCode()));
+            carePlan.setLanguage(nodeUtil.getNodeValueString(cpSection.getLanguageCode()));
         }
         if (cpSection.isSetTitle()) {
-            carePlan.setTitle(NodeUtil.getNodeValueString(cpSection.getTitle()));
+            carePlan.setTitle(nodeUtil.getNodeValueString(cpSection.getTitle()));
         }
 
         if (cpSection.getText().sizeOfContentArray() > 0) {
-            String cpTextContent = NodeUtil.getNodeValueString(cpSection.getText().getContentArray(0));
+            String cpTextContent = nodeUtil.getNodeValueString(cpSection.getText().getContentArray(0));
             Narrative narrative = new Narrative();
             narrative.setDivAsString(cpTextContent);
             narrative.setStatus(Narrative.NarrativeStatus.GENERATED);

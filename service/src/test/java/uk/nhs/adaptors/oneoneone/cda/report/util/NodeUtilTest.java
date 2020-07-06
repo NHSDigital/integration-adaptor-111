@@ -1,7 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.util;
 
 import org.apache.xmlbeans.XmlObject;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.w3c.dom.Node;
 
 import static org.junit.Assert.assertEquals;
@@ -11,11 +14,18 @@ import static org.mockito.Mockito.when;
 
 public class NodeUtilTest {
 
+    private NodeUtil nodeUtil;
+
+    @Before
+    public void setup() {
+        nodeUtil = new NodeUtil();
+    }
+
     @Test
     public void shouldGetNodeString_nullNode() {
         var xmlObject = mock(XmlObject.class);
 
-        assertNull(NodeUtil.getNodeValueString(xmlObject));
+        assertNull(nodeUtil.getNodeValueString(xmlObject));
     }
 
     @Test
@@ -24,7 +34,7 @@ public class NodeUtilTest {
         var innerNode = mock(Node.class);
         when(xmlObject.getDomNode()).thenReturn(innerNode);
 
-        assertNull(NodeUtil.getNodeValueString(xmlObject));
+        assertNull(nodeUtil.getNodeValueString(xmlObject));
     }
 
     @Test
@@ -35,7 +45,7 @@ public class NodeUtilTest {
         var childNode = mock(Node.class);
         when(innerNode.getFirstChild()).thenReturn(childNode);
 
-        assertNull(NodeUtil.getNodeValueString(xmlObject));
+        assertNull(nodeUtil.getNodeValueString(xmlObject));
     }
 
     @Test
@@ -47,6 +57,6 @@ public class NodeUtilTest {
         when(innerNode.getFirstChild()).thenReturn(childNode);
         when(childNode.getNodeValue()).thenReturn("happy path");
 
-        assertEquals(NodeUtil.getNodeValueString(xmlObject), "happy path");
+        assertEquals(nodeUtil.getNodeValueString(xmlObject), "happy path");
     }
 }

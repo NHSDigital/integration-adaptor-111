@@ -2,17 +2,14 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.HealthcareService;
+import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
-import org.hl7.fhir.dstu3.model.Period;
-import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
@@ -21,11 +18,9 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 @RequiredArgsConstructor
 public class ReferralRequestMapper {
 
-    private final HealthcareServiceMapper healthcareServiceMapper;
+    private final Reference transformerDevice = new Reference("Device/1");
 
-    private Reference transformerDevice = new Reference("Device/1");
-
-    public ReferralRequest mapReferralRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
+    public ReferralRequest mapReferralRequest(Encounter encounter, List<HealthcareService> healthcareServiceList) {
 
         ReferralRequest referralRequest = new ReferralRequest();
         referralRequest.setIdElement(newRandomUuid());
@@ -47,9 +42,9 @@ public class ReferralRequestMapper {
                         .setAgent(transformerDevice)
                         .setOnBehalfOf(encounter.getServiceProvider()));
 
-        for (POCDMT000002UK01InformationRecipient recipient :
-                clinicalDocument.getInformationRecipientArray()) {
-            referralRequest.addRecipient(new Reference(healthcareServiceMapper.mapHealthcareService(recipient)));
+        for (HealthcareService healthcareService :
+                healthcareServiceList) {
+            referralRequest.addRecipient(new Reference(healthcareService));
         }
 
         return referralRequest;
