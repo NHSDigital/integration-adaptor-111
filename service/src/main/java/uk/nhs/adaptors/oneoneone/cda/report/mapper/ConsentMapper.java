@@ -52,24 +52,26 @@ public class ConsentMapper {
 
         Patient patient = (Patient) encounter.getSubjectTarget();
 
-        Identifier docIdentifier = new Identifier();
-        docIdentifier.setUse(Identifier.IdentifierUse.USUAL);
-        docIdentifier.setValue(clinicalDocument.getSetId().getRoot());
+        if (clinicalDocument.isSetSetId()) {
+            Identifier docIdentifier = new Identifier();
+            docIdentifier.setUse(Identifier.IdentifierUse.USUAL);
+            docIdentifier.setValue(clinicalDocument.getSetId().getRoot());
+            consent.setIdentifier(docIdentifier);
+        }
 
         Date now = new Date();
         consent.setLanguage(encounter.getLanguage());
         consent.setStatus(Consent.ConsentState.ACTIVE)
-                .setPeriod(encounter.getPeriod())
-                .setPatientTarget(patient)
-                .setPatient(encounter.getSubject())
-                .addConsentingParty(encounter.getSubject())
-                .addOrganization(encounter.getServiceProvider())
-                .setData(List.of(new ConsentDataComponent()
-                        .setMeaning(ConsentDataMeaning.RELATED)
-                        .setReference(new Reference(encounter))))
-                .setIdentifier(docIdentifier)
-                .setDateTime(now)
-                .setPolicyRule(OPT_OUT_URI);
+            .setPeriod(encounter.getPeriod())
+            .setPatientTarget(patient)
+            .setPatient(encounter.getSubject())
+            .addConsentingParty(encounter.getSubject())
+            .addOrganization(encounter.getServiceProvider())
+            .setData(List.of(new ConsentDataComponent()
+                .setMeaning(ConsentDataMeaning.RELATED)
+                .setReference(new Reference(encounter))))
+            .setDateTime(now)
+            .setPolicyRule(OPT_OUT_URI);
 
         extractAuthCodesFromDoc(consent, clinicalDocument);
         POCDMT000002UK01StructuredBody structuredBody = getStructuredBody(clinicalDocument);
@@ -86,8 +88,12 @@ public class ConsentMapper {
         if (clinicalDocument.sizeOfAuthorizationArray() > 0) {
             for (POCDMT000002UK01Authorization auth : clinicalDocument.getAuthorizationArray()) {
                 POCDMT000002UK01Consent authConsent = auth.getConsent();
-                CE ce = authConsent.getCode();
-                consent.addAction(getCodingFromCE(ce));
+                if (authConsent.isSetCode()) {
+                    Optional<CodeableConcept> codeableConcept = getCodingFromCE(authConsent.getCode());
+                    if (codeableConcept.isPresent()) {
+                        consent.addAction(codeableConcept.get());
+                    }
+                }
             }
         }
     }
@@ -127,23 +133,25 @@ public class ConsentMapper {
         for (POCDMT000002UK01Section section : sections) {
             Narrative narrative = new Narrative();
             narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
-            narrative.setDivAsString(section.getText().xmlText());
-            consent.setText(narrative);
+            if (section.isSetText()) {
+                narrative.setDivAsString(section.getText().xmlText());
+                consent.setText(narrative);
+            }
         }
     }
 
     private void extractConsentSource(Consent consent, POCDMT000002UK01StructuredBody structuredBody) {
         List<POCDMT000002UK01Section> sections = getSectionsOfType(structuredBody, ITK_SNOMED, SYSTEM_CODE);
-        for (POCDMT000002UK01Section section : sections) {
-            consent.setSource(new Identifier().setValue(section.getId().getRoot()));
-        }
+        sections.stream()
+            .filter(section -> section.isSetId())
+            .forEach(section -> consent.setSource(new Identifier().setValue(section.getId().getRoot())));
     }
 
     private POCDMT000002UK01StructuredBody getStructuredBody(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         return Optional.ofNullable(clinicalDocument)
-                .map(POCDMT000002UK01ClinicalDocument1::getComponent)
-                .map(POCDMT000002UK01Component2::getStructuredBody)
-                .orElse(null);
+            .map(POCDMT000002UK01ClinicalDocument1::getComponent)
+            .map(POCDMT000002UK01Component2::getStructuredBody)
+            .orElse(null);
     }
 
     private List<POCDMT000002UK01Section> getSectionsOfType(POCDMT000002UK01StructuredBody structuredBody,
@@ -151,11 +159,11 @@ public class ConsentMapper {
         if (structuredBody == null) return Collections.emptyList();
 
         return Arrays.stream(structuredBody.getComponentArray())
-                .flatMap(component -> Optional.ofNullable(component.getSection()).stream())
-                .flatMap(section -> Arrays.stream(section.getComponentArray()))
-                .map(POCDMT000002UK01Component5::getSection)
-                .filter(sectionHasCode(system, code))
-                .collect(Collectors.toUnmodifiableList());
+            .flatMap(component -> Optional.ofNullable(component.getSection()).stream())
+            .flatMap(section -> Arrays.stream(section.getComponentArray()))
+            .map(POCDMT000002UK01Component5::getSection)
+            .filter(sectionHasCode(system, code))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private List<POCDMT000002UK01Entry> getEntriesOfType(POCDMT000002UK01StructuredBody structuredBody,
@@ -163,28 +171,34 @@ public class ConsentMapper {
         if (structuredBody == null) return Collections.emptyList();
 
         return Arrays.stream(structuredBody.getComponentArray())
-                .flatMap(component -> Optional.ofNullable(component.getSection()).stream())
-                .flatMap(section -> Arrays.stream(section.getEntryArray()))
-                .filter(entryHasTemplate(template))
-                .collect(Collectors.toUnmodifiableList());
+            .flatMap(component -> Optional.ofNullable(component.getSection()).stream())
+            .flatMap(section -> Arrays.stream(section.getEntryArray()))
+            .filter(entryHasTemplate(template))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private Predicate<POCDMT000002UK01Section> sectionHasCode(String system, String code) {
         return section -> Optional.ofNullable(section.getCode())
-                .map(codeElement -> system.equals(codeElement.getCodeSystem())
-                        && code.equals(codeElement.getCode()))
-                .orElse(false);
+            .map(codeElement -> system.equals(codeElement.getCodeSystem())
+                && code.equals(codeElement.getCode()))
+            .orElse(false);
     }
 
     private Predicate<? super POCDMT000002UK01Entry> entryHasTemplate(String template) {
         return entry -> entry.isSetContentId()
-                && entry.getContentId().getRoot().equals(NPFIT_CDA_CONTENT)
-                && entry.getContentId().getExtension().equals(template);
+            && entry.getContentId().getRoot().equals(NPFIT_CDA_CONTENT)
+            && entry.getContentId().getExtension().equals(template);
     }
 
-    private CodeableConcept getCodingFromCE(CE code) {
-        Coding coding = new Coding(code.getCodeSystem().equalsIgnoreCase(ITK_SNOMED) ?
+    private Optional<CodeableConcept> getCodingFromCE(CE code) {
+        if (code.isSetCodeSystem() && code.isSetCode() && code.isSetDisplayName()) {
+            Coding coding = new Coding(code.getCodeSystem().equalsIgnoreCase(ITK_SNOMED) ?
                 FHIR_SNOMED : code.getCodeSystem(), code.getCode(), code.getDisplayName());
-        return new CodeableConcept().setCoding(List.of(coding)).setText(code.getDisplayName());
+            CodeableConcept cc = new CodeableConcept()
+                .setCoding(List.of(coding)).setText(code.getDisplayName());
+            return Optional.of(cc);
+        } else {
+            return Optional.empty();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Consent;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -126,7 +127,10 @@ public class ConsentMapperTest {
         assertThat(consent.getPeriod()).isEqualTo(period);
         assertThat(consent.getText()).isNotNull();
         assertThat(consent.getPolicyRule()).isEqualTo(OPT_OUT_URI);
-        assertThat(consent.getActionFirstRep().getCodingFirstRep().getCode()).isEqualTo(code.getCode());
+        CodeableConcept action = consent.getActionFirstRep();
+        if (!action.isEmpty()) {
+            assertThat(consent.getActionFirstRep().getCodingFirstRep().getCode()).isEqualTo(code.getCode());
+        }
         assertThat(consent.getPatient()).isEqualTo(patientReference);
         assertThat(consent.getOrganization().get(0)).isEqualTo(patientReference);
         assertThat(consent.getConsentingParty().get(0)).isEqualTo(patientReference);
