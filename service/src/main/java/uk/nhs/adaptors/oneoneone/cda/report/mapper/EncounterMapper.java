@@ -84,7 +84,8 @@ public class EncounterMapper {
         return periodMapper.mapPeriod(effectiveTime);
     }
 
-    private List<Encounter.EncounterParticipantComponent> getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+    private List<Encounter.EncounterParticipantComponent>
+    getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         List<Encounter.EncounterParticipantComponent> encounterParticipantComponents = Arrays.stream(clinicalDocument
                 .getParticipantArray())
                 .map(participantMapper::mapEncounterParticipant)
@@ -100,6 +101,12 @@ public class EncounterMapper {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .forEach(encounterParticipantComponents::add);
+
+            Arrays.stream(clinicalDocument.getInformantArray())
+                  .map(informantMapper::mapInformantRelatedPersonIntoParticipantComponent)
+                  .filter(Optional::isPresent)
+                  .map(Optional::get)
+                  .forEach(encounterParticipantComponents::add);
         }
         if (clinicalDocument.isSetDataEnterer()) {
             encounterParticipantComponents.add(dataEntererMapper

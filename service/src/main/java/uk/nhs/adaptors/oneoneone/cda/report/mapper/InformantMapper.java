@@ -22,8 +22,21 @@ public class InformantMapper {
         if (informant.isSetAssignedEntity()) {
             Encounter.EncounterParticipantComponent component = new Encounter.EncounterParticipantComponent();
             component.setType(retrieveTypeFromITK(informant));
-            Practitioner practitioner = practitionerMapper
-                    .mapPractitioner(informant.getAssignedEntity());
+            Practitioner practitioner = practitionerMapper.mapPractitioner(informant.getAssignedEntity());
+            component.setIndividualTarget(practitioner);
+            component.setIndividual(new Reference(practitioner));
+            return Optional.of(component);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Encounter.EncounterParticipantComponent>
+    mapInformantRelatedPersonIntoParticipantComponent(POCDMT000002UK01Informant12 informant) {
+        if (informant.isSetRelatedEntity()) {
+            Encounter.EncounterParticipantComponent component = new Encounter.EncounterParticipantComponent();
+            component.setType(retrieveTypeFromITK(informant));
+            Practitioner practitioner = practitionerMapper.mapPractitioner(informant.getRelatedEntity());
             component.setIndividualTarget(practitioner);
             component.setIndividual(new Reference(practitioner));
             return Optional.of(component);
