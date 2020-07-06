@@ -1,6 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Consent;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -39,6 +38,7 @@ public class ConsentMapperTest {
     private static final String INFORMATION_ADVICE_GIVEN = "887031000000108";
     private static final String OPT_OUT_URI = "http://hl7.org/fhir/ConsentPolicy/opt-out";
     private static final String ROOT_ID = "411910CF-1A76-4330-98FE-C345DDEE5553";
+    private static final String CODE_DISPLAY_NAME = "Code DisplayName";
 
     @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
@@ -89,6 +89,7 @@ public class ConsentMapperTest {
         code = CE.Factory.newInstance();
         code.setCodeSystem(ITK_SNOMED);
         code.setCode(INFORMATION_ADVICE_GIVEN);
+        code.setDisplayName(CODE_DISPLAY_NAME);
 
         title.setLanguage(LANG);
         cs.setCode(LANG);
@@ -96,10 +97,9 @@ public class ConsentMapperTest {
         when(clinicalDocument.getComponent()).thenReturn(component2);
         when(clinicalDocument.sizeOfAuthorizationArray()).thenReturn(1);
         when(clinicalDocument.getAuthorizationArray()).thenReturn(new POCDMT000002UK01Authorization[]{authorization});
-        when(clinicalDocument.getSetId()).thenReturn(ii);
-        when(ii.getRoot()).thenReturn(ROOT_ID);
 
         when(authorization.getConsent()).thenReturn(authConsent);
+        when(authConsent.isSetCode()).thenReturn(true);
         when(authConsent.getCode()).thenReturn(code);
 
         when(component2.getStructuredBody()).thenReturn(structuredBody);
@@ -127,18 +127,13 @@ public class ConsentMapperTest {
         assertThat(consent.getPeriod()).isEqualTo(period);
         assertThat(consent.getText()).isNotNull();
         assertThat(consent.getPolicyRule()).isEqualTo(OPT_OUT_URI);
-        CodeableConcept action = consent.getActionFirstRep();
-        if (!action.isEmpty()) {
-            assertThat(consent.getActionFirstRep().getCodingFirstRep().getCode()).isEqualTo(code.getCode());
-        }
+        assertThat(consent.getActionFirstRep().getCodingFirstRep().getCode()).isEqualTo(code.getCode());
         assertThat(consent.getPatient()).isEqualTo(patientReference);
         assertThat(consent.getOrganization().get(0)).isEqualTo(patientReference);
         assertThat(consent.getConsentingParty().get(0)).isEqualTo(patientReference);
     }
 
     private void mockEncounter(Patient patient, Reference patientReference) {
-        encounter.setSubject(patientReference);
-        encounter.setServiceProvider(patientReference);
         when(encounter.getSubject()).thenReturn(patientReference);
         when(encounter.getSubjectTarget()).thenReturn(patient);
         when(encounter.getServiceProvider()).thenReturn(patientReference);
@@ -150,8 +145,5 @@ public class ConsentMapperTest {
         when(section.getComponentArray()).thenReturn(new POCDMT000002UK01Component5[]{component5, component5});
         when(section.getEntryArray()).thenReturn(new POCDMT000002UK01Entry[]{entry});
         when(section.getCode()).thenReturn(code);
-        when(section.getText()).thenReturn(strucDocText);
-
-        when(section.getId()).thenReturn(ii);
     }
 }
