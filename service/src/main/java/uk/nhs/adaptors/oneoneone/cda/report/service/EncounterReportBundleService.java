@@ -11,6 +11,7 @@ import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.Composition;
+import org.hl7.fhir.dstu3.model.Consent;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Group;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component;
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -39,12 +41,7 @@ public class EncounterReportBundleService {
     private CompositionMapper compositionMapper;
     private ListMapper listMapper;
     private CarePlanMapper carePlanMapper;
-
-    private static void addEntry(Bundle bundle, Resource resource) {
-        bundle.addEntry()
-            .setFullUrl(resource.getIdElement().getValue())
-            .setResource(resource);
-    }
+    private ConsentMapper consentMapper;
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
@@ -53,6 +50,7 @@ public class EncounterReportBundleService {
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument);
         Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter);
+        Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
 
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
@@ -64,6 +62,7 @@ public class EncounterReportBundleService {
         addEpisodeOfCare(bundle, encounter);
         addComposition(bundle, composition);
         addCarePlan(bundle, carePlans);
+        addConsent(bundle, consent);
 
         ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
         addList(bundle, listResource);
@@ -198,5 +197,15 @@ public class EncounterReportBundleService {
 
     private void addCarePlan(Bundle bundle, List<CarePlan> carePlans) {
         carePlans.stream().forEach(carePlan -> addEntry(bundle, carePlan));
+    }
+
+    private void addConsent(Bundle bundle, Consent consent) {
+        addEntry(bundle, consent);
+    }
+
+    private static void addEntry(Bundle bundle, Resource resource) {
+        bundle.addEntry()
+                .setFullUrl(resource.getIdElement().getValue())
+                .setResource(resource);
     }
 }
