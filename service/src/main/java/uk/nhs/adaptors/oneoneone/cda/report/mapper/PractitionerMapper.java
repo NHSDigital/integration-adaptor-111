@@ -12,6 +12,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedAuthor;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssociatedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Person;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RelatedEntity;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
 
 import java.util.Arrays;
@@ -62,6 +63,19 @@ public class PractitionerMapper {
         practitioner.setName(getHumanNameFromITK(assignedAuthor.getAssignedPerson()));
         practitioner.setTelecom(getTelecomFromITK(assignedAuthor.getTelecomArray()));
         practitioner.setAddress(getAddressesFromITK(assignedAuthor.getAddrArray()));
+
+        return practitioner;
+    }
+
+    public Practitioner mapPractitioner(POCDMT000002UK01RelatedEntity relatedEntity) {
+        Practitioner practitioner = new Practitioner();
+        practitioner.setIdElement(newRandomUuid());
+        practitioner.setActive(true);
+        if (relatedEntity.isSetRelatedPerson()) {
+            practitioner.setName(getHumanNameFromITK(relatedEntity.getRelatedPerson()));
+        }
+        practitioner.setTelecom(getTelecomFromITK(relatedEntity.getTelecomArray()));
+        practitioner.setAddress(getAddressesFromITK(relatedEntity.getAddrArray()));
 
         return practitioner;
     }
