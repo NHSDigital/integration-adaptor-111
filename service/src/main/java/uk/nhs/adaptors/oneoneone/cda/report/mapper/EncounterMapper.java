@@ -2,6 +2,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import lombok.AllArgsConstructor;
 import org.hl7.fhir.dstu3.model.Appointment;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.DiagnosisComponent;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
@@ -12,10 +13,15 @@ import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.hl7.fhir.dstu3.model.codesystems.EncounterType;
 import org.springframework.stereotype.Component;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
 import java.util.ArrayList;
@@ -70,7 +76,33 @@ public class EncounterMapper {
         setAppointment(encounter, clinicalDocument);
         setEpisodeOfCare(encounter, clinicalDocument);
         setDiagnosis(encounter, clinicalDocument);
+        setEncounterReasonAndType(encounter, clinicalDocument);
         return encounter;
+    }
+
+    private void setEncounterReasonAndType(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        if (clinicalDocument.getComponent().isSetStructuredBody()) {
+            for (POCDMT000002UK01Component3 component3 : clinicalDocument.getComponent().getStructuredBody().getComponentArray()) {
+                POCDMT000002UK01Section section = component3.getSection();
+                for (POCDMT000002UK01Entry entry : section.getEntryArray()) {
+                    if (entry.isSetEncounter()) {
+                        POCDMT000002UK01Encounter encounterITK = entry.getEncounter();
+                        if (encounterITK.isSetTypeId()) {
+                            EncounterType encounterType = EncounterType.fromCode(encounterITK.getTypeId().getAssigningAuthorityName());
+                            if (encounterType != null) {
+                                encounter.addType(new CodeableConcept().setText(encounterType.toString()));
+                            }
+                        }
+                        if (encounterITK.isSetCode()) {
+                            String reason = encounterITK.getCode().getDisplayName();
+                            if (reason != null) {
+                                encounter.addReason(new CodeableConcept().setText(reason));
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void setEpisodeOfCare(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
