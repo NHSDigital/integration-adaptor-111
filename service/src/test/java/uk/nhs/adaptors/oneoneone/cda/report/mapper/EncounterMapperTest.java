@@ -10,6 +10,7 @@ import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.hl7.fhir.dstu3.model.codesystems.EncounterType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,14 +19,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
+import uk.nhs.connect.iucds.cda.ucr.CDNPfITCDAUrl;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Author;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component2;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01DataEnterer;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InfrastructureRootTypeId;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RecordTarget;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
 import java.util.List;
@@ -89,6 +98,23 @@ public class EncounterMapperTest {
     private DiagnosisComponent diagnosis;
     @Mock
     private List<HealthcareService> healthcareServiceList;
+    @Mock
+    private POCDMT000002UK01Component3 component3;
+    @Mock
+    private POCDMT000002UK01Entry entry;
+    @Mock
+    private POCDMT000002UK01StructuredBody structuredBody;
+    @Mock
+    private POCDMT000002UK01Section section01;
+    @Mock
+    private POCDMT000002UK01Encounter encounter;
+    @Mock
+    private POCDMT000002UK01Component2 component2;
+    @Mock
+    private POCDMT000002UK01InfrastructureRootTypeId typeId;
+    @Mock
+    private CDNPfITCDAUrl cdnPfITCDAUrl;
+    private final String reason = "Patient convenience appointment";
 
     @Before
     public void setUp() {
@@ -113,6 +139,7 @@ public class EncounterMapperTest {
         mockReferralRequest();
         mockDiagnosis();
         mockParticipantWithAuthorInformantAndDataEnterer(clinicalDocument);
+        mockEncounterTypeAndReason();
     }
 
     @Test
@@ -153,6 +180,30 @@ public class EncounterMapperTest {
         assertThat(encounter.getEpisodeOfCareFirstRep().getResource()).isEqualTo(episodeOfCare);
         assertThat(encounter.getIncomingReferralFirstRep().getResource()).isEqualTo(referralRequest);
         assertThat(encounter.getDiagnosisFirstRep()).isEqualTo(diagnosis);
+        assertThat(encounter.getReason().get(0).getText()).isEqualTo(reason);
+        assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(EncounterType.ADMS.toString());
+    }
+
+    private void mockEncounterTypeAndReason() {
+        POCDMT000002UK01Component3[] componentArray = new POCDMT000002UK01Component3[1];
+        componentArray[0] = component3;
+        POCDMT000002UK01Entry[] entryArray = new POCDMT000002UK01Entry[1];
+        entryArray[0] = entry;
+
+        when(clinicalDocument.getComponent()).thenReturn(component2);
+        when(component2.isSetStructuredBody()).thenReturn(true);
+        when(component2.getStructuredBody()).thenReturn(structuredBody);
+        when(structuredBody.getComponentArray()).thenReturn(componentArray);
+        when(component3.getSection()).thenReturn(section01);
+        when(section01.getEntryArray()).thenReturn(entryArray);
+        when(entry.getEncounter()).thenReturn(encounter);
+        when(encounter.isSetTypeId()).thenReturn(true);
+        when(encounter.getTypeId()).thenReturn(typeId);
+        when(encounter.isSetCode()).thenReturn(true);
+        when(typeId.getAssigningAuthorityName()).thenReturn(EncounterType.ADMS.toString());
+        when(encounter.getCode()).thenReturn(cdnPfITCDAUrl);
+        when(cdnPfITCDAUrl.getDisplayName()).thenReturn(reason);
+        when(entry.isSetEncounter()).thenReturn(true);
     }
 
     private void mockClinicalDocument(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
