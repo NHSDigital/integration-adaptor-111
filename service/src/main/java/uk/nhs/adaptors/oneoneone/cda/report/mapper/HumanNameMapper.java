@@ -1,12 +1,13 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import lombok.AllArgsConstructor;
+import java.util.stream.Stream;
+
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.PN;
-
-import java.util.stream.Stream;
 
 @Component
 @AllArgsConstructor
@@ -24,16 +25,16 @@ public class HumanNameMapper {
         }
 
         Stream.of(itkPersonName.getGivenArray())
-                .map(nodeUtil::getNodeValueString)
-                .forEach(humanName::addGiven);
+            .map(nodeUtil::getNodeValueString)
+            .forEach(humanName::addGiven);
 
         Stream.of(itkPersonName.getPrefixArray())
-                .map(nodeUtil::getNodeValueString)
-                .forEach(humanName::addPrefix);
+            .map(nodeUtil::getNodeValueString)
+            .forEach(humanName::addPrefix);
 
         Stream.of(itkPersonName.getSuffixArray())
-                .map(nodeUtil::getNodeValueString)
-                .forEach(humanName::addSuffix);
+            .map(nodeUtil::getNodeValueString)
+            .forEach(humanName::addSuffix);
 
         if (itkPersonName.sizeOfFamilyArray() >= 1) {
             humanName.setFamily(nodeUtil.getNodeValueString(itkPersonName.getFamilyArray(0)));

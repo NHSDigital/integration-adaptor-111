@@ -1,33 +1,32 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import org.hl7.fhir.dstu3.model.Address;
-import org.hl7.fhir.dstu3.model.ContactPoint;
-import org.hl7.fhir.dstu3.model.HumanName;
-import org.hl7.fhir.dstu3.model.Organization;
-import org.hl7.fhir.dstu3.model.Location;
-import org.hl7.fhir.dstu3.model.Encounter;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.w3c.dom.Node;
-import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
-import uk.nhs.connect.iucds.cda.ucr.AD;
-import uk.nhs.connect.iucds.cda.ucr.PN;
-import uk.nhs.connect.iucds.cda.ucr.ED;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
-import uk.nhs.connect.iucds.cda.ucr.TEL;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import org.hl7.fhir.dstu3.model.Address;
+import org.hl7.fhir.dstu3.model.ContactPoint;
+import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.HumanName;
+import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.Organization;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.AD;
+import uk.nhs.connect.iucds.cda.ucr.PN;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
+import uk.nhs.connect.iucds.cda.ucr.TEL;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LocationMapperTest {
@@ -87,7 +86,7 @@ public class LocationMapperTest {
         when(organizationMapper.mapOrganization(any())).thenReturn(organization);
 
         Encounter.EncounterLocationComponent encounterLocationComponent = locationMapper
-                .mapOrganizationToLocationComponent(itkOrganization);
+            .mapOrganizationToLocationComponent(itkOrganization);
 
         assertThat(encounterLocationComponent.getLocationTarget().getIdElement().getValue()).startsWith("urn:uuid:");
         assertThat(encounterLocationComponent.getLocationTarget().getManagingOrganizationTarget()).isEqualTo(organization);
@@ -99,11 +98,11 @@ public class LocationMapperTest {
 
         TEL itkTelecom = mock(TEL.class);
 
-        when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[]{itkTelecom});
+        when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[] {itkTelecom});
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
 
         Location referenceRecipientToLocation = locationMapper
-                .mapRecipientToLocation(itkIntendedRecipient);
+            .mapRecipientToLocation(itkIntendedRecipient);
 
         assertThat(referenceRecipientToLocation.getId().startsWith("urn:uuid:"));
     }

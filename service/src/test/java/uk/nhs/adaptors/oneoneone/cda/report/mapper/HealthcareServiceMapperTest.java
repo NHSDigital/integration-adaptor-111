@@ -1,5 +1,11 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
@@ -10,18 +16,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.w3c.dom.Node;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.ON;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HealthcareServiceMapperTest {
@@ -55,9 +56,9 @@ public class HealthcareServiceMapperTest {
     @Before
     public void setup() {
         when(locationMapper.mapRecipientToLocation(intendedRecipient))
-                .thenReturn(location);
+            .thenReturn(location);
         when(organizationMapper.mapOrganization(any()))
-                .thenReturn(organization);
+            .thenReturn(organization);
         POCDMT000002UK01InformationRecipient[] informationRecipientArray = new POCDMT000002UK01InformationRecipient[1];
         informationRecipientArray[0] = informationRecipient;
         when(clinicalDocument.getInformationRecipientArray()).thenReturn(informationRecipientArray);
@@ -73,7 +74,7 @@ public class HealthcareServiceMapperTest {
     @Test
     public void shouldMapHealthcareService() {
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper
-                .mapHealthcareService(clinicalDocument);
+            .mapHealthcareService(clinicalDocument);
 
         HealthcareService healthcareService = healthcareServiceList.get(0);
 
@@ -81,5 +82,4 @@ public class HealthcareServiceMapperTest {
         assertThat(HEALTHCARE_SERVICE_NAME).isEqualTo(healthcareService.getName());
         assertThat(true).isEqualTo(healthcareService.getActive());
     }
-
 }

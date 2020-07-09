@@ -1,15 +1,16 @@
 package uk.nhs.adaptors.oneoneone.xml;
 
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.apache.xmlbeans.XmlValidationError;
+import static java.util.stream.Collectors.toList;
+
+import static org.apache.logging.log4j.util.Strings.join;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-import static org.apache.logging.log4j.util.Strings.join;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+import org.apache.xmlbeans.XmlValidationError;
 
 public final class XmlValidator {
     public static void validate(XmlObject xmlObject) throws XmlException {

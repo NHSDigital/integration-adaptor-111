@@ -21,7 +21,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 public class ConditionMapperTest {
 
     private final Reference individualRef = new Reference("IndividualRef/1");
-    private final String effectiveTimeString = "201706011400+00";
+    private static final String EFFECTIVE_TIME_STRING = "201706011400+00";
     @InjectMocks
     private ConditionMapper conditionMapper;
 
@@ -37,7 +37,7 @@ public class ConditionMapperTest {
     @Before
     public void setUp() {
         when(itkEncounter.getEffectiveTime()).thenReturn(time);
-        when(time.getValue()).thenReturn(effectiveTimeString);
+        when(time.getValue()).thenReturn(EFFECTIVE_TIME_STRING);
         when(encounter.getParticipantFirstRep()).thenReturn(participantFirstRep);
         when(participantFirstRep.getIndividual()).thenReturn(individualRef);
     }
@@ -49,6 +49,6 @@ public class ConditionMapperTest {
         assertThat(condition.getClinicalStatus()).isEqualTo(Condition.ConditionClinicalStatus.ACTIVE);
         assertThat(condition.getVerificationStatus()).isEqualTo(Condition.ConditionVerificationStatus.UNKNOWN);
         assertThat(condition.getAsserter()).isEqualTo(individualRef);
-        assertThat(condition.getAssertedDate()).isEqualTo(DateUtil.parse(effectiveTimeString));
+        assertThat(condition.getAssertedDate()).isEqualTo(DateUtil.parse(EFFECTIVE_TIME_STRING));
     }
 }

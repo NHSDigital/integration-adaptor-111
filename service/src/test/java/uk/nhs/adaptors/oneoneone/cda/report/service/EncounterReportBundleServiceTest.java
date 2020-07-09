@@ -171,6 +171,7 @@ public class EncounterReportBundleServiceTest {
     }
 
     @Test
+    @SuppressWarnings("MagicNumber")
     public void shouldCreateEncounterBundle() {
         POCDMT000002UK01ClinicalDocument1 document = mock(POCDMT000002UK01ClinicalDocument1.class);
 

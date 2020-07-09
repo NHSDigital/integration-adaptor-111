@@ -1,8 +1,8 @@
 package uk.nhs.adaptors.oneoneone;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import static org.springframework.boot.SpringApplication.run;
+
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class OneOneOneApplication {

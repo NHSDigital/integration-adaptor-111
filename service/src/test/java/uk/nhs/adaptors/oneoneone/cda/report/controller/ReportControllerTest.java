@@ -1,5 +1,17 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
+import static java.nio.charset.Charset.defaultCharset;
+import static java.nio.file.Files.readAllBytes;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
+import java.net.URL;
+import java.nio.file.Paths;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -7,18 +19,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.web.server.ResponseStatusException;
+
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-
-import java.net.URL;
-import java.nio.file.Paths;
-
-import static java.nio.file.Files.readAllBytes;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReportControllerTest {
@@ -44,6 +47,15 @@ public class ReportControllerTest {
         assertThat(clinicalDocument.getSetId().getRoot()).isEqualTo("411910CF-1A76-4330-98FE-C345DDEE5553");
     }
 
+    private String getValidReportRequest() {
+        try {
+            URL reportXmlResource = this.getClass().getResource("/xml/ITK_Report_request.xml");
+            return new String(readAllBytes(Paths.get(reportXmlResource.getPath())), defaultCharset());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Test
     public void postReportInvalidRequest() {
         String invalidRequest = "<invalid>";
@@ -58,15 +70,6 @@ public class ReportControllerTest {
 
         if (!exceptionThrown) {
             fail("ResponseStatusException should have been thrown");
-        }
-    }
-
-    private String getValidReportRequest() {
-        try {
-            URL reportXmlResource = this.getClass().getResource("/xml/ITK_Report_request.xml");
-            return new String(readAllBytes(Paths.get(reportXmlResource.getPath())));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 }

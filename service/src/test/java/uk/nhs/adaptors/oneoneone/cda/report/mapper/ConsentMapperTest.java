@@ -1,5 +1,9 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.hl7.fhir.dstu3.model.Consent;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -11,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.CS;
 import uk.nhs.connect.iucds.cda.ucr.II;
@@ -25,10 +30,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 import uk.nhs.connect.iucds.cda.ucr.ST;
 import uk.nhs.connect.iucds.cda.ucr.StrucDocText;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConsentMapperTest {
@@ -96,7 +97,7 @@ public class ConsentMapperTest {
 
         when(clinicalDocument.getComponent()).thenReturn(component2);
         when(clinicalDocument.sizeOfAuthorizationArray()).thenReturn(1);
-        when(clinicalDocument.getAuthorizationArray()).thenReturn(new POCDMT000002UK01Authorization[]{authorization});
+        when(clinicalDocument.getAuthorizationArray()).thenReturn(new POCDMT000002UK01Authorization[] {authorization});
 
         when(authorization.getConsent()).thenReturn(authConsent);
         when(authConsent.isSetCode()).thenReturn(true);
@@ -105,7 +106,7 @@ public class ConsentMapperTest {
         when(component2.getStructuredBody()).thenReturn(structuredBody);
         when(component3.getSection()).thenReturn(section);
         when(component5.getSection()).thenReturn(section);
-        when(structuredBody.getComponentArray()).thenReturn(new POCDMT000002UK01Component3[]{component3});
+        when(structuredBody.getComponentArray()).thenReturn(new POCDMT000002UK01Component3[] {component3});
     }
 
     @Test
@@ -135,15 +136,14 @@ public class ConsentMapperTest {
 
     private void mockEncounter(Patient patient, Reference patientReference) {
         when(encounter.getSubject()).thenReturn(patientReference);
-        when(encounter.getSubjectTarget()).thenReturn(patient);
         when(encounter.getServiceProvider()).thenReturn(patientReference);
         when(encounter.getPeriod()).thenReturn(period);
         when(encounter.getLanguage()).thenReturn(LANG);
     }
 
     private void mockSection() {
-        when(section.getComponentArray()).thenReturn(new POCDMT000002UK01Component5[]{component5, component5});
-        when(section.getEntryArray()).thenReturn(new POCDMT000002UK01Entry[]{entry});
+        when(section.getComponentArray()).thenReturn(new POCDMT000002UK01Component5[] {component5, component5});
+        when(section.getEntryArray()).thenReturn(new POCDMT000002UK01Entry[] {entry});
         when(section.getCode()).thenReturn(code);
     }
 }

@@ -28,7 +28,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 @RunWith(MockitoJUnitRunner.class)
 public class DiagnosisMapperTest {
 
-    private final String role = "role";
+    private static final String ROLE = "role";
     @InjectMocks
     private DiagnosisMapper diagnosisMapper;
     @Mock
@@ -76,7 +76,7 @@ public class DiagnosisMapperTest {
         when(itkencounter.isSetCode()).thenReturn(true);
         when(conditionMapper.mapCondition(any(), any())).thenReturn(condition);
         when(itkencounter.getStatusCode()).thenReturn(statusCode);
-        when(statusCode.getCode()).thenReturn(role);
+        when(statusCode.getCode()).thenReturn(ROLE);
         when(itkencounter.getPriorityCode()).thenReturn(priorityCode);
         String priority = "1";
         when(priorityCode.getCode()).thenReturn(priority);
@@ -87,7 +87,7 @@ public class DiagnosisMapperTest {
     public void mapComposition() {
         DiagnosisComponent diagnosisComponent = diagnosisMapper.mapDiagnosis(clinicalDocument, encounter);
 
-        assertThat(diagnosisComponent.getRole().getText()).isEqualTo(role);
+        assertThat(diagnosisComponent.getRole().getText()).isEqualTo(ROLE);
         assertThat(diagnosisComponent.getCondition().getReference()).isEqualTo(conditionRef.getReference());
         assertThat(diagnosisComponent.getConditionTarget()).isEqualTo(condition);
         int priorityInt = 1;

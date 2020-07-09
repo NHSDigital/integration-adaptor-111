@@ -1,6 +1,17 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import lombok.AllArgsConstructor;
+import static java.util.Arrays.stream;
+import static java.util.Collections.emptyList;
+
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Consent;
@@ -9,10 +20,11 @@ import org.hl7.fhir.dstu3.model.Consent.ConsentDataMeaning;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Narrative;
-import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
@@ -25,16 +37,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Observation;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 @Component
 @AllArgsConstructor
@@ -49,8 +51,6 @@ public class ConsentMapper {
     public Consent mapConsent(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
         Consent consent = new Consent();
         consent.setIdElement(newRandomUuid());
-
-        Patient patient = (Patient) encounter.getSubjectTarget();
 
         if (clinicalDocument.isSetSetId()) {
             Identifier docIdentifier = new Identifier();
@@ -103,7 +103,9 @@ public class ConsentMapper {
 
         for (POCDMT000002UK01Entry permissionEntry : permissionEntries) {
             Period dataPeriod = getDataPeriod(permissionEntry);
-            if (dataPeriod == null) continue;
+            if (dataPeriod == null) {
+                continue;
+            }
             consent.setDataPeriod(dataPeriod);
         }
     }
@@ -129,7 +131,7 @@ public class ConsentMapper {
         List<POCDMT000002UK01Section> sections = getSectionsOfType(structuredBody);
         for (POCDMT000002UK01Section section : sections) {
             Narrative narrative = new Narrative();
-            narrative.setStatus(Narrative.NarrativeStatus.GENERATED);
+            narrative.setStatus(GENERATED);
             if (section.isSetText()) {
                 narrative.setDivAsString(section.getText().xmlText());
                 consent.setText(narrative);
@@ -152,22 +154,26 @@ public class ConsentMapper {
     }
 
     private List<POCDMT000002UK01Section> getSectionsOfType(POCDMT000002UK01StructuredBody structuredBody) {
-        if (structuredBody == null) return Collections.emptyList();
+        if (structuredBody == null) {
+            return emptyList();
+        }
 
-        return Arrays.stream(structuredBody.getComponentArray())
+        return stream(structuredBody.getComponentArray())
             .flatMap(component -> Optional.ofNullable(component.getSection()).stream())
-            .flatMap(section -> Arrays.stream(section.getComponentArray()))
+            .flatMap(section -> stream(section.getComponentArray()))
             .map(POCDMT000002UK01Component5::getSection)
             .filter(sectionHasCode())
             .collect(Collectors.toUnmodifiableList());
     }
 
     private List<POCDMT000002UK01Entry> getEntriesOfType(POCDMT000002UK01StructuredBody structuredBody) {
-        if (structuredBody == null) return Collections.emptyList();
+        if (structuredBody == null) {
+            return emptyList();
+        }
 
-        return Arrays.stream(structuredBody.getComponentArray())
+        return stream(structuredBody.getComponentArray())
             .flatMap(component -> Optional.ofNullable(component.getSection()).stream())
-            .flatMap(section -> Arrays.stream(section.getEntryArray()))
+            .flatMap(section -> stream(section.getEntryArray()))
             .filter(entryHasTemplate())
             .collect(Collectors.toUnmodifiableList());
     }
@@ -187,8 +193,8 @@ public class ConsentMapper {
 
     private Optional<CodeableConcept> getCodingFromCE(CE code) {
         if (code.isSetCodeSystem() && code.isSetCode() && code.isSetDisplayName()) {
-            Coding coding = new Coding(code.getCodeSystem().equalsIgnoreCase(ITK_SNOMED) ?
-                FHIR_SNOMED : code.getCodeSystem(), code.getCode(), code.getDisplayName());
+            Coding coding = new Coding(code.getCodeSystem().equalsIgnoreCase(ITK_SNOMED)
+                ? FHIR_SNOMED : code.getCodeSystem(), code.getCode(), code.getDisplayName());
             CodeableConcept cc = new CodeableConcept()
                 .setCoding(List.of(coding)).setText(code.getDisplayName());
             return Optional.of(cc);

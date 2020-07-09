@@ -1,7 +1,15 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.parser.IParser;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import javax.jms.JMSException;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,18 +20,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
+
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.parser.IParser;
 import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-
-import javax.jms.JMSException;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EncounterReportServiceTest {

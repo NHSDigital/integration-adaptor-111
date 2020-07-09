@@ -1,18 +1,19 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import lombok.AllArgsConstructor;
-import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.Organization;
-import org.springframework.stereotype.Component;
-import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedCustodian;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Custodian;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01CustodianOrganization;
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Organization;
+import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedCustodian;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Custodian;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01CustodianOrganization;
 
 @Component
 @AllArgsConstructor
@@ -34,12 +35,12 @@ public class ServiceProviderMapper {
 
         if (custodianOrganization.isSetAddr()) {
             serviceProviderOrganization.setAddress(Collections
-                    .singletonList(addressMapper.mapAddress(custodianOrganization.getAddr())));
+                .singletonList(addressMapper.mapAddress(custodianOrganization.getAddr())));
         }
 
         if (custodianOrganization.isSetTelecom()) {
             serviceProviderOrganization.setTelecom(Collections
-                    .singletonList(contactPointMapper.mapContactPoint(custodianOrganization.getTelecom())));
+                .singletonList(contactPointMapper.mapContactPoint(custodianOrganization.getTelecom())));
         }
 
         if (custodian.isSetTypeCode()) {
@@ -55,6 +56,6 @@ public class ServiceProviderMapper {
 
     private List<CodeableConcept> retrieveTypeFromITK(POCDMT000002UK01Custodian custodian) {
         return Collections.singletonList(new CodeableConcept()
-                .setText(custodian.getTypeCode()));
+            .setText(custodian.getTypeCode()));
     }
 }

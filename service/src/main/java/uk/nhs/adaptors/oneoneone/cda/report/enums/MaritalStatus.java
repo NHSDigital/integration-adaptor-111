@@ -1,9 +1,9 @@
 package uk.nhs.adaptors.oneoneone.cda.report.enums;
 
+import java.util.stream.Stream;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.stream.Stream;
 
 @Getter
 @RequiredArgsConstructor
@@ -25,8 +25,8 @@ public enum MaritalStatus implements Concept {
 
     public static uk.nhs.adaptors.oneoneone.cda.report.enums.MaritalStatus fromCode(String code) {
         return Stream.of(values())
-                .filter(am -> code.toUpperCase().equals(am.value))
-                .findFirst()
-                .orElseThrow();
+            .filter(am -> code.toUpperCase().equals(am.value))
+            .findFirst()
+            .orElseThrow();
     }
 }

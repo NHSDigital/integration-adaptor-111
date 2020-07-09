@@ -1,6 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import org.hl7.fhir.dstu3.model.DomainResource;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Resource;
@@ -10,13 +14,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ListMapperTest {

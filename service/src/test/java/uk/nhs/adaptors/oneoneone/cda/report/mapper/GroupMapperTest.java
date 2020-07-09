@@ -1,5 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.assertj.core.util.Arrays;
 import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -11,11 +16,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RecordTarget;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GroupMapperTest {
