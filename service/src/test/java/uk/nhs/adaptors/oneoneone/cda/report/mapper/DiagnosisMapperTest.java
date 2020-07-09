@@ -1,6 +1,11 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import org.hl7.fhir.dstu3.model.Condition;
+import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.DiagnosisComponent;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.Before;
@@ -9,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.CS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -18,10 +24,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DiagnosisMapperTest {
@@ -46,11 +48,13 @@ public class DiagnosisMapperTest {
     @Mock
     private POCDMT000002UK01Entry entry;
     @Mock
-    private POCDMT000002UK01Encounter encounter;
+    private POCDMT000002UK01Encounter itkencounter;
     @Mock
     private CE priorityCode;
     @Mock
     private CS statusCode;
+    @Mock
+    private Encounter encounter;
     private Reference conditionRef;
 
     @Before
@@ -66,14 +70,14 @@ public class DiagnosisMapperTest {
         when(structuredBody.getComponentArray()).thenReturn(componentArray);
         when(component3.getSection()).thenReturn(section01);
         when(section01.getEntryArray()).thenReturn(entryArray);
-        when(entry.getEncounter()).thenReturn(encounter);
-        when(encounter.isSetText()).thenReturn(true);
-        when(encounter.isSetStatusCode()).thenReturn(true);
-        when(encounter.isSetCode()).thenReturn(true);
-        when(conditionMapper.mapCondition(any())).thenReturn(condition);
-        when(encounter.getStatusCode()).thenReturn(statusCode);
+        when(entry.getEncounter()).thenReturn(itkencounter);
+        when(itkencounter.isSetText()).thenReturn(true);
+        when(itkencounter.isSetStatusCode()).thenReturn(true);
+        when(itkencounter.isSetCode()).thenReturn(true);
+        when(conditionMapper.mapCondition(any(), any())).thenReturn(condition);
+        when(itkencounter.getStatusCode()).thenReturn(statusCode);
         when(statusCode.getCode()).thenReturn(role);
-        when(encounter.getPriorityCode()).thenReturn(priorityCode);
+        when(itkencounter.getPriorityCode()).thenReturn(priorityCode);
         String priority = "1";
         when(priorityCode.getCode()).thenReturn(priority);
         when(entry.isSetEncounter()).thenReturn(true);
@@ -81,7 +85,7 @@ public class DiagnosisMapperTest {
 
     @Test
     public void mapComposition() {
-        DiagnosisComponent diagnosisComponent = diagnosisMapper.mapDiagnosis(clinicalDocument);
+        DiagnosisComponent diagnosisComponent = diagnosisMapper.mapDiagnosis(clinicalDocument, encounter);
 
         assertThat(diagnosisComponent.getRole().getText()).isEqualTo(role);
         assertThat(diagnosisComponent.getCondition().getReference()).isEqualTo(conditionRef.getReference());

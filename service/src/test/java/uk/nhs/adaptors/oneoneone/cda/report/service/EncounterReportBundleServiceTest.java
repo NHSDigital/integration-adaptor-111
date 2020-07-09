@@ -1,10 +1,21 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.Collections;
+import java.util.List;
+
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.Composition;
+import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Consent;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
@@ -25,6 +36,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
@@ -32,16 +44,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EncounterReportBundleServiceTest {
@@ -74,6 +76,8 @@ public class EncounterReportBundleServiceTest {
     private static final IdType HEALTHCARE_SERVICE_ID = newRandomUuid();
     private static final Consent CONSENT;
     private static final IdType CONSENT_ID = newRandomUuid();
+    private static final Condition CONDITION;
+    private static final IdType CONDITION_ID = newRandomUuid();
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -105,6 +109,9 @@ public class EncounterReportBundleServiceTest {
 
         REFERRAL_REQUEST = new ReferralRequest();
         REFERRAL_REQUEST.setId(REFERRAL_REQUEST_ID);
+
+        CONDITION = new Condition();
+        CONDITION.setId(CONDITION_ID);
 
         COMPOSITION = new Composition();
         COMPOSITION.setId(COMPOSITION_ID);
@@ -158,6 +165,9 @@ public class EncounterReportBundleServiceTest {
         when(carePlanMapper.mapCarePlan(any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(Collections.singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
+        Encounter.DiagnosisComponent diagnosisComponent = new Encounter.DiagnosisComponent();
+        diagnosisComponent.setConditionTarget(CONDITION);
+        ENCOUNTER.addDiagnosis(diagnosisComponent);
     }
 
     @Test
@@ -166,7 +176,7 @@ public class EncounterReportBundleServiceTest {
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
 
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(13);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(14);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
         verifyEntry(entries.get(1), SERVICE_PROVIDER_ID.getValue(), ResourceType.Organization);
@@ -180,7 +190,8 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(9), COMPOSITION_ID.getValue(), ResourceType.Composition);
         verifyEntry(entries.get(10), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
         verifyEntry(entries.get(11), CONSENT_ID.getValue(), ResourceType.Consent);
-        verifyEntry(entries.get(12), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+        verifyEntry(entries.get(12), CONDITION_ID.getValue(), ResourceType.Condition);
+        verifyEntry(entries.get(13), LIST_RESOURCE_ID.getValue(), ResourceType.List);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {

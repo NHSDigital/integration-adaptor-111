@@ -1,5 +1,15 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.DiagnosisComponent;
@@ -18,6 +28,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.connect.iucds.cda.ucr.CDNPfITCDAUrl;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Author;
@@ -37,19 +48,10 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
 public class EncounterMapperTest {
 
+    private final String reason = "Patient convenience appointment";
     @Mock
     private ParticipantMapper participantMapper;
     @Mock
@@ -114,7 +116,6 @@ public class EncounterMapperTest {
     private POCDMT000002UK01InfrastructureRootTypeId typeId;
     @Mock
     private CDNPfITCDAUrl cdnPfITCDAUrl;
-    private final String reason = "Patient convenience appointment";
 
     @Before
     public void setUp() {
@@ -122,7 +123,7 @@ public class EncounterMapperTest {
         POCDMT000002UK01PatientRole patientRole = mock(POCDMT000002UK01PatientRole.class);
         POCDMT000002UK01Organization organization = mock(POCDMT000002UK01Organization.class);
 
-        when(clinicalDocument.getRecordTargetArray()).thenReturn(new POCDMT000002UK01RecordTarget[]{recordTarget});
+        when(clinicalDocument.getRecordTargetArray()).thenReturn(new POCDMT000002UK01RecordTarget[] {recordTarget});
         when(clinicalDocument.getRecordTargetArray(0)).thenReturn(recordTarget);
         when(clinicalDocument.sizeOfRecordTargetArray()).thenReturn(1);
         when(recordTarget.getPatientRole()).thenReturn(patientRole);
@@ -142,70 +143,6 @@ public class EncounterMapperTest {
         mockEncounterTypeAndReason();
     }
 
-    @Test
-    public void shouldMapEncounter() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
-        verifyEncounter(encounter);
-    }
-
-    @Test
-    public void mapEncounterTest() {
-        mockParticipant(clinicalDocument);
-
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
-        verifyEncounter(encounter);
-    }
-
-    @Test
-    public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
-        verifyEncounter(encounter);
-
-        assertThat(encounter.getParticipant().size()).isEqualTo(4);
-        for (Encounter.EncounterParticipantComponent component : encounter.getParticipant()) {
-            assertThat(component).isEqualTo(encounterParticipantComponent);
-        }
-    }
-
-    private void verifyEncounter(Encounter encounter) {
-        String uuidBeginning = "urn:uuid:";
-        assertThat(encounter.getIdElement().getValue()).startsWith(uuidBeginning);
-        assertThat(encounter.getStatus()).isEqualTo(FINISHED);
-        assertThat(encounter.getPeriod()).isEqualTo(period);
-        assertThat(encounter.getParticipantFirstRep()).isEqualTo(encounterParticipantComponent);
-        assertThat(encounter.getAppointmentTarget()).isEqualTo(appointment);
-        assertThat(encounter.getServiceProviderTarget()).isEqualTo(serviceProvider);
-        assertThat(encounter.getLocationFirstRep()).isEqualTo(locationComponent);
-        assertThat(encounter.getSubjectTarget()).isEqualTo(patient);
-        assertThat(encounter.getEpisodeOfCareFirstRep().getResource()).isEqualTo(episodeOfCare);
-        assertThat(encounter.getIncomingReferralFirstRep().getResource()).isEqualTo(referralRequest);
-        assertThat(encounter.getDiagnosisFirstRep()).isEqualTo(diagnosis);
-        assertThat(encounter.getReason().get(0).getText()).isEqualTo(reason);
-        assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(EncounterType.ADMS.toString());
-    }
-
-    private void mockEncounterTypeAndReason() {
-        POCDMT000002UK01Component3[] componentArray = new POCDMT000002UK01Component3[1];
-        componentArray[0] = component3;
-        POCDMT000002UK01Entry[] entryArray = new POCDMT000002UK01Entry[1];
-        entryArray[0] = entry;
-
-        when(clinicalDocument.getComponent()).thenReturn(component2);
-        when(component2.isSetStructuredBody()).thenReturn(true);
-        when(component2.getStructuredBody()).thenReturn(structuredBody);
-        when(structuredBody.getComponentArray()).thenReturn(componentArray);
-        when(component3.getSection()).thenReturn(section01);
-        when(section01.getEntryArray()).thenReturn(entryArray);
-        when(entry.getEncounter()).thenReturn(encounter);
-        when(encounter.isSetTypeId()).thenReturn(true);
-        when(encounter.getTypeId()).thenReturn(typeId);
-        when(encounter.isSetCode()).thenReturn(true);
-        when(typeId.getAssigningAuthorityName()).thenReturn(EncounterType.ADMS.toString());
-        when(encounter.getCode()).thenReturn(cdnPfITCDAUrl);
-        when(cdnPfITCDAUrl.getDisplayName()).thenReturn(reason);
-        when(entry.isSetEncounter()).thenReturn(true);
-    }
-
     private void mockClinicalDocument(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         POCDMT000002UK01RecordTarget mockRecordTarget = mock(POCDMT000002UK01RecordTarget.class);
         when(clinicalDocument.getRecordTargetArray(anyInt())).thenReturn(mockRecordTarget);
@@ -215,27 +152,8 @@ public class EncounterMapperTest {
     private void mockParticipant(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         POCDMT000002UK01Participant1 participant = mock(POCDMT000002UK01Participant1.class);
 
-        when(clinicalDocument.getParticipantArray()).thenReturn(new POCDMT000002UK01Participant1[]{participant});
+        when(clinicalDocument.getParticipantArray()).thenReturn(new POCDMT000002UK01Participant1[] {participant});
         when(participantMapper.mapEncounterParticipant(any())).thenReturn(encounterParticipantComponent);
-    }
-
-    private void mockParticipantWithAuthorInformantAndDataEnterer(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        mockParticipant(clinicalDocument);
-
-        POCDMT000002UK01Author author = mock(POCDMT000002UK01Author.class);
-        POCDMT000002UK01Informant12 informant = mock(POCDMT000002UK01Informant12.class);
-        POCDMT000002UK01DataEnterer dataEnterer = mock(POCDMT000002UK01DataEnterer.class);
-
-        when(clinicalDocument.sizeOfAuthorArray()).thenReturn(1);
-        when(clinicalDocument.getAuthorArray()).thenReturn(new POCDMT000002UK01Author[]{author});
-        when(clinicalDocument.sizeOfInformantArray()).thenReturn(1);
-        when(clinicalDocument.getInformantArray()).thenReturn(new POCDMT000002UK01Informant12[]{informant});
-        when(clinicalDocument.isSetDataEnterer()).thenReturn(true);
-        when(clinicalDocument.getDataEnterer()).thenReturn(dataEnterer);
-
-        when(authorMapper.mapAuthorIntoParticipantComponent(any())).thenReturn(encounterParticipantComponent);
-        when(informantMapper.mapInformantIntoParticipantComponent(any())).thenReturn(Optional.of(encounterParticipantComponent));
-        when(dataEntererMapper.mapDataEntererIntoParticipantComponent(any())).thenReturn(encounterParticipantComponent);
     }
 
     private void mockLocation() {
@@ -263,15 +181,98 @@ public class EncounterMapperTest {
 
     private void mockEpisodeOfCare() {
         when(episodeOfCareMapper.mapEpisodeOfCare(any(POCDMT000002UK01ClinicalDocument1.class), any(Reference.class)))
-                .thenReturn(Optional.of(episodeOfCare));
+            .thenReturn(Optional.of(episodeOfCare));
     }
 
     private void mockReferralRequest() {
         when(referralRequestMapper.mapReferralRequest(any(), any()))
-                .thenReturn(referralRequest);
+            .thenReturn(referralRequest);
     }
 
     private void mockDiagnosis() {
-        when(diagnosisMapper.mapDiagnosis(any())).thenReturn(diagnosis);
+        when(diagnosisMapper.mapDiagnosis(any(), any())).thenReturn(diagnosis);
+    }
+
+    private void mockParticipantWithAuthorInformantAndDataEnterer(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        mockParticipant(clinicalDocument);
+
+        POCDMT000002UK01Author author = mock(POCDMT000002UK01Author.class);
+        POCDMT000002UK01Informant12 informant = mock(POCDMT000002UK01Informant12.class);
+        POCDMT000002UK01DataEnterer dataEnterer = mock(POCDMT000002UK01DataEnterer.class);
+
+        when(clinicalDocument.sizeOfAuthorArray()).thenReturn(1);
+        when(clinicalDocument.getAuthorArray()).thenReturn(new POCDMT000002UK01Author[] {author});
+        when(clinicalDocument.sizeOfInformantArray()).thenReturn(1);
+        when(clinicalDocument.getInformantArray()).thenReturn(new POCDMT000002UK01Informant12[] {informant});
+        when(clinicalDocument.isSetDataEnterer()).thenReturn(true);
+        when(clinicalDocument.getDataEnterer()).thenReturn(dataEnterer);
+
+        when(authorMapper.mapAuthorIntoParticipantComponent(any())).thenReturn(encounterParticipantComponent);
+        when(informantMapper.mapInformantIntoParticipantComponent(any())).thenReturn(Optional.of(encounterParticipantComponent));
+        when(dataEntererMapper.mapDataEntererIntoParticipantComponent(any())).thenReturn(encounterParticipantComponent);
+    }
+
+    private void mockEncounterTypeAndReason() {
+        POCDMT000002UK01Component3[] componentArray = new POCDMT000002UK01Component3[1];
+        componentArray[0] = component3;
+        POCDMT000002UK01Entry[] entryArray = new POCDMT000002UK01Entry[1];
+        entryArray[0] = entry;
+
+        when(clinicalDocument.getComponent()).thenReturn(component2);
+        when(component2.isSetStructuredBody()).thenReturn(true);
+        when(component2.getStructuredBody()).thenReturn(structuredBody);
+        when(structuredBody.getComponentArray()).thenReturn(componentArray);
+        when(component3.getSection()).thenReturn(section01);
+        when(section01.getEntryArray()).thenReturn(entryArray);
+        when(entry.getEncounter()).thenReturn(encounter);
+        when(encounter.isSetTypeId()).thenReturn(true);
+        when(encounter.getTypeId()).thenReturn(typeId);
+        when(encounter.isSetCode()).thenReturn(true);
+        when(typeId.getAssigningAuthorityName()).thenReturn(EncounterType.ADMS.toString());
+        when(encounter.getCode()).thenReturn(cdnPfITCDAUrl);
+        when(cdnPfITCDAUrl.getDisplayName()).thenReturn(reason);
+        when(entry.isSetEncounter()).thenReturn(true);
+    }
+
+    @Test
+    public void shouldMapEncounter() {
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        verifyEncounter(encounter);
+    }
+
+    private void verifyEncounter(Encounter encounter) {
+        String uuidBeginning = "urn:uuid:";
+        assertThat(encounter.getIdElement().getValue()).startsWith(uuidBeginning);
+        assertThat(encounter.getStatus()).isEqualTo(FINISHED);
+        assertThat(encounter.getPeriod()).isEqualTo(period);
+        assertThat(encounter.getParticipantFirstRep()).isEqualTo(encounterParticipantComponent);
+        assertThat(encounter.getAppointmentTarget()).isEqualTo(appointment);
+        assertThat(encounter.getServiceProviderTarget()).isEqualTo(serviceProvider);
+        assertThat(encounter.getLocationFirstRep()).isEqualTo(locationComponent);
+        assertThat(encounter.getSubjectTarget()).isEqualTo(patient);
+        assertThat(encounter.getEpisodeOfCareFirstRep().getResource()).isEqualTo(episodeOfCare);
+        assertThat(encounter.getIncomingReferralFirstRep().getResource()).isEqualTo(referralRequest);
+        assertThat(encounter.getDiagnosisFirstRep()).isEqualTo(diagnosis);
+        assertThat(encounter.getReason().get(0).getText()).isEqualTo(reason);
+        assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(EncounterType.ADMS.toString());
+    }
+
+    @Test
+    public void mapEncounterTest() {
+        mockParticipant(clinicalDocument);
+
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        verifyEncounter(encounter);
+    }
+
+    @Test
+    public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        verifyEncounter(encounter);
+
+        assertThat(encounter.getParticipant().size()).isEqualTo(4);
+        for (Encounter.EncounterParticipantComponent component : encounter.getParticipant()) {
+            assertThat(component).isEqualTo(encounterParticipantComponent);
+        }
     }
 }
