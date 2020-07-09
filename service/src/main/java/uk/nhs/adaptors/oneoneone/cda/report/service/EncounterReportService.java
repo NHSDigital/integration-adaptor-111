@@ -1,30 +1,35 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import ca.uhn.fhir.context.FhirContext;
-import lombok.AllArgsConstructor;
+import javax.jms.TextMessage;
+
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
+
+import ca.uhn.fhir.context.FhirContext;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
-import javax.jms.TextMessage;
-
 @Service
+@Slf4j
 @AllArgsConstructor
 public class EncounterReportService {
 
     private static final String MESSAGE_ID = "messageId";
 
-    private EncounterReportBundleService encounterReportBundleService;
+    private static final String OUTGOING_MESSAGE_LOG = "MESSAGE TRANSLATED TO FHIR AND SENT TO QUEUE | ";
 
-    private JmsTemplate jmsTemplate;
+    private final EncounterReportBundleService encounterReportBundleService;
 
-    private FhirContext fhirContext;
+    private final JmsTemplate jmsTemplate;
 
-    private AmqpProperties amqpProperties;
+    private final FhirContext fhirContext;
 
-    public void transformAndPopulateToGP(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument, String messageId) {
+    private final AmqpProperties amqpProperties;
+
+    public void transformAndPopulateToGP(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument, String messageId, String trackingId) {
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(clinicalDocumentDocument);
 
         jmsTemplate.send(amqpProperties.getQueueName(), session -> {
@@ -32,11 +37,13 @@ public class EncounterReportService {
             message.setStringProperty(MESSAGE_ID, messageId);
             return message;
         });
+        LOGGER.info(OUTGOING_MESSAGE_LOG + "MESSAGE ID: " + messageId);
+        LOGGER.info(OUTGOING_MESSAGE_LOG + "TRACKING ID: " + trackingId);
     }
 
     private String toJsonString(Bundle encounterBundle) {
         return fhirContext
-                .newJsonParser()
-                .encodeResourceToString(encounterBundle);
+            .newJsonParser()
+            .encodeResourceToString(encounterBundle);
     }
 }
