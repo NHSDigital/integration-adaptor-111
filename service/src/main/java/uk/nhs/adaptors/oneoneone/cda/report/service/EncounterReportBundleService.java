@@ -1,10 +1,17 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import lombok.AllArgsConstructor;
+import static java.util.stream.Collectors.toSet;
+
+import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
+
+import java.util.Collection;
+import java.util.List;
+
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.Composition;
+import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Consent;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
@@ -18,6 +25,8 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
@@ -26,22 +35,16 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
-import java.util.Collection;
-import java.util.List;
-
-import static java.util.stream.Collectors.toSet;
-import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
-
 @Component
 @AllArgsConstructor
 public class EncounterReportBundleService {
 
-    private EncounterMapper encounterMapper;
-    private CompositionMapper compositionMapper;
-    private ListMapper listMapper;
-    private CarePlanMapper carePlanMapper;
-    private ConsentMapper consentMapper;
-    private HealthcareServiceMapper healthcareServiceMapper;
+    private final EncounterMapper encounterMapper;
+    private final CompositionMapper compositionMapper;
+    private final ListMapper listMapper;
+    private final CarePlanMapper carePlanMapper;
+    private final ConsentMapper consentMapper;
+    private final HealthcareServiceMapper healthcareServiceMapper;
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
@@ -65,6 +68,7 @@ public class EncounterReportBundleService {
         addComposition(bundle, composition);
         addCarePlan(bundle, carePlans);
         addConsent(bundle, consent);
+        addCondition(bundle, encounter);
 
         ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
         addList(bundle, listResource);
@@ -173,6 +177,11 @@ public class EncounterReportBundleService {
         }
     }
 
+    private void addCondition(Bundle bundle, Encounter encounter) {
+        Condition condition = (Condition) encounter.getDiagnosisFirstRep().getConditionTarget();
+        addEntry(bundle, condition);
+    }
+
     private void addComposition(Bundle bundle, Composition composition) {
         addEntry(bundle, composition);
         if (composition.hasAuthor()) {
@@ -190,7 +199,7 @@ public class EncounterReportBundleService {
 
     private void addHealthcareService(Bundle bundle, List<HealthcareService> healthcareServiceList) {
         for (HealthcareService healthcareService :
-                healthcareServiceList){
+            healthcareServiceList) {
             addEntry(bundle, healthcareService);
             if (healthcareService.hasLocation()) {
                 addEntry(bundle, (Location) healthcareService.getLocationFirstRep().getResource());
@@ -207,7 +216,7 @@ public class EncounterReportBundleService {
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
-                .setFullUrl(resource.getIdElement().getValue())
-                .setResource(resource);
+            .setFullUrl(resource.getIdElement().getValue())
+            .setResource(resource);
     }
 }

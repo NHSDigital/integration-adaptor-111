@@ -1,6 +1,14 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import lombok.AllArgsConstructor;
+import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
@@ -15,6 +23,8 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.codesystems.EncounterType;
 import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
@@ -23,15 +33,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.TS;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 @Component
 @AllArgsConstructor
@@ -80,69 +81,33 @@ public class EncounterMapper {
         return encounter;
     }
 
-    private void setEncounterReasonAndType(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        if (clinicalDocument.getComponent().isSetStructuredBody()) {
-            for (POCDMT000002UK01Component3 component3 : clinicalDocument.getComponent().getStructuredBody().getComponentArray()) {
-                POCDMT000002UK01Section section = component3.getSection();
-                for (POCDMT000002UK01Entry entry : section.getEntryArray()) {
-                    if (entry.isSetEncounter()) {
-                        POCDMT000002UK01Encounter encounterITK = entry.getEncounter();
-                        if (encounterITK.isSetTypeId()) {
-                            EncounterType encounterType = EncounterType.fromCode(encounterITK.getTypeId().getAssigningAuthorityName());
-                            if (encounterType != null) {
-                                encounter.addType(new CodeableConcept().setText(encounterType.toString()));
-                            }
-                        }
-                        if (encounterITK.isSetCode()) {
-                            String reason = encounterITK.getCode().getDisplayName();
-                            if (reason != null) {
-                                encounter.addReason(new CodeableConcept().setText(reason));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void setEpisodeOfCare(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        Optional<EpisodeOfCare> episodeOfCare = episodeOfCareMapper.mapEpisodeOfCare(clinicalDocument, encounter.getSubject());
-        episodeOfCare.ifPresent(ofCare -> encounter.addEpisodeOfCare(new Reference(ofCare)));
-    }
-
-    private Period getPeriod(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        TS effectiveTime = clinicalDocument.getEffectiveTime();
-
-        return periodMapper.mapPeriod(effectiveTime);
-    }
-
     private List<Encounter.EncounterParticipantComponent>
     getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         List<Encounter.EncounterParticipantComponent> encounterParticipantComponents = Arrays.stream(clinicalDocument
-                .getParticipantArray())
-                .map(participantMapper::mapEncounterParticipant)
-                .collect(Collectors.toList());
+            .getParticipantArray())
+            .map(participantMapper::mapEncounterParticipant)
+            .collect(Collectors.toList());
         if (clinicalDocument.sizeOfAuthorArray() > 0) {
             Arrays.stream(clinicalDocument.getAuthorArray())
-                    .map(authorMapper::mapAuthorIntoParticipantComponent)
-                    .forEach(encounterParticipantComponents::add);
+                .map(authorMapper::mapAuthorIntoParticipantComponent)
+                .forEach(encounterParticipantComponents::add);
         }
         if (clinicalDocument.sizeOfInformantArray() > 0) {
             Arrays.stream(clinicalDocument.getInformantArray())
-                    .map(informantMapper::mapInformantIntoParticipantComponent)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .forEach(encounterParticipantComponents::add);
+                .map(informantMapper::mapInformantIntoParticipantComponent)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(encounterParticipantComponents::add);
 
             Arrays.stream(clinicalDocument.getInformantArray())
-                  .map(informantMapper::mapInformantRelatedPersonIntoParticipantComponent)
-                  .filter(Optional::isPresent)
-                  .map(Optional::get)
-                  .forEach(encounterParticipantComponents::add);
+                .map(informantMapper::mapInformantRelatedPersonIntoParticipantComponent)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(encounterParticipantComponents::add);
         }
         if (clinicalDocument.isSetDataEnterer()) {
             encounterParticipantComponents.add(dataEntererMapper
-                    .mapDataEntererIntoParticipantComponent(clinicalDocument.getDataEnterer()));
+                .mapDataEntererIntoParticipantComponent(clinicalDocument.getDataEnterer()));
         }
         return encounterParticipantComponents;
     }
@@ -152,22 +117,17 @@ public class EncounterMapper {
         List<Encounter.EncounterLocationComponent> locations = new ArrayList<>();
         if (clinicalDocument1.sizeOfRecordTargetArray() > 0) {
             locations = Arrays.stream(clinicalDocument1.getRecordTargetArray())
-                    .map(recordTarget -> recordTarget.getPatientRole().getProviderOrganization())
-                    .map(locationMapper::mapOrganizationToLocationComponent)
-                    .collect(Collectors.toList());
+                .map(recordTarget -> recordTarget.getPatientRole().getProviderOrganization())
+                .map(locationMapper::mapOrganizationToLocationComponent)
+                .collect(Collectors.toList());
         }
         return locations;
     }
 
-    private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        Reference referralRequest = encounter.getIncomingReferralFirstRep();
-        Reference patient = encounter.getSubject();
+    private Period getPeriod(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        TS effectiveTime = clinicalDocument.getEffectiveTime();
 
-        Optional<Appointment> appointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument);
-        if (appointment.isPresent()) {
-            encounter.setAppointment(new Reference(appointment.get()));
-            encounter.setAppointmentTarget(appointment.get());
-        }
+        return periodMapper.mapPeriod(effectiveTime);
     }
 
     private void setServiceProvider(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
@@ -197,6 +157,52 @@ public class EncounterMapper {
         encounter.addIncomingReferral(referralRequestRef);
     }
 
+    private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        Reference referralRequest = encounter.getIncomingReferralFirstRep();
+        Reference patient = encounter.getSubject();
+
+        Optional<Appointment> appointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument);
+        if (appointment.isPresent()) {
+            encounter.setAppointment(new Reference(appointment.get()));
+            encounter.setAppointmentTarget(appointment.get());
+        }
+    }
+
+    private void setEpisodeOfCare(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        Optional<EpisodeOfCare> episodeOfCare = episodeOfCareMapper.mapEpisodeOfCare(clinicalDocument, encounter.getSubject());
+        episodeOfCare.ifPresent(ofCare -> encounter.addEpisodeOfCare(new Reference(ofCare)));
+    }
+
+    private void setDiagnosis(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        DiagnosisComponent diagnosis = diagnosisMapper.mapDiagnosis(clinicalDocument, encounter);
+        encounter.addDiagnosis(diagnosis);
+    }
+
+    private void setEncounterReasonAndType(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        if (clinicalDocument.getComponent().isSetStructuredBody()) {
+            for (POCDMT000002UK01Component3 component3 : clinicalDocument.getComponent().getStructuredBody().getComponentArray()) {
+                POCDMT000002UK01Section section = component3.getSection();
+                for (POCDMT000002UK01Entry entry : section.getEntryArray()) {
+                    if (entry.isSetEncounter()) {
+                        POCDMT000002UK01Encounter encounterITK = entry.getEncounter();
+                        if (encounterITK.isSetTypeId()) {
+                            EncounterType encounterType = EncounterType.fromCode(encounterITK.getTypeId().getAssigningAuthorityName());
+                            if (encounterType != null) {
+                                encounter.addType(new CodeableConcept().setText(encounterType.toString()));
+                            }
+                        }
+                        if (encounterITK.isSetCode()) {
+                            String reason = encounterITK.getCode().getDisplayName();
+                            if (reason != null) {
+                                encounter.addReason(new CodeableConcept().setText(reason));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private Optional<Patient> getPatient(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
         Patient patient = new Patient();
         if (clinicalDocument1.sizeOfRecordTargetArray() > 0) {
@@ -204,10 +210,5 @@ public class EncounterMapper {
             patient = patientMapper.mapPatient(patientRole);
         }
         return Optional.of(patient);
-    }
-
-    private void setDiagnosis(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        DiagnosisComponent diagnosis = diagnosisMapper.mapDiagnosis(clinicalDocument);
-        encounter.addDiagnosis(diagnosis);
     }
 }
