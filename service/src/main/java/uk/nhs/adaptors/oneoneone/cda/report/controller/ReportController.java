@@ -5,6 +5,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 import static org.springframework.http.MediaType.TEXT_XML_VALUE;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.MESSAGE_ID;
+import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.TRACKING_ID;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils.extractClinicalDocument;
 import static uk.nhs.adaptors.oneoneone.xml.XmlValidator.validate;
 
@@ -37,15 +39,15 @@ public class ReportController {
     public void postReport(@RequestBody String reportXml) {
         try {
             Map<ReportElement, String> reportElementsMap = ReportParserUtil.parseReportXml(reportXml);
-            LOGGER.info(String.format("ITK SOAP message received. MessageId: %s, ItkTrackingId: %s",
-                reportElementsMap.get(ReportElement.MESSAGE_ID), reportElementsMap.get(ReportElement.TRACKING_ID)));
+            LOGGER.info("ITK SOAP message received. MessageId: {}, ItkTrackingId: {}",
+                reportElementsMap.get(MESSAGE_ID), reportElementsMap.get(TRACKING_ID));
 
             POCDMT000002UK01ClinicalDocument1 clinicalDocument = extractClinicalDocument(reportElementsMap
                 .get(ReportElement.DISTRIBUTION_ENVELOPE));
             validate(clinicalDocument);
 
-            encounterReportService.transformAndPopulateToGP(clinicalDocument, reportElementsMap.get(ReportElement.MESSAGE_ID),
-                reportElementsMap.get(ReportElement.TRACKING_ID));
+            encounterReportService.transformAndPopulateToGP(clinicalDocument, reportElementsMap.get(MESSAGE_ID),
+                reportElementsMap.get(TRACKING_ID));
         } catch (XmlException | DocumentException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
             throw new ResponseStatusException(BAD_REQUEST, e.getMessage());

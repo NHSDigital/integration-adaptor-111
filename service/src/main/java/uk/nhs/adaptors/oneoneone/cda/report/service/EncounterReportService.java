@@ -35,7 +35,7 @@ public class EncounterReportService {
             message.setStringProperty(MESSAGE_ID, messageId);
             return message;
         });
-        LOGGER.info(String.format("Successfully sent FHIR message to queue. MessageId: %s, ItkTrackingId: %s", messageId, trackingId));
+        LOGGER.info("Successfully sent FHIR message to queue. MessageId: {}, ItkTrackingId: {}", messageId, trackingId);
     }
 
     private String toJsonString(Bundle encounterBundle) {
