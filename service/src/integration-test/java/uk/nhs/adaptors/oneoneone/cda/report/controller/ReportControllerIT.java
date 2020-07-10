@@ -1,5 +1,21 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
+import static java.nio.file.Files.readAllBytes;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
+
+import static io.restassured.RestAssured.given;
+
+import java.net.URL;
+import java.nio.file.Paths;
+
+import javax.jms.JMSException;
+import javax.jms.Message;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,21 +23,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+
 import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
 import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import java.net.URL;
-import java.nio.file.Paths;
-
-import static io.restassured.RestAssured.given;
-import static java.nio.file.Files.readAllBytes;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -44,25 +48,25 @@ public class ReportControllerIT {
     @Test
     public void postReportInvalidBody() {
         given()
-                .port(port)
-                .contentType(APPLICATION_XML_VALUE)
-                .body("<invalid_xml>")
-                .when()
-                .post(REPORT_ENDPOINT)
-                .then()
-                .statusCode(BAD_REQUEST.value()).extract();
+            .port(port)
+            .contentType(APPLICATION_XML_VALUE)
+            .body("<invalid_xml>")
+            .when()
+            .post(REPORT_ENDPOINT)
+            .then()
+            .statusCode(BAD_REQUEST.value()).extract();
     }
 
     @Test
     public void postReportValidBody() throws JMSException {
         given()
-                .port(port)
-                .contentType(APPLICATION_XML_VALUE)
-                .body(getResourceAsString("/xml/ITK_Report_request.xml"))
-                .when()
-                .post(REPORT_ENDPOINT)
-                .then()
-                .statusCode(ACCEPTED.value());
+            .port(port)
+            .contentType(APPLICATION_XML_VALUE)
+            .body(getResourceAsString("/xml/ITK_Report_request.xml"))
+            .when()
+            .post(REPORT_ENDPOINT)
+            .then()
+            .statusCode(ACCEPTED.value());
 
         Message jmsMessage = jmsTemplate.receive(amqpProperties.getQueueName());
         String messageBody = jmsMessage.getBody(String.class);
