@@ -20,3 +20,6 @@ The above script builds necessary docker images and starts the SpringBoot servic
 ## How to run integration tests:
 * Navigate to `service`
 * Run: `./gradlew integrationTest`
+
+## Example bundle message 
+* An example bundle message can be found [here](./example_FHIR_bundle_message.json) of [ITK_Report](./service/src/integration-test/resources/xml/ITK_Report_request.xml) converted to FHIR. 

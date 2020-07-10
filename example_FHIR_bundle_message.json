@@ -1,0 +1,1054 @@
+{
+    "resourceType": "Bundle",
+    "type": "transaction",
+    "entry": [
+        {
+            "fullUrl": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2",
+            "resource": {
+                "resourceType": "Encounter",
+                "status": "finished",
+                "type": [
+                    {
+                        "text": "ADMS"
+                    }
+                ],
+                "subject": {
+                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                },
+                "episodeOfCare": [
+                    {
+                        "reference": "urn:uuid:18defd92-02c6-4381-bd0c-d935a5380198"
+                    }
+                ],
+                "incomingReferral": [
+                    {
+                        "reference": "urn:uuid:bd352abe-6f2a-457d-bd99-20f74db0c6ec"
+                    }
+                ],
+                "participant": [
+                    {
+                        "type": [
+                            {
+                                "text": "REFT"
+                            }
+                        ],
+                        "period": {
+                            "start": "2011-05-19T20:45:00+01:00",
+                            "end": "2011-05-19T21:15:00+01:00"
+                        },
+                        "individual": {
+                            "reference": "urn:uuid:aa13247a-6ca5-4c02-aa0b-d7edefd92865"
+                        }
+                    },
+                    {
+                        "type": [
+                            {
+                                "text": "AUT"
+                            }
+                        ],
+                        "period": {
+                            "start": "2011-05-19T21:00:00+01:00"
+                        },
+                        "individual": {
+                            "reference": "urn:uuid:96f57ae8-8760-4628-9f5a-0fa6def907c7"
+                        }
+                    },
+                    {
+                        "type": [
+                            {
+                                "text": "INF"
+                            }
+                        ],
+                        "period": {
+                            "start": "2011-05-19T20:45:00+01:00",
+                            "end": "2011-05-19T21:15:00+01:00"
+                        },
+                        "individual": {
+                            "reference": "urn:uuid:a8dbe655-b5bb-4ac7-8af3-e7745ed84e16"
+                        }
+                    }
+                ],
+                "appointment": {
+                    "reference": "urn:uuid:e0d6720c-a340-475c-8869-4e8cf3e6ae9c"
+                },
+                "period": {
+                    "start": "2011-05-19T21:00:00+01:00"
+                },
+                "reason": [
+                    {
+                        "text": "Patient convenience appointment"
+                    }
+                ],
+                "diagnosis": [
+                    {
+                        "id": "urn:uuid:3373594b-9e2b-4ff0-a2ad-46d022086c09",
+                        "condition": {
+                            "reference": "urn:uuid:dee227fd-91ff-4648-b5d1-9b2452684cb7"
+                        },
+                        "role": {
+                            "text": "role"
+                        },
+                        "rank": 1
+                    }
+                ],
+                "location": [
+                    {
+                        "location": {
+                            "reference": "urn:uuid:5d466a6a-dc60-4e38-81a8-86bec820d302"
+                        },
+                        "status": "active"
+                    }
+                ],
+                "serviceProvider": {
+                    "reference": "urn:uuid:f25664e1-28ba-46f6-a53e-0a889b0a8ac7"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:f25664e1-28ba-46f6-a53e-0a889b0a8ac7",
+            "resource": {
+                "resourceType": "Organization",
+                "active": true,
+                "type": [
+                    {
+                        "text": "CST"
+                    }
+                ],
+                "name": "Broomfield Foundation Trust",
+                "telecom": [
+                    {
+                        "system": "other",
+                        "value": "tel:0123476895",
+                        "use": "work"
+                    }
+                ],
+                "address": [
+                    {
+                        "line": [
+                            "Broomfield Hospital",
+                            "Bocking End"
+                        ],
+                        "city": "Braintree",
+                        "postalCode": "CM7 9AB",
+                        "country": "UK"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:aa13247a-6ca5-4c02-aa0b-d7edefd92865",
+            "resource": {
+                "resourceType": "Practitioner",
+                "active": true,
+                "telecom": [
+                    {
+                        "system": "other",
+                        "value": "tel:0123456789",
+                        "use": "temp"
+                    }
+                ],
+                "address": [
+                    {
+                        "line": [
+                            "Church Street Walk in Centre",
+                            "4 Church Street",
+                            "Medway"
+                        ],
+                        "postalCode": "ME8 7TT"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:96f57ae8-8760-4628-9f5a-0fa6def907c7",
+            "resource": {
+                "resourceType": "Practitioner",
+                "active": true,
+                "name": [
+                    {
+                        "use": "usual",
+                        "family": "Jones",
+                        "given": [
+                            "Mary"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:a8dbe655-b5bb-4ac7-8af3-e7745ed84e16",
+            "resource": {
+                "resourceType": "RelatedPerson",
+                "active": true,
+                "patient": {
+                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                },
+                "relationship": {
+                    "text": "Spouse"
+                },
+                "name": [
+                    {
+                        "use": "usual",
+                        "family": "Bloggs",
+                        "given": [
+                            "Helga"
+                        ]
+                    }
+                ],
+                "telecom": [
+                    {
+                        "system": "other",
+                        "value": "tel:07886554123",
+                        "use": "mobile"
+                    }
+                ],
+                "gender": "unknown",
+                "address": [
+                    {
+                        "line": [
+                            "43 Summers Avenue",
+                            "Somerset Street"
+                        ],
+                        "city": "Medway",
+                        "postalCode": "ME5 7TY"
+                    }
+                ],
+                "period": {
+                    "start": "2011-05-19T20:45:00+01:00",
+                    "end": "2011-05-19T21:15:00+01:00"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:5d466a6a-dc60-4e38-81a8-86bec820d302",
+            "resource": {
+                "resourceType": "Location",
+                "managingOrganization": {
+                    "reference": "urn:uuid:fcf42f25-4c68-4610-8528-4efb8daaa342"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:fcf42f25-4c68-4610-8528-4efb8daaa342",
+            "resource": {
+                "resourceType": "Organization",
+                "type": [
+                    {
+                        "text": "GP Practice"
+                    }
+                ],
+                "name": "Medway Medical Practice",
+                "telecom": [
+                    {
+                        "system": "other",
+                        "value": "tel:01634111222",
+                        "use": "work"
+                    }
+                ],
+                "address": [
+                    {
+                        "line": [
+                            "Springer Street"
+                        ],
+                        "city": "Medway",
+                        "postalCode": "ME5 5TY"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6",
+            "resource": {
+                "resourceType": "Patient",
+                "language": "en",
+                "active": true,
+                "name": [
+                    {
+                        "use": "usual",
+                        "family": "Joe",
+                        "given": [
+                            "Blogg"
+                        ],
+                        "prefix": [
+                            "Mr"
+                        ]
+                    }
+                ],
+                "telecom": [
+                    {
+                        "system": "other",
+                        "value": "tel:01634775667",
+                        "use": "home"
+                    },
+                    {
+                        "system": "other",
+                        "value": "tel:01634451628",
+                        "use": "home"
+                    },
+                    {
+                        "system": "other",
+                        "value": "mailto:Joe.Blogg@emailfree.co.uk",
+                        "use": "home"
+                    }
+                ],
+                "gender": "male",
+                "birthDate": "1989-01-01",
+                "address": [
+                    {
+                        "line": [
+                            "17, County Avenue",
+                            "Woodtown"
+                        ],
+                        "city": "Medway",
+                        "postalCode": "ME5 FS3"
+                    }
+                ],
+                "generalPractitioner": [
+                    {
+                        "reference": "urn:uuid:6c97b6c4-b04c-4c13-bf84-9768826bdf1d"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:6c97b6c4-b04c-4c13-bf84-9768826bdf1d",
+            "resource": {
+                "resourceType": "Organization",
+                "type": [
+                    {
+                        "text": "GP Practice"
+                    }
+                ],
+                "name": "Medway Medical Practice",
+                "telecom": [
+                    {
+                        "system": "other",
+                        "value": "tel:01634111222",
+                        "use": "work"
+                    }
+                ],
+                "address": [
+                    {
+                        "line": [
+                            "Springer Street"
+                        ],
+                        "city": "Medway",
+                        "postalCode": "ME5 5TY"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:74940ef0-33ae-402d-8a85-7fad9b59f69e",
+            "resource": {
+                "resourceType": "HealthcareService",
+                "active": true,
+                "providedBy": {
+                    "reference": "urn:uuid:eb5dc24a-8fee-468e-903b-1613d6eaf930"
+                },
+                "location": [
+                    {
+                        "reference": "urn:uuid:9fb7c7ca-365e-4612-a65f-f9fddb7665de"
+                    }
+                ],
+                "name": "Thames Medical Practice",
+                "telecom": [
+                    {
+                        "system": "other",
+                        "value": "tel:0123476895",
+                        "use": "work"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:9fb7c7ca-365e-4612-a65f-f9fddb7665de",
+            "resource": {
+                "resourceType": "Location",
+                "telecom": [
+                    {
+                        "system": "other",
+                        "value": "tel:0123476895",
+                        "use": "work"
+                    }
+                ],
+                "address": {
+                    "line": [
+                        "Thames Medical Practice",
+                        "Hill Street Branch Surgery",
+                        "Medway",
+                        "Essex"
+                    ],
+                    "postalCode": "ME4 5TT"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:eb5dc24a-8fee-468e-903b-1613d6eaf930",
+            "resource": {
+                "resourceType": "Organization",
+                "name": "Thames Medical Practice"
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:0e469bea-749c-496d-a32b-28899bf4c897",
+            "resource": {
+                "resourceType": "HealthcareService",
+                "active": true,
+                "providedBy": {
+                    "reference": "urn:uuid:0cbe52ea-ff66-4266-b7d7-8e452b6a0b81"
+                },
+                "location": [
+                    {
+                        "reference": "urn:uuid:bd8e09b3-e80d-4738-8776-9af10f5fc0bb"
+                    }
+                ],
+                "name": "Medway Kent Out of Hours Clinic"
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:bd8e09b3-e80d-4738-8776-9af10f5fc0bb",
+            "resource": {
+                "resourceType": "Location"
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:0cbe52ea-ff66-4266-b7d7-8e452b6a0b81",
+            "resource": {
+                "resourceType": "Organization",
+                "name": "Medway Kent Out of Hours Clinic"
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:bd352abe-6f2a-457d-bd99-20f74db0c6ec",
+            "resource": {
+                "resourceType": "ReferralRequest",
+                "status": "active",
+                "intent": "plan",
+                "priority": "routine",
+                "subject": {
+                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                },
+                "context": {
+                    "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                },
+                "occurrencePeriod": {
+                    "start": "2020-07-14T08:12:16+01:00",
+                    "end": "2020-07-14T09:12:16+01:00"
+                },
+                "authoredOn": "2020-07-14T08:12:16+01:00",
+                "requester": {
+                    "agent": {
+                        "reference": "Device/1"
+                    },
+                    "onBehalfOf": {
+                        "reference": "urn:uuid:f25664e1-28ba-46f6-a53e-0a889b0a8ac7"
+                    }
+                },
+                "recipient": [
+                    {
+                        "reference": "urn:uuid:74940ef0-33ae-402d-8a85-7fad9b59f69e"
+                    },
+                    {
+                        "reference": "urn:uuid:0e469bea-749c-496d-a32b-28899bf4c897"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6",
+            "resource": {
+                "resourceType": "Patient",
+                "language": "en",
+                "active": true,
+                "name": [
+                    {
+                        "use": "usual",
+                        "family": "Joe",
+                        "given": [
+                            "Blogg"
+                        ],
+                        "prefix": [
+                            "Mr"
+                        ]
+                    }
+                ],
+                "telecom": [
+                    {
+                        "system": "other",
+                        "value": "tel:01634775667",
+                        "use": "home"
+                    },
+                    {
+                        "system": "other",
+                        "value": "tel:01634451628",
+                        "use": "home"
+                    },
+                    {
+                        "system": "other",
+                        "value": "mailto:Joe.Blogg@emailfree.co.uk",
+                        "use": "home"
+                    }
+                ],
+                "gender": "male",
+                "birthDate": "1989-01-01",
+                "address": [
+                    {
+                        "line": [
+                            "17, County Avenue",
+                            "Woodtown"
+                        ],
+                        "city": "Medway",
+                        "postalCode": "ME5 FS3"
+                    }
+                ],
+                "generalPractitioner": [
+                    {
+                        "reference": "urn:uuid:6c97b6c4-b04c-4c13-bf84-9768826bdf1d"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:e0d6720c-a340-475c-8869-4e8cf3e6ae9c",
+            "resource": {
+                "resourceType": "Appointment",
+                "status": "booked",
+                "description": "Appointment Reference",
+                "start": "2017-06-01T15:00:00.000+01:00",
+                "end": "2017-06-01T15:10:00.000+01:00",
+                "minutesDuration": 10,
+                "comment": "\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    ",
+                "incomingReferral": [
+                    {
+                        "reference": "urn:uuid:bd352abe-6f2a-457d-bd99-20f74db0c6ec"
+                    }
+                ],
+                "participant": [
+                    {
+                        "actor": {
+                            "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                        },
+                        "required": "required",
+                        "status": "accepted"
+                    },
+                    {
+                        "actor": {
+                            "reference": "urn:uuid:75ad9776-2b99-4585-aef5-a35643d4414a"
+                        },
+                        "required": "required",
+                        "status": "accepted"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6",
+            "resource": {
+                "resourceType": "Patient",
+                "language": "en",
+                "active": true,
+                "name": [
+                    {
+                        "use": "usual",
+                        "family": "Joe",
+                        "given": [
+                            "Blogg"
+                        ],
+                        "prefix": [
+                            "Mr"
+                        ]
+                    }
+                ],
+                "telecom": [
+                    {
+                        "system": "other",
+                        "value": "tel:01634775667",
+                        "use": "home"
+                    },
+                    {
+                        "system": "other",
+                        "value": "tel:01634451628",
+                        "use": "home"
+                    },
+                    {
+                        "system": "other",
+                        "value": "mailto:Joe.Blogg@emailfree.co.uk",
+                        "use": "home"
+                    }
+                ],
+                "gender": "male",
+                "birthDate": "1989-01-01",
+                "address": [
+                    {
+                        "line": [
+                            "17, County Avenue",
+                            "Woodtown"
+                        ],
+                        "city": "Medway",
+                        "postalCode": "ME5 FS3"
+                    }
+                ],
+                "generalPractitioner": [
+                    {
+                        "reference": "urn:uuid:6c97b6c4-b04c-4c13-bf84-9768826bdf1d"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:75ad9776-2b99-4585-aef5-a35643d4414a",
+            "resource": {
+                "resourceType": "Location",
+                "name": "CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST",
+                "description": "Psychiatric Community Care Services",
+                "address": {
+                    "line": [
+                        "Great George Street"
+                    ],
+                    "city": "Leeds",
+                    "postalCode": "LE13EX"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:18defd92-02c6-4381-bd0c-d935a5380198",
+            "resource": {
+                "resourceType": "EpisodeOfCare",
+                "status": "active",
+                "type": [
+                    {
+                        "text": "NHS111Encounter"
+                    }
+                ],
+                "patient": {
+                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                },
+                "managingOrganization": {
+                    "reference": "urn:uuid:0eabff03-be0f-4092-a882-53fdd6bb478f"
+                },
+                "period": {
+                    "start": "2011-05-19T20:45:00+01:00",
+                    "end": "2011-05-19T21:15:00+01:00"
+                },
+                "careManager": {
+                    "reference": "urn:uuid:1267e600-21b1-442a-b331-9c4e6575d72a"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:1267e600-21b1-442a-b331-9c4e6575d72a",
+            "resource": {
+                "resourceType": "Practitioner",
+                "active": true,
+                "name": [
+                    {
+                        "use": "usual",
+                        "family": "Cornwell",
+                        "given": [
+                            "Dave"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:0eabff03-be0f-4092-a882-53fdd6bb478f",
+            "resource": {
+                "resourceType": "Organization",
+                "name": "Medway South Out of Hours Centre"
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:0c9fd83a-8694-4df0-939b-e84eb0e19933",
+            "resource": {
+                "resourceType": "Composition",
+                "identifier": {
+                    "use": "usual",
+                    "value": "411910CF-1A76-4330-98FE-C345DDEE5553"
+                },
+                "status": "final",
+                "type": {
+                    "text": "371531000"
+                },
+                "subject": {
+                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                },
+                "encounter": {
+                    "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                },
+                "date": "2020-07-14T08:12:16+01:00",
+                "author": [
+                    {
+                        "reference": "urn:uuid:cf885330-6beb-462d-b66a-7b66695bd57c"
+                    }
+                ],
+                "title": "111 Report",
+                "confidentiality": "V",
+                "custodian": {
+                    "reference": "urn:uuid:0eabff03-be0f-4092-a882-53fdd6bb478f"
+                },
+                "relatesTo": [
+                    {
+                        "code": "replaces",
+                        "targetIdentifier": {
+                            "use": "usual",
+                            "value": "A709A442-3CF4-476E-8377-376500E82AAA"
+                        }
+                    }
+                ],
+                "section": [
+                    {
+                        "title": "Permission To View",
+                        "text": {
+                            "status": "generated",
+                            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    &lt;table xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                        &lt;tbody&gt;\n                                                            &lt;tr&gt;\n                                                                &lt;th&gt;Permission to view outcome&lt;/th&gt;\n                                                                &lt;td&gt;Permission to view obtained&lt;/td&gt;\n                                                            &lt;/tr&gt;\n                                                            &lt;tr&gt;\n                                                                &lt;th&gt;Date obtained&lt;/th&gt;\n                                                                &lt;td&gt;19-May-2011, 20:00&lt;/td&gt;\n                                                            &lt;/tr&gt;\n                                                            &lt;tr&gt;\n                                                                &lt;th&gt;Date expires&lt;/th&gt;\n                                                                &lt;td&gt;26-May-2011, 20:00&lt;/td&gt;\n                                                            &lt;/tr&gt;\n                                                        &lt;/tbody&gt;\n                                                    &lt;/table&gt;\n                                                </div>"
+                        }
+                    },
+                    {
+                        "title": "Patient?s Reported Condition",
+                        "text": {
+                            "status": "generated",
+                            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    &lt;content xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;Patient has an insect bite.&lt;/content&gt;\n                                                </div>"
+                        }
+                    },
+                    {
+                        "title": "Case Summary",
+                        "text": {
+                            "status": "generated",
+                            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                    &lt;urn:content styleCode=&quot;bold&quot; xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Disposition:&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Go to the nearest Emergency Department within 4 hours.\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content styleCode=&quot;bold&quot; xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Selected care service:&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Dx009&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content styleCode=&quot;bold&quot; xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Pathways Assessment:&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;An injury or other health problem was described.\n                                                        &lt;urn:br/&gt;The individual was described as breathing and conscious.\n                                                        &lt;urn:br/&gt;Loss of at least a mugful of blood in the last 30 minutes\n                                                        was not described.\n                                                        &lt;urn:br/&gt;An illness or other health problem was described. - Insect\n                                                        Bite\n                                                        &lt;urn:br/&gt;Fighting for breath was not described.\n                                                        &lt;urn:br/&gt;A heart attack, chest/upper back pain, recent probable\n                                                        stroke, recent fit/seizure or suicide attempt was not described\n                                                        as the main call reason.\n                                                        &lt;urn:br/&gt;New confusion, a diabetic hypo, a probable allergic\n                                                        reaction or successful resuscitation was not described as being\n                                                        the main call reason.\n                                                        &lt;urn:br/&gt;The individual was described as being warm to touch.\n                                                        &lt;urn:br/&gt;An insect or spider bite or sting was described. - Tick\n                                                        Bite\n                                                        &lt;urn:br/&gt;A sting/bite occurring within the last hour was not\n                                                        described.\n                                                        &lt;urn:br/&gt;10 or more stings were not described.\n                                                        &lt;urn:br/&gt;Nausea or vomiting since the sting was not described.\n                                                        &lt;urn:br/&gt;A sting involving the eyes or mouth was not described.\n                                                        &lt;urn:br/&gt;A fever was not described.\n                                                        &lt;urn:br/&gt;An insect still attached to the skin was described.\n                                                        &lt;urn:br/&gt;A tick bite was described.\n                                                        &lt;urn:br/&gt;\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content styleCode=&quot;bold&quot; xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Advice given:&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Remove any jewellery or tight clothing from the area.\n                                                        &lt;urn:br/&gt;Antihistamine medication and creams help reduce swelling\n                                                        and itching. They can be bought from pharmacies. Talk to the\n                                                        pharmacist for advice. Follow the instructions in the pack.\n                                                        &lt;urn:br/&gt;Unless advised not to, or they have already been given,\n                                                        paracetamol or ibuprofen can be used to relieve pain. Follow the\n                                                        instructions in the pack. If in doubt ask a pharmacist.\n                                                    &lt;/urn:content&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+                        }
+                    },
+                    {
+                        "title": "Patient Special Notes",
+                        "text": {
+                            "status": "generated",
+                            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    &lt;content xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;Patient has history of violence towards health care\n                                                        professionals\n                                                    &lt;/content&gt;\n                                                </div>"
+                        }
+                    },
+                    {
+                        "title": "Appointment Reference",
+                        "text": {
+                            "status": "generated",
+                            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    &lt;content xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    &lt;/content&gt;\n                                                </div>"
+                        }
+                    },
+                    {
+                        "title": "CarePlan Advice",
+                        "text": {
+                            "status": "generated",
+                            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;\n                                                        SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;\n                                                        Patient has history of violence towards health care\n                                                        professionals\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;An injury or other health problem was described.\n                                                        &lt;urn:br/&gt;The individual was described as breathing and conscious.\n                                                        &lt;urn:br/&gt;Loss of at least a mugful of blood in the last 30 minutes\n                                                        was not described.\n                                                        &lt;urn:br/&gt;An illness or other health problem was described. - Insect\n                                                        Bite\n                                                        &lt;urn:br/&gt;Fighting for breath was not described.\n                                                        &lt;urn:br/&gt;A heart attack, chest/upper back pain, recent probable\n                                                        stroke, recent fit/seizure or suicide attempt was not described\n                                                        as the main call reason.\n                                                        &lt;urn:br/&gt;New confusion, a diabetic hypo, a probable allergic\n                                                        reaction or successful resuscitation was not described as being\n                                                        the main call reason.\n                                                        &lt;urn:br/&gt;The individual was described as being warm to touch.\n                                                        &lt;urn:br/&gt;An insect or spider bite or sting was described. - Tick\n                                                        Bite\n                                                        &lt;urn:br/&gt;A sting/bite occurring within the last hour was not\n                                                        described.\n                                                        &lt;urn:br/&gt;10 or more stings were not described.\n                                                        &lt;urn:br/&gt;Nausea or vomiting since the sting was not described.\n                                                        &lt;urn:br/&gt;A sting involving the eyes or mouth was not described.\n                                                        &lt;urn:br/&gt;A fever was not described.\n                                                        &lt;urn:br/&gt;An insect still attached to the skin was described.\n                                                        &lt;urn:br/&gt;A tick bite was described.\n                                                        &lt;urn:br/&gt;\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content styleCode=&quot;bold&quot; xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Plan Summary:&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Remove any jewellery or tight clothing from the area.\n                                                        &lt;urn:br/&gt;Antihistamine medication and creams help reduce swelling\n                                                        and itching. They can be bought from pharmacies. Talk to the\n                                                        pharmacist for advice. Follow the instructions in the pack.\n                                                        &lt;urn:br/&gt;Unless advised not to, or they have already been given,\n                                                        paracetamol or ibuprofen can be used to relieve pain. Follow the\n                                                        instructions in the pack. If in doubt ask a pharmacist.\n                                                    &lt;/urn:content&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+                        }
+                    },
+                    {
+                        "title": "CarePlan Advice II",
+                        "text": {
+                            "status": "generated",
+                            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;\n                                                        SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;\n                                                        Patient has history of violence towards health care\n                                                        professionals\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;An injury or other health problem was described.\n                                                        &lt;urn:br/&gt;The individual was described as breathing and conscious.\n                                                        &lt;urn:br/&gt;Loss of at least a mugful of blood in the last 30 minutes\n                                                        was not described.\n                                                        &lt;urn:br/&gt;An illness or other health problem was described. - Insect\n                                                        Bite\n                                                        &lt;urn:br/&gt;Fighting for breath was not described.\n                                                        &lt;urn:br/&gt;A heart attack, chest/upper back pain, recent probable\n                                                        stroke, recent fit/seizure or suicide attempt was not described\n                                                        as the main call reason.\n                                                        &lt;urn:br/&gt;New confusion, a diabetic hypo, a probable allergic\n                                                        reaction or successful resuscitation was not described as being\n                                                        the main call reason.\n                                                        &lt;urn:br/&gt;The individual was described as being warm to touch.\n                                                        &lt;urn:br/&gt;An insect or spider bite or sting was described. - Tick\n                                                        Bite\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content styleCode=&quot;bold&quot; xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Plan Summary:&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Remove any jewellery or tight clothing from the area.\n                                                        &lt;urn:br/&gt;Antihistamine medication and creams help reduce swelling\n                                                        and itching. They can be bought from pharmacies. Talk to the\n                                                        pharmacist for advice. Follow the instructions in the pack.\n                                                        &lt;urn:br/&gt;Unless advised not to, or they have already been given,\n                                                        paracetamol or ibuprofen can be used to relieve pain. Follow the\n                                                        instructions in the pack. If in doubt ask a pharmacist.\n                                                    &lt;/urn:content&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:cf885330-6beb-462d-b66a-7b66695bd57c",
+            "resource": {
+                "resourceType": "Practitioner",
+                "active": true,
+                "name": [
+                    {
+                        "use": "usual",
+                        "family": "Jones",
+                        "given": [
+                            "Mary"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:639c0796-252c-4f75-8d1b-cdbee1d6119a",
+            "resource": {
+                "resourceType": "CarePlan",
+                "text": {
+                    "status": "generated",
+                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service</div>"
+                },
+                "status": "completed",
+                "intent": "plan",
+                "title": "CarePlan Advice",
+                "description": "\n                                                        SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    ",
+                "subject": {
+                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                },
+                "context": {
+                    "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                },
+                "period": {
+                    "start": "2011-05-19T21:00:00+01:00"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:34ef2d0b-91fe-4ca1-95f3-c6abf66f88d5",
+            "resource": {
+                "resourceType": "CarePlan",
+                "text": {
+                    "status": "generated",
+                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service</div>"
+                },
+                "status": "completed",
+                "intent": "plan",
+                "title": "CarePlan Advice II",
+                "description": "\n                                                        SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    ",
+                "subject": {
+                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                },
+                "context": {
+                    "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                },
+                "period": {
+                    "start": "2011-05-19T21:00:00+01:00"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:4b8836a3-5e8a-4ae5-ad7e-b3fdeba6f11d",
+            "resource": {
+                "resourceType": "Consent",
+                "identifier": {
+                    "use": "usual",
+                    "value": "411910CF-1A76-4330-98FE-C345DDEE5553"
+                },
+                "status": "active",
+                "patient": {
+                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                },
+                "period": {
+                    "start": "2011-05-19T21:00:00+01:00"
+                },
+                "dateTime": "2020-07-14T08:12:16+01:00",
+                "consentingParty": [
+                    {
+                        "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                    }
+                ],
+                "action": [
+                    {
+                        "coding": [
+                            {
+                                "system": "http://snomed.info/sct",
+                                "code": "425691002",
+                                "display": "Consent given for electronic record sharing"
+                            }
+                        ],
+                        "text": "Consent given for electronic record sharing"
+                    }
+                ],
+                "organization": [
+                    {
+                        "reference": "urn:uuid:f25664e1-28ba-46f6-a53e-0a889b0a8ac7"
+                    }
+                ],
+                "policyRule": "http://hl7.org/fhir/ConsentPolicy/opt-out",
+                "dataPeriod": {
+                    "start": "2011-05-19T21:00:00+01:00",
+                    "end": "2011-05-26T21:00:00+01:00"
+                },
+                "data": [
+                    {
+                        "meaning": "related",
+                        "reference": {
+                            "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:dee227fd-91ff-4648-b5d1-9b2452684cb7",
+            "resource": {
+                "resourceType": "Condition",
+                "clinicalStatus": "active",
+                "verificationStatus": "unknown",
+                "category": [
+                    {
+                        "text": "Example diagnosis text"
+                    }
+                ],
+                "subject": {
+                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                },
+                "context": {
+                    "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                },
+                "assertedDate": "2017-06-01T15:00:00+01:00",
+                "asserter": {
+                    "reference": "urn:uuid:aa13247a-6ca5-4c02-aa0b-d7edefd92865"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:681163f6-acd6-4e66-8fab-a16edbaed962",
+            "resource": {
+                "resourceType": "List",
+                "status": "current",
+                "mode": "working",
+                "title": "111 Report List",
+                "code": {
+                    "text": "225390008"
+                },
+                "subject": {
+                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                },
+                "encounter": {
+                    "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                },
+                "date": "2020-07-14T08:12:16+01:00",
+                "source": {
+                    "reference": "Device/1"
+                },
+                "orderedBy": {
+                    "text": "event-date"
+                },
+                "entry": [
+                    {
+                        "item": {
+                            "reference": "urn:uuid:34ef2d0b-91fe-4ca1-95f3-c6abf66f88d5"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:a8dbe655-b5bb-4ac7-8af3-e7745ed84e16"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:18defd92-02c6-4381-bd0c-d935a5380198"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:dee227fd-91ff-4648-b5d1-9b2452684cb7"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:bd352abe-6f2a-457d-bd99-20f74db0c6ec"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:cf885330-6beb-462d-b66a-7b66695bd57c"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:fcf42f25-4c68-4610-8528-4efb8daaa342"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:5d466a6a-dc60-4e38-81a8-86bec820d302"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:0e469bea-749c-496d-a32b-28899bf4c897"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:0eabff03-be0f-4092-a882-53fdd6bb478f"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:96f57ae8-8760-4628-9f5a-0fa6def907c7"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:4b8836a3-5e8a-4ae5-ad7e-b3fdeba6f11d"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:aa13247a-6ca5-4c02-aa0b-d7edefd92865"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:9fb7c7ca-365e-4612-a65f-f9fddb7665de"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:74940ef0-33ae-402d-8a85-7fad9b59f69e"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:eb5dc24a-8fee-468e-903b-1613d6eaf930"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:bd8e09b3-e80d-4738-8776-9af10f5fc0bb"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:e0d6720c-a340-475c-8869-4e8cf3e6ae9c"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:6c97b6c4-b04c-4c13-bf84-9768826bdf1d"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:75ad9776-2b99-4585-aef5-a35643d4414a"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:f25664e1-28ba-46f6-a53e-0a889b0a8ac7"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:0c9fd83a-8694-4df0-939b-e84eb0e19933"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:1267e600-21b1-442a-b331-9c4e6575d72a"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:639c0796-252c-4f75-8d1b-cdbee1d6119a"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:0cbe52ea-ff66-4266-b7d7-8e452b6a0b81"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
