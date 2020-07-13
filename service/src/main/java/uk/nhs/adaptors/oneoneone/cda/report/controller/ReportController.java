@@ -34,13 +34,13 @@ public class ReportController {
     @ResponseStatus(value = ACCEPTED)
     public void postReport(@RequestBody String reportXml) {
         try {
-            Map<ReportElement, String> reportElementsMap = ReportParserUtil.parseReportXml(reportXml);
+            Map<ReportElement, String> ReportElementsMap = ReportParserUtil.parseReportXml(reportXml);
 
-            POCDMT000002UK01ClinicalDocument1 clinicalDocument = extractClinicalDocument(reportElementsMap
+            POCDMT000002UK01ClinicalDocument1 clinicalDocument = extractClinicalDocument(ReportElementsMap
                 .get(ReportElement.DISTRIBUTION_ENVELOPE));
             validate(clinicalDocument);
 
-            encounterReportService.transformAndPopulateToGP(clinicalDocument, reportElementsMap.get(ReportElement.MESSAGE_ID));
+            encounterReportService.transformAndPopulateToGP(clinicalDocument, ReportElementsMap.get(ReportElement.MESSAGE_ID));
         } catch (XmlException | DocumentException e) {
             throw new ResponseStatusException(BAD_REQUEST, e.getMessage());
         }
