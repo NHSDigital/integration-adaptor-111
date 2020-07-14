@@ -29,7 +29,7 @@ pipeline {
                     steps {
                         script {
                             echo 'Building docker image for static code analysis'
-                            def staticCodeAnalysisImage = docker.build("local/111-static-code-analysis:${env.BUILD_ID}", "-f Dockerfile.tests")
+                            def staticCodeAnalysisImage = docker.build("local/111-static-code-analysis:${env.BUILD_ID}", "-f Dockerfile.tests .")
 
                             staticCodeAnalysisImage.inside {
                                 sh './gradlew check'
