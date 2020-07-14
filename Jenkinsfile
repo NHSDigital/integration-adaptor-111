@@ -30,7 +30,7 @@ pipeline {
                         script {
                             if (sh(label: 'Build docker image for static code analysis', script: 'docker build -t local/111-static-code-analysis:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for static code analysis")}
                             sh label: 'Running docker image', script: 'docker run -it -d --name check-container local/111-static-code-analysis:${BUILD_TAG} /bin/bash'
-                            sh label: 'Running static code analysis', script: 'docker exec check-container /bin/bash -c "./gradlew check"'
+                            sh label: 'Running static code analysis', returnStdout: true, script: 'docker exec check-container /bin/bash -c "./gradlew check"'
                         }
                     }
                     post {
