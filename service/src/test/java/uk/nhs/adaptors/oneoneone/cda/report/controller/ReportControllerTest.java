@@ -27,6 +27,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 public class ReportControllerTest {
 
     private static final String MESSAGE_ID = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
+    private static final String TRACKING_ID = "7D6F23E0-AE1A-11DB-9808-B18E1E0994CD";
 
     @InjectMocks
     private ReportController reportController;
@@ -41,7 +42,7 @@ public class ReportControllerTest {
         reportController.postReport(validRequest);
 
         ArgumentCaptor<POCDMT000002UK01ClinicalDocument1> captor = ArgumentCaptor.forClass(POCDMT000002UK01ClinicalDocument1.class);
-        verify(encounterReportService).transformAndPopulateToGP(captor.capture(), eq(MESSAGE_ID));
+        verify(encounterReportService).transformAndPopulateToGP(captor.capture(), eq(MESSAGE_ID), eq(TRACKING_ID));
         POCDMT000002UK01ClinicalDocument1 clinicalDocument = captor.getValue();
         assertThat(clinicalDocument.getId().getRoot()).isEqualTo("A709A442-3CF4-476E-8377-376500E829C9");
         assertThat(clinicalDocument.getSetId().getRoot()).isEqualTo("411910CF-1A76-4330-98FE-C345DDEE5553");

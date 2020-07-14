@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 
 import ca.uhn.fhir.context.FhirContext;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class EncounterReportService {
 
@@ -25,7 +27,7 @@ public class EncounterReportService {
 
     private final AmqpProperties amqpProperties;
 
-    public void transformAndPopulateToGP(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument, String messageId) {
+    public void transformAndPopulateToGP(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument, String messageId, String trackingId) {
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(clinicalDocumentDocument);
 
         jmsTemplate.send(amqpProperties.getQueueName(), session -> {
@@ -33,6 +35,7 @@ public class EncounterReportService {
             message.setStringProperty(MESSAGE_ID, messageId);
             return message;
         });
+        LOGGER.info("Successfully sent FHIR message to queue. MessageId: {}, ItkTrackingId: {}", messageId, trackingId);
     }
 
     private String toJsonString(Bundle encounterBundle) {
