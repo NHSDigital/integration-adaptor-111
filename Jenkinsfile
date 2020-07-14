@@ -139,7 +139,7 @@ pipeline {
         always {
             sh label: 'Stop docker container', script: 'docker stop check-container-${BUILD_TAG}'
             sh label: 'Remove docker container', script: 'docker rm check-container-${BUILD_TAG}'
-            recordIssues enabledForFailure: true, aggregatingResults: true, tool: checkStyle(pattern: 'build/reports/checkstyle/*.xml')
+            recordIssues enabledForFailure: true, tool: checkStyle()
 
             // sh label: 'Stopping containers', script: 'docker-compose down -v'
             sh label: 'Remove all unused images not just dangling ones', script:'docker system prune --force'
