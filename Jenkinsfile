@@ -138,11 +138,17 @@ pipeline {
     post {
         always {
             sh label: 'Create reports directory', script: 'mkdir -p build/reports'
-            sh label: 'Copy checkstyle report to jenkins', script: 'docker cp check-container-${BUILD_TAG}:/home/gradle/service/build/reports/. ./build/reports'
+            sh label: 'Copy reports to jenkins', script: 'docker cp check-container-${BUILD_TAG}:/home/gradle/service/build/reports/. ./build/reports'
             sh label: 'LS', script: 'ls -a -r build/reports'
             sh label: 'Stop docker container', script: 'docker stop check-container-${BUILD_TAG}'
             sh label: 'Remove docker container', script: 'docker rm check-container-${BUILD_TAG}'
-            recordIssues enabledForFailure: true, tool: checkStyle(pattern: 'build/reports/checkstyle/*.xml')
+            recordIssues(
+                enabledForFailure: true,
+                tools: [
+                    checkStyle(pattern: 'build/reports/checkstyle/*.xml'),
+                    spotBugs(pattern: 'build/reports/spotbugs/*.xml')
+                ]
+            )
 
             // sh label: 'Stopping containers', script: 'docker-compose down -v'
             sh label: 'Remove all unused images not just dangling ones', script:'docker system prune --force'
