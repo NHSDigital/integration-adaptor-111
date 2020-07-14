@@ -25,6 +25,13 @@ pipeline {
     stages {
         stage('Build and Test Locally') {
             stages {
+                stage('Static Code Analysis') {
+                    steps {
+                        script {
+                            sh label: 'Running static code analysis', script: './gradlew check'
+                        }
+                    }
+                }
 
                 stage('Run Tests') {
                     steps {

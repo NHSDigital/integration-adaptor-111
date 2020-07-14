@@ -38,6 +38,8 @@ public class ReportController {
     @ResponseStatus(value = ACCEPTED)
     public void postReport(@RequestBody String reportXml) {
         try {
+            int x = 3;
+            x = x;
             Map<ReportElement, String> ReportElementsMap = ReportParserUtil.parseReportXml(reportXml);
             LOGGER.info("ITK SOAP message received. MessageId: {}, ItkTrackingId: {}",
                     ReportElementsMap.get(MESSAGE_ID), ReportElementsMap.get(TRACKING_ID));
