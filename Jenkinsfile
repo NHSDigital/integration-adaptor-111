@@ -28,12 +28,8 @@ pipeline {
                 stage('Static Code Analysis') {
                     steps {
                         script {
-                            echo 'Building docker image for static code analysis'
-                            def staticCodeAnalysisImage = docker.build("local/111-static-code-analysis:${env.BUILD_ID}", "-f Dockerfile.tests .")
-
-                            staticCodeAnalysisImage.inside {
-                                sh './gradlew check'
-                            }
+                            if (sh(label: 'Build docker image for static code analysis', script: 'docker build -t local/111-static-code-analysis:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for static code analysis")}
+                            sh label: 'Running static code analysis', script: 'docker exec local/111-static-code-analysis:${BUILD_TAG} /bin/bash -c "./gradlew check"'
                         }
                     }
                 }
