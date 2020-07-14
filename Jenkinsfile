@@ -70,12 +70,6 @@ pipeline {
             }
             post {
                 always {
-                    recordIssues(
-                        enabledForFailure: true, aggregatingResults: true,
-                        tools: [checkStyle(pattern: 'build/reports/checkstyle/*.xml')]
-                    )
-                    sh label: 'Stop docker container', script: 'docker stop check-container-${BUILD_TAG}'
-                    sh label: 'Remove docker container', script: 'docker rm check-container-${BUILD_TAG}'
                     sh label: 'Copy 111 container logs', script: 'docker-compose logs test-111 > logs/test-111.log'
                     sh label: 'Copy activemq logs', script: 'docker-compose logs activemq > logs/activemq.log'
                     archiveArtifacts artifacts: 'logs/*.log', fingerprint: true
@@ -143,6 +137,13 @@ pipeline {
     }
     post {
         always {
+            recordIssues(
+                enabledForFailure: true, aggregatingResults: true,
+                tools: [checkStyle(pattern: 'build/reports/checkstyle/*.xml')]
+            )
+            sh label: 'Stop docker container', script: 'docker stop check-container-${BUILD_TAG}'
+            sh label: 'Remove docker container', script: 'docker rm check-container-${BUILD_TAG}'
+
 
             // sh label: 'Stopping containers', script: 'docker-compose down -v'
             sh label: 'Remove all unused images not just dangling ones', script:'docker system prune --force'
