@@ -1,26 +1,26 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import lombok.AllArgsConstructor;
-import org.hl7.fhir.dstu3.model.Address;
-import org.hl7.fhir.dstu3.model.ContactPoint;
-import org.hl7.fhir.dstu3.model.HumanName;
-import org.hl7.fhir.dstu3.model.Practitioner;
-import org.springframework.stereotype.Component;
-import uk.nhs.connect.iucds.cda.ucr.AD;
-import uk.nhs.connect.iucds.cda.ucr.PN;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedAuthor;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssociatedEntity;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Person;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RelatedEntity;
-import uk.nhs.connect.iucds.cda.ucr.TEL;
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import org.hl7.fhir.dstu3.model.Address;
+import org.hl7.fhir.dstu3.model.ContactPoint;
+import org.hl7.fhir.dstu3.model.HumanName;
+import org.hl7.fhir.dstu3.model.Practitioner;
+import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
+import uk.nhs.connect.iucds.cda.ucr.AD;
+import uk.nhs.connect.iucds.cda.ucr.PN;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedAuthor;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssociatedEntity;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Person;
+import uk.nhs.connect.iucds.cda.ucr.TEL;
 
 @Component
 @AllArgsConstructor
@@ -41,6 +41,27 @@ public class PractitionerMapper {
         practitioner.setAddress(getAddressesFromITK(associatedEntity.getAddrArray()));
 
         return practitioner;
+    }
+
+    private List<HumanName> getHumanNameFromITK(POCDMT000002UK01Person associatedPerson) {
+        if (associatedPerson == null)
+            return Collections.emptyList();
+        PN[] itkPersonName = associatedPerson.getNameArray();
+        return Arrays.stream(itkPersonName)
+            .map(humanNameMapper::mapHumanName)
+            .collect(Collectors.toList());
+    }
+
+    private List<ContactPoint> getTelecomFromITK(TEL[] itkTelecom) {
+        return Arrays.stream(itkTelecom)
+            .map(contactPointMapper::mapContactPoint)
+            .collect(Collectors.toList());
+    }
+
+    private List<Address> getAddressesFromITK(AD[] itkAddressArray) {
+        return Arrays.stream(itkAddressArray)
+            .map(addressMapper::mapAddress)
+            .collect(Collectors.toList());
     }
 
     public Practitioner mapPractitioner(POCDMT000002UK01AssignedEntity assignedEntity) {
@@ -66,38 +87,4 @@ public class PractitionerMapper {
 
         return practitioner;
     }
-
-    public Practitioner mapPractitioner(POCDMT000002UK01RelatedEntity relatedEntity) {
-        Practitioner practitioner = new Practitioner();
-        practitioner.setIdElement(newRandomUuid());
-        practitioner.setActive(true);
-        if (relatedEntity.isSetRelatedPerson()) {
-            practitioner.setName(getHumanNameFromITK(relatedEntity.getRelatedPerson()));
-        }
-        practitioner.setTelecom(getTelecomFromITK(relatedEntity.getTelecomArray()));
-        practitioner.setAddress(getAddressesFromITK(relatedEntity.getAddrArray()));
-
-        return practitioner;
-    }
-
-    private List<HumanName> getHumanNameFromITK(POCDMT000002UK01Person associatedPerson) {
-        if (associatedPerson == null) return Collections.emptyList();
-        PN[] itkPersonName = associatedPerson.getNameArray();
-        return Arrays.stream(itkPersonName)
-                .map(humanNameMapper::mapHumanName)
-                .collect(Collectors.toList());
-    }
-
-    private List<ContactPoint> getTelecomFromITK(TEL[] itkTelecom) {
-        return Arrays.stream(itkTelecom)
-                .map(contactPointMapper::mapContactPoint)
-                .collect(Collectors.toList());
-    }
-
-    private List<Address> getAddressesFromITK(AD[] itkAddressArray) {
-        return Arrays.stream(itkAddressArray)
-                .map(addressMapper::mapAddress)
-                .collect(Collectors.toList());
-    }
-
 }

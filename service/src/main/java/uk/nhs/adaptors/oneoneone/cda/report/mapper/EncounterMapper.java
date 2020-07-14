@@ -30,6 +30,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.TS;
@@ -68,48 +69,17 @@ public class EncounterMapper {
         Encounter encounter = new Encounter();
         encounter.setIdElement(newRandomUuid());
         encounter.setStatus(FINISHED);
-        encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument));
         encounter.setLocation(getLocationComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));
         setServiceProvider(encounter, clinicalDocument);
         setSubject(encounter, clinicalDocument);
+        encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument, encounter));
         setReferralRequest(encounter, healthcareServiceList);
         setAppointment(encounter, clinicalDocument);
         setEpisodeOfCare(encounter, clinicalDocument);
         setDiagnosis(encounter, clinicalDocument);
         setEncounterReasonAndType(encounter, clinicalDocument);
         return encounter;
-    }
-
-    private List<Encounter.EncounterParticipantComponent>
-    getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        List<Encounter.EncounterParticipantComponent> encounterParticipantComponents = Arrays.stream(clinicalDocument
-            .getParticipantArray())
-            .map(participantMapper::mapEncounterParticipant)
-            .collect(Collectors.toList());
-        if (clinicalDocument.sizeOfAuthorArray() > 0) {
-            Arrays.stream(clinicalDocument.getAuthorArray())
-                .map(authorMapper::mapAuthorIntoParticipantComponent)
-                .forEach(encounterParticipantComponents::add);
-        }
-        if (clinicalDocument.sizeOfInformantArray() > 0) {
-            Arrays.stream(clinicalDocument.getInformantArray())
-                .map(informantMapper::mapInformantIntoParticipantComponent)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .forEach(encounterParticipantComponents::add);
-
-            Arrays.stream(clinicalDocument.getInformantArray())
-                .map(informantMapper::mapInformantRelatedPersonIntoParticipantComponent)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .forEach(encounterParticipantComponents::add);
-        }
-        if (clinicalDocument.isSetDataEnterer()) {
-            encounterParticipantComponents.add(dataEntererMapper
-                .mapDataEntererIntoParticipantComponent(clinicalDocument.getDataEnterer()));
-        }
-        return encounterParticipantComponents;
     }
 
     private List<Encounter.EncounterLocationComponent>
@@ -149,6 +119,37 @@ public class EncounterMapper {
                 encounter.setSubjectTarget(group);
             }
         }
+    }
+
+    private List<Encounter.EncounterParticipantComponent>
+    getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
+        List<Encounter.EncounterParticipantComponent> encounterParticipantComponents = Arrays.stream(clinicalDocument
+            .getParticipantArray())
+            .map(participantMapper::mapEncounterParticipant)
+            .collect(Collectors.toList());
+        if (clinicalDocument.sizeOfAuthorArray() > 0) {
+            Arrays.stream(clinicalDocument.getAuthorArray())
+                .map(authorMapper::mapAuthorIntoParticipantComponent)
+                .forEach(encounterParticipantComponents::add);
+        }
+        if (clinicalDocument.sizeOfInformantArray() > 0) {
+            Arrays.stream(clinicalDocument.getInformantArray())
+                .map(informantMapper::mapInformantIntoParticipantComponent)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(encounterParticipantComponents::add);
+
+            for (POCDMT000002UK01Informant12 informant : clinicalDocument.getInformantArray()) {
+                Encounter.EncounterParticipantComponent encounterParticipantComponent =
+                    participantMapper.mapEncounterRelatedPerson(informant, encounter);
+                encounterParticipantComponents.add(encounterParticipantComponent);
+            }
+        }
+        if (clinicalDocument.isSetDataEnterer()) {
+            encounterParticipantComponents.add(dataEntererMapper
+                .mapDataEntererIntoParticipantComponent(clinicalDocument.getDataEnterer()));
+        }
+        return encounterParticipantComponents;
     }
 
     private void setReferralRequest(Encounter encounter, List<HealthcareService> healthcareServiceList) {
