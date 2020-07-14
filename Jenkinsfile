@@ -33,6 +33,11 @@ pipeline {
                             sh label: 'Running static code analysis', script: 'docker exec check-container /bin/bash -c "./gradlew check"'
                         }
                     }
+                    post {
+                        always {
+                            recordIssues(tools: [checkStyle(pattern: 'build/reports/checkstyle/*.xml')])
+                        }
+                    }
                 }
 
                 stage('Run Tests') {
