@@ -31,7 +31,6 @@ pipeline {
                             if (sh(label: 'Build docker image for static code analysis', script: 'docker build -t local/111-static-code-analysis:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for static code analysis")}
                             sh label: 'Running docker image', script: 'docker run -it -d --name check-container-${BUILD_TAG} local/111-static-code-analysis:${BUILD_TAG} /bin/bash'
                             sh label: 'Running static code analysis', returnStdout: true, script: 'docker exec check-container-${BUILD_TAG} /bin/bash -c "./gradlew check"'
-                            sh label: 'Copy checkstyle report to jenkins', script 'docker cp check-container-${BUILD_TAG}:/home/gradle/service/build/reports/checkstyle/main.html checkstyle-result.xml'
                         }
                     }
                 }
@@ -138,6 +137,7 @@ pipeline {
     }
     post {
         always {
+            sh label: 'Copy checkstyle report to jenkins', script 'docker cp check-container-${BUILD_TAG}:/home/gradle/service/build/reports/checkstyle/main.html checkstyle-result.xml'
             sh label: 'Stop docker container', script: 'docker stop check-container-${BUILD_TAG}'
             sh label: 'Remove docker container', script: 'docker rm check-container-${BUILD_TAG}'
             recordIssues enabledForFailure: true, tool: checkStyle()
