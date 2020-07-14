@@ -35,6 +35,7 @@ pipeline {
                     }
                     post {
                         always {
+                            enabledForFailure: true, aggregatingResults: true,
                             recordIssues(tools: [checkStyle(pattern: 'build/reports/checkstyle/*.xml')])
                         }
                     }
