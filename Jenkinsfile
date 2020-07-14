@@ -137,6 +137,7 @@ pipeline {
     }
     post {
         always {
+            sh label: 'Create reports directory', script: 'mkdir build/reports'
             sh label: 'Copy checkstyle report to jenkins', script: 'docker cp check-container-${BUILD_TAG}:/home/gradle/service/build/reports build/reports'
             sh label: 'Stop docker container', script: 'docker stop check-container-${BUILD_TAG}'
             sh label: 'Remove docker container', script: 'docker rm check-container-${BUILD_TAG}'
