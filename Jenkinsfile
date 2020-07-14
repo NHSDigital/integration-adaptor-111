@@ -29,8 +29,8 @@ pipeline {
                     steps {
                         script {
                             if (sh(label: 'Build docker image for static code analysis', script: 'docker build -t local/111-static-code-analysis:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for static code analysis")}
-                            sh label: 'Running docker image', script: 'docker run -it -d --name check-container:${BUILD_TAG} local/111-static-code-analysis:${BUILD_TAG} /bin/bash'
-                            sh label: 'Running static code analysis', returnStdout: true, script: 'docker exec check-container:${BUILD_TAG} /bin/bash -c "./gradlew check"'
+                            sh label: 'Running docker image', script: 'docker run -it -d --name check-container-${BUILD_TAG} local/111-static-code-analysis:${BUILD_TAG} /bin/bash'
+                            sh label: 'Running static code analysis', returnStdout: true, script: 'docker exec check-container-${BUILD_TAG} /bin/bash -c "./gradlew check"'
                         }
                     }
                     post {
@@ -39,6 +39,8 @@ pipeline {
                                 enabledForFailure: true, aggregatingResults: true,
                                 tools: [checkStyle(pattern: 'build/reports/checkstyle/*.xml')]
                             )
+                            sh label: 'Stop docker container', script: 'docker stop check-container-${BUILD_TAG}'
+                            sh label: 'Remove docker container', script: 'docker rm check-container-${BUILD_TAG}'
                         }
                     }
                 }
