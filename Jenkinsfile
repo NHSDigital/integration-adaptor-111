@@ -33,7 +33,7 @@ pipeline {
                             def staticCodeAnalysisImage = docker.build("local/111-static-code-analysis:${env.BUILD_ID}", "-f Dockerfile.tests .")
 
                             staticCodeAnalysisImage.inside {
-                                sh label: 'Running static code analysis' script: './gradlew check'
+                                sh 'gradlew check'
                             }
                         }
                     }
