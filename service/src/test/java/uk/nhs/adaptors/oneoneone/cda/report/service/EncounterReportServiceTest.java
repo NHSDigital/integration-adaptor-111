@@ -32,6 +32,7 @@ public class EncounterReportServiceTest {
     private static final String ENCOUNTER_REPORT_MAPPING = "<encounter-report-mapping>";
     private static final String QUEUE_NAME = "Encounter-Report";
     private static final String MESSAGE_ID = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
+    private static final String TRACKING_ID = "7D6F23E0-AE1A-11DB-9808-B18E1E0994CD";
 
     @InjectMocks
     private EncounterReportService encounterReportService;
@@ -67,7 +68,7 @@ public class EncounterReportServiceTest {
         Session session = mock(Session.class);
         when(session.createTextMessage(any())).thenReturn(textMessage);
 
-        encounterReportService.transformAndPopulateToGP(clinicalDoc, MESSAGE_ID);
+        encounterReportService.transformAndPopulateToGP(clinicalDoc, MESSAGE_ID, TRACKING_ID);
 
         ArgumentCaptor<MessageCreator> argumentCaptor = ArgumentCaptor.forClass(MessageCreator.class);
         verify(jmsTemplate).send(eq(QUEUE_NAME), argumentCaptor.capture());

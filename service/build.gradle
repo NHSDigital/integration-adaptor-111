@@ -39,6 +39,10 @@ dependencies {
 
 }
 
+lombok {
+    config['lombok.log.fieldName'] = 'LOGGER'
+}
+
 sourceSets {
     integrationTest {
         java {
