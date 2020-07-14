@@ -137,10 +137,10 @@ pipeline {
     }
     post {
         always {
-            sh label: 'Copy checkstyle report to jenkins', script: 'docker cp check-container-${BUILD_TAG}:/home/gradle/service/build/reports/checkstyle/main.html checkstyle-result.xml'
+            sh label: 'Copy checkstyle report to jenkins', script: 'docker cp check-container-${BUILD_TAG}:/home/gradle/service/build/reports build/reports'
             sh label: 'Stop docker container', script: 'docker stop check-container-${BUILD_TAG}'
             sh label: 'Remove docker container', script: 'docker rm check-container-${BUILD_TAG}'
-            recordIssues enabledForFailure: true, tool: checkStyle()
+            recordIssues enabledForFailure: true, tool: checkStyle(pattern: 'build/reports/checkstyle/*.xml')
 
             // sh label: 'Stopping containers', script: 'docker-compose down -v'
             sh label: 'Remove all unused images not just dangling ones', script:'docker system prune --force'
