@@ -210,6 +210,7 @@ public class EncounterMapperTest {
         when(authorMapper.mapAuthorIntoParticipantComponent(any())).thenReturn(encounterParticipantComponent);
         when(informantMapper.mapInformantIntoParticipantComponent(any())).thenReturn(Optional.of(encounterParticipantComponent));
         when(dataEntererMapper.mapDataEntererIntoParticipantComponent(any())).thenReturn(encounterParticipantComponent);
+        when(participantMapper.mapEncounterRelatedPerson(any(), any())).thenReturn(encounterParticipantComponent);
     }
 
     private void mockEncounterTypeAndReason() {
@@ -271,7 +272,7 @@ public class EncounterMapperTest {
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
         verifyEncounter(encounter);
 
-        assertThat(encounter.getParticipant().size()).isEqualTo(4);
+        assertThat(encounter.getParticipant().size()).isEqualTo(5);
         for (Encounter.EncounterParticipantComponent component : encounter.getParticipant()) {
             assertThat(component).isEqualTo(encounterParticipantComponent);
         }
