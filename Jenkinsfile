@@ -29,12 +29,8 @@ pipeline {
                     steps {
                         script {
                             if (sh(label: 'Build docker image for static code analysis', script: 'docker build -t local/111-static-code-analysis:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for static code analysis")}
-                            sh label: 'Pulling JDK 11', script: 'docker pull gradle:jdk11'
-                            def staticCodeAnalysisImage = docker.build("local/111-static-code-analysis:${env.BUILD_ID}", "-f Dockerfile.tests .")
-
-                            staticCodeAnalysisImage.inside {
-                                sh 'gradlew check'
-                            }
+                            sh label: 'Running docker image', script: 'docker run -it -d --name check-container local/111-static-code-analysis:${BUILD_TAG} /bin/bash'
+                            sh label: 'Running static code analysis', script: 'docker exec check-container /bin/bash -c "./gradlew check"'
                         }
                     }
                 }
