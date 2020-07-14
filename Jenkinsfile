@@ -137,12 +137,10 @@ pipeline {
     }
     post {
         always {
-            recordIssues(
-                enabledForFailure: true, aggregatingResults: true,
-                tools: [checkStyle(pattern: 'build/reports/checkstyle/*.xml')]
-            )
             sh label: 'Stop docker container', script: 'docker stop check-container-${BUILD_TAG}'
             sh label: 'Remove docker container', script: 'docker rm check-container-${BUILD_TAG}'
+            recordIssues enabledForFailure: true, aggregatingResults: true, tool: checkStyle(pattern: 'build/reports/checkstyle/*.xml')
+            )
 
 
             // sh label: 'Stopping containers', script: 'docker-compose down -v'
