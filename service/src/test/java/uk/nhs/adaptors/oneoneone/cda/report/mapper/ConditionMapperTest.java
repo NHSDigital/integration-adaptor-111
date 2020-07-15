@@ -1,6 +1,8 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Condition.ConditionClinicalStatus.ACTIVE;
+import static org.hl7.fhir.dstu3.model.Condition.ConditionVerificationStatus.UNKNOWN;
 import static org.mockito.Mockito.when;
 
 import org.hl7.fhir.dstu3.model.Condition;
@@ -20,8 +22,8 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 @RunWith(MockitoJUnitRunner.class)
 public class ConditionMapperTest {
 
-    private final Reference individualRef = new Reference("IndividualRef/1");
     private static final String EFFECTIVE_TIME_STRING = "201706011400+00";
+    private final Reference individualRef = new Reference("IndividualRef/1");
     @InjectMocks
     private ConditionMapper conditionMapper;
 
@@ -46,8 +48,8 @@ public class ConditionMapperTest {
     public void mapCondition() {
         Condition condition = conditionMapper.mapCondition(itkEncounter, encounter);
 
-        assertThat(condition.getClinicalStatus()).isEqualTo(Condition.ConditionClinicalStatus.ACTIVE);
-        assertThat(condition.getVerificationStatus()).isEqualTo(Condition.ConditionVerificationStatus.UNKNOWN);
+        assertThat(condition.getClinicalStatus()).isEqualTo(ACTIVE);
+        assertThat(condition.getVerificationStatus()).isEqualTo(UNKNOWN);
         assertThat(condition.getAsserter()).isEqualTo(individualRef);
         assertThat(condition.getAssertedDate()).isEqualTo(DateUtil.parse(EFFECTIVE_TIME_STRING));
     }

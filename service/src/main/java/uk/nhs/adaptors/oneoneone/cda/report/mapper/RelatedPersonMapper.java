@@ -1,9 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static java.util.Arrays.stream;
+import static java.util.Collections.emptyList;
+
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,22 +85,23 @@ public class RelatedPersonMapper {
     }
 
     private List<HumanName> getHumanNameFromITK(POCDMT000002UK01Person associatedPerson) {
-        if (associatedPerson == null)
-            return Collections.emptyList();
+        if (associatedPerson == null) {
+            return emptyList();
+        }
         PN[] itkPersonName = associatedPerson.getNameArray();
-        return Arrays.stream(itkPersonName)
+        return stream(itkPersonName)
             .map(humanNameMapper::mapHumanName)
             .collect(Collectors.toList());
     }
 
     private List<ContactPoint> getTelecomFromITK(TEL[] itkTelecom) {
-        return Arrays.stream(itkTelecom)
+        return stream(itkTelecom)
             .map(contactPointMapper::mapContactPoint)
             .collect(Collectors.toList());
     }
 
     private List<Address> getAddressesFromITK(AD[] itkAddressArray) {
-        return Arrays.stream(itkAddressArray)
+        return stream(itkAddressArray)
             .map(addressMapper::mapAddress)
             .collect(Collectors.toList());
     }

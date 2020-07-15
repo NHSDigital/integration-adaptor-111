@@ -1,10 +1,11 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static java.util.Arrays.stream;
+
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,6 +14,8 @@ import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.DiagnosisComponent;
+import org.hl7.fhir.dstu3.model.Encounter.EncounterLocationComponent;
+import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.HealthcareService;
@@ -82,11 +85,10 @@ public class EncounterMapper {
         return encounter;
     }
 
-    private List<Encounter.EncounterLocationComponent>
-    getLocationComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
-        List<Encounter.EncounterLocationComponent> locations = new ArrayList<>();
+    private List<EncounterLocationComponent> getLocationComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
+        List<EncounterLocationComponent> locations = new ArrayList<>();
         if (clinicalDocument1.sizeOfRecordTargetArray() > 0) {
-            locations = Arrays.stream(clinicalDocument1.getRecordTargetArray())
+            locations = stream(clinicalDocument1.getRecordTargetArray())
                 .map(recordTarget -> recordTarget.getPatientRole().getProviderOrganization())
                 .map(locationMapper::mapOrganizationToLocationComponent)
                 .collect(Collectors.toList());
@@ -121,26 +123,26 @@ public class EncounterMapper {
         }
     }
 
-    private List<Encounter.EncounterParticipantComponent>
-    getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
-        List<Encounter.EncounterParticipantComponent> encounterParticipantComponents = Arrays.stream(clinicalDocument
+    private List<EncounterParticipantComponent> getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument,
+        Encounter encounter) {
+        List<EncounterParticipantComponent> encounterParticipantComponents = stream(clinicalDocument
             .getParticipantArray())
             .map(participantMapper::mapEncounterParticipant)
             .collect(Collectors.toList());
         if (clinicalDocument.sizeOfAuthorArray() > 0) {
-            Arrays.stream(clinicalDocument.getAuthorArray())
+            stream(clinicalDocument.getAuthorArray())
                 .map(authorMapper::mapAuthorIntoParticipantComponent)
                 .forEach(encounterParticipantComponents::add);
         }
         if (clinicalDocument.sizeOfInformantArray() > 0) {
-            Arrays.stream(clinicalDocument.getInformantArray())
+            stream(clinicalDocument.getInformantArray())
                 .map(informantMapper::mapInformantIntoParticipantComponent)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEach(encounterParticipantComponents::add);
 
             for (POCDMT000002UK01Informant12 informant : clinicalDocument.getInformantArray()) {
-                Encounter.EncounterParticipantComponent encounterParticipantComponent =
+                EncounterParticipantComponent encounterParticipantComponent =
                     participantMapper.mapEncounterRelatedPerson(informant, encounter);
                 encounterParticipantComponents.add(encounterParticipantComponent);
             }
