@@ -69,7 +69,7 @@ task integrationTest(type: Test) {
     outputs.upToDateWhen { false }
 }
 
-task staticAnalysis(type: GradleBuild) {
+task staticCodeAnalysis(type: GradleBuild) {
     tasks = [
             'clean',
             'checkstyleMain',
