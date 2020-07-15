@@ -46,10 +46,7 @@ public class ReportController {
         produces = TEXT_XML_VALUE)
     @ResponseStatus(value = ACCEPTED)
     public ResponseEntity<String> postReport(@RequestBody String reportXml) {
-        try
-        {
-
-
+        try {
             Map<ReportElement, String> reportElementsMap = ReportParserUtil.parseReportXml(reportXml);
             String messageId = reportElementsMap.get(MESSAGE_ID);
             String trackingId = reportElementsMap.get(TRACKING_ID);
