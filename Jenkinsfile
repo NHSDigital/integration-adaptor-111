@@ -29,7 +29,7 @@ pipeline {
                     steps {
                         script {
                             if (sh(label: 'Build docker image for static code analysis', script: 'docker build -t local/111-static-code-analysis:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for static code analysis")}
-                            sh label: 'Running docker container', script: 'docker run -it -d --name check-container-${BUILD_TAG} local/111-static-code-analysis:${BUILD_TAG} /bin/bash' {error("Failed to run docker container")}
+                            sh label: 'Running docker container', script: 'docker run -it -d --name check-container-${BUILD_TAG} local/111-static-code-analysis:${BUILD_TAG} /bin/bash', returnStatus: true) != 0) {error("Failed to run docker container")}
                             sh label: 'Running static code analysis', returnStdout: true, script: 'docker exec check-container-${BUILD_TAG} /bin/bash -c "./gradlew staticCodeAnalysis --continue"', returnStatus: true) != 0) {error("Static code analysis failed.")}
                         }
                     }
