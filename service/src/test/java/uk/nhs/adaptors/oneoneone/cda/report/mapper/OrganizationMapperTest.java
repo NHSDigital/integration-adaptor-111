@@ -1,5 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Organization;
@@ -8,19 +13,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.w3c.dom.Node;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.CE;
-import uk.nhs.connect.iucds.cda.ucr.ON;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrganizationMapperTest {
@@ -52,8 +50,8 @@ public class OrganizationMapperTest {
         TEL itkTelecom = mock(TEL.class);
         CE codeEntity = mock(CE.class);
 
-        when(itkOrganization.getAddrArray()).thenReturn(new AD[]{itkAddress});
-        when(itkOrganization.getTelecomArray()).thenReturn(new TEL[]{itkTelecom});
+        when(itkOrganization.getAddrArray()).thenReturn(new AD[] {itkAddress});
+        when(itkOrganization.getTelecomArray()).thenReturn(new TEL[] {itkTelecom});
         when(itkOrganization.isSetStandardIndustryClassCode()).thenReturn(true);
         when(itkOrganization.getStandardIndustryClassCode()).thenReturn(codeEntity);
         when(codeEntity.getDisplayName()).thenReturn(GP_PRACTICE);

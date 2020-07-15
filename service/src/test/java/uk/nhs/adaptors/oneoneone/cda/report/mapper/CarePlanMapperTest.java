@@ -1,5 +1,11 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -8,11 +14,10 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.w3c.dom.Node;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.CS;
@@ -23,14 +28,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component5;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 import uk.nhs.connect.iucds.cda.ucr.ST;
-import uk.nhs.connect.iucds.cda.ucr.StrucDocContent;
 import uk.nhs.connect.iucds.cda.ucr.StrucDocText;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CarePlanMapperTest {
@@ -90,7 +88,7 @@ public class CarePlanMapperTest {
         when(component2.getStructuredBody()).thenReturn(structuredBody);
         when(component3.getSection()).thenReturn(section);
         when(component5.getSection()).thenReturn(section);
-        when(structuredBody.getComponentArray()).thenReturn(new POCDMT000002UK01Component3[]{component3});
+        when(structuredBody.getComponentArray()).thenReturn(new POCDMT000002UK01Component3[] {component3});
 
         encounter.setPeriod(period);
         title.setLanguage(LANG);
@@ -129,7 +127,7 @@ public class CarePlanMapperTest {
 
     private void mockSection() {
         when(section.sizeOfComponentArray()).thenReturn(2).thenReturn(0);
-        when(section.getComponentArray()).thenReturn(new POCDMT000002UK01Component5[]{component5, component5});
+        when(section.getComponentArray()).thenReturn(new POCDMT000002UK01Component5[] {component5, component5});
         when(section.getCode()).thenReturn(code);
         when(section.isSetLanguageCode()).thenReturn(true);
         when(section.isSetTitle()).thenReturn(true);
@@ -147,9 +145,4 @@ public class CarePlanMapperTest {
 
         when(nodeUtil.getNodeValueString(section.getText().getContentArray(0))).thenReturn(DESCRIPTION);
     }
-
-
-
-
-
 }

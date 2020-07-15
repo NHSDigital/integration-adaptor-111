@@ -1,17 +1,18 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.Instant;
+import java.util.Date;
+
 import org.hl7.fhir.dstu3.model.Period;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.IVXBTS;
-
-import java.time.Instant;
-import java.util.Date;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PeriodMapperTest {
@@ -39,5 +40,4 @@ public class PeriodMapperTest {
         assertThat(period.getStart()).isEqualTo(Date.from(Instant.parse("2011-05-19T19:45:00.00Z")));
         assertThat(period.getEnd()).isEqualTo(Date.from(Instant.parse("2011-05-19T20:15:00.00Z")));
     }
-
 }

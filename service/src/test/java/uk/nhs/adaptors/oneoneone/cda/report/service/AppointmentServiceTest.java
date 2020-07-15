@@ -1,5 +1,14 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.Before;
@@ -8,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.AppointmentMapper;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -18,15 +28,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 import uk.nhs.connect.npfit.hl7.localisation.TemplateContent;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AppointmentServiceTest {
@@ -58,7 +59,7 @@ public class AppointmentServiceTest {
 
         when(clinicalDocument1.getComponent()).thenReturn(component2);
         when(component2.getStructuredBody()).thenReturn(structuredBody);
-        when(structuredBody.getComponentArray()).thenReturn(new POCDMT000002UK01Component3[]{component3});
+        when(structuredBody.getComponentArray()).thenReturn(new POCDMT000002UK01Component3[] {component3});
         when(component3.getSection()).thenReturn(section);
     }
 
@@ -74,31 +75,11 @@ public class AppointmentServiceTest {
         assertThat(resultAppointment.get()).isEqualTo(appointment);
     }
 
-    @Test
-    public void shouldReturnEmptyOptionalForNonExistingEntry() {
-        when(section.getEntryArray()).thenReturn(new POCDMT000002UK01Entry[]{});
-        mockAppointmentSection(section);
-
-        Optional<Appointment> resultAppointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument1);
-
-        assertFalse(resultAppointment.isPresent());
-    }
-
-    @Test
-    public void shouldReturnEmptyOptionalForNonExistingSection() {
-        when(section.getComponentArray()).thenReturn(new POCDMT000002UK01Component5[]{});
-        mockAppointmentEntry(section);
-
-        Optional<Appointment> resultAppointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument1);
-
-        assertFalse(resultAppointment.isPresent());
-    }
-
     private void mockAppointmentEntry(POCDMT000002UK01Section section) {
         TemplateContent templateContent = mock(TemplateContent.class);
         POCDMT000002UK01Entry sectionEntry = mock(POCDMT000002UK01Entry.class);
 
-        when(section.getEntryArray()).thenReturn(new POCDMT000002UK01Entry[]{sectionEntry});
+        when(section.getEntryArray()).thenReturn(new POCDMT000002UK01Entry[] {sectionEntry});
         when(sectionEntry.isSetContentId()).thenReturn(true);
         when(sectionEntry.getContentId()).thenReturn(templateContent);
         when(templateContent.getRoot()).thenReturn(NPFIT_CDA_CONTENT);
@@ -110,10 +91,30 @@ public class AppointmentServiceTest {
         POCDMT000002UK01Section section1 = mock(POCDMT000002UK01Section.class);
         CE code = mock(CE.class);
 
-        when(section.getComponentArray()).thenReturn(new POCDMT000002UK01Component5[]{component5});
+        when(section.getComponentArray()).thenReturn(new POCDMT000002UK01Component5[] {component5});
         when(component5.getSection()).thenReturn(section1);
         when(section1.getCode()).thenReturn(code);
         when(code.getCode()).thenReturn(APPOINTMENT_CODE);
         when(code.getCodeSystem()).thenReturn(SNOMED);
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalForNonExistingEntry() {
+        when(section.getEntryArray()).thenReturn(new POCDMT000002UK01Entry[] {});
+        mockAppointmentSection(section);
+
+        Optional<Appointment> resultAppointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument1);
+
+        assertFalse(resultAppointment.isPresent());
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalForNonExistingSection() {
+        when(section.getComponentArray()).thenReturn(new POCDMT000002UK01Component5[] {});
+        mockAppointmentEntry(section);
+
+        Optional<Appointment> resultAppointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument1);
+
+        assertFalse(resultAppointment.isPresent());
     }
 }

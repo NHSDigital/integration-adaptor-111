@@ -198,8 +198,7 @@ public class EncounterReportBundleService {
     }
 
     private void addHealthcareService(Bundle bundle, List<HealthcareService> healthcareServiceList) {
-        for (HealthcareService healthcareService :
-            healthcareServiceList) {
+        for (HealthcareService healthcareService : healthcareServiceList) {
             addEntry(bundle, healthcareService);
             if (healthcareService.hasLocation()) {
                 addEntry(bundle, (Location) healthcareService.getLocationFirstRep().getResource());

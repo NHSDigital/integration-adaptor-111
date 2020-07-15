@@ -51,7 +51,7 @@ import uk.nhs.connect.iucds.cda.ucr.TS;
 @RunWith(MockitoJUnitRunner.class)
 public class EncounterMapperTest {
 
-    private final String reason = "Patient convenience appointment";
+    private static final String REASON = "Patient convenience appointment";
     @Mock
     private ParticipantMapper participantMapper;
     @Mock
@@ -231,7 +231,7 @@ public class EncounterMapperTest {
         when(encounter.isSetCode()).thenReturn(true);
         when(typeId.getAssigningAuthorityName()).thenReturn(EncounterType.ADMS.toString());
         when(encounter.getCode()).thenReturn(cdnPfITCDAUrl);
-        when(cdnPfITCDAUrl.getDisplayName()).thenReturn(reason);
+        when(cdnPfITCDAUrl.getDisplayName()).thenReturn(REASON);
         when(entry.isSetEncounter()).thenReturn(true);
     }
 
@@ -254,7 +254,7 @@ public class EncounterMapperTest {
         assertThat(encounter.getEpisodeOfCareFirstRep().getResource()).isEqualTo(episodeOfCare);
         assertThat(encounter.getIncomingReferralFirstRep().getResource()).isEqualTo(referralRequest);
         assertThat(encounter.getDiagnosisFirstRep()).isEqualTo(diagnosis);
-        assertThat(encounter.getReason().get(0).getText()).isEqualTo(reason);
+        assertThat(encounter.getReason().get(0).getText()).isEqualTo(REASON);
         assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(EncounterType.ADMS.toString());
     }
 
@@ -267,6 +267,7 @@ public class EncounterMapperTest {
     }
 
     @Test
+    @SuppressWarnings("MagicNumber")
     public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
         verifyEncounter(encounter);

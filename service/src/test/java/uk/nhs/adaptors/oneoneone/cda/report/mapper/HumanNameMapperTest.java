@@ -1,5 +1,9 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import org.apache.xmlbeans.XmlString;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Period;
@@ -9,12 +13,9 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.PN;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HumanNameMapperTest {
@@ -44,7 +45,7 @@ public class HumanNameMapperTest {
         pn.addNewValidTime();
 
         when(periodMapper.mapPeriod(ArgumentMatchers.any()))
-                .thenReturn(period);
+            .thenReturn(period);
 
         when(nodeUtil.hasSubNodes(any())).thenReturn(true);
         when(itkPersonName.getGivenArray()).thenReturn(pn.getGivenArray());

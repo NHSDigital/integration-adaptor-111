@@ -1,5 +1,8 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
@@ -11,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -18,12 +22,8 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component2;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParentDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RelatedDocument1;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
 public class CompositionMapperTest {
-
 
     private final IBaseResource episodeOfCareRefResource = new EpisodeOfCare();
     @InjectMocks
@@ -71,5 +71,4 @@ public class CompositionMapperTest {
         assertThat(composition.getConfidentiality()).isEqualTo(Composition.DocumentConfidentiality.V);
         assertThat(composition.getRelatesTo().get(0).getCode()).isEqualTo(Composition.DocumentRelationshipType.REPLACES);
     }
-
 }

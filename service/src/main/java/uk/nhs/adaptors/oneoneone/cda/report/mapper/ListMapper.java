@@ -1,6 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import lombok.RequiredArgsConstructor;
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+
+import java.util.Collection;
+import java.util.Date;
+
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Identifier;
@@ -8,12 +12,9 @@ import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-
-import java.util.Collection;
-import java.util.Date;
-
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 @Component
 @RequiredArgsConstructor
@@ -22,9 +23,10 @@ public class ListMapper {
     private static final String SNOMED = "225390008";
     private static final String LIST_TITLE = "111 Report List";
     private static final String ORDER_BY = "event-date";
-    private static final Reference transformerDevice = new Reference("Device/1");
+    private static final Reference TRANSFORMER_DEVICE = new Reference("Device/1");
 
-    public ListResource mapList(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, Collection<Resource> resourcesCreated){
+    public ListResource mapList(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
+        Collection<Resource> resourcesCreated) {
         ListResource listResource = new ListResource();
 
         listResource.setIdElement(newRandomUuid());
@@ -34,24 +36,24 @@ public class ListMapper {
         docIdentifier.setValue(clinicalDocument.getSetId().getRoot());
 
         listResource
-                .setStatus(ListResource.ListStatus.CURRENT)
-                .setTitle(LIST_TITLE)
-                .setMode(ListResource.ListMode.WORKING)
-                .setCode(new CodeableConcept().setText(SNOMED))
-                .setSubject(encounter.getSubject())
-                .setSourceTarget(encounter.getSubjectTarget())
-                .setEncounter(new Reference(encounter))
-                .setEncounterTarget(encounter)
-        .setDate(new Date())
-        .setSource(transformerDevice)
-        .setOrderedBy(new CodeableConcept().setText(ORDER_BY));
+            .setStatus(ListResource.ListStatus.CURRENT)
+            .setTitle(LIST_TITLE)
+            .setMode(ListResource.ListMode.WORKING)
+            .setCode(new CodeableConcept().setText(SNOMED))
+            .setSubject(encounter.getSubject())
+            .setSourceTarget(encounter.getSubjectTarget())
+            .setEncounter(new Reference(encounter))
+            .setEncounterTarget(encounter)
+            .setDate(new Date())
+            .setSource(TRANSFORMER_DEVICE)
+            .setOrderedBy(new CodeableConcept().setText(ORDER_BY));
 
         resourcesCreated.stream()
-                .map(Resource::getIdElement)
-                .map(Reference::new)
-                .map(ListResource.ListEntryComponent::new)
-                .forEach(listResource::addEntry);
+            .map(Resource::getIdElement)
+            .map(Reference::new)
+            .map(ListResource.ListEntryComponent::new)
+            .forEach(listResource::addEntry);
 
-        return  listResource;
+        return listResource;
     }
 }

@@ -1,11 +1,12 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
+
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
@@ -44,24 +45,25 @@ public class PractitionerMapper {
     }
 
     private List<HumanName> getHumanNameFromITK(POCDMT000002UK01Person associatedPerson) {
-        if (associatedPerson == null)
+        if (associatedPerson == null) {
             return Collections.emptyList();
+        }
         PN[] itkPersonName = associatedPerson.getNameArray();
-        return Arrays.stream(itkPersonName)
+        return stream(itkPersonName)
             .map(humanNameMapper::mapHumanName)
-            .collect(Collectors.toList());
+            .collect(toList());
     }
 
     private List<ContactPoint> getTelecomFromITK(TEL[] itkTelecom) {
-        return Arrays.stream(itkTelecom)
+        return stream(itkTelecom)
             .map(contactPointMapper::mapContactPoint)
-            .collect(Collectors.toList());
+            .collect(toList());
     }
 
     private List<Address> getAddressesFromITK(AD[] itkAddressArray) {
-        return Arrays.stream(itkAddressArray)
+        return stream(itkAddressArray)
             .map(addressMapper::mapAddress)
-            .collect(Collectors.toList());
+            .collect(toList());
     }
 
     public Practitioner mapPractitioner(POCDMT000002UK01AssignedEntity assignedEntity) {

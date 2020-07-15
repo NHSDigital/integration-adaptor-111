@@ -1,5 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
+import static java.nio.charset.Charset.defaultCharset;
 import static java.nio.file.Files.readAllBytes;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -98,7 +99,7 @@ public class ReportControllerIT {
     private String getResourceAsString(String path) {
         try {
             URL reportXmlResource = this.getClass().getResource(path);
-            return new String(readAllBytes(Paths.get(reportXmlResource.getPath())));
+            return new String(readAllBytes(Paths.get(reportXmlResource.getPath())), defaultCharset());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -1,12 +1,12 @@
 package uk.nhs.adaptors.oneoneone.config;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
-
-import static org.springframework.util.StringUtils.isEmpty;
 
 @Configuration
 public class AmqpConfiguration {

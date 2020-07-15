@@ -1,5 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Reference;
@@ -10,11 +15,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReferralRequestMapperTest {
@@ -38,15 +38,15 @@ public class ReferralRequestMapperTest {
         encounter = new Encounter();
         String encounterId = "Encounter/1";
         encounter
-                .setServiceProvider(serviceProviderRef)
-                .setSubject(patientRef)
-                .setId(encounterId);
+            .setServiceProvider(serviceProviderRef)
+            .setSubject(patientRef)
+            .setId(encounterId);
     }
 
     @Test
     public void shouldMapReferralRequest() {
         ReferralRequest referralRequest = referralRequestMapper
-                .mapReferralRequest(encounter, healthcareServiceList);
+            .mapReferralRequest(encounter, healthcareServiceList);
 
         assertThat(ReferralRequest.ReferralRequestStatus.ACTIVE).isEqualTo(referralRequest.getStatus());
         assertThat(ReferralRequest.ReferralCategory.PLAN).isEqualTo(referralRequest.getIntent());

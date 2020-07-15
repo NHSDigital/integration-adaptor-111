@@ -1,5 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Practitioner;
@@ -8,14 +13,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01DataEnterer;
 import uk.nhs.connect.iucds.cda.ucr.TS;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DataEntererMapperTest {
@@ -46,11 +47,11 @@ public class DataEntererMapperTest {
         when(dataEnterer.getTime()).thenReturn(time);
         when(dataEnterer.getTypeCode()).thenReturn("CON");
         when(practitionerMapper.mapPractitioner(isA(POCDMT000002UK01AssignedEntity.class)))
-                .thenReturn(practitioner);
+            .thenReturn(practitioner);
         when(periodMapper.mapPeriod(isA(TS.class))).thenReturn(period);
 
         Encounter.EncounterParticipantComponent participantComponent = dataEntererMapper
-                .mapDataEntererIntoParticipantComponent(dataEnterer);
+            .mapDataEntererIntoParticipantComponent(dataEnterer);
 
         assertThat(participantComponent.getIndividualTarget()).isEqualTo(practitioner);
         assertThat(participantComponent.getPeriod()).isEqualTo(period);

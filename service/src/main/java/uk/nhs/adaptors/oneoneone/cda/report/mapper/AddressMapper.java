@@ -1,12 +1,13 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import lombok.AllArgsConstructor;
+import java.util.Arrays;
+
 import org.hl7.fhir.dstu3.model.Address;
 import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
-
-import java.util.Arrays;
 
 @Component
 @AllArgsConstructor
@@ -20,8 +21,8 @@ public class AddressMapper {
         Address address = new Address();
 
         Arrays.stream(itkAddress.getStreetAddressLineArray())
-                .map(nodeUtil::getNodeValueString)
-                .forEach(address::addLine);
+            .map(nodeUtil::getNodeValueString)
+            .forEach(address::addLine);
 
         if (itkAddress.sizeOfPostalCodeArray() > 0) {
             address.setPostalCode(nodeUtil.getNodeValueString(itkAddress.getPostalCodeArray(0)));
