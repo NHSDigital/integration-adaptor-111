@@ -70,6 +70,18 @@ task integrationTest(type: Test) {
     outputs.upToDateWhen { false }
 }
 
+task staticCodeAnalysis(type: GradleBuild) {
+    tasks = [
+            'clean',
+            'checkstyleMain',
+            'checkstyleTest',
+            'checkstyleIntegrationTest',
+            'spotbugsMain',
+            'spotbugsTest',
+            'spotbugsIntegrationTest',
+    ]
+}
+
 tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
     excludeFilter = rootProject.file('config/spotbugs/exclude.xml')
     reports {
