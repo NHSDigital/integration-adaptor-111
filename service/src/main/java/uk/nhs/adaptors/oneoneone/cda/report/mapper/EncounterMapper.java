@@ -82,8 +82,7 @@ public class EncounterMapper {
         return encounter;
     }
 
-    private List<Encounter.EncounterLocationComponent>
-    getLocationComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
+    private List<Encounter.EncounterLocationComponent> getLocationComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
         List<Encounter.EncounterLocationComponent> locations = new ArrayList<>();
         if (clinicalDocument1.sizeOfRecordTargetArray() > 0) {
             locations = Arrays.stream(clinicalDocument1.getRecordTargetArray())
@@ -121,8 +120,8 @@ public class EncounterMapper {
         }
     }
 
-    private List<Encounter.EncounterParticipantComponent>
-    getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
+    private List<Encounter.EncounterParticipantComponent> getEncounterParticipantComponents(
+            POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
         List<Encounter.EncounterParticipantComponent> encounterParticipantComponents = Arrays.stream(clinicalDocument
             .getParticipantArray())
             .map(participantMapper::mapEncounterParticipant)

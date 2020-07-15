@@ -84,8 +84,9 @@ public class RelatedPersonMapper {
     }
 
     private List<HumanName> getHumanNameFromITK(POCDMT000002UK01Person associatedPerson) {
-        if (associatedPerson == null)
+        if (associatedPerson == null) {
             return Collections.emptyList();
+        }
         PN[] itkPersonName = associatedPerson.getNameArray();
         return Arrays.stream(itkPersonName)
             .map(humanNameMapper::mapHumanName)
