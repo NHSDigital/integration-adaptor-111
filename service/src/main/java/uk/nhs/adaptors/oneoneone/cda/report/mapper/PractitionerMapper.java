@@ -1,10 +1,9 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static java.util.Collections.emptyList;
-
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +20,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedAuthor;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssociatedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Person;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RelatedEntity;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
 
 @Component
@@ -46,9 +44,8 @@ public class PractitionerMapper {
     }
 
     private List<HumanName> getHumanNameFromITK(POCDMT000002UK01Person associatedPerson) {
-        if (associatedPerson == null) {
-            return emptyList();
-        }
+        if (associatedPerson == null)
+            return Collections.emptyList();
         PN[] itkPersonName = associatedPerson.getNameArray();
         return Arrays.stream(itkPersonName)
             .map(humanNameMapper::mapHumanName)
@@ -87,19 +84,6 @@ public class PractitionerMapper {
         practitioner.setName(getHumanNameFromITK(assignedAuthor.getAssignedPerson()));
         practitioner.setTelecom(getTelecomFromITK(assignedAuthor.getTelecomArray()));
         practitioner.setAddress(getAddressesFromITK(assignedAuthor.getAddrArray()));
-
-        return practitioner;
-    }
-
-    public Practitioner mapPractitioner(POCDMT000002UK01RelatedEntity relatedEntity) {
-        Practitioner practitioner = new Practitioner();
-        practitioner.setIdElement(newRandomUuid());
-        practitioner.setActive(true);
-        if (relatedEntity.isSetRelatedPerson()) {
-            practitioner.setName(getHumanNameFromITK(relatedEntity.getRelatedPerson()));
-        }
-        practitioner.setTelecom(getTelecomFromITK(relatedEntity.getTelecomArray()));
-        practitioner.setAddress(getAddressesFromITK(relatedEntity.getAddrArray()));
 
         return practitioner;
     }

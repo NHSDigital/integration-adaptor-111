@@ -7,9 +7,11 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.RelatedPerson;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 
 @Component
@@ -19,6 +21,8 @@ public class ParticipantMapper {
     private final PeriodMapper periodMapper;
 
     private final PractitionerMapper practitionerMapper;
+
+    private final RelatedPersonMapper relatedPersonMapper;
 
     public Encounter.EncounterParticipantComponent mapEncounterParticipant(POCDMT000002UK01Participant1 encounterParticipant) {
         Practitioner practitioner = practitionerMapper
@@ -39,5 +43,23 @@ public class ParticipantMapper {
     private List<CodeableConcept> retrieveTypeFromITK(POCDMT000002UK01Participant1 encounterParticipant) {
         return Collections.singletonList(new CodeableConcept()
             .setText(encounterParticipant.getTypeCode()));
+    }
+
+    public Encounter.EncounterParticipantComponent mapEncounterRelatedPerson(POCDMT000002UK01Informant12 informant, Encounter encounter) {
+        RelatedPerson relatedPerson = relatedPersonMapper
+            .mapRelatedPerson(informant, encounter);
+
+        Encounter.EncounterParticipantComponent encounterParticipantComponent = new Encounter.EncounterParticipantComponent()
+            .setType(Collections.singletonList(new CodeableConcept().setText(informant.getTypeCode())))
+            .setIndividual(new Reference(relatedPerson))
+            .setIndividualTarget(relatedPerson);
+
+        if (informant.isSetRelatedEntity()) {
+            if (informant.getRelatedEntity().isSetEffectiveTime()) {
+                encounterParticipantComponent.setPeriod(periodMapper.mapPeriod(informant.getRelatedEntity().getEffectiveTime()));
+            }
+        }
+
+        return encounterParticipantComponent;
     }
 }
