@@ -37,7 +37,9 @@ public class ReportController {
     @PostMapping(value = "/report", consumes = {TEXT_XML_VALUE, APPLICATION_XML_VALUE})
     @ResponseStatus(value = ACCEPTED)
     public void postReport(@RequestBody String reportXml) {
-        try {
+        try
+        {
+
             Map<ReportElement, String> reportElementsMap = ReportParserUtil.parseReportXml(reportXml);
             LOGGER.info("ITK SOAP message received. MessageId: {}, ItkTrackingId: {}",
                 reportElementsMap.get(MESSAGE_ID), reportElementsMap.get(TRACKING_ID));
