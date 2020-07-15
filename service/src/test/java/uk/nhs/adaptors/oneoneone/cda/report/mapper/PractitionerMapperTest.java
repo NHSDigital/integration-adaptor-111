@@ -20,7 +20,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedAuthor;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssociatedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Person;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RelatedEntity;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -117,28 +116,8 @@ public class PractitionerMapperTest {
         when(addressMapper.mapAddress(ArgumentMatchers.any())).thenReturn(address);
 
         Practitioner practitioner = practitionerMapper.mapPractitioner(associatedEntity);
-
-        assertThat(practitioner.getIdElement().getValue()).startsWith("urn:uuid:");
-        assertThat(practitioner.getActive()).isEqualTo(true);
-        assertThat(practitioner.getNameFirstRep()).isEqualTo(humanName);
-        assertThat(practitioner.getTelecomFirstRep()).isEqualTo(contactPoint);
-        assertThat(practitioner.getAddressFirstRep()).isEqualTo(address);
-    }
-
-    @Test
-    public void shouldMapPractitionerForRelatedEntity() {
-        POCDMT000002UK01RelatedEntity relatedEntity = POCDMT000002UK01RelatedEntity.Factory.newInstance();
-        relatedEntity.setRelatedPerson(createPerson());
-        relatedEntity.setTelecomArray(createTelecomArray());
-        relatedEntity.setAddrArray(createAddrArray());
-
-        when(humanNameMapper.mapHumanName(ArgumentMatchers.any())).thenReturn(humanName);
-        when(contactPointMapper.mapContactPoint(ArgumentMatchers.any())).thenReturn(contactPoint);
-        when(addressMapper.mapAddress(ArgumentMatchers.any())).thenReturn(address);
-
-        Practitioner practitioner = practitionerMapper.mapPractitioner(relatedEntity);
-
-        assertThat(practitioner.getIdElement().getValue()).startsWith("urn:uuid:");
+        String uuidBeginning = "urn:uuid:";
+        assertThat(practitioner.getIdElement().getValue()).startsWith(uuidBeginning);
         assertThat(practitioner.getActive()).isEqualTo(true);
         assertThat(practitioner.getNameFirstRep()).isEqualTo(humanName);
         assertThat(practitioner.getTelecomFirstRep()).isEqualTo(contactPoint);
