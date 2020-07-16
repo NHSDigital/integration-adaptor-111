@@ -170,7 +170,6 @@ public class EncounterReportBundleServiceTest {
         diagnosisComponent.setCondition(new Reference());
         diagnosisComponent.setRole(new CodeableConcept());
         diagnosisComponent.setRank(1);
-
         diagnosisComponent.setConditionTarget(CONDITION);
         ENCOUNTER.addDiagnosis(diagnosisComponent);
     }
