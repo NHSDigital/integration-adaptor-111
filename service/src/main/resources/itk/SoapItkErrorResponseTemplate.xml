@@ -1,0 +1,24 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:a="http://www.w3.org/2005/08/addressing"
+            xmlns:itk="urn:nhs-itk:ns:201005">
+    <s:Header>
+        <a:MessageID>%s</a:MessageID>
+        <a:Action>http://www.w3.org/2005/08/addressing/soap/fault</a:Action>
+        <a:To>%s</a:To>
+        <a:RelatesTo>%s</a:RelatesTo>
+    </s:Header>
+    <s:Body>
+        <s:Fault>
+            <faultcode>s:Client</faultcode>
+            <faultstring>A client related error has occurred, see detail element for further information</faultstring>
+            <faultactor>http://source.of.fault.example.com</faultactor>
+            <detail>
+                <itk:ToolkitErrorInfo>
+                    <itk:ErrorID>%s</itk:ErrorID>
+                    <itk:ErrorCode codeSystem="2.16.840.1.113883.2.1.3.2.4.17.268">%s</itk:ErrorCode>
+                    <itk:ErrorText>%s</itk:ErrorText>
+                    <itk:ErrorDiagnosticText>%s</itk:ErrorDiagnosticText>
+                </itk:ToolkitErrorInfo>
+            </detail>
+        </s:Fault>
+    </s:Body>
+</s:Envelope>

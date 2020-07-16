@@ -11,12 +11,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ItkResponseUtil {
 
-    private static final String SUCCESS_TEMPLATE = loadSuccessTemplate();
     private static final String SOAP_ITK_OK_RESPONSE_TEMPLATE_PATH = "itk/SoapItkOkResponseTemplate.xml";
-
-    public String createSuccessResponseEntity(String originalMessageId, String responseMessageId) {
-        return String.format(SUCCESS_TEMPLATE, responseMessageId, originalMessageId);
-    }
+    private static final String SUCCESS_TEMPLATE = loadSuccessTemplate();
+    private static final String SOAP_ITK_ERROR_RESPONSE_TEMPLATE_PATH = "itk/SoapItkErrorResponseTemplate.xml";
+    private static final String UNSUCCESSFUL_TEMPLATE = loadUnsuccessTemplate();
 
     private static String loadSuccessTemplate() {
         return getResourceAsString(SOAP_ITK_OK_RESPONSE_TEMPLATE_PATH);
@@ -28,5 +26,19 @@ public class ItkResponseUtil {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static String loadUnsuccessTemplate() {
+        return getResourceAsString(SOAP_ITK_ERROR_RESPONSE_TEMPLATE_PATH);
+    }
+
+    public String createSuccessResponseEntity(String originalMessageId, String responseMessageId) {
+        return String.format(SUCCESS_TEMPLATE, responseMessageId, originalMessageId);
+    }
+
+    public String createUnSuccessfulResponseEntity(String originalMessageId, String address, String responseMessageId, String errorCode,
+        String errorId, String errorForUser, String technicalDetailsOfError) {
+        return String.format(UNSUCCESSFUL_TEMPLATE, responseMessageId, address, originalMessageId, errorCode, errorId, errorForUser,
+            technicalDetailsOfError);
     }
 }
