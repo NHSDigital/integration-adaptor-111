@@ -14,6 +14,7 @@ import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.dstu3.model.CarePlan;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Consent;
@@ -166,6 +167,10 @@ public class EncounterReportBundleServiceTest {
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(Collections.singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
         Encounter.DiagnosisComponent diagnosisComponent = new Encounter.DiagnosisComponent();
+        diagnosisComponent.setCondition(new Reference());
+        diagnosisComponent.setRole(new CodeableConcept());
+        diagnosisComponent.setRank(1);
+
         diagnosisComponent.setConditionTarget(CONDITION);
         ENCOUNTER.addDiagnosis(diagnosisComponent);
     }
