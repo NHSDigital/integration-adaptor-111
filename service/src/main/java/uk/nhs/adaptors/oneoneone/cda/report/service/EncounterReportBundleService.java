@@ -178,8 +178,12 @@ public class EncounterReportBundleService {
     }
 
     private void addCondition(Bundle bundle, Encounter encounter) {
-        Condition condition = (Condition) encounter.getDiagnosisFirstRep().getConditionTarget();
-        addEntry(bundle, condition);
+        if (encounter.hasDiagnosis()) {
+            Condition condition = (Condition) encounter.getDiagnosisFirstRep().getConditionTarget();
+            if (condition != null) {
+                addEntry(bundle, condition);
+            }
+        }
     }
 
     private void addComposition(Bundle bundle, Composition composition) {
