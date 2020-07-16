@@ -15,7 +15,8 @@ public class DateUtil {
 
     private static final String[] FORMATS = {
         "yyyyMMddHHmmX",
-        "yyyyMMdd"
+        "yyyyMMddHHmmZ",
+        "yyyyMMdd",
     };
 
     public static Date parseISODate(String date) {
