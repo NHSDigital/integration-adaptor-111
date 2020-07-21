@@ -76,9 +76,10 @@ public class ReportController {
 
             return new ResponseEntity<>(itkResponseUtil.createSuccessResponseEntity(messageId, randomUUID().toString().toUpperCase()), OK);
         } catch (DocumentException e) {
+            String default_message_id_missing = "Message Id not available";
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
             throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
-                toAddress, messageId, CLIENT_ERROR_CODE, "This is not a valid XML message", e.getMessage()));
+                DEFAULT_ADDRESS, default_message_id_missing, CLIENT_ERROR_CODE, "This is not a valid XML message", e.getMessage()));
         } catch (XmlException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
             throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
