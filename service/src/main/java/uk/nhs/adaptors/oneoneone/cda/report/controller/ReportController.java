@@ -47,6 +47,7 @@ public class ReportController {
     private static final String DEFAULT_ADDRESS = "http://www.w3.org/2005/08/addressing/anonymous";
     private static final String INTERNAL_USER_ERROR_MESSAGE = "Internal Error. Please contact your system Administrator";
     private static final String INTERNAL_ERROR_MESSAGE = "Internal Error";
+    private static final String DEFAULT_MESSAGE_ID_MISSING = "Message Id not available";
     private final EncounterReportService encounterReportService;
     private final ItkResponseUtil itkResponseUtil;
 
@@ -76,10 +77,9 @@ public class ReportController {
 
             return new ResponseEntity<>(itkResponseUtil.createSuccessResponseEntity(messageId, randomUUID().toString().toUpperCase()), OK);
         } catch (DocumentException e) {
-            String default_message_id_missing = "Message Id not available";
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
             throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
-                DEFAULT_ADDRESS, default_message_id_missing, CLIENT_ERROR_CODE, "This is not a valid XML message", e.getMessage()));
+                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, "This is not a valid XML message", e.getMessage()));
         } catch (XmlException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
             throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
@@ -91,7 +91,7 @@ public class ReportController {
         } catch (SoapClientException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
             throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
-                toAddress, messageId, CLIENT_ERROR_CODE, e.getReason(), e.getMessage()));
+                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, e.getReason(), e.getMessage()));
         } catch (Exception e) {
             LOGGER.error(INTERNAL_SERVER_ERROR.toString() + e.getMessage());
             throw new ResponseStatusException(INTERNAL_SERVER_ERROR, createErrorResponse(
