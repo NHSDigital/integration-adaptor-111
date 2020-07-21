@@ -37,25 +37,25 @@ public class ReportParserUtil {
         String messageId = "MessageId";
         String errorLocation = "Header";
         Node messageIdNode = document.selectSingleNode(MESSAGE_ID_NODE);
-        if (messageIdNode.getText() == null) {
+        if (messageIdNode == null) {
             throw new SoapClientException(messageId, errorLocation);
         }
         return messageIdNode.getText();
     }
 
     private static String getAddress(Document document) {
-        Node messageIdNode = document.selectSingleNode(ADDRESS_NODE);
-        if (messageIdNode == null) {
+        Node addressNode = document.selectSingleNode(ADDRESS_NODE);
+        if (addressNode == null) {
             return null;
         }
-        return messageIdNode.getText();
+        return addressNode.getText();
     }
 
     private static String getDistributionEnvelope(Document document) throws SoapClientException {
         String distributionEnvelope = "DistributionEnvelope";
         String errorLocation = "Payload";
         Node distributionEnvelopeNode = document.selectSingleNode(DISTRIBUTION_ENVELOPE_NODE);
-        if (distributionEnvelopeNode.getText() == null) {
+        if (distributionEnvelopeNode == null) {
             throw new SoapClientException(distributionEnvelope, errorLocation);
         }
         return distributionEnvelopeNode.asXML();
