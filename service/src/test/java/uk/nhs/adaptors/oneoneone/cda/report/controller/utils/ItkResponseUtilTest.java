@@ -30,32 +30,32 @@ public class ItkResponseUtilTest {
     public void shouldCreateUnSuccessResponseEntity() {
         String unSuccessResponseEntity = itkResponseUtil.createUnSuccessfulResponseEntity("123", "address", "456",
             "1000", "789", "error for user", "technical details of error");
-        String expectedResponse = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:a=\"http://www.w3" +
-            ".org/2005/08/addressing\"\n" +
-            "            xmlns:itk=\"urn:nhs-itk:ns:201005\">\n" +
-            "    <s:Header>\n" +
-            "        <a:MessageID>456</a:MessageID>\n" +
-            "        <a:Action>http://www.w3.org/2005/08/addressing/soap/fault</a:Action>\n" +
-            "        <a:To>address</a:To>\n" +
-            "        <a:RelatesTo>123</a:RelatesTo>\n" +
-            "    </s:Header>\n" +
-            "    <s:Body>\n" +
-            "        <s:Fault>\n" +
-            "            <faultcode>s:Client</faultcode>\n" +
-            "            <faultstring>A client related error has occurred, see detail element for further information</faultstring>\n" +
-            "            <faultactor>http://source.of.fault.example.com</faultactor>\n" +
-            "            <detail>\n" +
-            "                <itk:ToolkitErrorInfo>\n" +
-            "                    <itk:ErrorID>1000</itk:ErrorID>\n" +
-            "                    <itk:ErrorCode codeSystem=\"2.16.840.1.113883.2.1.3.2.4.17" +
-            ".268\">789</itk:ErrorCode>\n" +
-            "                    <itk:ErrorText>error for user</itk:ErrorText>\n" +
-            "                    <itk:ErrorDiagnosticText>technical details of error</itk:ErrorDiagnosticText>\n" +
-            "                </itk:ToolkitErrorInfo>\n" +
-            "            </detail>\n" +
-            "        </s:Fault>\n" +
-            "    </s:Body>\n" +
-            "</s:Envelope>";
+        String expectedResponse = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:a=\"http://www.w3"
+            + ".org/2005/08/addressing\"\n"
+            + "            xmlns:itk=\"urn:nhs-itk:ns:201005\">\n"
+            + "    <s:Header>\n"
+            + "        <a:MessageID>123</a:MessageID>\n"
+            + "        <a:Action>http://www.w3.org/2005/08/addressing/soap/fault</a:Action>\n"
+            + "        <a:To>address</a:To>\n"
+            + "        <a:RelatesTo>456</a:RelatesTo>\n"
+            + "    </s:Header>\n"
+            + "    <s:Body>\n"
+            + "        <s:Fault>\n"
+            + "            <faultcode>s:Client</faultcode>\n"
+            + "            <faultstring>A client related error has occurred, see detail element for further information</faultstring>\n"
+            + "            <faultactor>http://source.of.fault.example.com</faultactor>\n"
+            + "            <detail>\n"
+            + "                <itk:ToolkitErrorInfo>\n"
+            + "                    <itk:ErrorID>1000</itk:ErrorID>\n"
+            + "                    <itk:ErrorCode codeSystem=\"2.16.840.1.113883.2.1.3.2.4.17"
+            + ".268\">789</itk:ErrorCode>\n"
+            + "                    <itk:ErrorText>error for user</itk:ErrorText>\n"
+            + "                    <itk:ErrorDiagnosticText>technical details of error</itk:ErrorDiagnosticText>\n"
+            + "                </itk:ToolkitErrorInfo>\n"
+            + "            </detail>\n"
+            + "        </s:Fault>\n"
+            + "    </s:Body>\n"
+            + "</s:Envelope>";
         assertThat(unSuccessResponseEntity).isEqualTo(expectedResponse);
     }
 }

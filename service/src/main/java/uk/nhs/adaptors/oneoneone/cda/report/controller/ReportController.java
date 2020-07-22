@@ -83,11 +83,11 @@ public class ReportController {
         } catch (XmlException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
             throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
-                toAddress, messageId, CLIENT_ERROR_CODE, "Message body not valid", e.getMessage()));
+                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, "Message body not valid", e.getMessage()));
         } catch (ItkXmlException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
             throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
-                toAddress, messageId, CLIENT_ERROR_CODE, e.getReason(), e.getMessage()));
+                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, e.getReason(), e.getMessage()));
         } catch (SoapClientException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
             throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
