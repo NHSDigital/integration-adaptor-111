@@ -2,12 +2,25 @@ version: '3'
 
 services:
   integration-adaptor-111:
-    image: uk.nhs/integration-adaptor-111:0.0.1-SNAPSHOT
+    #image: uk.nhs/integration-adaptor-111:0.0.1-SNAPSHOT
+    build:
+      context: .
     ports:
       - "10001:8080"
     environment:
       - PEM111_AMQP_BROKER=amqp://activemq:5672
       - LOG_LEVEL=DEBUG
+    depends_on: 
+      - activemq
+
+  nginx:
+    build:
+      context: ./nginx
+    ports: 
+      - 8080:80
+      - 8083:443
+    depends_on: 
+      - integration-adaptor-111
 
   activemq:
     image: rmohr/activemq:5.15.9

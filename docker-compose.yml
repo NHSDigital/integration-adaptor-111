@@ -6,13 +6,33 @@ services:
     command: ./gradlew -i --build-cache integrationTest
     environment:
       - PEM111_AMQP_BROKER=amqp://activemq:5672
-    networks:
-      - dbnetwork
+    # networks:
+    #   - dbnetwork
+
+  integration-adaptor-111:
+    image: local/111-adapter:latest
+    ports:
+      - "10001:8080"
+    environment:
+      - PEM111_AMQP_BROKER=amqp://activemq:5672
+      - LOG_LEVEL=DEBUG
+    depends_on: 
+      - activemq
+
+  nginx:
+    # build:
+    #   context: ./nginx
+    image: local/111-nginx:latest
+    ports: 
+      - 8080:80
+      - 8083:443
+    depends_on: 
+      - integration-adaptor-111
+
   activemq:
     image: rmohr/activemq:5.15.9
-    networks:
-      - dbnetwork
-
-networks:
-  dbnetwork:
-
+    ports:
+      - "8161:8161"
+      - "5672:5672"
+    # networks:
+    #   - dbnetwork

@@ -1,0 +1,9 @@
+FROM nginx:latest
+
+COPY certs/private/nginx-selfsigned.key /etc/ssl/private/nginx-selfsigned.key
+COPY certs/public/nginx-selfsigned.crt /etc/ssl/certs/nginx-selfsigned.crt
+
+COPY conf/default-ssl.conf /etc/nginx/conf.d/default-ssl.conf
+
+EXPOSE 80
+EXPOSE 443
