@@ -1,9 +1,19 @@
 FROM nginx:latest
 
-COPY certs/private/nginx-selfsigned.key /etc/ssl/private/nginx-selfsigned.key
-COPY certs/public/nginx-selfsigned.crt /etc/ssl/certs/nginx-selfsigned.crt
+# COPY ./nginx/certs/ca.cer /etc/ssl/certs/CA.crt
+# COPY ./nginx/certs/server_private.key /etc/ssl/private/nginx-selfsigned.key
+# COPY ./nginx/certs/server_public.crt /etc/ssl/certs/nginx-selfsigned.crt
+# COPY ./nginx/certs/client_public.crt /etc/ssl/certs/client/client-selfsigned.crt
 
-COPY conf/default-ssl.conf /etc/nginx/conf.d/default-ssl.conf
+# COPY ./nginx/conf/default-ssl.template /etc/nginx/templates/default-ssl.template
+# COPY ./nginx/conf/default-ssl.conf /etc/nginx/conf.d/default-ssl.conf
+
+RUN apt-get update && apt-get install -y ruby
+COPY ./nginx/conf/default-ssl.conf.erb /etc/nginx/conf.d/default-ssl.conf.erb
+
+COPY ./nginx/scripts/30-copy_certs.sh /docker-entrypoint.d
+COPY ./nginx/scripts/35-prepare_config.sh /docker-entrypoint.d
+COPY ./nginx/scripts/40-debug.sh /docker-entrypoint.d
 
 EXPOSE 80
 EXPOSE 443

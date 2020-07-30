@@ -10,8 +10,7 @@ server {
     access_log /dev/stdout;
 
     location / {
-      # proxy_pass http://${NGINX_ADAPTER_HOSTNAME}:${NGINX_ADAPTER_PORT};
-      proxy_pass http://adapter:8080;
+      proxy_pass http://<%= ENV['NGINX_ADAPTER_HOSTNAME'] %>:<%= ENV['NGINX_ADAPTER_PORT'] %>;
       proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
 
@@ -44,5 +43,16 @@ server {
 server {
     listen 80 default_server;
     server_name _;
-    return 301 https://$host$request_uri;
+    location / {
+      return 301 https://$host$request_uri;
+    }
+    
+    location /healthcheck {
+      proxy_pass http://<%= ENV['NGINX_ADAPTER_HOSTNAME'] %>:<%= ENV['NGINX_ADAPTER_PORT'] %><%= ENV['SERVICE_HEALTHCHECK']%>;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+
+      error_log /dev/stdout;
+      access_log /dev/stdout;
+    }
 }

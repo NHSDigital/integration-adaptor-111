@@ -6,8 +6,8 @@ services:
     command: ./gradlew -i --build-cache integrationTest
     environment:
       - PEM111_AMQP_BROKER=amqp://activemq:5672
-    # networks:
-    #   - dbnetwork
+    networks:
+      - 111network
 
   integration-adaptor-111:
     image: local/111-adapter:latest
@@ -18,21 +18,43 @@ services:
       - LOG_LEVEL=DEBUG
     depends_on: 
       - activemq
+    networks:
+      - 111network
 
   nginx:
-    # build:
-    #   context: ./nginx
     image: local/111-nginx:latest
     ports: 
-      - 8080:80
-      - 8083:443
+      - "8443:443"
+      - "8480:80"
+    networks:
+      - 111network
+    links:
+      - "integration-adaptor-111:adapter"
     depends_on: 
       - integration-adaptor-111
+    environment:
+      - NGINX_ADAPTER_HOSTNAME=adapter
+      - NGINX_ADAPTER_PORT=8080
+      - NGINX_PUBLIC_CERT
+      - NGINX_PRIVATE_CERT
+      - NGINX_CLIENT_PUBLIC_CERT
+      - NGINX_CA_CERT
+      - DEBUG=true
+      - SERVICE_HEALTHCHECK=/actuator/health
 
   activemq:
     image: rmohr/activemq:5.15.9
     ports:
       - "8161:8161"
       - "5672:5672"
-    # networks:
-    #   - dbnetwork
+    networks:
+      - 111network
+
+networks:
+  111network:
+
+
+    # - NGINX_PUBLIC_CERT="${NGINX_PUBLIC_CERT}"
+    # - NGINX_PRIVATE_CERT="${NGINX_PRIVATE_CERT}"
+    # - NGINX_CLIENT_PUBLIC_CERT="${NGINX_CLIENT_PUBLIC_CERT}"
+    # - NGINX_CA_CERT="${NGINX_CA_CERT}"
