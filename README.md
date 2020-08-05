@@ -10,7 +10,7 @@ National Integration Adaptors - Adaptor for NHS 111 Post Event Message
 * Run script: `start-local-environment.sh`
 
 The above script builds necessary docker images and starts the SpringBoot service and ActiveMQ
-* REST service `localhost:100001`
+* REST service `localhost:10001`
 * ActiveMQ: `localhost:5672`
 
 ## How to run unit tests:
