@@ -33,6 +33,8 @@ public class LocationMapper {
 
     private final NodeUtil nodeUtil;
 
+    private final PeriodMapper periodMapper;
+
     public Location mapRoleToLocation(POCDMT000002UK01ParticipantRole role) {
         Location location = new Location();
         location.setIdElement(IdType.newRandomUuid());
@@ -61,6 +63,13 @@ public class LocationMapper {
         encounterLocationComponent.setLocation(new Reference(location));
         encounterLocationComponent.setLocationTarget(location);
 
+        if (organization.isSetAsOrganizationPartOf()) {
+            if (organization.getAsOrganizationPartOf().getEffectiveTime() != null) {
+                encounterLocationComponent.setPeriod(
+                        periodMapper.mapPeriod(organization.getAsOrganizationPartOf().getEffectiveTime()));
+            }
+        }
+
         return encounterLocationComponent;
     }
 
@@ -71,9 +80,9 @@ public class LocationMapper {
             location.setAddress(addressMapper.mapAddress(intendedRecipient.getAddrArray(0)));
         }
         location.setTelecom(Arrays
-            .stream(intendedRecipient.getTelecomArray())
-            .map(contactPointMapper::mapContactPoint)
-            .collect(Collectors.toList()));
+                .stream(intendedRecipient.getTelecomArray())
+                .map(contactPointMapper::mapContactPoint)
+                .collect(Collectors.toList()));
         return location;
     }
 }
