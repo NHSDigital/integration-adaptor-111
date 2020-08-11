@@ -31,14 +31,6 @@ The services will listen on following ports
 
 ## Testing
 
-## How to run unit tests:
-* Navigate to `integration-adaptor-111/service`
-* Run: `./gradlew test`
-
-## How to run integration tests:
-* Navigate to `integration-adaptor-111/service`
-* Run: `./gradlew integrationTest`
-
 ## How to run the acceptance test:
 * Navigate to `integration-adaptor-111/test-scripts/0.1.0/tests/`
 * Run ./acceptance.sh
