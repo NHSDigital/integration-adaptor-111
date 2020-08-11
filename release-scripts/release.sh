@@ -12,6 +12,7 @@ docker tag local/111:${RELEASE_VERSION} nhsdev/nia-111-adaptor:${RELEASE_VERSION
 if [ "$1" == "-y" ];
 then
   echo "Tagging and pushing Docker image and git tag"
+  docker tag nhsdev/nia-111-adaptor:${RELEASE_VERSION} nhsdev/nia-111-adaptor:latest
   docker push nhsdev/nia-111-adaptor:${RELEASE_VERSION}
   git tag -a ${RELEASE_VERSION} -m "Release ${RELEASE_VERSION}"
   git push origin ${RELEASE_VERSION}
