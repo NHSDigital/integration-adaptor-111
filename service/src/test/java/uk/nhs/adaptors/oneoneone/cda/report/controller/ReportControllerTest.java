@@ -4,7 +4,6 @@ import static java.nio.charset.Charset.defaultCharset;
 import static java.nio.file.Files.readAllBytes;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -22,7 +21,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.server.ResponseStatusException;
 
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkResponseUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
@@ -74,16 +72,7 @@ public class ReportControllerTest {
     public void postReportInvalidRequest() {
         String invalidRequest = "<invalid>";
 
-        boolean exceptionThrown = false;
-        try {
-            reportController.postReport(invalidRequest);
-        } catch (ResponseStatusException exc) {
-            assertThat(exc.getStatus()).isEqualTo(BAD_REQUEST);
-            exceptionThrown = true;
-        }
-
-        if (!exceptionThrown) {
-            fail("ResponseStatusException should have been thrown");
-        }
+        ResponseEntity<String> response = reportController.postReport(invalidRequest);
+        assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
     }
 }

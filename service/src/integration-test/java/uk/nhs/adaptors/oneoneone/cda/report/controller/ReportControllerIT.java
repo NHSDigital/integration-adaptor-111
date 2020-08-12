@@ -68,7 +68,9 @@ public class ReportControllerIT {
             .when()
             .post(REPORT_ENDPOINT)
             .then()
-            .statusCode(BAD_REQUEST.value()).extract();
+            .contentType(TEXT_XML_VALUE)
+            .statusCode(BAD_REQUEST.value())
+            .extract();
     }
 
     @Test
