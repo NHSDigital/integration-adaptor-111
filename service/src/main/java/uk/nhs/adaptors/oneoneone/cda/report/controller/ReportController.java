@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,8 +51,9 @@ public class ReportController {
     private final ItkResponseUtil itkResponseUtil;
 
     @PostMapping(value = "/report",
-        consumes = {TEXT_XML_VALUE, APPLICATION_XML_VALUE},
-        produces = TEXT_XML_VALUE)
+        consumes = {APPLICATION_XML_VALUE, TEXT_XML_VALUE},
+        produces = TEXT_XML_VALUE
+    )
     @ResponseStatus(value = ACCEPTED)
     public ResponseEntity<String> postReport(@RequestBody String reportXml) {
         String toAddress = null;
@@ -78,25 +78,27 @@ public class ReportController {
             return new ResponseEntity<>(itkResponseUtil.createSuccessResponseEntity(messageId, randomUUID().toString().toUpperCase()), OK);
         } catch (DocumentException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
-            throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
-                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, "This is not a valid XML message", e.getMessage()));
+            return new ResponseEntity<>(createErrorResponseBody(
+                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, "This is not a valid XML message", e.getMessage()),
+                BAD_REQUEST);
         } catch (XmlException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
-            throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
-                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, "Message body not valid", e.getMessage()));
+            return new ResponseEntity<>(createErrorResponseBody(
+                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, "Message body not valid", e.getMessage()),
+                BAD_REQUEST);
         } catch (ItkXmlException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
-            throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
-                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, e.getReason(), e.getMessage()));
+            return new ResponseEntity<>(createErrorResponseBody(
+                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, e.getReason(), e.getMessage()), BAD_REQUEST);
         } catch (SoapClientException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
-            throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
-                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, e.getReason(), e.getMessage()));
+            return new ResponseEntity<>(createErrorResponseBody(
+                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, e.getReason(), e.getMessage()), BAD_REQUEST);
         } catch (Exception e) {
             LOGGER.error(INTERNAL_SERVER_ERROR.toString() + e.getMessage());
-            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, createErrorResponse(
-                toAddress, messageId, INTERNAL_PROCESSING_ERROR_CODE,
-                INTERNAL_USER_ERROR_MESSAGE, INTERNAL_ERROR_MESSAGE));
+            return new ResponseEntity<>(createErrorResponseBody(
+                toAddress, messageId, INTERNAL_PROCESSING_ERROR_CODE, INTERNAL_USER_ERROR_MESSAGE, INTERNAL_ERROR_MESSAGE),
+                INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -104,7 +106,7 @@ public class ReportController {
         return value == null ? DEFAULT_ADDRESS : value;
     }
 
-    private String createErrorResponse(String toAddress, String messageId, String errorCode, String errorForUser, String errorMessage) {
+    private String createErrorResponseBody(String toAddress, String messageId, String errorCode, String errorForUser, String errorMessage) {
         return itkResponseUtil.createUnSuccessfulResponseEntity(
             randomUUID().toString().toUpperCase(), toAddress, messageId,
             errorCode, randomUUID().toString().toUpperCase(), errorForUser,
