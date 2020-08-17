@@ -15,6 +15,8 @@ public class ItkResponseUtil {
     private static final String SUCCESS_TEMPLATE = loadSuccessTemplate();
     private static final String SOAP_ITK_ERROR_RESPONSE_TEMPLATE_PATH = "itk/SoapItkErrorResponseTemplate.xml";
     private static final String UNSUCCESSFUL_TEMPLATE = loadUnsuccessTemplate();
+    private static final String SOAP_ITK_ERROR_RESPONSE_BAD_REQUEST_TEMPLATE_PATH = "itk/SoapItkErrorResponseTemplateBadRequest.xml";
+    private static final String UNSUCCESSFUL_BAD_REQUEST_TEMPLATE = loadUnsuccessBadRequestTemplate();
 
     private static String loadSuccessTemplate() {
         return getResourceAsString(SOAP_ITK_OK_RESPONSE_TEMPLATE_PATH);
@@ -32,6 +34,10 @@ public class ItkResponseUtil {
         return getResourceAsString(SOAP_ITK_ERROR_RESPONSE_TEMPLATE_PATH);
     }
 
+    private static String loadUnsuccessBadRequestTemplate() {
+        return getResourceAsString(SOAP_ITK_ERROR_RESPONSE_BAD_REQUEST_TEMPLATE_PATH);
+    }
+
     public String createSuccessResponseEntity(String originalMessageId, String responseMessageId) {
         return String.format(SUCCESS_TEMPLATE, responseMessageId, originalMessageId);
     }
@@ -39,6 +45,12 @@ public class ItkResponseUtil {
     public String createUnSuccessfulResponseEntity(String originalMessageId, String address, String responseMessageId, String errorCode,
         String errorId, String errorForUser, String technicalDetailsOfError) {
         return String.format(UNSUCCESSFUL_TEMPLATE, originalMessageId, address, responseMessageId, errorId, errorCode, errorForUser,
+            technicalDetailsOfError);
+    }
+
+    public String createUnSuccessfulResponseEntityBadRequest(String originalMessageId, String responseMessageId, String errorCode,
+        String errorId, String errorForUser, String technicalDetailsOfError) {
+        return String.format(UNSUCCESSFUL_BAD_REQUEST_TEMPLATE, originalMessageId, responseMessageId, errorCode, errorId, errorForUser,
             technicalDetailsOfError);
     }
 }
