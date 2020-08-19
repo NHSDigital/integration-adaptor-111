@@ -22,4 +22,8 @@ The above script builds necessary docker images and starts the SpringBoot servic
 * Run: `./gradlew integrationTest`
 
 ## Example bundle message 
-* An example bundle message can be found [here](./example_FHIR_bundle_message.json) of [ITK_Report](./service/src/integration-test/resources/xml/ITK_Report_request.xml) converted to FHIR. 
+* An example bundle message can be found [here](./example_FHIR_bundle_message.json) of [ITK_Report](./service/src/integration-test/resources/xml/ITK_Report_request.xml) converted to FHIR.
+
+## AMQP Variables
+* Queue name: `encounter-report`
+* Broker: `amqp://activemq:5672`
