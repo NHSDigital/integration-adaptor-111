@@ -77,26 +77,26 @@ public class ReportController {
             return new ResponseEntity<>(itkResponseUtil.createSuccessResponseEntity(messageId, randomUUID().toString().toUpperCase()), OK);
         } catch (DocumentException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
-            return new ResponseEntity<>(createErrorResponseBodyBadRequest(
+            return new ResponseEntity<>(createErrorResponseBody(
                 DEFAULT_ADDRESS, CLIENT_ERROR_CODE, "This is not a valid XML message", e.getMessage()),
                 BAD_REQUEST);
         } catch (XmlException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
-            return new ResponseEntity<>(createErrorResponseBodyBadRequest(
+            return new ResponseEntity<>(createErrorResponseBody(
                 DEFAULT_ADDRESS, CLIENT_ERROR_CODE, "Message body not valid", e.getMessage()),
                 BAD_REQUEST);
         } catch (ItkXmlException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
-            return new ResponseEntity<>(createErrorResponseBodyBadRequest(
+            return new ResponseEntity<>(createErrorResponseBody(
                 DEFAULT_ADDRESS, CLIENT_ERROR_CODE, e.getReason(), e.getMessage()), BAD_REQUEST);
         } catch (SoapClientException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
-            return new ResponseEntity<>(createErrorResponseBodyBadRequest(
+            return new ResponseEntity<>(createErrorResponseBody(
                 DEFAULT_ADDRESS, CLIENT_ERROR_CODE, e.getReason(), e.getMessage()), BAD_REQUEST);
         } catch (Exception e) {
             LOGGER.error(INTERNAL_SERVER_ERROR.toString() + e.getMessage());
             return new ResponseEntity<>(createErrorResponseBody(
-                toAddress, messageId, INTERNAL_PROCESSING_ERROR_CODE, INTERNAL_USER_ERROR_MESSAGE, INTERNAL_ERROR_MESSAGE),
+                toAddress, INTERNAL_PROCESSING_ERROR_CODE, INTERNAL_USER_ERROR_MESSAGE, INTERNAL_ERROR_MESSAGE),
                 INTERNAL_SERVER_ERROR);
         }
     }
@@ -105,18 +105,10 @@ public class ReportController {
         return value == null ? DEFAULT_ADDRESS : value;
     }
 
-    private String createErrorResponseBody(String toAddress, String messageId, String errorCode, String errorForUser, String errorMessage) {
+    private String createErrorResponseBody(String toAddress, String errorCode, String errorForUser, String errorMessage) {
         return itkResponseUtil.createUnSuccessfulResponseEntity(
-            randomUUID().toString().toUpperCase(), toAddress, messageId,
-            errorCode, randomUUID().toString().toUpperCase(), errorForUser,
-            errorMessage);
-    }
-
-    private String createErrorResponseBodyBadRequest(String toAddress, String errorCode, String errorForUser, String errorMessage) {
-        return itkResponseUtil.createUnSuccessfulResponseEntityBadRequest(
             randomUUID().toString().toUpperCase(), toAddress,
             errorCode, randomUUID().toString().toUpperCase(), errorForUser,
             errorMessage);
     }
-
 }

@@ -28,7 +28,7 @@ public class ItkResponseUtilTest {
 
     @Test
     public void shouldCreateUnSuccessResponseEntity() {
-        String unSuccessResponseEntity = itkResponseUtil.createUnSuccessfulResponseEntity("123", "address", "456",
+        String unSuccessResponseEntity = itkResponseUtil.createUnSuccessfulResponseEntity("123", "address",
             "1000", "789", "error for user", "technical details of error");
         String expectedResponse = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:a=\"http://www.w3"
             + ".org/2005/08/addressing\"\n"
@@ -37,7 +37,6 @@ public class ItkResponseUtilTest {
             + "        <a:MessageID>123</a:MessageID>\n"
             + "        <a:Action>http://www.w3.org/2005/08/addressing/soap/fault</a:Action>\n"
             + "        <a:To>address</a:To>\n"
-            + "        <a:RelatesTo>456</a:RelatesTo>\n"
             + "    </s:Header>\n"
             + "    <s:Body>\n"
             + "        <s:Fault>\n"
@@ -46,9 +45,9 @@ public class ItkResponseUtilTest {
             + "            <faultactor>http://source.of.fault.example.com</faultactor>\n"
             + "            <detail>\n"
             + "                <itk:ToolkitErrorInfo>\n"
-            + "                    <itk:ErrorID>789</itk:ErrorID>\n"
+            + "                    <itk:ErrorID>1000</itk:ErrorID>\n"
             + "                    <itk:ErrorCode codeSystem=\"2.16.840.1.113883.2.1.3.2.4.17"
-            + ".268\">1000</itk:ErrorCode>\n"
+            + ".268\">789</itk:ErrorCode>\n"
             + "                    <itk:ErrorText>error for user</itk:ErrorText>\n"
             + "                    <itk:ErrorDiagnosticText>technical details of error</itk:ErrorDiagnosticText>\n"
             + "                </itk:ToolkitErrorInfo>\n"
