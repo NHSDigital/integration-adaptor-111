@@ -13,6 +13,7 @@ import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Period;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -27,6 +28,8 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01OrganizationPartOf;
+import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LocationMapperTest {
@@ -40,6 +43,8 @@ public class LocationMapperTest {
     @Mock
     private OrganizationMapper organizationMapper;
     @Mock
+    private PeriodMapper periodMapper;
+    @Mock
     private ContactPointMapper contactPointMapper;
     @InjectMocks
     private LocationMapper locationMapper;
@@ -49,6 +54,8 @@ public class LocationMapperTest {
     private HumanName humanName;
     @Mock
     private Organization organization;
+    @Mock
+    private Period period;
     @Mock
     private ContactPoint contactPoint;
     @Mock
@@ -82,14 +89,22 @@ public class LocationMapperTest {
     @Test
     public void shouldMapOrganizationToLocationComponent() {
         POCDMT000002UK01Organization itkOrganization = mock(POCDMT000002UK01Organization.class);
+        POCDMT000002UK01OrganizationPartOf partOf = mock(POCDMT000002UK01OrganizationPartOf.class);
+        IVLTS effectiveTime = mock(IVLTS.class);
+
 
         when(organizationMapper.mapOrganization(any())).thenReturn(organization);
+        when(itkOrganization.isSetAsOrganizationPartOf()).thenReturn(true);
+        when(itkOrganization.getAsOrganizationPartOf()).thenReturn(partOf);
+        when(partOf.getEffectiveTime()).thenReturn(effectiveTime);
+        when(periodMapper.mapPeriod(any())).thenReturn(period);
 
         Encounter.EncounterLocationComponent encounterLocationComponent = locationMapper
-            .mapOrganizationToLocationComponent(itkOrganization);
+                .mapOrganizationToLocationComponent(itkOrganization);
 
         assertThat(encounterLocationComponent.getLocationTarget().getIdElement().getValue()).startsWith("urn:uuid:");
         assertThat(encounterLocationComponent.getLocationTarget().getManagingOrganizationTarget()).isEqualTo(organization);
+        assertThat(encounterLocationComponent.getPeriod()).isEqualTo(period);
     }
 
     @Test
@@ -98,11 +113,11 @@ public class LocationMapperTest {
 
         TEL itkTelecom = mock(TEL.class);
 
-        when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[] {itkTelecom});
+        when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[]{itkTelecom});
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
 
         Location referenceRecipientToLocation = locationMapper
-            .mapRecipientToLocation(itkIntendedRecipient);
+                .mapRecipientToLocation(itkIntendedRecipient);
 
         assertThat(referenceRecipientToLocation.getId().startsWith("urn:uuid:"));
     }

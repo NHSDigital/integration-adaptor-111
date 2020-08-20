@@ -36,9 +36,9 @@ public class ItkResponseUtil {
         return String.format(SUCCESS_TEMPLATE, responseMessageId, originalMessageId);
     }
 
-    public String createUnSuccessfulResponseEntity(String originalMessageId, String address, String responseMessageId, String errorCode,
+    public String createUnSuccessfulResponseEntity(String originalMessageId, String responseMessageId, String errorCode,
         String errorId, String errorForUser, String technicalDetailsOfError) {
-        return String.format(UNSUCCESSFUL_TEMPLATE, originalMessageId, address, responseMessageId, errorCode, errorId, errorForUser,
+        return String.format(UNSUCCESSFUL_TEMPLATE, originalMessageId, responseMessageId, errorCode, errorId, errorForUser,
             technicalDetailsOfError);
     }
 }

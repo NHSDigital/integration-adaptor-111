@@ -10,7 +10,7 @@ National Integration Adaptors - Adaptor for NHS 111 Post Event Message
 * Run script: `start-local-environment.sh`
 
 The above script builds necessary docker images and starts the SpringBoot service and ActiveMQ
-* REST service `localhost:100001`
+* REST service `localhost:10001`
 * ActiveMQ: `localhost:5672`
 
 ## How to run unit tests:
@@ -22,4 +22,8 @@ The above script builds necessary docker images and starts the SpringBoot servic
 * Run: `./gradlew integrationTest`
 
 ## Example bundle message 
-* An example bundle message can be found [here](./example_FHIR_bundle_message.json) of [ITK_Report](./service/src/integration-test/resources/xml/ITK_Report_request.xml) converted to FHIR. 
+* An example bundle message can be found [here](./example_FHIR_bundle_message.json) of [ITK_Report](./service/src/integration-test/resources/xml/ITK_Report_request.xml) converted to FHIR.
+
+## AMQP Variables
+* Queue name: `encounter-report`
+* Broker: `amqp://activemq:5672`

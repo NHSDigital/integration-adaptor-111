@@ -1,10 +1,8 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
 import org.apache.xmlbeans.XmlString;
 import org.hl7.fhir.dstu3.model.Address;
+import org.hl7.fhir.dstu3.model.Address.AddressUse;
 import org.hl7.fhir.dstu3.model.Period;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,14 +11,20 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AddressMapperTest {
 
     private static final String CITY = "Small City";
+    private static final List<String> ADDRESS_USE_LIST = Arrays.asList("H");
     private static final String ADDRESS_LINE = "Magnolia Crescent 1";
     private static final String POSTAL_CODE = "BS2 RF2";
     private static final String COUNTRY = "United Kingdom";
@@ -52,9 +56,11 @@ public class AddressMapperTest {
 
         when(itkAddress.sizeOfUseablePeriodArray()).thenReturn(1);
         when(periodMapper.mapPeriod(ArgumentMatchers.any()))
-            .thenReturn(period);
+                .thenReturn(period);
         when(itkAddress.getStreetAddressLineArray()).thenReturn(ad.getStreetAddressLineArray());
         when(nodeUtil.getNodeValueString(ad.getStreetAddressLineArray(0))).thenReturn(ADDRESS_LINE);
+        when(itkAddress.isSetUse()).thenReturn(true);
+        when(itkAddress.getUse()).thenReturn(ADDRESS_USE_LIST);
         when(itkAddress.sizeOfPostalCodeArray()).thenReturn(1);
         when(itkAddress.getPostalCodeArray(0)).thenReturn(ad.getPostalCodeArray(0));
         when(nodeUtil.getNodeValueString(ad.getPostalCodeArray(0))).thenReturn(POSTAL_CODE);
@@ -78,6 +84,7 @@ public class AddressMapperTest {
     public void shouldMapAddress() {
         Address address = addressMapper.mapAddress(itkAddress);
 
+        assertThat(address.getUse()).isEqualTo(AddressUse.HOME);
         assertThat(address.getLine().get(0).getValue()).isEqualTo(ADDRESS_LINE);
         assertThat(address.getCity()).isEqualTo(CITY);
         assertThat(address.getPostalCode()).isEqualTo(POSTAL_CODE);

@@ -28,7 +28,7 @@ public class ItkResponseUtilTest {
 
     @Test
     public void shouldCreateUnSuccessResponseEntity() {
-        String unSuccessResponseEntity = itkResponseUtil.createUnSuccessfulResponseEntity("123", "address", "456",
+        String unSuccessResponseEntity = itkResponseUtil.createUnSuccessfulResponseEntity("123", "address",
             "1000", "789", "error for user", "technical details of error");
         String expectedResponse = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:a=\"http://www.w3"
             + ".org/2005/08/addressing\"\n"
@@ -37,7 +37,6 @@ public class ItkResponseUtilTest {
             + "        <a:MessageID>123</a:MessageID>\n"
             + "        <a:Action>http://www.w3.org/2005/08/addressing/soap/fault</a:Action>\n"
             + "        <a:To>address</a:To>\n"
-            + "        <a:RelatesTo>456</a:RelatesTo>\n"
             + "    </s:Header>\n"
             + "    <s:Body>\n"
             + "        <s:Fault>\n"

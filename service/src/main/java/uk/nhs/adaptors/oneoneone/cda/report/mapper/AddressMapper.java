@@ -1,13 +1,13 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import java.util.Arrays;
-
-import org.hl7.fhir.dstu3.model.Address;
-import org.springframework.stereotype.Component;
-
 import lombok.AllArgsConstructor;
+import org.hl7.fhir.dstu3.model.Address;
+import org.hl7.fhir.dstu3.model.Address.AddressUse;
+import org.springframework.stereotype.Component;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
+
+import java.util.Arrays;
 
 @Component
 @AllArgsConstructor
@@ -21,8 +21,12 @@ public class AddressMapper {
         Address address = new Address();
 
         Arrays.stream(itkAddress.getStreetAddressLineArray())
-            .map(nodeUtil::getNodeValueString)
-            .forEach(address::addLine);
+                .map(nodeUtil::getNodeValueString)
+                .forEach(address::addLine);
+
+        if (itkAddress.isSetUse()) {
+            address.setUse(AddressUse.fromCode(getAddressUseString(itkAddress.getUse().get(0).toString())));
+        }
 
         if (itkAddress.sizeOfPostalCodeArray() > 0) {
             address.setPostalCode(nodeUtil.getNodeValueString(itkAddress.getPostalCodeArray(0)));
@@ -53,5 +57,14 @@ public class AddressMapper {
         }
 
         return address;
+    }
+
+    private String getAddressUseString(String useCode) {
+        return switch (useCode) {
+            case "H", "HP" -> "home";
+            case "WP" -> "work";
+            case "TMP" -> "temp";
+            default -> null;
+        };
     }
 }
