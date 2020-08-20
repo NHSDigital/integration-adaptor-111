@@ -82,14 +82,6 @@ public class ReportController {
                 BAD_REQUEST);
         } catch (XmlException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
-<<<<<<< HEAD
-            throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
-                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, "Message body not valid", e.getMessage()));
-        } catch (ItkXmlException e) {
-            LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
-            throw new ResponseStatusException(BAD_REQUEST, createErrorResponse(
-                DEFAULT_ADDRESS, DEFAULT_MESSAGE_ID_MISSING, CLIENT_ERROR_CODE, e.getReason(), e.getMessage()));
-=======
             return new ResponseEntity<>(createErrorResponseBody(
                 DEFAULT_ADDRESS, CLIENT_ERROR_CODE, "Message body not valid", e.getMessage()),
                 BAD_REQUEST);
@@ -97,7 +89,6 @@ public class ReportController {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
             return new ResponseEntity<>(createErrorResponseBody(
                 DEFAULT_ADDRESS, CLIENT_ERROR_CODE, e.getReason(), e.getMessage()), BAD_REQUEST);
->>>>>>> master
         } catch (SoapClientException e) {
             LOGGER.error(BAD_REQUEST.toString() + e.getMessage());
             return new ResponseEntity<>(createErrorResponseBody(
