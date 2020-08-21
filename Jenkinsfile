@@ -19,7 +19,9 @@ pipeline {
         BUILD_TAG_LOWER = sh label: 'Lowercase build tag', returnStdout: true, script: "echo -n ${BUILD_TAG} | tr '[:upper:]' '[:lower:]'"
         ENVIRONMENT_ID = "build1"
         ECR_REPO_DIR = "111"
+        ECR_REPO_DIR_NGINX = "111-nginx"
         DOCKER_IMAGE = "${DOCKER_REGISTRY}/${ECR_REPO_DIR}:${BUILD_TAG}"
+        DOCKER_NGINX_IMAGE = "${DOCKER_REGISTRY}/${ECR_REPO_DIR_NGINX}:${BUILD_TAG}"
     }    
 
     stages {
@@ -65,7 +67,8 @@ pipeline {
                 stage('Build Docker Images') {
                     steps {
                         script {
-                            if (sh(label: 'Running docker build', script: 'docker build -t ${DOCKER_IMAGE} .', returnStatus: true) != 0) {error("Failed to build 111 Docker image")}
+                            if (sh(label: 'Running 111 docker build', script: 'docker build -t ${DOCKER_IMAGE} -f Dockerfile.111 .', returnStatus: true) != 0) {error("Failed to build 111 Docker image")}
+                            if (sh(label: 'Running nginx docker buid', script: 'docker build -t ${DOCKER_NGINX_IMAGE} -f Dockerfile.nginx .', returnStatus: true) != 0) {error("Failed to build Nginx Docker image")}
                         }
                     }
                 }
@@ -78,7 +81,9 @@ pipeline {
                         script {
                             if (ecrLogin(TF_STATE_BUCKET_REGION) != 0 )  { error("Docker login to ECR failed") }
                             String dockerPushCommand = "docker push ${DOCKER_IMAGE}"
-                            if (sh (label: "Pushing image", script: dockerPushCommand, returnStatus: true) !=0) { error("Docker push image failed") }
+                            String dockerNginxPushCommand = "docker push ${DOCKER_NGINX_IMAGE}"
+                            if (sh (label: "Pushing image", script: dockerPushCommand, returnStatus: true) !=0) { error("Docker push 111 image failed") }
+                            if (sh (label: "Pushing image", script: dockerNginxPushCommand, returnStatus: true) !=0) { error("Docker push nginx image failed") }
                         }
                     }
                 }
@@ -243,6 +248,12 @@ Map<String,String> collectTfOutputs(String component) {
 String getSecretValue(String secretName, String region) {
   String awsCommand = "aws secretsmanager get-secret-value --region ${region} --secret-id ${secretName} --query SecretString --output text"
   return sh(script: awsCommand, returnStdout: true).trim()
+}
+
+void writeSecretToFile(String secretName, String fileName, String region) {
+  String secretValue = getSecretValue(secretName, region)
+  sh (script: "touch ${fileName} && echo '\n' > ${fileName}")
+  sh (script: "echo '${secretValue}' >> ${fileName}")
 }
 
 Map<String,Object> decodeSecretKeyValue(String rawSecret) {
