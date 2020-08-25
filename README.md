@@ -15,7 +15,7 @@ The main objective of the 111 Adaptor is to hide complex legacy standards and in
 As with all National Integration Adaptors, the 111 adaptor is a self-hosted component - packaged as a [docker image](https://hub.docker.com/r/nhsdev/nia-111-adaptor), you must deploy it within your own environment.
 
 The following diagram illustrates the NHS 111 Report adaptor: 
-![111 Logical Architecture](/img/111 SysContext.png)
+![111 SysContext](/img/111 SysContext.png)
 
 ## Configuration
 The adaptor reads its configuration from environment variables. The following sections describe the environment variables used to configure the adaptor.
@@ -60,3 +60,6 @@ The above script builds necessary docker images and starts the SpringBoot servic
 ### AMQP Variables
 * Queue name: `encounter-report`
 * Broker: `amqp://activemq:5672`
+
+## ITK Testbench
+The [ITK Testbench](https://digital.nhs.uk/services/interoperability-toolkit/developer-resources/itk-test-centre/itk-testbench) provided by NHS Digital has an essential tool for ITK interface development and conformance.
