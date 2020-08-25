@@ -62,4 +62,4 @@ The above script builds necessary docker images and starts the SpringBoot servic
 * Broker: `amqp://activemq:5672`
 
 ## ITK Testbench
-The [ITK Testbench](https://digital.nhs.uk/services/interoperability-toolkit/developer-resources/itk-test-centre/itk-testbench) provided by NHS Digital has an essential tool for ITK interface development and conformance.
+The [ITK Testbench](https://digital.nhs.uk/services/interoperability-toolkit/developer-resources/itk-test-centre/itk-testbench) provided by NHS Digital has an essential tool for ITK interface development and conformance.  This tool provides resources that will allow you to adequately test the 111 adaptor within your own environment.
