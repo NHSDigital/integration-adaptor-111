@@ -24,10 +24,10 @@ The adaptor reads its configuration from environment variables. The following se
 The post event messages (PEM) handled by the adaptor are sent to the Active Message Queue within the GP supplier's own environment and are not stored within the NHS 111 adaptor itself.  
 
 You need to configure the following environment variables to enable this:
-/n PEM111_AMQP_BROKER
-/n PEM111_AMQP_QUEUE_NAME
-/n PEM111_AMQP_USERNAME
-/n PEM111_AMQP_PASSWORD
+PEM111_AMQP_BROKER
+PEM111_AMQP_QUEUE_NAME
+PEM111_AMQP_USERNAME
+PEM111_AMQP_PASSWORD
 
 ## ITK to FHIR Mapping
 Even though the adaptor removes this complexity, the FHIR field mappings have been documented in this [ReadME]() for information.
