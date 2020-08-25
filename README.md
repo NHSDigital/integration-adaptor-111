@@ -15,7 +15,7 @@ The main objective of the 111 Adaptor is to hide complex legacy standards and in
 As with all National Integration Adaptors, the 111 adaptor is a self-hosted component - packaged as a [docker image](https://hub.docker.com/r/nhsdev/nia-111-adaptor), you must deploy it within your own environment.
 
 The following diagram illustrates the NHS 111 Report adaptor: 
-![111 Logical Architecture][img/111 SysContext.png]
+![111 Logical Architecture](img/111 SysContext.png)
 
 ## Configuration
 The adaptor reads its configuration from environment variables. The following sections describe the environment variables used to configure the adaptor.
