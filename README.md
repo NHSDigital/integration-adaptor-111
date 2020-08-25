@@ -30,7 +30,7 @@ You need to configure the following environment variables to enable this:
 * PEM111_AMQP_PASSWORD
 
 ## ITK to FHIR Mapping
-Even though the adaptor removes this complexity, the FHIR field mappings have been documented in this [ReadME]() for information.
+Even though the adaptor removes this complexity, the FHIR field mappings have been documented in this [ReadME](doc/ITK_FHIR_mapping.docx) for information.
 
 ## Running the Adaptor
 
@@ -55,7 +55,7 @@ The above script builds necessary docker images and starts the SpringBoot servic
 * Run: `./gradlew integrationTest`
 
 ### Example bundle message 
-* An example bundle message can be found [here](./example_FHIR_bundle_message.json) of [ITK_Report](./service/src/integration-test/resources/xml/ITK_Report_request.xml) converted to FHIR.
+* An example bundle message can be found [here](doc/example_FHIR_bundle_message.json) of [ITK_Report](./service/src/integration-test/resources/xml/ITK_Report_request.xml) converted to FHIR.
 
 ### AMQP Variables
 * Queue name: `encounter-report`
