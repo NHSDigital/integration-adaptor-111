@@ -67,8 +67,8 @@ public class CompositionMapper {
                 .setConfidentiality(Composition.DocumentConfidentiality.valueOf(clinicalDocument.getConfidentialityCode().getCode()));
         }
 
-        if (isNotEmpty(clinicalDocument.getRelatedDocumentArray()) &&
-            clinicalDocument.getRelatedDocumentArray(0).getParentDocument().getIdArray(0).isSetRoot()) {
+        if (isNotEmpty(clinicalDocument.getRelatedDocumentArray())
+            && clinicalDocument.getRelatedDocumentArray(0).getParentDocument().getIdArray(0).isSetRoot()) {
             Identifier relatedDocIdentifier = new Identifier();
             relatedDocIdentifier.setUse(Identifier.IdentifierUse.USUAL);
             relatedDocIdentifier.setValue(clinicalDocument.getRelatedDocumentArray(0).getParentDocument().getIdArray(0).getRoot());
