@@ -29,33 +29,34 @@ public class EpisodeOfCareMapper {
     private final PeriodMapper periodMapper;
 
     public Optional<EpisodeOfCare> mapEpisodeOfCare(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Reference subject) {
-        POCDMT000002UK01EncompassingEncounter encompassingEncounter = clinicalDocument.getComponentOf()
-            .getEncompassingEncounter();
+        if (clinicalDocument.isSetComponentOf()) {
+            POCDMT000002UK01EncompassingEncounter encompassingEncounter = clinicalDocument.getComponentOf()
+                .getEncompassingEncounter();
 
-        if (encompassingEncounter.isSetResponsibleParty() && encompassingEncounter.getResponsibleParty().getAssignedEntity() != null) {
-            POCDMT000002UK01AssignedEntity assignedEntity = encompassingEncounter.getResponsibleParty().getAssignedEntity();
-            EpisodeOfCare episodeOfCare = new EpisodeOfCare();
-            episodeOfCare.setPatient(subject);
-            episodeOfCare.setStatus(ACTIVE);
-            episodeOfCare.setType(asList(new CodeableConcept().setText(encompassingEncounter.getCode().getCode())));
-            episodeOfCare.setPeriod(periodMapper.mapPeriod(encompassingEncounter.getEffectiveTime()));
-            episodeOfCare.setId(newRandomUuid());
-            Practitioner practitioner = practitionerMapper.mapPractitioner(assignedEntity);
-            episodeOfCare.setCareManagerTarget(practitioner);
-            episodeOfCare.setCareManager(new Reference(practitioner));
+            if (encompassingEncounter.isSetResponsibleParty() && encompassingEncounter.getResponsibleParty().getAssignedEntity() != null) {
+                POCDMT000002UK01AssignedEntity assignedEntity = encompassingEncounter.getResponsibleParty().getAssignedEntity();
+                EpisodeOfCare episodeOfCare = new EpisodeOfCare();
+                episodeOfCare.setPatient(subject);
+                episodeOfCare.setStatus(ACTIVE);
+                episodeOfCare.setType(asList(new CodeableConcept().setText(encompassingEncounter.getCode().getCode())));
+                episodeOfCare.setPeriod(periodMapper.mapPeriod(encompassingEncounter.getEffectiveTime()));
+                episodeOfCare.setId(newRandomUuid());
+                Practitioner practitioner = practitionerMapper.mapPractitioner(assignedEntity);
+                episodeOfCare.setCareManagerTarget(practitioner);
+                episodeOfCare.setCareManager(new Reference(practitioner));
 
-            if (assignedEntity.isSetRepresentedOrganization()) {
-                POCDMT000002UK01Organization representedOrganization = assignedEntity
-                    .getRepresentedOrganization();
+                if (assignedEntity.isSetRepresentedOrganization()) {
+                    POCDMT000002UK01Organization representedOrganization = assignedEntity
+                        .getRepresentedOrganization();
 
-                Organization organization = organizationMapper.mapOrganization(representedOrganization);
-                episodeOfCare.setManagingOrganization(new Reference(organization));
-                episodeOfCare.setManagingOrganizationTarget(organization);
+                    Organization organization = organizationMapper.mapOrganization(representedOrganization);
+                    episodeOfCare.setManagingOrganization(new Reference(organization));
+                    episodeOfCare.setManagingOrganizationTarget(organization);
+                }
+
+                return Optional.of(episodeOfCare);
             }
-
-            return Optional.of(episodeOfCare);
-        } else {
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 }

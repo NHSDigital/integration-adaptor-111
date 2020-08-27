@@ -1,6 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.hl7.fhir.dstu3.model.Composition;
@@ -47,6 +48,8 @@ public class CompositionMapperTest {
 
     @Before
     public void setUp() {
+        POCDMT000002UK01RelatedDocument1[] relatedDocsArray = {mock(POCDMT000002UK01RelatedDocument1.class)};
+        when(clinicalDocument.getRelatedDocumentArray()).thenReturn(relatedDocsArray);
         when(clinicalDocument.getRelatedDocumentArray(0)).thenReturn(relatedDocument1);
         when(relatedDocument1.getParentDocument()).thenReturn(parentDocument1);
         when(parentDocument1.getIdArray(0)).thenReturn(ii);

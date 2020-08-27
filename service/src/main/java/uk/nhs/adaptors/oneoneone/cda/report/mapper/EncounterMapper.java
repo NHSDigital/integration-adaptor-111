@@ -89,6 +89,7 @@ public class EncounterMapper {
         List<EncounterLocationComponent> locations = new ArrayList<>();
         if (clinicalDocument1.sizeOfRecordTargetArray() > 0) {
             locations = stream(clinicalDocument1.getRecordTargetArray())
+                .filter(recordTarget -> recordTarget.getPatientRole().getProviderOrganization() != null)
                 .map(recordTarget -> recordTarget.getPatientRole().getProviderOrganization())
                 .map(locationMapper::mapOrganizationToLocationComponent)
                 .collect(Collectors.toList());
