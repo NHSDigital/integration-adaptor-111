@@ -39,6 +39,7 @@ services:
       - NGINX_PRIVATE_CERT
       - NGINX_CLIENT_PUBLIC_CERT
       - NGINX_CA_CERT
+      - NGINX_CRL
       - DEBUG=true
       - RUN_IN_DOCKER=true
       - SERVICE_HEALTHCHECK=/actuator/health

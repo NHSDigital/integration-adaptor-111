@@ -47,6 +47,12 @@ echo "-----BEGIN RSA PRIVATE KEY-----" > ${CERTS_DIR}/server_private.key
 echo ${NGINX_PRIVATE_CERT} | sed 's/-----BEGIN RSA PRIVATE KEY----- //' | sed 's/-----BEGIN RSA PRIVATE KEY-----//' | sed 's/ -----END RSA PRIVATE KEY-----//' | sed 's/-----END RSA PRIVATE KEY-----//' | sed 's/ /\n/g' >> ${CERTS_DIR}/server_private.key
 echo "-----END RSA PRIVATE KEY-----" >> ${CERTS_DIR}/server_private.key
 
+# crl
+echo "-----BEGIN X509 CRL-----" > ${CERTS_DIR}/revocation_list.crl
+echo ${NGINX_CRL} | sed 's/-----BEGIN X509 CRL----- //' | sed 's/-----BEGIN X509 CRL-----//' | sed 's/ -----END X509 CRL-----//' | sed 's/-----END X509 CRL-----//' | sed 's/ /\n/g' >> ${CERTS_DIR}/revocation_list.crl
+echo "-----END X509 CRL-----" >> ${CERTS_DIR}/revocation_list.crl
+
+
 # combine CA with client public
 cat ${CERTS_DIR}/ca.crt > ${CERTS_DIR}/client_public.crt
 cat ${CERTS_DIR}/client_public_only.crt >> ${CERTS_DIR}/client_public.crt

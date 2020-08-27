@@ -36,4 +36,7 @@ then
   echo "Client public cert"
   cat /etc/ssl/client_public.crt
   echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+  echo "Revocation list"
+  cat /etc/ssl/revocation_list.crl
+  echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
 fi
