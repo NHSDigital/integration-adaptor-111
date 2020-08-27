@@ -59,6 +59,7 @@ public class EpisodeOfCareMapperTest {
 
     @Test
     public void shouldMapEpisodeOfCare() {
+        when(clinicalDocument.isSetComponentOf()).thenReturn(true);
         when(encompassingEncounter.isSetResponsibleParty()).thenReturn(true);
         POCDMT000002UK01ResponsibleParty responsibleParty = mock(POCDMT000002UK01ResponsibleParty.class);
         when(encompassingEncounter.getResponsibleParty()).thenReturn(responsibleParty);
@@ -90,6 +91,7 @@ public class EpisodeOfCareMapperTest {
 
     @Test
     public void shouldMapEpisodeOfCareNoResponsibleParty() {
+        when(clinicalDocument.isSetComponentOf()).thenReturn(true);
         when(encompassingEncounter.isSetResponsibleParty()).thenReturn(false);
 
         Optional<EpisodeOfCare> episodeOfCareOptional = episodeOfCareMapper.mapEpisodeOfCare(clinicalDocument, null);
