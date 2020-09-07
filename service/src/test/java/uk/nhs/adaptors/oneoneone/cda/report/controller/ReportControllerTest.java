@@ -4,11 +4,14 @@ import static java.nio.charset.Charset.defaultCharset;
 import static java.nio.file.Files.readAllBytes;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.net.URL;
@@ -22,8 +25,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
 
+import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkResponseUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
+import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
+import uk.nhs.adaptors.oneoneone.cda.report.validation.SoapValidator;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -42,11 +48,17 @@ public class ReportControllerTest {
     @Mock
     private ItkResponseUtil itkResponseUtil;
 
+    @Mock
+    private ItkValidator itkValidator;
+
+    @Mock
+    private SoapValidator soapValidator;
+
     @Test
     public void postReportValidRequest() {
         when(itkResponseUtil.createSuccessResponseEntity(eq(MESSAGE_ID), anyString())).thenReturn(RESPONSE_XML);
 
-        String validRequest = getValidReportRequest();
+        String validRequest = getValidXmlReportRequest();
 
         ResponseEntity<String> response = reportController.postReport(validRequest);
 
@@ -59,7 +71,7 @@ public class ReportControllerTest {
         assertThat(response.getBody()).isEqualTo(RESPONSE_XML);
     }
 
-    private String getValidReportRequest() {
+    private String getValidXmlReportRequest() {
         try {
             URL reportXmlResource = this.getClass().getResource("/xml/ITK_Report_request.xml");
             return new String(readAllBytes(Paths.get(reportXmlResource.getPath())), defaultCharset());
@@ -69,10 +81,20 @@ public class ReportControllerTest {
     }
 
     @Test
-    public void postReportInvalidRequest() {
+    public void postReportInvalidXmlRequest() {
         String invalidRequest = "<invalid>";
 
         ResponseEntity<String> response = reportController.postReport(invalidRequest);
         assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+    }
+
+    @Test
+    public void postReportInvalidItkRequest() throws SoapClientException {
+        doThrow(new SoapClientException("Soap validation failed", "ITK header missing"))
+            .when(itkValidator).checkItkConformance(anyMap());
+        String invalidRequest = getValidXmlReportRequest();
+
+        ResponseEntity<String> response = reportController.postReport(invalidRequest);
+        assertThat(response.getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR);
     }
 }

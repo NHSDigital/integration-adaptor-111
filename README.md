@@ -29,6 +29,11 @@ You need to configure the following environment variables to enable this:
 * PEM111_AMQP_USERNAME
 * PEM111_AMQP_PASSWORD
 
+### SOAP ITK
+Incoming SOAP ITK message is validated. One of the requirements is to check SOAP To field - it's the URL of /report endpoint. You can set the expected value using the following env variable:
+* PEM111_SOAP_SEND_TO
+
+
 ## ITK to FHIR Mapping
 Even though the adaptor removes this complexity, the FHIR field mappings have been documented [here](doc/ITK_FHIR_mapping.docx) for information.
 
