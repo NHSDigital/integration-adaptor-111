@@ -15,3 +15,6 @@ amqp:
   exchange: amq.direct
   username: ${PEM111_AMQP_USERNAME:}
   password: ${PEM111_AMQP_PASSWORD:}
+
+soap:
+  sendTo: ${PEM111_SOAP_SEND_TO:http://localhost:8080/report}

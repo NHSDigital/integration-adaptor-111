@@ -6,15 +6,21 @@
         <a:ReplyTo>
             <a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>
         </a:ReplyTo>
-        <a:To s:mustUnderstand="1">https://uat.pathways.sehnp.nhs.uk:1880/NHS111Reportv20.svc</a:To>
+        <a:To s:mustUnderstand="1">http://localhost:8080/report</a:To>
+        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsu:Timestamp xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="D6CD5232-14CF-11DF-9423-1F9A910D4703">
+                <wsu:Created>2020-09-03T12:07:58Z</wsu:Created>
+                <wsu:Expires>2020-09-03T12:17:58Z</wsu:Expires>
+            </wsu:Timestamp>
+            <wsse:UsernameToken>
+                <wsse:Username>TKS Server test</wsse:Username>
+            </wsse:UsernameToken>
+        </wsse:Security>
     </s:Header>
     <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <itk:DistributionEnvelope xmlns:itk="urn:nhs-itk:ns:201005"
-                                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                                  xsi:schemaLocation="urn:nhs-itk:ns:201005 ..\..\Schemas\distributionEnvelope-v2-0.xsd">
-            <!-- the header of the distribution envelope contains a service name - ALWAYS "SendNHS111Report-v1-0" for NHS 111 CDA documents and a generated DCE UUID trackingId-->
-
-            <itk:header service="SendNHS111Report-v1-0" trackingid="7D6F23E0-AE1A-11DB-9808-B18E1E0994CD">
+                                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <itk:header service="urn:nhs-itk:services:201005:SendNHS111Report-v2-0" trackingid="7D6F23E0-AE1A-11DB-9808-B18E1E0994CD">
                 <!-- the address list is not needed, as the end point has been looked up and is in the SOAP header
                 <itk:addresslist>
                     <itk:address uri="urn:nhs-uk:addressing:ods:EM396"/>
@@ -28,7 +34,7 @@
                     <!-- CDA documents have a mimetype of application/cda+xml. id is the id of the CDA payload (<payload@id>) -->
                     <!-- for more details of manifest attributes see the ITK Core pack -->
                     <itk:manifestitem mimetype="application/cda+xml" id="uuid_7D6F23E0-AE1A-11DB-9808-B18E1E0994EE"
-                                      profileid="urn:nhs-en:profile:nhs111CDADocument-v3-1"/>
+                                      profileid="urn:nhs-en:profile:nhs111CDADocument-v2-0"/>
                 </itk:manifest>
                 <!-- the sender address - use the ODS org site code of the sender, with a SDS idenifier of the sending person if available -->
                 <itk:senderAddress uri="urn:nhs-uk:addressing:ods:5L399:445510770"/>

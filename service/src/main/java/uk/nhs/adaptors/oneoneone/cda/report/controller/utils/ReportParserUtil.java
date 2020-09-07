@@ -7,7 +7,6 @@ import java.util.Map;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
@@ -17,57 +16,27 @@ public class ReportParserUtil {
     private static final String MESSAGE_ID_NODE = "//*[local-name()='MessageID']";
     private static final String ADDRESS_NODE = "//*[local-name()='Address']";
     private static final String DISTRIBUTION_ENVELOPE_NODE = "//*[local-name()='DistributionEnvelope']";
+    private static final String ITK_PAYLOADS_NODE = "//*[local-name()='payloads']";
     private static final String HEADER_NODE = "//*[local-name()='header']";
+    private static final String SOAP_HEADER_NODE = "//*[local-name()='Header']";
 
-    public static Map<ReportElement, String> parseReportXml(String reportXml) throws DocumentException, SoapClientException {
+    public static Map<ReportElement, Element> parseReportXml(String reportXml) throws DocumentException, SoapClientException {
 
-        Map<ReportElement, String> reportElementsMap = new HashMap<>();
+        Map<ReportElement, Element> reportElementsMap = new HashMap<>();
 
         SAXReader reader = new SAXReader();
         Document document = reader.read(new StringReader(reportXml));
 
-        reportElementsMap.put(ReportElement.MESSAGE_ID, getMessageId(document));
-        reportElementsMap.put(ReportElement.ADDRESS, getAddress(document));
-        reportElementsMap.put(ReportElement.DISTRIBUTION_ENVELOPE, getDistributionEnvelope(document));
-        reportElementsMap.put(ReportElement.TRACKING_ID, getTrackingId(document));
+        reportElementsMap.put(ReportElement.MESSAGE_ID, getElement(document, MESSAGE_ID_NODE));
+        reportElementsMap.put(ReportElement.ADDRESS, getElement(document, ADDRESS_NODE));
+        reportElementsMap.put(ReportElement.DISTRIBUTION_ENVELOPE, getElement(document, DISTRIBUTION_ENVELOPE_NODE));
+        reportElementsMap.put(ReportElement.ITK_PAYLOADS, getElement(document, ITK_PAYLOADS_NODE));
+        reportElementsMap.put(ReportElement.ITK_HEADER, getElement(document, HEADER_NODE));
+        reportElementsMap.put(ReportElement.SOAP_HEADER, getElement(document, SOAP_HEADER_NODE));
         return reportElementsMap;
     }
 
-    private static String getMessageId(Document document) throws SoapClientException {
-        String messageId = "MessageId";
-        String errorLocation = "Header";
-        Node messageIdNode = document.selectSingleNode(MESSAGE_ID_NODE);
-        if (messageIdNode == null) {
-            throw new SoapClientException(messageId, errorLocation);
-        }
-        return messageIdNode.getText();
-    }
-
-    private static String getAddress(Document document) {
-        Node addressNode = document.selectSingleNode(ADDRESS_NODE);
-        if (addressNode == null) {
-            return null;
-        }
-        return addressNode.getText();
-    }
-
-    private static String getDistributionEnvelope(Document document) throws SoapClientException {
-        String distributionEnvelope = "DistributionEnvelope";
-        String errorLocation = "Payload";
-        Node distributionEnvelopeNode = document.selectSingleNode(DISTRIBUTION_ENVELOPE_NODE);
-        if (distributionEnvelopeNode == null) {
-            throw new SoapClientException(distributionEnvelope, errorLocation);
-        }
-        return distributionEnvelopeNode.asXML();
-    }
-
-    private static String getTrackingId(Document document) throws SoapClientException {
-        String trackingId = "trackingid";
-        String errorLocation = "DistributionEnvelope header";
-        Element element = (Element) document.selectSingleNode(HEADER_NODE);
-        if (element.attribute(trackingId).getValue() == null) {
-            throw new SoapClientException(trackingId, errorLocation);
-        }
-        return element.attribute(trackingId).getValue();
+    private static Element getElement(Document document, String xpath) {
+        return (Element) document.selectSingleNode(xpath);
     }
 }

@@ -1,6 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
 import org.apache.xmlbeans.XmlException;
+import org.dom4j.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -13,10 +14,19 @@ public final class ReportRequestUtils {
 
     private static final String CLINICAL_DOCUMENT_NODE_NAME = "ClinicalDocument";
 
-    public static POCDMT000002UK01ClinicalDocument1 extractClinicalDocument(String distributionEnvelopXml) throws ItkXmlException {
+    public static DistributionEnvelopeDocument extractDistributionEnvelope(Element distributionEnvelope) throws ItkXmlException {
+        try {
+            DistributionEnvelopeDocument envelopedDocument = DistributionEnvelopeDocument.Factory.parse(distributionEnvelope.asXML());
+            return envelopedDocument;
+        } catch (XmlException e) {
+            throw new ItkXmlException("DistributionEnvelope missing", e.getMessage(), e);
+        }
+    }
+
+    public static POCDMT000002UK01ClinicalDocument1 extractClinicalDocument(DistributionEnvelopeDocument envelopedDocument)
+        throws ItkXmlException {
         POCDMT000002UK01ClinicalDocument1 clinicalDocument;
         try {
-            DistributionEnvelopeDocument envelopedDocument = DistributionEnvelopeDocument.Factory.parse(distributionEnvelopXml);
             clinicalDocument = ClinicalDocumentDocument1.Factory
                 .parse(findClinicalDoc(envelopedDocument))
                 .getClinicalDocument();
