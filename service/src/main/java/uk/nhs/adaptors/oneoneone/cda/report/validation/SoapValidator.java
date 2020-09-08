@@ -40,7 +40,7 @@ public class SoapValidator {
         if (localHeader != null) {
             Attribute mustUnderstand = ((Element) localHeader).attribute("mustUnderstand");
             if (mustUnderstand != null && StringUtils.equals(mustUnderstand.getValue(), "1")) {
-                throw new SoapMustUnderstandException("Soap validation failed", "Rejecting foreing header");
+                throw new SoapMustUnderstandException("Soap validation failed", "Rejecting foreign header");
             }
         }
     }

@@ -94,7 +94,7 @@ public class ReportController {
             LOGGER.error(e.getMessage(), e);
             return new ResponseEntity<>(createErrorResponseBody(
                 DEFAULT_ADDRESS, CLIENT_ERROR_CODE, FAULT_CODE_CLIENT, "This is not a valid XML message", e.getMessage()),
-                BAD_REQUEST);
+                INTERNAL_SERVER_ERROR);
         } catch (XmlException e) {
             LOGGER.error(e.getMessage(), e);
             return new ResponseEntity<>(createErrorResponseBody(
@@ -103,7 +103,7 @@ public class ReportController {
         } catch (ItkXmlException e) {
             LOGGER.error(e.getReason(), e);
             return new ResponseEntity<>(createErrorResponseBody(
-                DEFAULT_ADDRESS, CLIENT_ERROR_CODE, FAULT_CODE_CLIENT, e.getReason(), e.getMessage()), BAD_REQUEST);
+                DEFAULT_ADDRESS, CLIENT_ERROR_CODE, FAULT_CODE_CLIENT, e.getReason(), e.getMessage()), INTERNAL_SERVER_ERROR);
         } catch (SoapClientException e) {
             LOGGER.error(e.getReason(), e);
             return new ResponseEntity<>(createErrorResponseBody(
