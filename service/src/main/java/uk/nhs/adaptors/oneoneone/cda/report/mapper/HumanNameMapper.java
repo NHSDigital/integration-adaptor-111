@@ -1,5 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.hl7.fhir.dstu3.model.HumanName.NameUse.OFFICIAL;
+
 import java.util.stream.Stream;
 
 import org.hl7.fhir.dstu3.model.HumanName;
@@ -44,7 +46,7 @@ public class HumanNameMapper {
             humanName.setPeriod(periodMapper.mapPeriod(itkPersonName.getValidTime()));
         }
 
-        humanName.setUse(HumanName.NameUse.USUAL);
+        humanName.setUse(OFFICIAL);
 
         return humanName;
     }

@@ -5,7 +5,7 @@ import static java.nio.file.Files.readAllBytes;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 import static org.springframework.http.MediaType.TEXT_XML_VALUE;
@@ -69,7 +69,7 @@ public class ReportControllerIT {
             .post(REPORT_ENDPOINT)
             .then()
             .contentType(TEXT_XML_VALUE)
-            .statusCode(BAD_REQUEST.value())
+            .statusCode(INTERNAL_SERVER_ERROR.value())
             .extract();
     }
 

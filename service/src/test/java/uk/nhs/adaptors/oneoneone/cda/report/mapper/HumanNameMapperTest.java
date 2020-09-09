@@ -1,6 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.HumanName.NameUse.OFFICIAL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -66,6 +67,6 @@ public class HumanNameMapperTest {
         assertThat(humanName.getSuffixAsSingleString()).isEqualTo(SUFFIX);
         assertThat(humanName.getFamily()).isEqualTo(FAMILY);
         assertThat(humanName.getPeriod()).isEqualTo(period);
-        assertThat(humanName.getUse()).isEqualTo(HumanName.NameUse.USUAL);
+        assertThat(humanName.getUse()).isEqualTo(OFFICIAL);
     }
 }
