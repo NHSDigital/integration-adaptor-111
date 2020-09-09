@@ -1,12 +1,15 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+import static org.hl7.fhir.dstu3.model.Composition.CompositionStatus.FINAL;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
 import java.util.Date;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
@@ -29,7 +32,9 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 @AllArgsConstructor
 public class CompositionMapper {
 
-    private static final String SNOMED = "371531000";
+    private static final String SNOMED_SYSTEM = "http://snomed.info/sct";
+    private static final String SNOMED_CODE = "371531000";
+    private static final String SNOMED_CODE_DISPLAY = "Report of clinical encounter (record artifact)";
     private static final String COMPOSITION_TITLE = "111 Report";
     private final AuthorMapper authorMapper;
     private final NodeUtil nodeUtil;
@@ -47,14 +52,13 @@ public class CompositionMapper {
         }
 
         Identifier docIdentifier = new Identifier();
-        docIdentifier.setUse(Identifier.IdentifierUse.USUAL);
+        docIdentifier.setUse(USUAL);
         docIdentifier.setValue(clinicalDocument.getSetId().getRoot());
 
         composition
             .setTitle(COMPOSITION_TITLE)
-            .setType(new CodeableConcept()
-                .setText(SNOMED))
-            .setStatus(Composition.CompositionStatus.FINAL)
+            .setType(createCodeableConcept())
+            .setStatus(FINAL)
             .setEncounter(new Reference(encounter))
             .setEncounterTarget(encounter)
             .setSubject(encounter.getSubject())
@@ -70,7 +74,7 @@ public class CompositionMapper {
         if (isNotEmpty(clinicalDocument.getRelatedDocumentArray())
             && clinicalDocument.getRelatedDocumentArray(0).getParentDocument().getIdArray(0).isSetRoot()) {
             Identifier relatedDocIdentifier = new Identifier();
-            relatedDocIdentifier.setUse(Identifier.IdentifierUse.USUAL);
+            relatedDocIdentifier.setUse(USUAL);
             relatedDocIdentifier.setValue(clinicalDocument.getRelatedDocumentArray(0).getParentDocument().getIdArray(0).getRoot());
             composition.addRelatesTo()
                 .setCode(Composition.DocumentRelationshipType.REPLACES)
@@ -107,5 +111,10 @@ public class CompositionMapper {
         }
 
         return composition;
+    }
+
+    private CodeableConcept createCodeableConcept() {
+        Coding coding = new Coding(SNOMED_SYSTEM, SNOMED_CODE, SNOMED_CODE_DISPLAY);
+        return new CodeableConcept(coding);
     }
 }

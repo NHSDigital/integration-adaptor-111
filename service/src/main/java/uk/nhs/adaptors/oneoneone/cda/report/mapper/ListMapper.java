@@ -1,11 +1,15 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
+import static org.hl7.fhir.dstu3.model.ListResource.ListMode.WORKING;
+import static org.hl7.fhir.dstu3.model.ListResource.ListStatus.CURRENT;
 
 import java.util.Collection;
 import java.util.Date;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.ListResource;
@@ -20,7 +24,9 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 @RequiredArgsConstructor
 public class ListMapper {
 
-    private static final String SNOMED = "225390008";
+    private static final String SNOMED_SYSTEM = "http://snomed.info/sct";
+    private static final String SNOMED_CODE_TRIAGE = "225390008";
+    private static final String SNOMED_DISPLAY_TRIAGE = "Triage";
     private static final String LIST_TITLE = "111 Report List";
     private static final String ORDER_BY = "event-date";
     private static final Reference TRANSFORMER_DEVICE = new Reference("Device/1");
@@ -32,14 +38,14 @@ public class ListMapper {
         listResource.setIdElement(newRandomUuid());
 
         Identifier docIdentifier = new Identifier();
-        docIdentifier.setUse(Identifier.IdentifierUse.USUAL);
+        docIdentifier.setUse(USUAL);
         docIdentifier.setValue(clinicalDocument.getSetId().getRoot());
 
         listResource
-            .setStatus(ListResource.ListStatus.CURRENT)
+            .setStatus(CURRENT)
             .setTitle(LIST_TITLE)
-            .setMode(ListResource.ListMode.WORKING)
-            .setCode(new CodeableConcept().setText(SNOMED))
+            .setMode(WORKING)
+            .setCode(createCodeableConcept())
             .setSubject(encounter.getSubject())
             .setSourceTarget(encounter.getSubjectTarget())
             .setEncounter(new Reference(encounter))
@@ -55,5 +61,10 @@ public class ListMapper {
             .forEach(listResource::addEntry);
 
         return listResource;
+    }
+
+    private CodeableConcept createCodeableConcept() {
+        Coding coding = new Coding(SNOMED_SYSTEM, SNOMED_CODE_TRIAGE, SNOMED_DISPLAY_TRIAGE);
+        return new CodeableConcept(coding);
     }
 }
