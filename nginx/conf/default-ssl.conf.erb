@@ -1,3 +1,8 @@
+map  $ssl_client_s_dn  $ssl_client_s_dn_cn {
+  default "";
+  ~(^|,)CN=(?<CN>[^,]+) $CN;
+}
+
 server {
     listen       443 ssl default_server;
     server_name  _;
@@ -5,7 +10,8 @@ server {
     ssl_certificate_key /etc/ssl/server_private.key;
     ssl_client_certificate /etc/ssl/client_public.crt;
     ssl_verify_client optional;
-    ssl_crl /etc/ssl/revocation_list.crl;
+    ssl_verify_depth 10;
+    # ssl_crl /etc/ssl/revocation_list.crl;
 
     error_log /dev/stdout;
     access_log /dev/stdout;
@@ -21,14 +27,19 @@ server {
       if ($ssl_client_verify != SUCCESS) {
         return 403;
       }
+
+      if ($ssl_client_s_dn_cn != $ssl_server_name) {
+        return 403 "Client and Server Certificates Names does not match";
+      }
     }
 
     location /auth_test {
-    # do something with the CN and SAN.
+    # do something with the CN and SAN
     # tried these embedded vars so far, to no avail
     return 200 "
     Client S DN: $ssl_client_s_dn
     Client I DN: $ssl_client_i_dn
+    Client CN: $ssl_client_s_dn_cn
     Server CN: $ssl_server_name
     Client Verify: $ssl_client_verify
     ";
