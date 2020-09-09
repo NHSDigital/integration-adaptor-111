@@ -10,7 +10,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -85,7 +84,7 @@ public class ReportControllerTest {
         String invalidRequest = "<invalid>";
 
         ResponseEntity<String> response = reportController.postReport(invalidRequest);
-        assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+        assertThat(response.getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR);
     }
 
     @Test

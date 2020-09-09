@@ -3,7 +3,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.controller;
 import static java.util.UUID.randomUUID;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;

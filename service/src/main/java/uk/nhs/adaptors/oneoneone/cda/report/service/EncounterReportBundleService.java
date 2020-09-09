@@ -116,7 +116,10 @@ public class EncounterReportBundleService {
             if (appointment.hasParticipant()) {
                 for (Appointment.AppointmentParticipantComponent participant : appointment.getParticipant()) {
                     if (participant.hasActor()) {
-                        addEntry(bundle, participant.getActorTarget());
+                        Resource actorTarget = participant.getActorTarget();
+                        if (!(actorTarget instanceof Patient)) {
+                            addEntry(bundle, actorTarget);
+                        }
                     }
                 }
             }
@@ -169,9 +172,7 @@ public class EncounterReportBundleService {
     private void addIncomingReferral(Bundle bundle, Encounter encounter) {
         ReferralRequest referralRequest = (ReferralRequest) encounter.getIncomingReferralFirstRep().getResource();
         addEntry(bundle, referralRequest);
-        if (referralRequest.hasSubject()) {
-            addEntry(bundle, referralRequest.getSubjectTarget());
-        }
+
         if (referralRequest.hasRequester()) {
             addEntry(bundle, referralRequest.getRequester().getOnBehalfOfTarget());
         }
