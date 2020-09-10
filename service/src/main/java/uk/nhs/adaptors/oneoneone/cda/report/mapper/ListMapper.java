@@ -1,5 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static java.util.Arrays.asList;
+
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
 import static org.hl7.fhir.dstu3.model.ListResource.ListMode.WORKING;
@@ -10,10 +12,19 @@ import java.util.Date;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
+import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.ListResource;
+import org.hl7.fhir.dstu3.model.Observation;
+import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Practitioner;
+import org.hl7.fhir.dstu3.model.Provenance;
+import org.hl7.fhir.dstu3.model.Questionnaire;
+import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.hl7.fhir.dstu3.model.RelatedPerson;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +41,8 @@ public class ListMapper {
     private static final String LIST_TITLE = "111 Report List";
     private static final String ORDER_BY = "event-date";
     private static final Reference TRANSFORMER_DEVICE = new Reference("Device/1");
+    private static final Collection<Class> TRIAGE_RESOURCES = asList(Condition.class, Questionnaire.class, QuestionnaireResponse.class,
+        Observation.class, Organization.class, Practitioner.class, Provenance.class, ReferralRequest.class, RelatedPerson.class);
 
     public ListResource mapList(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
         Collection<Resource> resourcesCreated) {
@@ -55,6 +68,7 @@ public class ListMapper {
             .setOrderedBy(new CodeableConcept().setText(ORDER_BY));
 
         resourcesCreated.stream()
+            .filter(it -> TRIAGE_RESOURCES.contains(it.getClass()))
             .map(Resource::getIdElement)
             .map(Reference::new)
             .map(ListResource.ListEntryComponent::new)
