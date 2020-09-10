@@ -49,5 +49,14 @@ run-curl61:
 run-curl7:
 	sh -c 'curl --cert nginx/certs/nhs_certs/test05.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test05_cert_chain.txt --request POST https://test02.oneoneone.nhs.uk:8443/report --resolve test02.oneoneone.nhs.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
 
+run-curl71:
+	sh -c 'curl --cert nginx/certs/nhs_certs/test05.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test05_cert_chain.txt --request POST https://test05.opentest.hscic.gov.uk:8443/report --resolve test05.opentest.hscic.gov.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
+
+run-curl72:
+	sh -c 'curl -k --cert nginx/certs/nhs_certs/test05.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test05_cert_chain.txt --request POST https://test05.opentest.hscic.gov.uk:8443/auth_test --resolve test05.opentest.hscic.gov.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
+
+run-curl73:
+	sh -c 'curl -k --cert nginx/certs/nhs_certs/test05.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test05_cert_chain.txt --request POST https://test05.opentest.hscic.gov.uk:8443/report --resolve test05.opentest.hscic.gov.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
+
 run-curl8:
 	sh -c 'curl --cert nginx/certs/nhs_certs/test05.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test05_cert_chain.txt https://test02.oneoneone.nhs.uk:8443/auth_test --resolve test02.oneoneone.nhs.uk:8443:127.0.0.1'
