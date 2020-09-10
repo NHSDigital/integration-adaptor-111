@@ -26,19 +26,19 @@ server {
       access_log /dev/stdout;
 
       if ($ssl_client_verify != SUCCESS) {
-        return 403 "SSL Verification failed";
+        return 403 "Mutual authentication failed"; # General fail from nginx
       }
 
       if ($ssl_client_s_dn_cn != $ssl_server_name) {
-        return 403 "Client and Server Certificates Names does not match";
+        return 403 "Mutual authentication failed"; # Client and Server Certificates Names does not match
       }
 
       if ($ssl_server_name != "<%= ENV['SERVER_SSL_CN'] %>") {
-        return 403 "Server using an SSL cert for different domain than requested";
+        return 403 "Mutual authentication failed"; # Server using an SSL cert for different domain than requested
       }
 
       if ($ssl_client_s_dn_cn != "<%= ENV['SERVER_SSL_CN'] %>") {
-        return 403 "Server using an SSL cert for different domain than the one in client cert";
+        return 403 "Mutual authentication failed"; # Server using an SSL cert for different domain than the one in client cert
       }
     }
 
