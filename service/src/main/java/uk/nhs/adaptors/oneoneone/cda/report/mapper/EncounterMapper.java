@@ -195,12 +195,6 @@ public class EncounterMapper {
                                 encounter.addType(new CodeableConcept().setText(encounterType.toString()));
                             }
                         }
-                        if (encounterITK.isSetCode()) {
-                            String reason = encounterITK.getCode().getDisplayName();
-                            if (reason != null) {
-                                encounter.addReason(new CodeableConcept().setText(reason));
-                            }
-                        }
                     }
                 }
             }

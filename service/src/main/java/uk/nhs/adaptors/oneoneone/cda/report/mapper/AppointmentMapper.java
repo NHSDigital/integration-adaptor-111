@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.time.DateUtils;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Appointment.AppointmentParticipantComponent;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -62,8 +63,22 @@ public class AppointmentMapper {
             .setStatus(ACCEPTED));
 
         getAppointmentParticipantComponents(itkEncounter).forEach(appointment::addParticipant);
-
+        appointment.addReason(getReason(entry));
         return Optional.of(appointment);
+    }
+
+    private CodeableConcept getReason(POCDMT000002UK01Entry entry) {
+        if (entry.isSetEncounter()) {
+            POCDMT000002UK01Encounter encounterITK = entry.getEncounter();
+            if (encounterITK.isSetCode()) {
+                String reason = encounterITK.getCode().getDisplayName();
+                if (reason != null) {
+                    return new CodeableConcept().setText(reason);
+                }
+            }
+        }
+
+        return null;
     }
 
     private List<AppointmentParticipantComponent> getAppointmentParticipantComponents(POCDMT000002UK01Encounter itkEncounter) {
