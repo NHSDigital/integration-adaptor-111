@@ -51,7 +51,6 @@ import uk.nhs.connect.iucds.cda.ucr.TS;
 @RunWith(MockitoJUnitRunner.class)
 public class EncounterMapperTest {
 
-    private static final String REASON = "Patient convenience appointment";
     @Mock
     private ParticipantMapper participantMapper;
     @Mock
@@ -228,10 +227,7 @@ public class EncounterMapperTest {
         when(entry.getEncounter()).thenReturn(encounter);
         when(encounter.isSetTypeId()).thenReturn(true);
         when(encounter.getTypeId()).thenReturn(typeId);
-        when(encounter.isSetCode()).thenReturn(true);
         when(typeId.getAssigningAuthorityName()).thenReturn(EncounterType.ADMS.toString());
-        when(encounter.getCode()).thenReturn(cdnPfITCDAUrl);
-        when(cdnPfITCDAUrl.getDisplayName()).thenReturn(REASON);
         when(entry.isSetEncounter()).thenReturn(true);
     }
 
@@ -254,7 +250,6 @@ public class EncounterMapperTest {
         assertThat(encounter.getEpisodeOfCareFirstRep().getResource()).isEqualTo(episodeOfCare);
         assertThat(encounter.getIncomingReferralFirstRep().getResource()).isEqualTo(referralRequest);
         assertThat(encounter.getDiagnosisFirstRep()).isEqualTo(diagnosis);
-        assertThat(encounter.getReason().get(0).getText()).isEqualTo(REASON);
         assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(EncounterType.ADMS.toString());
     }
 

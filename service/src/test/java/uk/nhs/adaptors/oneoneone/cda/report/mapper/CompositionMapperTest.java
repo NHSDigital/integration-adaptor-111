@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
@@ -69,7 +70,10 @@ public class CompositionMapperTest {
         Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter);
 
         assertThat(composition.getTitle()).isEqualTo("111 Report");
-        assertThat(composition.getType().getText()).isEqualTo("371531000");
+        Coding code = composition.getType().getCodingFirstRep();
+        assertThat(code.getCode()).isEqualTo("371531000");
+        assertThat(code.getSystem()).isEqualTo("http://snomed.info/sct");
+        assertThat(code.getDisplay()).isEqualTo("Report of clinical encounter (record artifact)");
         assertThat(composition.getStatus()).isEqualTo(Composition.CompositionStatus.FINAL);
         assertThat(composition.getConfidentiality()).isEqualTo(Composition.DocumentConfidentiality.V);
         assertThat(composition.getRelatesTo().get(0).getCode()).isEqualTo(Composition.DocumentRelationshipType.REPLACES);

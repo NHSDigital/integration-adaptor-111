@@ -1,11 +1,15 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static java.time.Instant.parse;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Appointment.AppointmentStatus.BOOKED;
+import static org.hl7.fhir.dstu3.model.Appointment.ParticipantRequired.REQUIRED;
+import static org.hl7.fhir.dstu3.model.Appointment.ParticipationStatus.ACCEPTED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.Optional;
 
@@ -20,6 +24,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.CDNPfITCDAUrl;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
@@ -35,6 +40,7 @@ public class AppointmentMapperTest {
     private static final String TITLE = "title";
     private static final String COMMENT = "comment";
     private static final int MINUTES_DURATION = 10;
+    private static final String REASON = "TheReason";
     @Mock
     private LocationMapper locationMapper;
     @InjectMocks
@@ -58,16 +64,17 @@ public class AppointmentMapperTest {
         assertThat(appointmentOptional.isPresent());
         Appointment appointment = appointmentOptional.get();
         assertThat(appointment.getIdElement().getValue()).startsWith("urn:uuid:");
-        assertThat(appointment.getStatus()).isEqualTo(Appointment.AppointmentStatus.BOOKED);
+        assertThat(appointment.getStatus()).isEqualTo(BOOKED);
         assertThat(appointment.getIncomingReferral().get(0)).isEqualTo(referralRequest);
-        assertThat(appointment.getStart()).isEqualTo(Date.from(Instant.parse("2011-05-19T19:45:00.00Z")));
-        assertThat(appointment.getEnd()).isEqualTo(Date.from(Instant.parse("2011-05-19T19:55:00.00Z")));
+        assertThat(appointment.getStart()).isEqualTo(Date.from(parse("2011-05-19T19:45:00.00Z")));
+        assertThat(appointment.getEnd()).isEqualTo(Date.from(parse("2011-05-19T19:55:00.00Z")));
         assertThat(appointment.getMinutesDuration()).isEqualTo(MINUTES_DURATION);
         assertThat(appointment.getDescription()).isEqualTo(TITLE);
         assertThat(appointment.getComment()).isEqualTo(COMMENT);
         assertThat(appointment.getParticipantFirstRep().getActor()).isEqualTo(patient);
-        assertThat(appointment.getParticipantFirstRep().getRequired()).isEqualTo(Appointment.ParticipantRequired.REQUIRED);
-        assertThat(appointment.getParticipantFirstRep().getStatus()).isEqualTo(Appointment.ParticipationStatus.ACCEPTED);
+        assertThat(appointment.getParticipantFirstRep().getRequired()).isEqualTo(REQUIRED);
+        assertThat(appointment.getParticipantFirstRep().getStatus()).isEqualTo(ACCEPTED);
+        assertThat(appointment.getReasonFirstRep().getText()).isEqualTo(REASON);
     }
 
     private POCDMT000002UK01Entry mockEntry() {
@@ -81,6 +88,11 @@ public class AppointmentMapperTest {
         when(encounter.getEffectiveTime()).thenReturn(time);
         when(time.getValue()).thenReturn("201105191945+00");
         when(participant.getParticipantRole()).thenReturn(participantRole);
+        when(entry.isSetEncounter()).thenReturn(true);
+        when(encounter.isSetCode()).thenReturn(true);
+        CDNPfITCDAUrl cdnPfITCDAUrl = mock(CDNPfITCDAUrl.class);
+        when(encounter.getCode()).thenReturn(cdnPfITCDAUrl);
+        when(cdnPfITCDAUrl.getDisplayName()).thenReturn(REASON);
         return entry;
     }
 
