@@ -1,5 +1,15 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.DiagnosisComponent;
@@ -18,6 +28,8 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import uk.nhs.adaptors.oneoneone.cda.report.objects.EncounterHelper;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.connect.iucds.cda.ucr.CDNPfITCDAUrl;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Author;
@@ -36,16 +48,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RecordTarget;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 import uk.nhs.connect.iucds.cda.ucr.TS;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class EncounterMapperTest {
@@ -112,6 +114,9 @@ public class EncounterMapperTest {
     private POCDMT000002UK01InfrastructureRootTypeId typeId;
     @Mock
     private CDNPfITCDAUrl cdnPfITCDAUrl;
+    @Mock
+    private AppointmentMapper appointmentMapper;
+    private Optional<Appointment> optionalAppointment;
 
     @BeforeEach
     public void setUp() {
@@ -124,6 +129,8 @@ public class EncounterMapperTest {
         when(clinicalDocument.sizeOfRecordTargetArray()).thenReturn(1);
         when(recordTarget.getPatientRole()).thenReturn(patientRole);
         when(patientRole.getProviderOrganization()).thenReturn(organization);
+
+        optionalAppointment = Optional.of(appointment);
 
         mockClinicalDocument(clinicalDocument);
         mockParticipant(clinicalDocument);
@@ -167,7 +174,7 @@ public class EncounterMapperTest {
     }
 
     private void mockAppointment() {
-        when(appointmentService.retrieveAppointment(any(), any(), any())).thenReturn(Optional.of(appointment));
+        when(appointmentService.retrieveAppointment(any(), any())).thenReturn(Optional.of(appointment));
     }
 
     private void mockSubject() {
@@ -180,7 +187,7 @@ public class EncounterMapperTest {
     }
 
     private void mockReferralRequest() {
-        when(referralRequestMapper.mapReferralRequest(any(), any()))
+        when(referralRequestMapper.mapReferralRequest(any(), any(), any()))
             .thenReturn(referralRequest);
     }
 
@@ -225,8 +232,9 @@ public class EncounterMapperTest {
 
     @Test
     public void shouldMapEncounter() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
-        verifyEncounter(encounter);
+        EncounterHelper encounterHelper = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+
+        verifyEncounter(encounterHelper.getEncounter());
     }
 
     private void verifyEncounter(Encounter encounter) {
@@ -235,12 +243,10 @@ public class EncounterMapperTest {
         assertThat(encounter.getStatus()).isEqualTo(FINISHED);
         assertThat(encounter.getPeriod()).isEqualTo(period);
         assertThat(encounter.getParticipantFirstRep()).isEqualTo(encounterParticipantComponent);
-        assertThat(encounter.getAppointmentTarget()).isEqualTo(appointment);
         assertThat(encounter.getServiceProviderTarget()).isEqualTo(serviceProvider);
         assertThat(encounter.getLocationFirstRep()).isEqualTo(locationComponent);
         assertThat(encounter.getSubjectTarget()).isEqualTo(patient);
         assertThat(encounter.getEpisodeOfCareFirstRep().getResource()).isEqualTo(episodeOfCare);
-        assertThat(encounter.getIncomingReferralFirstRep().getResource()).isEqualTo(referralRequest);
         assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(EncounterType.ADMS.toString());
     }
 
@@ -248,18 +254,20 @@ public class EncounterMapperTest {
     public void mapEncounterTest() {
         mockParticipant(clinicalDocument);
 
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
-        verifyEncounter(encounter);
+        EncounterHelper encounterHelper = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        encounterHelper.setAppointment(optionalAppointment);
+        encounterHelper.setReferralRequest(referralRequest);
+        verifyEncounter(encounterHelper.getEncounter());
     }
 
     @Test
     @SuppressWarnings("MagicNumber")
     public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
-        verifyEncounter(encounter);
+        EncounterHelper encounterHelper = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        verifyEncounter(encounterHelper.getEncounter());
 
-        assertThat(encounter.getParticipant().size()).isEqualTo(5);
-        for (Encounter.EncounterParticipantComponent component : encounter.getParticipant()) {
+        assertThat(encounterHelper.getEncounter().getParticipant().size()).isEqualTo(5);
+        for (Encounter.EncounterParticipantComponent component : encounterHelper.getEncounter().getParticipant()) {
             assertThat(component).isEqualTo(encounterParticipantComponent);
         }
     }

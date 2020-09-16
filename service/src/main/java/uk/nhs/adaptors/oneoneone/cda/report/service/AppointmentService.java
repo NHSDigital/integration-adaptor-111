@@ -27,8 +27,7 @@ public class AppointmentService {
     private static final String SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
     private final AppointmentMapper appointmentMapper;
 
-    public Optional<Appointment> retrieveAppointment(Reference referralRequest, Reference patient,
-        POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+    public Optional<Appointment> retrieveAppointment(Reference patient, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         POCDMT000002UK01StructuredBody structuredBody = clinicalDocument.getComponent().getStructuredBody();
         POCDMT000002UK01Component3[] components = structuredBody.getComponentArray();
         if (components == null) {
@@ -38,7 +37,7 @@ public class AppointmentService {
         Optional<POCDMT000002UK01Entry> entry = getAppointmentEntry(components);
         Optional<POCDMT000002UK01Section> matchingSection = getAppointmentSection(components);
         if (entry.isPresent() && matchingSection.isPresent()) {
-            return appointmentMapper.mapAppointment(entry.get(), matchingSection.get(), referralRequest, patient);
+            return appointmentMapper.mapAppointment(entry.get(), matchingSection.get(), patient);
         } else {
             return Optional.empty();
         }

@@ -33,8 +33,7 @@ public class StructuredBodyUtil {
             && entry.getContentId().getExtension().equals(template);
     }
 
-    public List<POCDMT000002UK01Entry> getEntriesOfType(
-        POCDMT000002UK01StructuredBody structuredBody,
+    public List<POCDMT000002UK01Entry> getEntriesOfType(POCDMT000002UK01StructuredBody structuredBody,
         String template) {
 
         if (structuredBody == null) {

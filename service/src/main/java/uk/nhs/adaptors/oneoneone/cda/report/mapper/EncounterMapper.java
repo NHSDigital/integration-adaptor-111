@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterLocationComponent;
@@ -27,6 +26,7 @@ import org.hl7.fhir.dstu3.model.codesystems.EncounterType;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.objects.EncounterHelper;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
@@ -65,7 +65,8 @@ public class EncounterMapper {
 
     private final GroupMapper groupMapper;
 
-    public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<HealthcareService> healthcareServiceList) {
+    public EncounterHelper mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<HealthcareService> healthcareServiceList) {
+        EncounterHelper encounterHelper = new EncounterHelper();
         Encounter encounter = new Encounter();
         encounter.setIdElement(newRandomUuid());
         encounter.setStatus(FINISHED);
@@ -74,11 +75,12 @@ public class EncounterMapper {
         setServiceProvider(encounter, clinicalDocument);
         setSubject(encounter, clinicalDocument);
         encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument, encounter));
-        setReferralRequest(encounter, healthcareServiceList);
-        setAppointment(encounter, clinicalDocument);
+        setAppointment(encounter, clinicalDocument, encounterHelper);
         setEpisodeOfCare(encounter, clinicalDocument);
         setEncounterReasonAndType(encounter, clinicalDocument);
-        return encounter;
+        setReferralRequest(clinicalDocument, encounter, healthcareServiceList, encounterHelper);
+        encounterHelper.setEncounter(encounter);
+        return encounterHelper;
     }
 
     private List<EncounterLocationComponent> getLocationComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
@@ -151,21 +153,11 @@ public class EncounterMapper {
         return encounterParticipantComponents;
     }
 
-    private void setReferralRequest(Encounter encounter, List<HealthcareService> healthcareServiceList) {
-        ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(encounter, healthcareServiceList);
-        Reference referralRequestRef = new Reference(referralRequest);
-        encounter.addIncomingReferral(referralRequestRef);
-    }
-
-    private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        Reference referralRequest = encounter.getIncomingReferralFirstRep();
+    private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument,
+        EncounterHelper encounterHelper) {
         Reference patient = encounter.getSubject();
 
-        Optional<Appointment> appointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument);
-        if (appointment.isPresent()) {
-            encounter.setAppointment(new Reference(appointment.get()));
-            encounter.setAppointmentTarget(appointment.get());
-        }
+        encounterHelper.setAppointment(appointmentService.retrieveAppointment(patient, clinicalDocument));
     }
 
     private void setEpisodeOfCare(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -190,6 +182,12 @@ public class EncounterMapper {
                 }
             }
         }
+    }
+
+    private void setReferralRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
+        List<HealthcareService> healthcareServiceList, EncounterHelper encounterHelper) {
+        ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument, encounter, healthcareServiceList);
+        encounterHelper.setReferralRequest(referralRequest);
     }
 
     private Optional<Patient> getPatient(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {

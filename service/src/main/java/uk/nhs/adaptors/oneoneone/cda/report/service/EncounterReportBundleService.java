@@ -30,6 +30,7 @@ import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.AppointmentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConditionMapper;
@@ -37,6 +38,8 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.objects.EncounterHelper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -53,6 +56,8 @@ public class EncounterReportBundleService {
     private final PathwayUtil pathwayUtil;
     private final MessageHeaderService messageHeaderService;
     private final ConditionMapper conditionMapper;
+    private final ReferralRequestMapper referralRequestMapper;
+    private final AppointmentMapper appointmentMapper;
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
@@ -65,13 +70,15 @@ public class EncounterReportBundleService {
         bundle.setType(MESSAGE);
 
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        EncounterHelper encounterHelper = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        Encounter encounter = encounterHelper.getEncounter();
         Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter);
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
         List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
             encounter.getSubject(), new Reference(encounter));
         Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, questionnaireResponseList, condition);
+        encounter = addEncounterObjects(encounter, encounterHelper, clinicalDocument, questionnaireResponseList);
 
         addEntry(bundle, messageHeaderService.createMessageHeader());
         addEncounter(bundle, encounter);
@@ -93,6 +100,24 @@ public class EncounterReportBundleService {
         addList(bundle, listResource);
 
         return bundle;
+    }
+
+    private Encounter addEncounterObjects(Encounter encounter, EncounterHelper encounterHelper,
+        POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<QuestionnaireResponse> questionnaireResponseList) {
+        if (encounterHelper.getReferralRequest() != null) {
+            encounter.addIncomingReferral(new Reference(referralRequestMapper.addCondition(
+                encounterHelper.getReferralRequest(), clinicalDocument, encounter, questionnaireResponseList)));
+        }
+
+        encounterHelper.getAppointment()
+            .map(encounterAppointment -> appointmentMapper.addReferralRequest(encounterAppointment,
+                encounterHelper.getReferralRequest()))
+            .ifPresent(appointment -> {
+                encounter.setAppointment(new Reference(appointment));
+                encounter.setAppointmentTarget(appointment);
+            });
+
+        return encounter;
     }
 
     private ListResource getReferenceFromBundle(Bundle bundle, POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {

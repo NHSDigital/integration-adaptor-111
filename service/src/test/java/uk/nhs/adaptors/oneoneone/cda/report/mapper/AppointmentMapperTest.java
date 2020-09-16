@@ -5,6 +5,7 @@ import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -48,18 +49,17 @@ public class AppointmentMapperTest {
     public void shouldMapAppointment() {
         POCDMT000002UK01Entry entry = mockEntry();
         POCDMT000002UK01Section section = mockSection();
-        Reference referralRequest = mock(Reference.class);
+        ReferralRequest referralRequest = mock(ReferralRequest.class);
         Reference patient = mock(Reference.class);
 
         when(locationMapper.mapRoleToLocation(any())).thenReturn(location);
 
-        Optional<Appointment> appointmentOptional = appointmentMapper.mapAppointment(entry, section, referralRequest, patient);
-
+        Optional<Appointment> appointmentOptional = appointmentMapper.mapAppointment(entry, section, patient);
         assertThat(appointmentOptional.isPresent());
-        Appointment appointment = appointmentOptional.get();
+        Appointment appointment = appointmentMapper.addReferralRequest(appointmentOptional.get(), referralRequest);
         assertThat(appointment.getIdElement().getValue()).startsWith("urn:uuid:");
         assertThat(appointment.getStatus()).isEqualTo(BOOKED);
-        assertThat(appointment.getIncomingReferral().get(0)).isEqualTo(referralRequest);
+        assertThat((ReferralRequest) appointment.getIncomingReferral().get(0).getResource()).isEqualTo(referralRequest);
         assertThat(appointment.getStart()).isNull();
         assertThat(appointment.getEnd()).isNull();
         assertThat(appointment.getMinutesDuration()).isEqualTo(0);
