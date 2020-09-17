@@ -38,7 +38,7 @@ The 111 application by itself does not offer TLS termination. If there is a need
 
 8. Create a PKCS12 cert for client
 
-  > `openssl pkcs12 -export -inkey client_private.key -in client_public.cer -out client.p12`
+  > `openssl pkcs12 -export -inkey client_private.key -in client_public.cer -out client_pkcs.p12`
 
 ## Running the local environment
 
