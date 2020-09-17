@@ -7,6 +7,9 @@ import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Encounter;
@@ -14,6 +17,7 @@ import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -111,14 +115,23 @@ public class LocationMapperTest {
     public void shouldMapRecipientToLocation() {
         POCDMT000002UK01IntendedRecipient itkIntendedRecipient = mock(POCDMT000002UK01IntendedRecipient.class);
 
+        AD itkAddress = mock(AD.class);
         TEL itkTelecom = mock(TEL.class);
 
+        when(itkIntendedRecipient.sizeOfAddrArray()).thenReturn(new AD[]{itkAddress}.length);
+        when(addressMapper.mapAddress(any())).thenReturn(address);
         when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[]{itkTelecom});
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
+        when(itkIntendedRecipient.isSetReceivedOrganization()).thenReturn(true);
+        when(organizationMapper.mapOrganization(any())).thenReturn(organization);
 
         Location referenceRecipientToLocation = locationMapper
                 .mapRecipientToLocation(itkIntendedRecipient);
 
         assertThat(referenceRecipientToLocation.getId().startsWith("urn:uuid:"));
+        assertThat(referenceRecipientToLocation.getAddress()).isEqualTo(address);
+        assertThat(referenceRecipientToLocation.getTelecom()).isEqualTo(new ArrayList<>(Arrays.asList(contactPoint)));
+        assertThat(referenceRecipientToLocation.getManagingOrganization()).isNotNull();
+        assertThat(referenceRecipientToLocation.getManagingOrganizationTarget()).isEqualTo(organization);
     }
 }
