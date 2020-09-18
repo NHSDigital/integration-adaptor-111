@@ -3,7 +3,7 @@
     "type": "transaction",
     "entry": [
         {
-            "fullUrl": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2",
+            "fullUrl": "urn:uuid:d7b9998e-9e14-469f-8418-779dd8bd3a10",
             "resource": {
                 "resourceType": "Encounter",
                 "status": "finished",
@@ -13,16 +13,16 @@
                     }
                 ],
                 "subject": {
-                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                    "reference": "urn:uuid:397b1ddd-b441-4e86-b64e-77dc6f83fc2b"
                 },
                 "episodeOfCare": [
                     {
-                        "reference": "urn:uuid:18defd92-02c6-4381-bd0c-d935a5380198"
+                        "reference": "urn:uuid:6bff3569-2257-46bc-b600-27c46b583fac"
                     }
                 ],
                 "incomingReferral": [
                     {
-                        "reference": "urn:uuid:bd352abe-6f2a-457d-bd99-20f74db0c6ec"
+                        "reference": "urn:uuid:17e313ac-8417-4b20-a256-4423ab0f8918"
                     }
                 ],
                 "participant": [
@@ -33,11 +33,11 @@
                             }
                         ],
                         "period": {
-                            "start": "2011-05-19T20:45:00+01:00",
-                            "end": "2011-05-19T21:15:00+01:00"
+                            "start": "2011-05-19T21:45:00+02:00",
+                            "end": "2011-05-19T22:15:00+02:00"
                         },
                         "individual": {
-                            "reference": "urn:uuid:aa13247a-6ca5-4c02-aa0b-d7edefd92865"
+                            "reference": "urn:uuid:a0a85e57-ca08-4103-babe-4e28c2197dc1"
                         }
                     },
                     {
@@ -47,10 +47,10 @@
                             }
                         ],
                         "period": {
-                            "start": "2011-05-19T21:00:00+01:00"
+                            "start": "2011-05-19T22:00:00+02:00"
                         },
                         "individual": {
-                            "reference": "urn:uuid:96f57ae8-8760-4628-9f5a-0fa6def907c7"
+                            "reference": "urn:uuid:8e5c1429-7484-4497-97d8-29235c3662e2"
                         }
                     },
                     {
@@ -60,30 +60,25 @@
                             }
                         ],
                         "period": {
-                            "start": "2011-05-19T20:45:00+01:00",
-                            "end": "2011-05-19T21:15:00+01:00"
+                            "start": "2011-05-19T21:45:00+02:00",
+                            "end": "2011-05-19T22:15:00+02:00"
                         },
                         "individual": {
-                            "reference": "urn:uuid:a8dbe655-b5bb-4ac7-8af3-e7745ed84e16"
+                            "reference": "urn:uuid:23d3ebdb-21af-4725-a232-7c1c9db6f1af"
                         }
                     }
                 ],
                 "appointment": {
-                    "reference": "urn:uuid:e0d6720c-a340-475c-8869-4e8cf3e6ae9c"
+                    "reference": "urn:uuid:a56b5cb5-97bb-4c7f-a15c-1b6de0986fa1"
                 },
                 "period": {
-                    "start": "2011-05-19T21:00:00+01:00"
+                    "start": "2011-05-19T22:00:00+02:00"
                 },
-                "reason": [
-                    {
-                        "text": "Patient convenience appointment"
-                    }
-                ],
                 "diagnosis": [
                     {
-                        "id": "urn:uuid:3373594b-9e2b-4ff0-a2ad-46d022086c09",
+                        "id": "urn:uuid:fd673018-fb84-49fb-a342-432b95866b26",
                         "condition": {
-                            "reference": "urn:uuid:dee227fd-91ff-4648-b5d1-9b2452684cb7"
+                            "reference": "urn:uuid:56345763-36c9-4d33-8882-5c4ce643ad87"
                         },
                         "role": {
                             "text": "role"
@@ -94,18 +89,22 @@
                 "location": [
                     {
                         "location": {
-                            "reference": "urn:uuid:5d466a6a-dc60-4e38-81a8-86bec820d302"
+                            "reference": "urn:uuid:a7112f72-fab7-4b82-8f39-b41fd63f6e38"
                         },
-                        "status": "active"
+                        "status": "active",
+                        "period": {
+                            "start": "2011-05-19T21:45:00+02:00",
+                            "end": "2011-05-19T22:15:00+02:00"
+                        }
                     }
                 ],
                 "serviceProvider": {
-                    "reference": "urn:uuid:f25664e1-28ba-46f6-a53e-0a889b0a8ac7"
+                    "reference": "urn:uuid:0b0f7d3e-d4f0-46a0-92ac-ae82ad391464"
                 }
             }
         },
         {
-            "fullUrl": "urn:uuid:f25664e1-28ba-46f6-a53e-0a889b0a8ac7",
+            "fullUrl": "urn:uuid:0b0f7d3e-d4f0-46a0-92ac-ae82ad391464",
             "resource": {
                 "resourceType": "Organization",
                 "active": true,
@@ -124,6 +123,7 @@
                 ],
                 "address": [
                     {
+                        "use": "work",
                         "line": [
                             "Broomfield Hospital",
                             "Bocking End"
@@ -136,7 +136,7 @@
             }
         },
         {
-            "fullUrl": "urn:uuid:aa13247a-6ca5-4c02-aa0b-d7edefd92865",
+            "fullUrl": "urn:uuid:a0a85e57-ca08-4103-babe-4e28c2197dc1",
             "resource": {
                 "resourceType": "Practitioner",
                 "active": true,
@@ -160,13 +160,13 @@
             }
         },
         {
-            "fullUrl": "urn:uuid:96f57ae8-8760-4628-9f5a-0fa6def907c7",
+            "fullUrl": "urn:uuid:8e5c1429-7484-4497-97d8-29235c3662e2",
             "resource": {
                 "resourceType": "Practitioner",
                 "active": true,
                 "name": [
                     {
-                        "use": "usual",
+                        "use": "official",
                         "family": "Jones",
                         "given": [
                             "Mary"
@@ -176,19 +176,19 @@
             }
         },
         {
-            "fullUrl": "urn:uuid:a8dbe655-b5bb-4ac7-8af3-e7745ed84e16",
+            "fullUrl": "urn:uuid:23d3ebdb-21af-4725-a232-7c1c9db6f1af",
             "resource": {
                 "resourceType": "RelatedPerson",
                 "active": true,
                 "patient": {
-                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                    "reference": "urn:uuid:397b1ddd-b441-4e86-b64e-77dc6f83fc2b"
                 },
                 "relationship": {
                     "text": "Spouse"
                 },
                 "name": [
                     {
-                        "use": "usual",
+                        "use": "official",
                         "family": "Bloggs",
                         "given": [
                             "Helga"
@@ -205,6 +205,7 @@
                 "gender": "unknown",
                 "address": [
                     {
+                        "use": "home",
                         "line": [
                             "43 Summers Avenue",
                             "Somerset Street"
@@ -214,22 +215,22 @@
                     }
                 ],
                 "period": {
-                    "start": "2011-05-19T20:45:00+01:00",
-                    "end": "2011-05-19T21:15:00+01:00"
+                    "start": "2011-05-19T21:45:00+02:00",
+                    "end": "2011-05-19T22:15:00+02:00"
                 }
             }
         },
         {
-            "fullUrl": "urn:uuid:5d466a6a-dc60-4e38-81a8-86bec820d302",
+            "fullUrl": "urn:uuid:a7112f72-fab7-4b82-8f39-b41fd63f6e38",
             "resource": {
                 "resourceType": "Location",
                 "managingOrganization": {
-                    "reference": "urn:uuid:fcf42f25-4c68-4610-8528-4efb8daaa342"
+                    "reference": "urn:uuid:2cd0ac72-7fc5-4128-8e4d-b975696e0ad6"
                 }
             }
         },
         {
-            "fullUrl": "urn:uuid:fcf42f25-4c68-4610-8528-4efb8daaa342",
+            "fullUrl": "urn:uuid:2cd0ac72-7fc5-4128-8e4d-b975696e0ad6",
             "resource": {
                 "resourceType": "Organization",
                 "type": [
@@ -247,6 +248,7 @@
                 ],
                 "address": [
                     {
+                        "use": "work",
                         "line": [
                             "Springer Street"
                         ],
@@ -257,14 +259,14 @@
             }
         },
         {
-            "fullUrl": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6",
+            "fullUrl": "urn:uuid:397b1ddd-b441-4e86-b64e-77dc6f83fc2b",
             "resource": {
                 "resourceType": "Patient",
                 "language": "en",
                 "active": true,
                 "name": [
                     {
-                        "use": "usual",
+                        "use": "official",
                         "family": "Joe",
                         "given": [
                             "Blogg"
@@ -295,6 +297,7 @@
                 "birthDate": "1989-01-01",
                 "address": [
                     {
+                        "use": "home",
                         "line": [
                             "17, County Avenue",
                             "Woodtown"
@@ -305,13 +308,13 @@
                 ],
                 "generalPractitioner": [
                     {
-                        "reference": "urn:uuid:6c97b6c4-b04c-4c13-bf84-9768826bdf1d"
+                        "reference": "urn:uuid:216001e1-f2a9-484d-9d3a-fbe837b44329"
                     }
                 ]
             }
         },
         {
-            "fullUrl": "urn:uuid:6c97b6c4-b04c-4c13-bf84-9768826bdf1d",
+            "fullUrl": "urn:uuid:216001e1-f2a9-484d-9d3a-fbe837b44329",
             "resource": {
                 "resourceType": "Organization",
                 "type": [
@@ -329,6 +332,7 @@
                 ],
                 "address": [
                     {
+                        "use": "work",
                         "line": [
                             "Springer Street"
                         ],
@@ -339,16 +343,16 @@
             }
         },
         {
-            "fullUrl": "urn:uuid:74940ef0-33ae-402d-8a85-7fad9b59f69e",
+            "fullUrl": "urn:uuid:acaf524e-ff2a-447b-8e57-32174679a551",
             "resource": {
                 "resourceType": "HealthcareService",
                 "active": true,
                 "providedBy": {
-                    "reference": "urn:uuid:eb5dc24a-8fee-468e-903b-1613d6eaf930"
+                    "reference": "urn:uuid:07ca24f5-f71a-4ba8-b77d-571600a07b13"
                 },
                 "location": [
                     {
-                        "reference": "urn:uuid:9fb7c7ca-365e-4612-a65f-f9fddb7665de"
+                        "reference": "urn:uuid:c2d8a871-9278-462e-ba0d-779e2031cf48"
                     }
                 ],
                 "name": "Thames Medical Practice",
@@ -362,7 +366,7 @@
             }
         },
         {
-            "fullUrl": "urn:uuid:9fb7c7ca-365e-4612-a65f-f9fddb7665de",
+            "fullUrl": "urn:uuid:c2d8a871-9278-462e-ba0d-779e2031cf48",
             "resource": {
                 "resourceType": "Location",
                 "telecom": [
@@ -373,6 +377,7 @@
                     }
                 ],
                 "address": {
+                    "use": "work",
                     "line": [
                         "Thames Medical Practice",
                         "Hill Street Branch Surgery",
@@ -384,157 +389,108 @@
             }
         },
         {
-            "fullUrl": "urn:uuid:eb5dc24a-8fee-468e-903b-1613d6eaf930",
+            "fullUrl": "urn:uuid:07ca24f5-f71a-4ba8-b77d-571600a07b13",
             "resource": {
                 "resourceType": "Organization",
                 "name": "Thames Medical Practice"
             }
         },
         {
-            "fullUrl": "urn:uuid:0e469bea-749c-496d-a32b-28899bf4c897",
+            "fullUrl": "urn:uuid:ffc382eb-9e71-4c65-996f-0e0c6f0fea11",
             "resource": {
                 "resourceType": "HealthcareService",
                 "active": true,
                 "providedBy": {
-                    "reference": "urn:uuid:0cbe52ea-ff66-4266-b7d7-8e452b6a0b81"
+                    "reference": "urn:uuid:69ddb5d5-3141-4674-a68e-2957fbcd0aab"
                 },
                 "location": [
                     {
-                        "reference": "urn:uuid:bd8e09b3-e80d-4738-8776-9af10f5fc0bb"
+                        "reference": "urn:uuid:5e7a04d4-5287-4971-8f82-b1ec45153008"
                     }
                 ],
                 "name": "Medway Kent Out of Hours Clinic"
             }
         },
         {
-            "fullUrl": "urn:uuid:bd8e09b3-e80d-4738-8776-9af10f5fc0bb",
+            "fullUrl": "urn:uuid:5e7a04d4-5287-4971-8f82-b1ec45153008",
             "resource": {
                 "resourceType": "Location"
             }
         },
         {
-            "fullUrl": "urn:uuid:0cbe52ea-ff66-4266-b7d7-8e452b6a0b81",
+            "fullUrl": "urn:uuid:69ddb5d5-3141-4674-a68e-2957fbcd0aab",
             "resource": {
                 "resourceType": "Organization",
                 "name": "Medway Kent Out of Hours Clinic"
             }
         },
         {
-            "fullUrl": "urn:uuid:bd352abe-6f2a-457d-bd99-20f74db0c6ec",
+            "fullUrl": "urn:uuid:17e313ac-8417-4b20-a256-4423ab0f8918",
             "resource": {
                 "resourceType": "ReferralRequest",
                 "status": "active",
                 "intent": "plan",
                 "priority": "routine",
                 "subject": {
-                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                    "reference": "urn:uuid:397b1ddd-b441-4e86-b64e-77dc6f83fc2b"
                 },
                 "context": {
-                    "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                    "reference": "urn:uuid:d7b9998e-9e14-469f-8418-779dd8bd3a10"
                 },
                 "occurrencePeriod": {
-                    "start": "2020-07-14T08:12:16+01:00",
-                    "end": "2020-07-14T09:12:16+01:00"
+                    "start": "2020-09-18T15:46:13+02:00",
+                    "end": "2020-09-18T16:46:13+02:00"
                 },
-                "authoredOn": "2020-07-14T08:12:16+01:00",
+                "authoredOn": "2020-09-18T15:46:13+02:00",
                 "requester": {
                     "agent": {
                         "reference": "Device/1"
                     },
                     "onBehalfOf": {
-                        "reference": "urn:uuid:f25664e1-28ba-46f6-a53e-0a889b0a8ac7"
+                        "reference": "urn:uuid:0b0f7d3e-d4f0-46a0-92ac-ae82ad391464"
                     }
                 },
                 "recipient": [
                     {
-                        "reference": "urn:uuid:74940ef0-33ae-402d-8a85-7fad9b59f69e"
+                        "reference": "urn:uuid:acaf524e-ff2a-447b-8e57-32174679a551"
                     },
                     {
-                        "reference": "urn:uuid:0e469bea-749c-496d-a32b-28899bf4c897"
+                        "reference": "urn:uuid:ffc382eb-9e71-4c65-996f-0e0c6f0fea11"
                     }
                 ]
             }
         },
         {
-            "fullUrl": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6",
-            "resource": {
-                "resourceType": "Patient",
-                "language": "en",
-                "active": true,
-                "name": [
-                    {
-                        "use": "usual",
-                        "family": "Joe",
-                        "given": [
-                            "Blogg"
-                        ],
-                        "prefix": [
-                            "Mr"
-                        ]
-                    }
-                ],
-                "telecom": [
-                    {
-                        "system": "other",
-                        "value": "tel:01634775667",
-                        "use": "home"
-                    },
-                    {
-                        "system": "other",
-                        "value": "tel:01634451628",
-                        "use": "home"
-                    },
-                    {
-                        "system": "other",
-                        "value": "mailto:Joe.Blogg@emailfree.co.uk",
-                        "use": "home"
-                    }
-                ],
-                "gender": "male",
-                "birthDate": "1989-01-01",
-                "address": [
-                    {
-                        "line": [
-                            "17, County Avenue",
-                            "Woodtown"
-                        ],
-                        "city": "Medway",
-                        "postalCode": "ME5 FS3"
-                    }
-                ],
-                "generalPractitioner": [
-                    {
-                        "reference": "urn:uuid:6c97b6c4-b04c-4c13-bf84-9768826bdf1d"
-                    }
-                ]
-            }
-        },
-        {
-            "fullUrl": "urn:uuid:e0d6720c-a340-475c-8869-4e8cf3e6ae9c",
+            "fullUrl": "urn:uuid:a56b5cb5-97bb-4c7f-a15c-1b6de0986fa1",
             "resource": {
                 "resourceType": "Appointment",
                 "status": "booked",
+                "reason": [
+                    {
+                        "text": "Patient convenience appointment"
+                    }
+                ],
                 "description": "Appointment Reference",
-                "start": "2017-06-01T15:00:00.000+01:00",
-                "end": "2017-06-01T15:10:00.000+01:00",
+                "start": "2017-06-01T16:00:00.000+02:00",
+                "end": "2017-06-01T16:10:00.000+02:00",
                 "minutesDuration": 10,
                 "comment": "\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    ",
                 "incomingReferral": [
                     {
-                        "reference": "urn:uuid:bd352abe-6f2a-457d-bd99-20f74db0c6ec"
+                        "reference": "urn:uuid:17e313ac-8417-4b20-a256-4423ab0f8918"
                     }
                 ],
                 "participant": [
                     {
                         "actor": {
-                            "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                            "reference": "urn:uuid:397b1ddd-b441-4e86-b64e-77dc6f83fc2b"
                         },
                         "required": "required",
                         "status": "accepted"
                     },
                     {
                         "actor": {
-                            "reference": "urn:uuid:75ad9776-2b99-4585-aef5-a35643d4414a"
+                            "reference": "urn:uuid:8beb67e2-99fe-4f04-a8be-5ada1383b5f1"
                         },
                         "required": "required",
                         "status": "accepted"
@@ -543,66 +499,13 @@
             }
         },
         {
-            "fullUrl": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6",
-            "resource": {
-                "resourceType": "Patient",
-                "language": "en",
-                "active": true,
-                "name": [
-                    {
-                        "use": "usual",
-                        "family": "Joe",
-                        "given": [
-                            "Blogg"
-                        ],
-                        "prefix": [
-                            "Mr"
-                        ]
-                    }
-                ],
-                "telecom": [
-                    {
-                        "system": "other",
-                        "value": "tel:01634775667",
-                        "use": "home"
-                    },
-                    {
-                        "system": "other",
-                        "value": "tel:01634451628",
-                        "use": "home"
-                    },
-                    {
-                        "system": "other",
-                        "value": "mailto:Joe.Blogg@emailfree.co.uk",
-                        "use": "home"
-                    }
-                ],
-                "gender": "male",
-                "birthDate": "1989-01-01",
-                "address": [
-                    {
-                        "line": [
-                            "17, County Avenue",
-                            "Woodtown"
-                        ],
-                        "city": "Medway",
-                        "postalCode": "ME5 FS3"
-                    }
-                ],
-                "generalPractitioner": [
-                    {
-                        "reference": "urn:uuid:6c97b6c4-b04c-4c13-bf84-9768826bdf1d"
-                    }
-                ]
-            }
-        },
-        {
-            "fullUrl": "urn:uuid:75ad9776-2b99-4585-aef5-a35643d4414a",
+            "fullUrl": "urn:uuid:8beb67e2-99fe-4f04-a8be-5ada1383b5f1",
             "resource": {
                 "resourceType": "Location",
                 "name": "CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST",
                 "description": "Psychiatric Community Care Services",
                 "address": {
+                    "use": "work",
                     "line": [
                         "Great George Street"
                     ],
@@ -612,7 +515,7 @@
             }
         },
         {
-            "fullUrl": "urn:uuid:18defd92-02c6-4381-bd0c-d935a5380198",
+            "fullUrl": "urn:uuid:6bff3569-2257-46bc-b600-27c46b583fac",
             "resource": {
                 "resourceType": "EpisodeOfCare",
                 "status": "active",
@@ -622,28 +525,28 @@
                     }
                 ],
                 "patient": {
-                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                    "reference": "urn:uuid:397b1ddd-b441-4e86-b64e-77dc6f83fc2b"
                 },
                 "managingOrganization": {
-                    "reference": "urn:uuid:0eabff03-be0f-4092-a882-53fdd6bb478f"
+                    "reference": "urn:uuid:26ed6ebd-f737-4c06-ab5b-f904a4b22c07"
                 },
                 "period": {
-                    "start": "2011-05-19T20:45:00+01:00",
-                    "end": "2011-05-19T21:15:00+01:00"
+                    "start": "2011-05-19T21:45:00+02:00",
+                    "end": "2011-05-19T22:15:00+02:00"
                 },
                 "careManager": {
-                    "reference": "urn:uuid:1267e600-21b1-442a-b331-9c4e6575d72a"
+                    "reference": "urn:uuid:b95fbd7f-898c-4f39-9ea3-e567d727700a"
                 }
             }
         },
         {
-            "fullUrl": "urn:uuid:1267e600-21b1-442a-b331-9c4e6575d72a",
+            "fullUrl": "urn:uuid:b95fbd7f-898c-4f39-9ea3-e567d727700a",
             "resource": {
                 "resourceType": "Practitioner",
                 "active": true,
                 "name": [
                     {
-                        "use": "usual",
+                        "use": "official",
                         "family": "Cornwell",
                         "given": [
                             "Dave"
@@ -653,14 +556,14 @@
             }
         },
         {
-            "fullUrl": "urn:uuid:0eabff03-be0f-4092-a882-53fdd6bb478f",
+            "fullUrl": "urn:uuid:26ed6ebd-f737-4c06-ab5b-f904a4b22c07",
             "resource": {
                 "resourceType": "Organization",
                 "name": "Medway South Out of Hours Centre"
             }
         },
         {
-            "fullUrl": "urn:uuid:0c9fd83a-8694-4df0-939b-e84eb0e19933",
+            "fullUrl": "urn:uuid:7bd4cdba-d00f-4637-9549-17ec98352bcf",
             "resource": {
                 "resourceType": "Composition",
                 "identifier": {
@@ -669,24 +572,30 @@
                 },
                 "status": "final",
                 "type": {
-                    "text": "371531000"
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "371531000",
+                            "display": "Report of clinical encounter (record artifact)"
+                        }
+                    ]
                 },
                 "subject": {
-                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                    "reference": "urn:uuid:397b1ddd-b441-4e86-b64e-77dc6f83fc2b"
                 },
                 "encounter": {
-                    "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                    "reference": "urn:uuid:d7b9998e-9e14-469f-8418-779dd8bd3a10"
                 },
-                "date": "2020-07-14T08:12:16+01:00",
+                "date": "2020-09-18T15:46:13+02:00",
                 "author": [
                     {
-                        "reference": "urn:uuid:cf885330-6beb-462d-b66a-7b66695bd57c"
+                        "reference": "urn:uuid:bb2f6301-e31b-4d20-86b1-00a353a56698"
                     }
                 ],
                 "title": "111 Report",
                 "confidentiality": "V",
                 "custodian": {
-                    "reference": "urn:uuid:0eabff03-be0f-4092-a882-53fdd6bb478f"
+                    "reference": "urn:uuid:26ed6ebd-f737-4c06-ab5b-f904a4b22c07"
                 },
                 "relatesTo": [
                     {
@@ -741,23 +650,23 @@
                         }
                     },
                     {
-                        "title": "CarePlan Advice II",
+                        "title": "CarePlan Advice III",
                         "text": {
                             "status": "generated",
-                            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;\n                                                        SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;\n                                                        Patient has history of violence towards health care\n                                                        professionals\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;An injury or other health problem was described.\n                                                        &lt;urn:br/&gt;The individual was described as breathing and conscious.\n                                                        &lt;urn:br/&gt;Loss of at least a mugful of blood in the last 30 minutes\n                                                        was not described.\n                                                        &lt;urn:br/&gt;An illness or other health problem was described. - Insect\n                                                        Bite\n                                                        &lt;urn:br/&gt;Fighting for breath was not described.\n                                                        &lt;urn:br/&gt;A heart attack, chest/upper back pain, recent probable\n                                                        stroke, recent fit/seizure or suicide attempt was not described\n                                                        as the main call reason.\n                                                        &lt;urn:br/&gt;New confusion, a diabetic hypo, a probable allergic\n                                                        reaction or successful resuscitation was not described as being\n                                                        the main call reason.\n                                                        &lt;urn:br/&gt;The individual was described as being warm to touch.\n                                                        &lt;urn:br/&gt;An insect or spider bite or sting was described. - Tick\n                                                        Bite\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content styleCode=&quot;bold&quot; xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Plan Summary:&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Remove any jewellery or tight clothing from the area.\n                                                        &lt;urn:br/&gt;Antihistamine medication and creams help reduce swelling\n                                                        and itching. They can be bought from pharmacies. Talk to the\n                                                        pharmacist for advice. Follow the instructions in the pack.\n                                                        &lt;urn:br/&gt;Unless advised not to, or they have already been given,\n                                                        paracetamol or ibuprofen can be used to relieve pain. Follow the\n                                                        instructions in the pack. If in doubt ask a pharmacist.\n                                                    &lt;/urn:content&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+                            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;\n                                                        SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2019 16:00\n                                                        Location: WEST LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;\n                                                        Patient has history of violence towards health care\n                                                        professionals\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;An injury or other health problem was described.\n                                                        &lt;urn:br/&gt;The individual was described as breathing and conscious.\n                                                        &lt;urn:br/&gt;Loss of at least a mugful of blood in the last 30 minutes\n                                                        was not described.\n                                                        &lt;urn:br/&gt;An illness or other health problem was described. - Insect\n                                                        Bite\n                                                        &lt;urn:br/&gt;Fighting for breath was not described.\n                                                        &lt;urn:br/&gt;A heart attack, chest/upper back pain, recent probable\n                                                        stroke, recent fit/seizure or suicide attempt was not described\n                                                        as the main call reason.\n                                                        &lt;urn:br/&gt;New confusion, a diabetic hypo, a probable allergic\n                                                        reaction or successful resuscitation was not described as being\n                                                        the main call reason.\n                                                        &lt;urn:br/&gt;The individual was described as being warm to touch.\n                                                        &lt;urn:br/&gt;An insect or spider bite or sting was described. - Tick\n                                                        Bite\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content styleCode=&quot;bold&quot; xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Plan Summary:&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Remove any jewellery or tight clothing from the area.\n                                                        &lt;urn:br/&gt;Antihistamine medication and creams help reduce swelling\n                                                        and itching. They can be bought from pharmacies. Talk to the\n                                                        pharmacist for advice. Follow the instructions in the pack.\n                                                        &lt;urn:br/&gt;Unless advised not to, or they have already been given,\n                                                        paracetamol or ibuprofen can be used to relieve pain. Follow the\n                                                        instructions in the pack. If in doubt ask a pharmacist.\n                                                    &lt;/urn:content&gt;\n                                                &lt;/xml-fragment&gt;</div>"
                         }
                     }
                 ]
             }
         },
         {
-            "fullUrl": "urn:uuid:cf885330-6beb-462d-b66a-7b66695bd57c",
+            "fullUrl": "urn:uuid:bb2f6301-e31b-4d20-86b1-00a353a56698",
             "resource": {
                 "resourceType": "Practitioner",
                 "active": true,
                 "name": [
                     {
-                        "use": "usual",
+                        "use": "official",
                         "family": "Jones",
                         "given": [
                             "Mary"
@@ -767,7 +676,7 @@
             }
         },
         {
-            "fullUrl": "urn:uuid:639c0796-252c-4f75-8d1b-cdbee1d6119a",
+            "fullUrl": "urn:uuid:5f8ffa44-2933-4ee6-b7f3-732117c50562",
             "resource": {
                 "resourceType": "CarePlan",
                 "text": {
@@ -779,41 +688,41 @@
                 "title": "CarePlan Advice",
                 "description": "\n                                                        SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    ",
                 "subject": {
-                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                    "reference": "urn:uuid:397b1ddd-b441-4e86-b64e-77dc6f83fc2b"
                 },
                 "context": {
-                    "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                    "reference": "urn:uuid:d7b9998e-9e14-469f-8418-779dd8bd3a10"
                 },
                 "period": {
-                    "start": "2011-05-19T21:00:00+01:00"
+                    "start": "2011-05-19T22:00:00+02:00"
                 }
             }
         },
         {
-            "fullUrl": "urn:uuid:34ef2d0b-91fe-4ca1-95f3-c6abf66f88d5",
+            "fullUrl": "urn:uuid:5119772d-164b-43dd-89a8-33d17e8ae865",
             "resource": {
                 "resourceType": "CarePlan",
                 "text": {
                     "status": "generated",
-                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service</div>"
+                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2019 16:00\n                                                        Location: WEST LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service</div>"
                 },
                 "status": "completed",
                 "intent": "plan",
-                "title": "CarePlan Advice II",
-                "description": "\n                                                        SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    ",
+                "title": "CarePlan Advice III",
+                "description": "\n                                                        SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2019 16:00\n                                                        Location: WEST LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    ",
                 "subject": {
-                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                    "reference": "urn:uuid:397b1ddd-b441-4e86-b64e-77dc6f83fc2b"
                 },
                 "context": {
-                    "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                    "reference": "urn:uuid:d7b9998e-9e14-469f-8418-779dd8bd3a10"
                 },
                 "period": {
-                    "start": "2011-05-19T21:00:00+01:00"
+                    "start": "2011-05-19T22:00:00+02:00"
                 }
             }
         },
         {
-            "fullUrl": "urn:uuid:4b8836a3-5e8a-4ae5-ad7e-b3fdeba6f11d",
+            "fullUrl": "urn:uuid:dc96aca0-d525-4b2a-8bcf-aea465b91092",
             "resource": {
                 "resourceType": "Consent",
                 "identifier": {
@@ -822,15 +731,15 @@
                 },
                 "status": "active",
                 "patient": {
-                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                    "reference": "urn:uuid:397b1ddd-b441-4e86-b64e-77dc6f83fc2b"
                 },
                 "period": {
-                    "start": "2011-05-19T21:00:00+01:00"
+                    "start": "2011-05-19T22:00:00+02:00"
                 },
-                "dateTime": "2020-07-14T08:12:16+01:00",
+                "dateTime": "2020-09-18T15:46:13+02:00",
                 "consentingParty": [
                     {
-                        "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                        "reference": "urn:uuid:397b1ddd-b441-4e86-b64e-77dc6f83fc2b"
                     }
                 ],
                 "action": [
@@ -847,26 +756,26 @@
                 ],
                 "organization": [
                     {
-                        "reference": "urn:uuid:f25664e1-28ba-46f6-a53e-0a889b0a8ac7"
+                        "reference": "urn:uuid:0b0f7d3e-d4f0-46a0-92ac-ae82ad391464"
                     }
                 ],
                 "policyRule": "http://hl7.org/fhir/ConsentPolicy/opt-out",
                 "dataPeriod": {
-                    "start": "2011-05-19T21:00:00+01:00",
-                    "end": "2011-05-26T21:00:00+01:00"
+                    "start": "2011-05-19T22:00:00+02:00",
+                    "end": "2011-05-26T22:00:00+02:00"
                 },
                 "data": [
                     {
                         "meaning": "related",
                         "reference": {
-                            "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                            "reference": "urn:uuid:d7b9998e-9e14-469f-8418-779dd8bd3a10"
                         }
                     }
                 ]
             }
         },
         {
-            "fullUrl": "urn:uuid:dee227fd-91ff-4648-b5d1-9b2452684cb7",
+            "fullUrl": "urn:uuid:56345763-36c9-4d33-8882-5c4ce643ad87",
             "resource": {
                 "resourceType": "Condition",
                 "clinicalStatus": "active",
@@ -877,34 +786,40 @@
                     }
                 ],
                 "subject": {
-                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                    "reference": "urn:uuid:397b1ddd-b441-4e86-b64e-77dc6f83fc2b"
                 },
                 "context": {
-                    "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                    "reference": "urn:uuid:d7b9998e-9e14-469f-8418-779dd8bd3a10"
                 },
-                "assertedDate": "2017-06-01T15:00:00+01:00",
+                "assertedDate": "2017-06-01T16:00:00+02:00",
                 "asserter": {
-                    "reference": "urn:uuid:aa13247a-6ca5-4c02-aa0b-d7edefd92865"
+                    "reference": "urn:uuid:a0a85e57-ca08-4103-babe-4e28c2197dc1"
                 }
             }
         },
         {
-            "fullUrl": "urn:uuid:681163f6-acd6-4e66-8fab-a16edbaed962",
+            "fullUrl": "urn:uuid:8542fdd5-d8bc-4059-a206-dff285cd4aae",
             "resource": {
                 "resourceType": "List",
                 "status": "current",
                 "mode": "working",
                 "title": "111 Report List",
                 "code": {
-                    "text": "225390008"
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "225390008",
+                            "display": "Triage"
+                        }
+                    ]
                 },
                 "subject": {
-                    "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                    "reference": "urn:uuid:397b1ddd-b441-4e86-b64e-77dc6f83fc2b"
                 },
                 "encounter": {
-                    "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                    "reference": "urn:uuid:d7b9998e-9e14-469f-8418-779dd8bd3a10"
                 },
-                "date": "2020-07-14T08:12:16+01:00",
+                "date": "2020-09-18T15:46:13+02:00",
                 "source": {
                     "reference": "Device/1"
                 },
@@ -914,137 +829,67 @@
                 "entry": [
                     {
                         "item": {
-                            "reference": "urn:uuid:34ef2d0b-91fe-4ca1-95f3-c6abf66f88d5"
+                            "reference": "urn:uuid:23d3ebdb-21af-4725-a232-7c1c9db6f1af"
                         }
                     },
                     {
                         "item": {
-                            "reference": "urn:uuid:a8dbe655-b5bb-4ac7-8af3-e7745ed84e16"
+                            "reference": "urn:uuid:07ca24f5-f71a-4ba8-b77d-571600a07b13"
                         }
                     },
                     {
                         "item": {
-                            "reference": "urn:uuid:18defd92-02c6-4381-bd0c-d935a5380198"
+                            "reference": "urn:uuid:b95fbd7f-898c-4f39-9ea3-e567d727700a"
                         }
                     },
                     {
                         "item": {
-                            "reference": "urn:uuid:dee227fd-91ff-4648-b5d1-9b2452684cb7"
+                            "reference": "urn:uuid:56345763-36c9-4d33-8882-5c4ce643ad87"
                         }
                     },
                     {
                         "item": {
-                            "reference": "urn:uuid:d4aba2e8-2a6b-44ea-933d-49bdb0ce34e6"
+                            "reference": "urn:uuid:8e5c1429-7484-4497-97d8-29235c3662e2"
                         }
                     },
                     {
                         "item": {
-                            "reference": "urn:uuid:bd352abe-6f2a-457d-bd99-20f74db0c6ec"
+                            "reference": "urn:uuid:17e313ac-8417-4b20-a256-4423ab0f8918"
                         }
                     },
                     {
                         "item": {
-                            "reference": "urn:uuid:cf885330-6beb-462d-b66a-7b66695bd57c"
+                            "reference": "urn:uuid:0b0f7d3e-d4f0-46a0-92ac-ae82ad391464"
                         }
                     },
                     {
                         "item": {
-                            "reference": "urn:uuid:fcf42f25-4c68-4610-8528-4efb8daaa342"
+                            "reference": "urn:uuid:69ddb5d5-3141-4674-a68e-2957fbcd0aab"
                         }
                     },
                     {
                         "item": {
-                            "reference": "urn:uuid:5d466a6a-dc60-4e38-81a8-86bec820d302"
+                            "reference": "urn:uuid:bb2f6301-e31b-4d20-86b1-00a353a56698"
                         }
                     },
                     {
                         "item": {
-                            "reference": "urn:uuid:0e469bea-749c-496d-a32b-28899bf4c897"
+                            "reference": "urn:uuid:2cd0ac72-7fc5-4128-8e4d-b975696e0ad6"
                         }
                     },
                     {
                         "item": {
-                            "reference": "urn:uuid:0eabff03-be0f-4092-a882-53fdd6bb478f"
+                            "reference": "urn:uuid:26ed6ebd-f737-4c06-ab5b-f904a4b22c07"
                         }
                     },
                     {
                         "item": {
-                            "reference": "urn:uuid:8c0db6ec-bacd-42e3-8edb-3ad8b3943bf2"
+                            "reference": "urn:uuid:216001e1-f2a9-484d-9d3a-fbe837b44329"
                         }
                     },
                     {
                         "item": {
-                            "reference": "urn:uuid:96f57ae8-8760-4628-9f5a-0fa6def907c7"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:4b8836a3-5e8a-4ae5-ad7e-b3fdeba6f11d"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:aa13247a-6ca5-4c02-aa0b-d7edefd92865"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:9fb7c7ca-365e-4612-a65f-f9fddb7665de"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:74940ef0-33ae-402d-8a85-7fad9b59f69e"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:eb5dc24a-8fee-468e-903b-1613d6eaf930"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:bd8e09b3-e80d-4738-8776-9af10f5fc0bb"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:e0d6720c-a340-475c-8869-4e8cf3e6ae9c"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:6c97b6c4-b04c-4c13-bf84-9768826bdf1d"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:75ad9776-2b99-4585-aef5-a35643d4414a"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:f25664e1-28ba-46f6-a53e-0a889b0a8ac7"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:0c9fd83a-8694-4df0-939b-e84eb0e19933"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:1267e600-21b1-442a-b331-9c4e6575d72a"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:639c0796-252c-4f75-8d1b-cdbee1d6119a"
-                        }
-                    },
-                    {
-                        "item": {
-                            "reference": "urn:uuid:0cbe52ea-ff66-4266-b7d7-8e452b6a0b81"
+                            "reference": "urn:uuid:a0a85e57-ca08-4103-babe-4e28c2197dc1"
                         }
                     }
                 ]
