@@ -15,8 +15,6 @@ build-tests:
 
 run-all:
 	sh -c '. ./nginx/scripts/export_cert_values.sh && docker-compose -f docker-compose.yml up -d nginx'
-##sh -c 'NGINX_PUBLIC_CERT="${NGINX_PUBLIC_CERT}" NGINX_PRIVATE_CERT="${NGINX_PRIVATE_CERT}" NGINX_CLIENT_PUBLIC_CERT="${NGINX_CLIENT_PUBLIC_CERT}" NGINX_CA_CERT="${NGINX_CA_CERT}" docker-compose -f docker-compose.yml up -d nginx'
-
 
 stop-all:
 	sh -c 'docker stop $$(docker ps -a -q)'
@@ -28,17 +26,37 @@ clean-all:
 	sh -c 'docker rm -f -v $$(docker ps -a -q)'
 
 run-curl:
-	sh -c 'curl --cacert nginx/certs/CA.cer https://integration-adaptor-111.local:8443 --resolve integration-adaptor-111.local:8443:127.0.0.1'
+	sh -c 'curl --cacert nginx/certs/ca.cer https://integration-adaptor-111.local:8443 --resolve integration-adaptor-111.local:8443:127.0.0.1'
 
 run-curl2:
-	sh -c 'curl -v --cert nginx/certs/client_pkcs.p12 --cert-type p12 --pass pkcsPass --cacert nginx/certs/CA.cer https://integration-adaptor-111.local:8443 --resolve integration-adaptor-111.local:8443:127.0.0.1'
+	sh -c 'curl -v --cert nginx/certs/client_pkcs.p12 --cert-type p12 --pass password --cacert nginx/certs/ca.cer https://integration-adaptor-111.local:8443 --resolve integration-adaptor-111.local:8443:127.0.0.1'
 
 run-curl3:
-	sh -c 'curl -v --cert nginx/certs/client_pkcs.p12 --cert-type p12 --pass pkcsPass --cacert nginx/certs/CA.cer https://integration-adaptor-111.local:8443/auth_test --resolve integration-adaptor-111.local:8443:127.0.0.1'
+	sh -c 'curl -v --cert nginx/certs/client_pkcs.p12 --cert-type p12 --pass password --cacert nginx/certs/ca.cer https://integration-adaptor-111.local:8443/auth_test --resolve integration-adaptor-111.local:8443:127.0.0.1'
 
 run-curl4:
-	sh -c 'curl --cert nginx/certs/client_pkcs.p12 --cert-type p12 --pass pkcsPass --cacert nginx/certs/CA.cer --request POST https://integration-adaptor-111.local:8443/report --resolve integration-adaptor-111.local:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
+	sh -c 'curl --cert nginx/certs/client_pkcs.p12 --cert-type p12 --pass password --cacert nginx/certs/ca.cer --request POST https://integration-adaptor-111.local:8443/report --resolve integration-adaptor-111.local:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
 
 run-curl5:
-	sh -c 'curl --cacert nginx/certs/CA.cer --request POST https://integration-adaptor-111.local:8443/report --resolve integration-adaptor-111.local:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
+	sh -c 'curl --cacert nginx/certs/ca.cer --request POST https://integration-adaptor-111.local:8443/report --resolve integration-adaptor-111.local:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
 
+run-curl6:
+	sh -c 'curl --cert nginx/certs/client_pkcs.p12 --cert-type p12 --pass password --cacert nginx/certs/ca.cer --request POST https://test02.oneoneone.nhs.uk:8443/report --resolve test02.oneoneone.nhs.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
+
+run-curl61:
+	sh -c 'curl --cert nginx/certs/client_pkcs.p12 --cert-type p12 --pass password --cacert nginx/certs/ca.cer --request POST https://test02.oneoneone.nhs.uk:8443/auth_test --resolve test02.oneoneone.nhs.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
+
+run-curl7:
+	sh -c 'curl --cert nginx/certs/nhs_certs/test05.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test05_cert_chain.txt --request POST https://test02.oneoneone.nhs.uk:8443/report --resolve test02.oneoneone.nhs.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
+
+run-curl71:
+	sh -c 'curl --cert nginx/certs/nhs_certs/test05.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test05_cert_chain.txt --request POST https://test05.opentest.hscic.gov.uk:8443/report --resolve test05.opentest.hscic.gov.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
+
+run-curl72:
+	sh -c 'curl -k --cert nginx/certs/nhs_certs/test05.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test05_cert_chain.txt --request POST https://test05.opentest.hscic.gov.uk:8443/auth_test --resolve test05.opentest.hscic.gov.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
+
+run-curl73:
+	sh -c 'curl -k --cert nginx/certs/nhs_certs/test05.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test05_cert_chain.txt --request POST https://test05.opentest.hscic.gov.uk:8443/report --resolve test05.opentest.hscic.gov.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/ITK_Report_request.xml" -H "Content-Type: application/xml"'
+
+run-curl8:
+	sh -c 'curl --cert nginx/certs/nhs_certs/test05.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test05_cert_chain.txt https://test02.oneoneone.nhs.uk:8443/auth_test --resolve test02.oneoneone.nhs.uk:8443:127.0.0.1'
