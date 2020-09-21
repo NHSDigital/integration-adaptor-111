@@ -18,6 +18,7 @@ import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Practitioner;
+import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.ResourceType;
@@ -33,6 +34,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 import java.util.Collections;
@@ -78,6 +80,8 @@ public class EncounterReportBundleServiceTest {
     private static final IdType CONSENT_ID = newRandomUuid();
     private static final Condition CONDITION;
     private static final IdType CONDITION_ID = newRandomUuid();
+    private static final QuestionnaireResponse QUESTIONNAIRE_RESPONSE;
+    private static final IdType QUESTIONNAIRE_RESPONSE_ID = newRandomUuid();
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -128,6 +132,9 @@ public class EncounterReportBundleServiceTest {
         CONSENT = new Consent();
         CONSENT.setId(CONSENT_ID);
 
+        QUESTIONNAIRE_RESPONSE = new QuestionnaireResponse();
+        QUESTIONNAIRE_RESPONSE.setId(QUESTIONNAIRE_RESPONSE_ID);
+
         ENCOUNTER = new Encounter();
         ENCOUNTER.setStatus(FINISHED);
         ENCOUNTER.setIdElement(ENCOUNTER_ID);
@@ -156,15 +163,20 @@ public class EncounterReportBundleServiceTest {
     private HealthcareServiceMapper healthcareServiceMapper;
     @Mock
     private ConsentMapper consentMapper;
+    @Mock
+    private PathwayUtil pathwayUtil;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws XmlException {
+        List<QuestionnaireResponse> questionnaireResponseList = new ArrayList<>();
+        questionnaireResponseList.add(QUESTIONNAIRE_RESPONSE);
         when(encounterMapper.mapEncounter(any(), any())).thenReturn(ENCOUNTER);
         when(compositionMapper.mapComposition(any(), any())).thenReturn(COMPOSITION);
         when(listMapper.mapList(any(), any(), any())).thenReturn(LIST_RESOURCE);
         when(carePlanMapper.mapCarePlan(any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(Collections.singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
+        when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
         Encounter.DiagnosisComponent diagnosisComponent = new Encounter.DiagnosisComponent();
         diagnosisComponent.setCondition(new Reference());
         diagnosisComponent.setRole(new CodeableConcept());
@@ -175,12 +187,12 @@ public class EncounterReportBundleServiceTest {
 
     @Test
     @SuppressWarnings("MagicNumber")
-    public void shouldCreateEncounterBundle() {
+    public void shouldCreateEncounterBundle() throws XmlException {
         POCDMT000002UK01ClinicalDocument1 document = mock(POCDMT000002UK01ClinicalDocument1.class);
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
 
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(14);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(15);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
         verifyEntry(entries.get(1), SERVICE_PROVIDER_ID.getValue(), ResourceType.Organization);
@@ -195,7 +207,8 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(10), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
         verifyEntry(entries.get(11), CONSENT_ID.getValue(), ResourceType.Consent);
         verifyEntry(entries.get(12), CONDITION_ID.getValue(), ResourceType.Condition);
-        verifyEntry(entries.get(13), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+        verifyEntry(entries.get(13), QUESTIONNAIRE_RESPONSE_ID.getValue(), ResourceType.QuestionnaireResponse);
+        verifyEntry(entries.get(14), LIST_RESOURCE_ID.getValue(), ResourceType.List);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {

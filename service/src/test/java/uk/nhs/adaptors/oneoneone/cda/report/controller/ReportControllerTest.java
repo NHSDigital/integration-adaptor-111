@@ -52,7 +52,7 @@ public class ReportControllerTest {
     private SoapValidator soapValidator;
 
     @Test
-    public void postReportValidRequest() {
+    public void postReportValidRequest() throws XmlException {
         when(itkResponseUtil.createSuccessResponseEntity(eq(MESSAGE_ID), anyString())).thenReturn(RESPONSE_XML);
 
         String validRequest = getValidXmlReportRequest();
