@@ -1,12 +1,12 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
-
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ItkResponseUtilTest {
     private final ItkResponseUtil itkResponseUtil = new ItkResponseUtil();
 
