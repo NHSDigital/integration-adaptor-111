@@ -17,7 +17,6 @@ import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Period;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,14 +25,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
+import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01OrganizationPartOf;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01OrganizationPartOf;
-import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LocationMapperTest {
