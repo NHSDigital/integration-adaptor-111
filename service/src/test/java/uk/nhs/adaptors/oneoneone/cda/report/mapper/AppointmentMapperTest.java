@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.CDNPfITCDAUrl;
-import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant2;
@@ -20,10 +19,8 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.StrucDocContent;
 import uk.nhs.connect.iucds.cda.ucr.StrucDocText;
 
-import java.util.Date;
 import java.util.Optional;
 
-import static java.time.Instant.parse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hl7.fhir.dstu3.model.Appointment.AppointmentStatus.BOOKED;
 import static org.hl7.fhir.dstu3.model.Appointment.ParticipantRequired.REQUIRED;
@@ -64,8 +61,8 @@ public class AppointmentMapperTest {
         assertThat(appointment.getIdElement().getValue()).startsWith("urn:uuid:");
         assertThat(appointment.getStatus()).isEqualTo(BOOKED);
         assertThat(appointment.getIncomingReferral().get(0)).isEqualTo(referralRequest);
-        assertThat(appointment.getStart()).isEqualTo(Date.from(parse("2011-05-19T19:45:00.00Z")));
-        assertThat(appointment.getEnd()).isEqualTo(Date.from(parse("2011-05-19T19:55:00.00Z")));
+        assertThat(appointment.getStart()).isNull();
+        assertThat(appointment.getEnd()).isNull();
         assertThat(appointment.getMinutesDuration()).isEqualTo(MINUTES_DURATION);
         assertThat(appointment.getDescription()).isEqualTo(TITLE);
         assertThat(appointment.getComment()).isEqualTo(COMMENT);
@@ -80,11 +77,8 @@ public class AppointmentMapperTest {
         POCDMT000002UK01Encounter encounter = mock(POCDMT000002UK01Encounter.class);
         POCDMT000002UK01Participant2 participant = mock(POCDMT000002UK01Participant2.class);
         POCDMT000002UK01ParticipantRole participantRole = mock(POCDMT000002UK01ParticipantRole.class);
-        IVLTS time = mock(IVLTS.class);
         when(entry.getEncounter()).thenReturn(encounter);
         when(encounter.getParticipantArray()).thenReturn(new POCDMT000002UK01Participant2[] {participant});
-        when(encounter.getEffectiveTime()).thenReturn(time);
-        when(time.getValue()).thenReturn("201105191945+00");
         when(participant.getParticipantRole()).thenReturn(participantRole);
         when(entry.isSetEncounter()).thenReturn(true);
         when(encounter.isSetCode()).thenReturn(true);

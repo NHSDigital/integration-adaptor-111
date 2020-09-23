@@ -1,15 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.Appointment.AppointmentStatus.BOOKED;
-import static org.hl7.fhir.dstu3.model.Appointment.ParticipantRequired.REQUIRED;
-import static org.hl7.fhir.dstu3.model.Appointment.ParticipationStatus.ACCEPTED;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang3.time.DateUtils;
+import lombok.AllArgsConstructor;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Appointment.AppointmentParticipantComponent;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
@@ -18,15 +9,20 @@ import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
-import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant2;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.hl7.fhir.dstu3.model.Appointment.AppointmentStatus.BOOKED;
+import static org.hl7.fhir.dstu3.model.Appointment.ParticipantRequired.REQUIRED;
+import static org.hl7.fhir.dstu3.model.Appointment.ParticipationStatus.ACCEPTED;
 
 @Component
 @AllArgsConstructor
@@ -40,13 +36,9 @@ public class AppointmentMapper {
     public Optional<Appointment> mapAppointment(POCDMT000002UK01Entry entry, POCDMT000002UK01Section matchingSection,
         Reference referralRequest, Reference patient) {
         POCDMT000002UK01Encounter itkEncounter = entry.getEncounter();
-        Date startDate = DateUtil.parse(itkEncounter.getEffectiveTime().getValue());
-        Date endDate = DateUtils.addMinutes(startDate, MINUTES_DURATION);
         Appointment appointment = new Appointment()
             .setStatus(BOOKED)
             .addIncomingReferral(referralRequest)
-            .setStart(startDate)
-            .setEnd(endDate)
             .setMinutesDuration(MINUTES_DURATION);
         appointment.setIdElement(IdType.newRandomUuid());
 
