@@ -23,6 +23,8 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -110,14 +112,23 @@ public class LocationMapperTest {
     public void shouldMapRecipientToLocation() {
         POCDMT000002UK01IntendedRecipient itkIntendedRecipient = mock(POCDMT000002UK01IntendedRecipient.class);
 
+        AD itkAddress = mock(AD.class);
         TEL itkTelecom = mock(TEL.class);
 
+        when(itkIntendedRecipient.sizeOfAddrArray()).thenReturn(new AD[]{itkAddress}.length);
+        when(addressMapper.mapAddress(any())).thenReturn(address);
         when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[]{itkTelecom});
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
+        when(itkIntendedRecipient.isSetReceivedOrganization()).thenReturn(true);
+        when(organizationMapper.mapOrganization(any())).thenReturn(organization);
 
         Location referenceRecipientToLocation = locationMapper
                 .mapRecipientToLocation(itkIntendedRecipient);
 
         assertThat(referenceRecipientToLocation.getId().startsWith("urn:uuid:"));
+        assertThat(referenceRecipientToLocation.getAddress()).isEqualTo(address);
+        assertThat(referenceRecipientToLocation.getTelecom()).isEqualTo(List.of(contactPoint));
+        assertThat(referenceRecipientToLocation.getManagingOrganization()).isNotNull();
+        assertThat(referenceRecipientToLocation.getManagingOrganizationTarget()).isEqualTo(organization);
     }
 }
