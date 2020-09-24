@@ -31,7 +31,7 @@ pipeline {
                     steps {
                         script {
                             if (sh(label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for tests")}
-                            if (sh(label: 'Running docker tests container', script: 'docker run -it -v /var/run/docker.sock:/var/run/docker.sock --name 111-tests-${BUILD_TAG} local/111-tests:${BUILD_TAG} ./gradlew check -i --continue --rerun-tasks', returnStatus: true) != 0) {error("Failed to run docker tests container")}
+                            if (sh(label: 'Running docker tests container', script: 'docker run -v /var/run/docker.sock:/var/run/docker.sock --name 111-tests-${BUILD_TAG} local/111-tests:${BUILD_TAG} ./gradlew check -i --continue --rerun-tasks', returnStatus: true) != 0) {error("Failed to run docker tests container")}
                         }
                     }
                     post {
