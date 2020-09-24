@@ -32,15 +32,15 @@ public class IntegrationTestsExtension implements BeforeAllCallback, BeforeEachC
 
         var jmsTemplate = applicationContext.getBean(JmsTemplate.class);
 
-        var meshInboundQueueName = Objects.requireNonNull(
+        var queueName = Objects.requireNonNull(
             applicationContext.getEnvironment().getProperty("amqp.queueName"));
 
         var receiveTimeout = jmsTemplate.getReceiveTimeout();
         jmsTemplate.setReceiveTimeout(RECEIVE_TIMEOUT_NO_WAIT);
-        List.of(meshInboundQueueName, DLQ_PREFIX + meshInboundQueueName)
-            .forEach(queueName -> {
-                while (jmsTemplate.receive(queueName) != null) {
-                    LOGGER.info("Purged '" + queueName + "' message");
+        List.of(queueName, DLQ_PREFIX + queueName)
+            .forEach(name -> {
+                while (jmsTemplate.receive(name) != null) {
+                    LOGGER.info("Purged '" + name + "' message");
                 }
             });
         jmsTemplate.setReceiveTimeout(receiveTimeout);

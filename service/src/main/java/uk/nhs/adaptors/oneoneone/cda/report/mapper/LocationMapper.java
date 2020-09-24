@@ -66,7 +66,7 @@ public class LocationMapper {
         if (organization.isSetAsOrganizationPartOf()) {
             if (organization.getAsOrganizationPartOf().getEffectiveTime() != null) {
                 encounterLocationComponent.setPeriod(
-                        periodMapper.mapPeriod(organization.getAsOrganizationPartOf().getEffectiveTime()));
+                    periodMapper.mapPeriod(organization.getAsOrganizationPartOf().getEffectiveTime()));
             }
         }
 
@@ -75,14 +75,26 @@ public class LocationMapper {
 
     public Location mapRecipientToLocation(POCDMT000002UK01IntendedRecipient intendedRecipient) {
         Location location = new Location();
-        location.setIdElement(IdType.newRandomUuid());
         if (intendedRecipient.sizeOfAddrArray() > 0) {
             location.setAddress(addressMapper.mapAddress(intendedRecipient.getAddrArray(0)));
         }
+
         location.setTelecom(Arrays
-                .stream(intendedRecipient.getTelecomArray())
-                .map(contactPointMapper::mapContactPoint)
-                .collect(Collectors.toList()));
+            .stream(intendedRecipient.getTelecomArray())
+            .map(contactPointMapper::mapContactPoint)
+            .collect(Collectors.toList()));
+
+        if (intendedRecipient.isSetReceivedOrganization()) {
+            Organization managingOrganization = organizationMapper.mapOrganization(intendedRecipient.getReceivedOrganization());
+            location.setManagingOrganization(new Reference(managingOrganization));
+            location.setManagingOrganizationTarget(managingOrganization);
+        }
+
+        if (location.isEmpty()) {
+            return null;
+        }
+
+        location.setIdElement(IdType.newRandomUuid());
         return location;
     }
 }
