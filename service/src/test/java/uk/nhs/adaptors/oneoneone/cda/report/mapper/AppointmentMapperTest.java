@@ -34,7 +34,6 @@ public class AppointmentMapperTest {
 
     private static final String TITLE = "title";
     private static final String COMMENT = "comment";
-    private static final int MINUTES_DURATION = 10;
     private static final String REASON = "TheReason";
     @Mock
     private LocationMapper locationMapper;
@@ -63,7 +62,7 @@ public class AppointmentMapperTest {
         assertThat(appointment.getIncomingReferral().get(0)).isEqualTo(referralRequest);
         assertThat(appointment.getStart()).isNull();
         assertThat(appointment.getEnd()).isNull();
-        assertThat(appointment.getMinutesDuration()).isEqualTo(MINUTES_DURATION);
+        assertThat(appointment.getMinutesDuration()).isEqualTo(0);
         assertThat(appointment.getDescription()).isEqualTo(TITLE);
         assertThat(appointment.getComment()).isEqualTo(COMMENT);
         assertThat(appointment.getParticipantFirstRep().getActor()).isEqualTo(patient);

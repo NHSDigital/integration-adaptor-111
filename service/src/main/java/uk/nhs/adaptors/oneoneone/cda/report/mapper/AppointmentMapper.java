@@ -38,8 +38,7 @@ public class AppointmentMapper {
         POCDMT000002UK01Encounter itkEncounter = entry.getEncounter();
         Appointment appointment = new Appointment()
             .setStatus(BOOKED)
-            .addIncomingReferral(referralRequest)
-            .setMinutesDuration(MINUTES_DURATION);
+            .addIncomingReferral(referralRequest);
         appointment.setIdElement(IdType.newRandomUuid());
 
         if (matchingSection != null) {
