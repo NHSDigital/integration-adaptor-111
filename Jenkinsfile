@@ -30,16 +30,17 @@ pipeline {
                 stage('Run Tests') {
                     steps {
                         script {
-                            sh label: 'Create logs directory', script: 'mkdir -p logs build'
                             if (sh(label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for tests")}
-                            if (sh(label: 'Running docker tests container', script: 'docker run -it -d -v /var/run/docker.sock:/var/run/docker.sock --name 111-tests-${BUILD_TAG} local/111-tests:${BUILD_TAG} /bin/bash', returnStatus: true) != 0) {error("Failed to run docker tests container")}
-                            if (sh(label: 'Running tests', returnStdout: true, script: 'docker exec 111-tests-${BUILD_TAG} /bin/bash -c "./gradlew check -i --continue --rerun-tasks"', returnStatus: true) != 0) {error("Tests failed.")}
+                            if (sh(label: 'Running docker tests container', script: 'docker run -it -v /var/run/docker.sock:/var/run/docker.sock --name 111-tests-${BUILD_TAG} local/111-tests:${BUILD_TAG} ./gradlew check -i --continue --rerun-tasks', returnStatus: true) != 0) {error("Failed to run docker tests container")}
                         }
                     }
                     post {
                         always {
-                            sh label: 'Create reports directory', script: 'mkdir -p build/reports'
-                            sh label: 'Copy reports to jenkins', script: 'docker cp 111-tests-${BUILD_TAG}:/home/gradle/service/build/reports/. ./build/reports'
+                            sh label: 'Create logs and reports directories', script: 'mkdir -p logs build/reports'
+                            sh label: 'Copy 111-tests container logs', script: 'docker logs 111-tests-${BUILD_TAG} > logs/111-tests.log'
+                            archiveArtifacts artifacts: 'logs/*.log', fingerprint: true
+                            sh label: 'Copy 111-tests container reports', script: 'docker cp 111-tests-${BUILD_TAG}:/home/gradle/service/build/reports/. ./build/reports'
+                            archiveArtifacts artifacts: 'build/reports/*.*', fingerprint: true
                             sh label: 'Stop docker container', script: 'docker stop 111-tests-${BUILD_TAG}'
                             sh label: 'Remove docker container', script: 'docker rm 111-tests-${BUILD_TAG}'
                             recordIssues(
@@ -75,12 +76,6 @@ pipeline {
                             if (sh (label: "Pushing image", script: dockerNginxPushCommand, returnStatus: true) !=0) { error("Docker push nginx image failed") }
                         }
                     }
-                }
-            }
-            post {
-                always {
-                    sh label: 'Copy 111 container logs', script: 'docker-compose logs 111-tests > logs/111-tests.log'
-                    archiveArtifacts artifacts: 'logs/*.log', fingerprint: true
                 }
             }
         }
