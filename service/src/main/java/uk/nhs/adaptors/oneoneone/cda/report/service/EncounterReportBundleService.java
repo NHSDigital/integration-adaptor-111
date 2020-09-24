@@ -52,8 +52,8 @@ public class EncounterReportBundleService {
 
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
-        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter);
+        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans);
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
 
         addEncounter(bundle, encounter);

@@ -4,11 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +33,8 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RelatedDocument1;
 public class CompositionMapperTest {
 
     private final IBaseResource episodeOfCareRefResource = new EpisodeOfCare();
+    private final CarePlan carePlan = new CarePlan();
+    private final List<CarePlan> carePlans = Arrays.asList(carePlan);
     @InjectMocks
     private CompositionMapper compositionMapper;
     @Mock
@@ -44,6 +51,10 @@ public class CompositionMapperTest {
     private Encounter encounter;
     @Mock
     private Reference episodeOfCareRef;
+    @Mock
+    private Reference reference;
+    @Mock
+    private ReferralRequest referralRequest;
     @Mock
     private POCDMT000002UK01Component2 component2;
 
@@ -63,11 +74,15 @@ public class CompositionMapperTest {
         when(clinicalDocument.getComponent()).thenReturn(component2);
         when(ce.isSetCode()).thenReturn(true);
         when(ii.isSetRoot()).thenReturn(true);
+        when(encounter.hasIncomingReferral()).thenReturn(true);
+        when(encounter.getIncomingReferralFirstRep()).thenReturn(reference);
+        when(reference.getResource()).thenReturn(referralRequest);
+        when(reference.getResource().fhirType()).thenReturn("ReferralRequest");
     }
 
     @Test
     public void mapComposition() {
-        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter);
+        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans);
 
         assertThat(composition.getTitle()).isEqualTo("111 Report");
         Coding code = composition.getType().getCodingFirstRep();
@@ -77,5 +92,7 @@ public class CompositionMapperTest {
         assertThat(composition.getStatus()).isEqualTo(Composition.CompositionStatus.FINAL);
         assertThat(composition.getConfidentiality()).isEqualTo(Composition.DocumentConfidentiality.V);
         assertThat(composition.getRelatesTo().get(0).getCode()).isEqualTo(Composition.DocumentRelationshipType.REPLACES);
+        assertThat(composition.getSection().get(0).getTitle()).isEqualTo("CarePlan");
+        assertThat(composition.getSection().get(1).getTitle()).isEqualTo("ReferralRequest");
     }
 }
