@@ -1,20 +1,20 @@
 package uk.nhs.adaptors.oneoneone.cda.report.util;
 
+import org.apache.xmlbeans.XmlObject;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.w3c.dom.Node;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.apache.xmlbeans.XmlObject;
-import org.junit.Before;
-import org.junit.Test;
-import org.w3c.dom.Node;
-
 public class NodeUtilTest {
 
     private NodeUtil nodeUtil;
 
-    @Before
+    @BeforeEach
     public void setup() {
         nodeUtil = new NodeUtil();
     }

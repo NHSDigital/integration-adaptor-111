@@ -1,23 +1,22 @@
 package uk.nhs.adaptors.oneoneone.cda.report.validation;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.dom4j.Element;
 import org.dom4j.Node;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
 import uk.nhs.adaptors.oneoneone.config.SoapProperties;
 
-@RunWith(MockitoJUnitRunner.class)
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 public class SoapValidatorTest {
     private static final String SOAP_VALIDATION_FAILED_MSG = "Soap validation failed";
     private static final String SEND_TO_XPATH = "//*[local-name()='To']";
@@ -35,34 +34,34 @@ public class SoapValidatorTest {
     @InjectMocks
     private SoapValidator soapValidator;
 
+    @Mock
     private Element soapHeader;
+    @Mock
     private Node to;
+    @Mock
     private Node timestamp;
+    @Mock
     private Node timestampCreated;
+    @Mock
     private Node timestampExpires;
+    @Mock
     private Node username;
+    @Mock
     private Node replyToAddress;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        when(soapProperties.getSendTo()).thenReturn(VALID_SOAP_TO);
-        soapHeader = mock(Element.class);
-        to = mock(Node.class);
-        when(to.getText()).thenReturn(VALID_SOAP_TO);
-        when(soapHeader.selectSingleNode(SEND_TO_XPATH)).thenReturn(to);
-        timestamp = mock(Node.class);
-        when(soapHeader.selectSingleNode(TIMESTAMP_XPATH)).thenReturn(timestamp);
-        timestampCreated = mock(Node.class);
-        when(timestampCreated.getText()).thenReturn("2020-09-03T11:27:30Z");
-        when(timestamp.selectSingleNode(TIMESTAMP_CREATED_XPATH)).thenReturn(timestampCreated);
-        timestampExpires = mock(Node.class);
-        when(timestampExpires.getText()).thenReturn("2020-09-04T11:27:30Z");
-        when(timestamp.selectSingleNode(TIMESTAMP_EXPIRES_XPATH)).thenReturn(timestampExpires);
-        username = mock(Node.class);
-        when(soapHeader.selectSingleNode(USERNAME_XPATH)).thenReturn(username);
-        replyToAddress = mock(Node.class);
-        when(replyToAddress.getText()).thenReturn(VALID_REPLY_TO);
-        when(soapHeader.selectSingleNode(REPLY_TO_ADDRESS_XPATH)).thenReturn(replyToAddress);
+        lenient().when(soapHeader.selectSingleNode(SEND_TO_XPATH)).thenReturn(to);
+        lenient().when(soapProperties.getSendTo()).thenReturn(VALID_SOAP_TO);
+        lenient().when(to.getText()).thenReturn(VALID_SOAP_TO);
+        lenient().when(soapHeader.selectSingleNode(TIMESTAMP_XPATH)).thenReturn(timestamp);
+        lenient().when(timestampCreated.getText()).thenReturn("2020-09-03T11:27:30Z");
+        lenient().when(timestamp.selectSingleNode(TIMESTAMP_CREATED_XPATH)).thenReturn(timestampCreated);
+        lenient().when(timestampExpires.getText()).thenReturn("2020-09-04T11:27:30Z");
+        lenient().when(timestamp.selectSingleNode(TIMESTAMP_EXPIRES_XPATH)).thenReturn(timestampExpires);
+        lenient().when(soapHeader.selectSingleNode(USERNAME_XPATH)).thenReturn(username);
+        lenient().when(replyToAddress.getText()).thenReturn(VALID_REPLY_TO);
+        lenient().when(soapHeader.selectSingleNode(REPLY_TO_ADDRESS_XPATH)).thenReturn(replyToAddress);
     }
 
     @Test

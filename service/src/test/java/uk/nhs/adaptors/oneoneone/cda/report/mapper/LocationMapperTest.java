@@ -1,15 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Encounter;
@@ -17,12 +7,11 @@ import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Period;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
@@ -34,7 +23,16 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
 
-@RunWith(MockitoJUnitRunner.class)
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 public class LocationMapperTest {
 
     public static final String DESCRIPTION = "description";
@@ -129,7 +127,7 @@ public class LocationMapperTest {
 
         assertThat(referenceRecipientToLocation.getId().startsWith("urn:uuid:"));
         assertThat(referenceRecipientToLocation.getAddress()).isEqualTo(address);
-        assertThat(referenceRecipientToLocation.getTelecom()).isEqualTo(new ArrayList<>(Arrays.asList(contactPoint)));
+        assertThat(referenceRecipientToLocation.getTelecom()).isEqualTo(List.of(contactPoint));
         assertThat(referenceRecipientToLocation.getManagingOrganization()).isNotNull();
         assertThat(referenceRecipientToLocation.getManagingOrganizationTarget()).isEqualTo(organization);
     }

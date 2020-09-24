@@ -1,21 +1,16 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.hl7.fhir.dstu3.model.Consent;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.CS;
 import uk.nhs.connect.iucds.cda.ucr.II;
@@ -31,7 +26,11 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 import uk.nhs.connect.iucds.cda.ucr.ST;
 import uk.nhs.connect.iucds.cda.ucr.StrucDocText;
 
-@RunWith(MockitoJUnitRunner.class)
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 public class ConsentMapperTest {
     private static final String URN_UUID = "urn:uuid:";
     private static final String LANG = "EN";
@@ -80,7 +79,7 @@ public class ConsentMapperTest {
     @InjectMocks
     private ConsentMapper consentMapper;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         POCDMT000002UK01Component2 component2 = mock(POCDMT000002UK01Component2.class);
         POCDMT000002UK01Component3 component3 = mock(POCDMT000002UK01Component3.class);
