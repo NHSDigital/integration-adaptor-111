@@ -65,7 +65,7 @@ public class QuestionnaireMapperTest {
         assertThat(questionnaire.getSubjectType().get(0).getValue()).isEqualTo("Patient");
         assertThat(questionnaire.getExperimental()).isEqualTo(false);
         assertThat(questionnaire.getStatus()).isEqualTo(Enumerations.PublicationStatus.ACTIVE);
-        assertThat(questionnaire.getDate().toString()).isEqualTo("Thu Feb 17 00:00:00 GMT 2011");
+        assertThat(questionnaire.getDate()).isEqualTo("2011-02-17T00:00:00+00:00");
         assertThat(questionnaire.getPublisher()).isEqualTo("N/A");
     }
 }

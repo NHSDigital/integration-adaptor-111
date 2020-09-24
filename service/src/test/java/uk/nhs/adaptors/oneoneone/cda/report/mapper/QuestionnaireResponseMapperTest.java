@@ -66,7 +66,7 @@ public class QuestionnaireResponseMapperTest {
         assertThat(questionnaireResponse.getSubject()).isEqualTo(patient);
         assertThat(questionnaireResponse.getContext()).isEqualTo(encounter);
         assertThat(questionnaireResponse.getIdentifier().getValue()).isEqualTo(caseId);
-        assertThat(questionnaireResponse.getAuthored().toString()).isEqualTo("Thu Feb 17 00:00:00 GMT 2011");
+        assertThat(questionnaireResponse.getAuthored()).isEqualTo("2011-02-17T00:00:00+00:00");
         assertThat(questionnaireResponse.getItemFirstRep().getText()).isEqualTo(questionText);
         assertThat(questionnaireResponse.getItemFirstRep().getAnswer().get(0).getValue().toString()).isEqualTo(answerText);
     }

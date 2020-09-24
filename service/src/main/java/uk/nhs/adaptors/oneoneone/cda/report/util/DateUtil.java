@@ -3,6 +3,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -53,6 +54,7 @@ public class DateUtil {
         if (StringUtils.isNotBlank(dateStr)) {
             SimpleDateFormat sdfInput = new SimpleDateFormat(INPUT_PATTERN);
             SimpleDateFormat sdfOutput = new SimpleDateFormat(OUTPUT_PATTERN);
+            sdfOutput.setTimeZone(TimeZone.getTimeZone("UTC"));
 
             try {
                 Date date = sdfInput.parse(dateStr);
