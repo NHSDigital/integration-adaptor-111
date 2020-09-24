@@ -16,6 +16,8 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 @UtilityClass
 public class StructuredBodyUtil {
 
+    private static final String NPFIT_CDA_CONTENT = "2.16.840.1.113883.2.1.3.2.4.18.16";
+
     public POCDMT000002UK01StructuredBody getStructuredBody(
         POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
 
@@ -27,7 +29,7 @@ public class StructuredBodyUtil {
 
     public Predicate<? super POCDMT000002UK01Entry> entryHasTemplate(String template) {
         return entry -> entry.isSetContentId()
-            && entry.getContentId().getRoot().equals("2.16.840.1.113883.2.1.3.2.4.18.16")
+            && entry.getContentId().getRoot().equals(NPFIT_CDA_CONTENT)
             && entry.getContentId().getExtension().equals(template);
     }
 

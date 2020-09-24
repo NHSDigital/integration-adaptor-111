@@ -1,5 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
+import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent;
@@ -37,6 +38,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

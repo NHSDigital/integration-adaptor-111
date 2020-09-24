@@ -1,10 +1,13 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.ContactDetail;
 import org.hl7.fhir.dstu3.model.ContactPoint;
@@ -27,33 +30,37 @@ import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 @Component
 @AllArgsConstructor
 public class QuestionnaireMapper {
+    private static final String NOT_APPLICABLE = "N/A";
+
     public Questionnaire mapQuestionnaire(PathwaysCase pathwaysCase, TriageLine triageLine) {
         Questionnaire questionnaire = new Questionnaire();
         String publisher = getPublisher(pathwaysCase.getPathwayDetails().getPathwayTriageDetails().getPathwayTriageArray(0).getUser());
         Date latestDate = getLatestDate(pathwaysCase);
 
-        questionnaire.addIdentifier(new Identifier().setValue(getCaseID(pathwaysCase)));
-        questionnaire.setVersion(latestDate.toString());
-        questionnaire.setStatus(Enumerations.PublicationStatus.ACTIVE);
-        questionnaire.setExperimental(false);
-        questionnaire.addSubjectType("Patient");
-        questionnaire.setDate(latestDate);
-        questionnaire.setPublisher(publisher);
-        questionnaire.setLastReviewDate(latestDate);
-        questionnaire.setJurisdiction(Collections.singletonList(new CodeableConcept().setText(getCountry(pathwaysCase))));
-        questionnaire.addContact(
-            new ContactDetail().addTelecom(
-                new ContactPoint().setValue(
-                    getContactNumber(pathwaysCase)
-                )));
-
-        questionnaire.addItem(getItem(triageLine.getQuestion(), getCaseID(pathwaysCase)));
+        questionnaire.setIdElement(newRandomUuid());
+        questionnaire.addIdentifier(new Identifier().setValue(getCaseID(pathwaysCase)))
+            .setVersion(latestDate.toString())
+            .setStatus(Enumerations.PublicationStatus.ACTIVE)
+            .setExperimental(false)
+            .addSubjectType("Patient")
+            .setDate(latestDate)
+            .setPublisher(publisher)
+            .setLastReviewDate(latestDate)
+            .setJurisdiction(Collections.singletonList(
+                new CodeableConcept().setText(
+                    getCountry(pathwaysCase))))
+            .addContact(
+                new ContactDetail().addTelecom(
+                    new ContactPoint().setValue(
+                        getContactNumber(pathwaysCase)
+                    )))
+            .addItem(getItem(triageLine.getQuestion(), getCaseID(pathwaysCase)));
 
         return questionnaire;
     }
 
     private String getPublisher(User user) {
-        String value = "";
+        String value = StringUtils.EMPTY;
         if (user.getId() != null) {
             value += String.format("User ID: '%s' ", user.getId());
         }
@@ -63,8 +70,8 @@ public class QuestionnaireMapper {
         if (user.getSkillSet() != null) {
             value += String.format("User skill set: '%s'", user.getSkillSet());
         }
-        if (value.equals("")) {
-            return "N/A";
+        if (value.isBlank()) {
+            return NOT_APPLICABLE;
         }
 
         return value;
@@ -131,7 +138,7 @@ public class QuestionnaireMapper {
         if (question.getQuestionText() != null) {
             item.setText(question.getQuestionText());
         } else {
-            item.setText("N/A");
+            item.setText(NOT_APPLICABLE);
         }
 
         if (question.getAnswers() != null) {

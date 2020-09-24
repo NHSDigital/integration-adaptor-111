@@ -2,6 +2,8 @@ package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
+
+import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

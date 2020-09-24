@@ -1,5 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
+import org.apache.xmlbeans.XmlException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

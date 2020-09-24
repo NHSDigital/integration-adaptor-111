@@ -7,23 +7,23 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.apache.xmlbeans.XmlException;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.connect.iucds.cda.ucr.ClinicalDocumentDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class StructuredBodyUtilTest {
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
     @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocumentMock;
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException, XmlException {
         URL resource = getClass().getResource("/xml/example-clinical-doc.xml");
         clinicalDocument = ClinicalDocumentDocument1.Factory.parse(resource).getClinicalDocument();

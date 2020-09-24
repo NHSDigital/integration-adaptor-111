@@ -1,5 +1,8 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Questionnaire;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
@@ -20,31 +23,31 @@ import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 @AllArgsConstructor
 public class QuestionnaireResponseMapper {
 
+    private static final String NOT_APPLICABLE = "N/A";
     private final QuestionnaireMapper questionnaireMapper;
 
     public QuestionnaireResponse mapQuestionnaireResponse(PathwaysCase pathwaysCase, Reference patient, Reference encounter,
         TriageLine triageLine) {
-
         QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse();
+        Questionnaire questionnaire = questionnaireMapper.mapQuestionnaire(pathwaysCase, triageLine);
 
-        questionnaireResponse.setStatus(QuestionnaireResponse.QuestionnaireResponseStatus.COMPLETED);
-        questionnaireResponse.setSubject(patient);
-        questionnaireResponse.setContext(encounter);
+        questionnaireResponse.setIdElement(newRandomUuid());
+
+        questionnaireResponse
+            .setQuestionnaire(new Reference(questionnaire))
+            .setQuestionnaireTarget(questionnaire)
+            .setStatus(QuestionnaireResponse.QuestionnaireResponseStatus.COMPLETED)
+            .setSubject(patient)
+            .setContext(encounter);
 
         if (pathwaysCase.getCaseDetails() != null) {
             if (pathwaysCase.getCaseDetails().isSetCaseId()) {
                 questionnaireResponse.setIdentifier(new Identifier().setValue(pathwaysCase.getCaseDetails().getCaseId()));
             }
         }
-
         if (pathwaysCase.isSetCaseReceiveEnd()) {
             questionnaireResponse.setAuthored(DateUtil.parsePathwaysDate(pathwaysCase.getCaseReceiveEnd().toString()));
         }
-
-        Questionnaire questionnaire = questionnaireMapper.mapQuestionnaire(pathwaysCase, triageLine);
-        questionnaireResponse.setQuestionnaire(new Reference(questionnaire));
-        questionnaireResponse.setQuestionnaireTarget(questionnaire);
-
         if (triageLine.getQuestion() != null) {
             questionnaireResponse.addItem(getItem(triageLine.getQuestion()));
         }
@@ -57,8 +60,8 @@ public class QuestionnaireResponseMapper {
         QuestionnaireResponseItemAnswerComponent answer = new QuestionnaireResponseItemAnswerComponent();
         StringType correctAnswerText = new StringType();
 
-        if (question.getQuestionId() == null || question.getQuestionId().isBlank()) {
-            item.setLinkId("N/A");
+        if (StringUtils.isBlank(question.getQuestionId())) {
+            item.setLinkId(NOT_APPLICABLE);
         } else {
             item.setLinkId(question.getQuestionId());
         }

@@ -18,18 +18,18 @@ import java.util.List;
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.QuestionnaireResponseMapper;
 import uk.nhs.connect.iucds.cda.ucr.ClinicalDocumentDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PathwayUtilTest {
     @InjectMocks
     private PathwayUtil pathwayUtil;
@@ -46,7 +46,7 @@ public class PathwayUtilTest {
     @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocumentMock;
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException, XmlException, URISyntaxException {
         String filename = (String.valueOf(Paths.get(getClass()
             .getResource("/pathways_64_bit_encoded.txt").toURI())));
