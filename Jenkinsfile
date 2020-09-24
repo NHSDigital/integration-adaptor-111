@@ -32,7 +32,8 @@ pipeline {
                         script {
                             sh label: 'Create logs directory', script: 'mkdir -p logs build'
                             if (sh(label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for tests")}
-                            if (sh(label: 'Running tests', script: 'docker run -v /var/run/docker.sock:/var/run/docker.sock --name 111-tests local/111-tests:${BUILD_TAG} gradle check -i --continue', returnStatus: true) != 0) {error("Some tests failed, check the logs")}
+                            if (sh(label: 'Running docker tests container', script: 'docker run -it -d -v /var/run/docker.sock:/var/run/docker.sock --name 111-tests-${BUILD_TAG} local/111-tests:${BUILD_TAG} /bin/bash', returnStatus: true) != 0) {error("Failed to run docker tests container")}
+                            if (sh(label: 'Running tests', returnStdout: true, script: 'docker exec 111-tests-${BUILD_TAG} /bin/bash -c "./gradlew check -i --continue --rerun-tasks"', returnStatus: true) != 0) {error("Tests failed.")}
                         }
                     }
                     post {

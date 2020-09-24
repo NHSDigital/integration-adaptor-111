@@ -115,6 +115,12 @@ task integrationTest(type: Test) {
         classpath = sourceSets.integrationTest.runtimeClasspath
         outputs.upToDateWhen { false }
     }
+    mustRunAfter(checkstyleMain)
+    mustRunAfter(checkstyleTest)
+    mustRunAfter(checkstyleIntegrationTest)
+    mustRunAfter(spotbugsMain)
+    mustRunAfter(spotbugsTest)
+    mustRunAfter(spotbugsIntegrationTest)
 }
 
 task staticCodeAnalysis(type: GradleBuild) {
@@ -138,3 +144,4 @@ tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
 }
 
 integrationTest.mustRunAfter test
+check.dependsOn integrationTest
