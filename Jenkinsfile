@@ -27,20 +27,20 @@ pipeline {
     stages {
         stage('Build and Test Locally') {
             stages {
-                stage('Static Code Analysis') {
+                stage('Run Tests') {
                     steps {
                         script {
-                            if (sh(label: 'Build docker image for static code analysis', script: 'docker build -t local/111-static-code-analysis:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for static code analysis")}
-                            if (sh(label: 'Running docker container', script: 'docker run -it -d --name check-container-${BUILD_TAG} local/111-static-code-analysis:${BUILD_TAG} /bin/bash', returnStatus: true) != 0) {error("Failed to run docker container")}
-                            if (sh(label: 'Running static code analysis', returnStdout: true, script: 'docker exec check-container-${BUILD_TAG} /bin/bash -c "./gradlew staticCodeAnalysis --continue"', returnStatus: true) != 0) {error("Static code analysis failed.")}
+                            sh label: 'Create logs directory', script: 'mkdir -p logs build'
+                            if (sh(label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for tests")}
+                            if (sh(label: 'Running tests', script: 'docker run -v /var/run/docker.sock:/var/run/docker.sock --name 111-tests local/111-tests:${BUILD_TAG} gradle check -i --continue', returnStatus: true) != 0) {error("Some tests failed, check the logs")}
                         }
                     }
                     post {
                         always {
                             sh label: 'Create reports directory', script: 'mkdir -p build/reports'
-                            sh label: 'Copy reports to jenkins', script: 'docker cp check-container-${BUILD_TAG}:/home/gradle/service/build/reports/. ./build/reports'
-                            sh label: 'Stop docker container', script: 'docker stop check-container-${BUILD_TAG}'
-                            sh label: 'Remove docker container', script: 'docker rm check-container-${BUILD_TAG}'
+                            sh label: 'Copy reports to jenkins', script: 'docker cp 111-tests-${BUILD_TAG}:/home/gradle/service/build/reports/. ./build/reports'
+                            sh label: 'Stop docker container', script: 'docker stop 111-tests-${BUILD_TAG}'
+                            sh label: 'Remove docker container', script: 'docker rm 111-tests-${BUILD_TAG}'
                             recordIssues(
                                 enabledForFailure: true,
                                 tools: [
@@ -48,18 +48,6 @@ pipeline {
                                     spotBugs(pattern: 'build/reports/spotbugs/*.xml')
                                 ]
                             )
-                        }
-                    }
-                }
-
-                stage('Run Tests') {
-                    steps {
-                        script {
-                            sh label: 'Create logs directory', script: 'mkdir -p logs build'
-                            if (sh(label: 'Start ActiveMQ', script: 'docker-compose -f ./docker-compose.yml up -d activemq', returnStatus: true) != 0) {error("Failed to start ActiveMQ container")}
-                            if (sh(label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for tests")}
-                            if (sh(label: 'Running tests', script: 'BUILD_TAG=${BUILD_TAG} docker-compose -f ./docker-compose.yml run test-111', returnStatus: true) != 0) {error("Some tests failed, check the logs")}
-                            sh label: 'Stop ActiveMQ', script: 'docker-compose -f ./docker-compose.yml stop test-111 activemq'
                         }
                     }
                 }
@@ -90,8 +78,7 @@ pipeline {
             }
             post {
                 always {
-                    sh label: 'Copy 111 container logs', script: 'docker-compose logs test-111 > logs/test-111.log'
-                    sh label: 'Copy activemq logs', script: 'docker-compose logs activemq > logs/activemq.log'
+                    sh label: 'Copy 111 container logs', script: 'docker-compose logs 111-tests > logs/111-tests.log'
                     archiveArtifacts artifacts: 'logs/*.log', fingerprint: true
                 }
             }
