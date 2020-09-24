@@ -40,7 +40,7 @@ pipeline {
                             sh label: 'Copy 111-tests container logs', script: 'docker logs 111-tests-${BUILD_TAG} > logs/111-tests.log'
                             archiveArtifacts artifacts: 'logs/*.log', fingerprint: true
                             sh label: 'Copy 111-tests container reports', script: 'docker cp 111-tests-${BUILD_TAG}:/home/gradle/service/build/reports/. ./build/reports'
-                            archiveArtifacts artifacts: 'build/reports/*.*', fingerprint: true
+                            archiveArtifacts artifacts: 'build/reports/**/*.*', fingerprint: true
                             sh label: 'Stop docker container', script: 'docker stop 111-tests-${BUILD_TAG}'
                             sh label: 'Remove docker container', script: 'docker rm 111-tests-${BUILD_TAG}'
                             recordIssues(
