@@ -25,35 +25,34 @@ pipeline {
     }    
 
     stages {
-        stage('Build and Test Locally') {
-            stages {
-                stage('Run Tests') {
-                    steps {
-                        script {
-                            if (sh(label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for tests")}
-                            if (sh(label: 'Running docker tests container', script: 'docker run -v /var/run/docker.sock:/var/run/docker.sock --name 111-tests-${BUILD_TAG} local/111-tests:${BUILD_TAG} ./gradlew check -i --continue --rerun-tasks', returnStatus: true) != 0) {error("Failed to run docker tests container")}
-                        }
-                    }
-                    post {
-                        always {
-                            sh label: 'Create logs and reports directories', script: 'mkdir -p logs build/reports'
-                            sh label: 'Copy 111-tests container logs', script: 'docker logs 111-tests-${BUILD_TAG} > logs/111-tests.log'
-                            archiveArtifacts artifacts: 'logs/*.log', fingerprint: true
-                            sh label: 'Copy 111-tests container reports', script: 'docker cp 111-tests-${BUILD_TAG}:/home/gradle/service/build/reports/. ./build/reports'
-                            archiveArtifacts artifacts: 'build/reports/**/*.*', fingerprint: true
-                            sh label: 'Stop docker container', script: 'docker stop 111-tests-${BUILD_TAG}'
-                            sh label: 'Remove docker container', script: 'docker rm 111-tests-${BUILD_TAG}'
-                            recordIssues(
-                                enabledForFailure: true,
-                                tools: [
-                                    checkStyle(pattern: 'build/reports/checkstyle/*.xml'),
-                                    spotBugs(pattern: 'build/reports/spotbugs/*.xml')
-                                ]
-                            )
-                        }
-                    }
+        stage('Test') {
+            steps {
+                script {
+                    if (sh(label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for tests")}
+                    if (sh(label: 'Running docker tests container', script: 'docker run -v /var/run/docker.sock:/var/run/docker.sock --name 111-tests-${BUILD_TAG} local/111-tests:${BUILD_TAG} ./gradlew check -i --continue --rerun-tasks', returnStatus: true) != 0) {error("Failed to run docker tests container")}
                 }
-
+            }
+            post {
+                always {
+                    sh label: 'Create logs and reports directories', script: 'mkdir -p logs build/reports'
+                    sh label: 'Copy 111-tests container logs', script: 'docker logs 111-tests-${BUILD_TAG} > logs/111-tests.log'
+                    archiveArtifacts artifacts: 'logs/*.log', fingerprint: true
+                    sh label: 'Copy 111-tests container reports', script: 'docker cp 111-tests-${BUILD_TAG}:/home/gradle/service/build/reports/. ./build/reports'
+                    archiveArtifacts artifacts: 'build/reports/**/*.*', fingerprint: true
+                    sh label: 'Stop docker container', script: 'docker stop 111-tests-${BUILD_TAG}'
+                    sh label: 'Remove docker container', script: 'docker rm 111-tests-${BUILD_TAG}'
+                    recordIssues(
+                        enabledForFailure: true,
+                        tools: [
+                            checkStyle(pattern: 'build/reports/checkstyle/*.xml'),
+                            spotBugs(pattern: 'build/reports/spotbugs/*.xml')
+                        ]
+                    )
+                }
+            }
+        }
+        stage('Build') {
+            stages {
                 stage('Build Docker Images') {
                     steps {
                         script {
@@ -62,8 +61,7 @@ pipeline {
                         }
                     }
                 }
-
-                stage('Push image') {
+                stage('Push Image') {
                     when {
                         expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
                     }
@@ -79,7 +77,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy and Integration Test') {
+        stage('Deploy') {
             when {
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
@@ -110,25 +108,25 @@ pipeline {
                         //Run TF Apply
                         if (terraform('apply', TF_STATE_BUCKET, tfProject, tfEnvironment, tfComponent, tfRegion, tfVariables) !=0 ) { error("Terraform Apply failed")}
                         tfOutputs = collectTfOutputs(tfComponent)
-                      } // dir terraform/aws
-                        } // dir integration-adaptors
-                    } //script
-                  } //steps
-                } //stage
-                stage ('Verify AWS Deployment') {
-                  steps {
-                    script {
-                      sleep(60)
-                      if (checkLbTargetGroupHealth(tfOutputs["${tfComponent}_lb_target_group_arn"], TF_STATE_BUCKET_REGION) != 0) { error("AWS healthcheck failed, check the CloudWatch logs")}
-                    } //script
-                  } //steps
-                }
-                stage('Run integration tests') {
-                    steps {
-                        echo 'TODO run integration tests'
-                        echo 'TODO archive test results'
+                      }
                     }
-                 }
+                  }
+                }
+              }
+              stage ('Verify AWS Deployment') {
+                steps {
+                  script {
+                    sleep(60)
+                    if (checkLbTargetGroupHealth(tfOutputs["${tfComponent}_lb_target_group_arn"], TF_STATE_BUCKET_REGION) != 0) { error("AWS healthcheck failed, check the CloudWatch logs")}
+                  }
+                }
+              }
+              // stage('Run integration tests') {
+              //     steps {
+              //         echo 'TODO run integration tests'
+              //         echo 'TODO archive test results'
+              //     }
+              // }
             }
 
         }
