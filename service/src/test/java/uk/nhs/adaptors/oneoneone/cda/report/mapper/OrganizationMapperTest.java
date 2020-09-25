@@ -1,5 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Organization;
@@ -8,22 +13,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.CE;
+import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class OrganizationMapperTest {
 
     public static final String ORGANIZATION_NAME = "ORGANIZATION_NAME";
     public static final String GP_PRACTICE = "GP Practice";
+    private static final String ODS_CODE = "SL3";
+
     @Mock
     private ContactPointMapper contactPointMapper;
 
@@ -42,12 +46,21 @@ public class OrganizationMapperTest {
     @Mock
     private NodeUtil nodeUtil;
 
+    @Mock
+    private II ii;
+
     @Test
     public void shouldMapOrganization() {
         POCDMT000002UK01Organization itkOrganization = mock(POCDMT000002UK01Organization.class);
         AD itkAddress = mock(AD.class);
         TEL itkTelecom = mock(TEL.class);
         CE codeEntity = mock(CE.class);
+
+        II[] iiArray = new II[] {ii};
+        when(itkOrganization.getIdArray()).thenReturn(iiArray);
+        when(ii.isSetExtension()).thenReturn(true);
+        when(ii.getExtension()).thenReturn(ODS_CODE);
+        when(itkOrganization.sizeOfIdArray()).thenReturn(1);
 
         when(itkOrganization.getAddrArray()).thenReturn(new AD[] {itkAddress});
         when(itkOrganization.getTelecomArray()).thenReturn(new TEL[] {itkTelecom});
@@ -65,5 +78,6 @@ public class OrganizationMapperTest {
         assertThat(organization.getAddressFirstRep()).isEqualTo(address);
         assertThat(organization.getTelecomFirstRep()).isEqualTo(contactPoint);
         assertThat(organization.getTypeFirstRep().getText()).isEqualTo(GP_PRACTICE);
+        assertThat(organization.getIdentifierFirstRep().getValue()).isEqualTo(ODS_CODE);
     }
 }
