@@ -1,5 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
+import org.apache.xmlbeans.XmlException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -52,7 +53,7 @@ public class ReportControllerTest {
     private SoapValidator soapValidator;
 
     @Test
-    public void postReportValidRequest() {
+    public void postReportValidRequest() throws XmlException {
         when(itkResponseUtil.createSuccessResponseEntity(eq(MESSAGE_ID), anyString())).thenReturn(RESPONSE_XML);
 
         String validRequest = getValidXmlReportRequest();

@@ -55,4 +55,16 @@ public class DateUtilTest {
         String dateAsString = "30/02/19891898.00";
         Assertions.assertThrows(IllegalStateException.class, () -> DateUtil.parseISODateTime(dateAsString));
     }
+
+    @Test
+    public void shouldParsePathwaysDateFormatCorrectly() {
+        String dateAsString = "2011-02-17T17:31:14.313Z";
+        assertThat(DateUtil.parsePathwaysDate(dateAsString)).isEqualTo("2011-02-17T00:00:00+00:00");
+    }
+
+    @Test
+    public void shouldThrowExceptionForWrongPathwaysDateFormat() {
+        String dateAsString = "30/01/2020";
+        Assertions.assertThrows(IllegalStateException.class, () -> DateUtil.parsePathwaysDate(dateAsString));
+    }
 }
