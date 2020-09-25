@@ -2,6 +2,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import javax.jms.TextMessage;
 
+import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,8 @@ public class EncounterReportService {
 
     private final AmqpProperties amqpProperties;
 
-    public void transformAndPopulateToGP(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument, String messageId, String trackingId) {
+    public void transformAndPopulateToGP(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument,
+        String messageId, String trackingId) throws XmlException {
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(clinicalDocumentDocument);
 
         jmsTemplate.send(amqpProperties.getQueueName(), session -> {
