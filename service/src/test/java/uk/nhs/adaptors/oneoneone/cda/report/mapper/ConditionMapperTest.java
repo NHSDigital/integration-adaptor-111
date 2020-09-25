@@ -1,5 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Condition.ConditionClinicalStatus.ACTIVE;
+import static org.hl7.fhir.dstu3.model.Condition.ConditionVerificationStatus.UNKNOWN;
+import static org.mockito.Mockito.when;
+
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Reference;
@@ -22,6 +27,9 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component5;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
+import uk.nhs.connect.iucds.cda.ucr.CS;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hl7.fhir.dstu3.model.Condition.ConditionClinicalStatus.ACTIVE;
@@ -33,10 +41,19 @@ public class ConditionMapperTest {
 
     private static final String EFFECTIVE_TIME_STRING = "201706011400+00";
     private static final String CONIDITION_TEXT = "Condition text";
+    private static final String LANGUAGE_CODE = "en";
+    private static final String LANGUAGE_SYSTEM = "http://hl7.org/fhir/ValueSet/languages";
+    private static final String LANGUAGE_DISPLAY = "English";
     private final Reference individualRef = new Reference("IndividualRef/1");
     @InjectMocks
     private ConditionMapper conditionMapper;
 
+    @Mock
+    private POCDMT000002UK01Section itkSection;
+    @Mock
+    private POCDMT000002UK01Component5 component;
+    @Mock
+    private CS cs;
     @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
     @Mock
@@ -66,6 +83,12 @@ public class ConditionMapperTest {
 
     @BeforeEach
     public void setUp() {
+        when(itkSection.getComponentArray()).thenReturn(new POCDMT000002UK01Component5[] {component});
+        when(component.getSection()).thenReturn(itkSection);
+        when(itkSection.isSetLanguageCode()).thenReturn(true);
+        when(itkSection.getLanguageCode()).thenReturn(cs);
+        when(cs.isSetCode()).thenReturn(true);
+        when(cs.getCode()).thenReturn(LANGUAGE_CODE);
         when(clinicalDocument.getComponent()).thenReturn(component2);
         when(component2.isSetStructuredBody()).thenReturn(true);
         when(component2.getStructuredBody()).thenReturn(structuredBody);
@@ -90,11 +113,15 @@ public class ConditionMapperTest {
     @Test
     public void mapCondition() {
         Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter);
+        Condition condition = conditionMapper.mapCondition(itkSection, itkEncounter, encounter);
+
 
         assertThat(condition.getClinicalStatus()).isEqualTo(ACTIVE);
         assertThat(condition.getVerificationStatus()).isEqualTo(UNKNOWN);
-        assertThat(condition.getAsserter()).isEqualTo(individualRef);
         assertThat(condition.getAssertedDate()).isEqualTo(DateUtil.parse(EFFECTIVE_TIME_STRING));
         assertThat(condition.getCategoryFirstRep().getText()).isEqualTo(CONIDITION_TEXT);
+        assertThat(condition.getCode().getCoding().get(0).getCode()).isEqualTo(LANGUAGE_CODE);
+        assertThat(condition.getCode().getCoding().get(0).getSystem()).isEqualTo(LANGUAGE_SYSTEM);
+        assertThat(condition.getCode().getCoding().get(0).getDisplay()).isEqualTo(LANGUAGE_DISPLAY);
     }
 }

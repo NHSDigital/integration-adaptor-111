@@ -11,14 +11,14 @@ public interface Concept {
     }
     default Coding toCoding() {
         return new Coding()
-            .setCode(getValue())
+            .setCode(getCode())
             .setDisplay(getDisplay())
             .setSystem(getSystem());
     }
-    String getValue();
+    String getCode();
     String getDisplay();
     String getSystem();
     default String toCode() {
-        return getValue();
+        return getCode();
     }
 }

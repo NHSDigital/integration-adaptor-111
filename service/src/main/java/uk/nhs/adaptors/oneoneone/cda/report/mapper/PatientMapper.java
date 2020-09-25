@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Enumerations;
 import org.hl7.fhir.dstu3.model.Extension;
@@ -22,6 +23,7 @@ import org.hl7.fhir.dstu3.model.StringType;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.enums.MaritalStatus;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01LanguageCommunication;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Patient;
@@ -71,7 +73,19 @@ public class PatientMapper {
             }
 
             if (itkPatient.isSetMaritalStatusCode()) {
-                fhirPatient.setMaritalStatus(getMaritalStatus(itkPatient));
+                if (itkPatient.getMaritalStatusCode().isSetCode()) {
+                    if (MaritalStatus.fromCode(itkPatient.getMaritalStatusCode().getCode()) != null) {
+                        MaritalStatus maritalStatus = MaritalStatus.fromCode(itkPatient.getMaritalStatusCode().getCode());
+                        if (maritalStatus.getDisplay() != null) {
+                            fhirPatient.setMaritalStatus(new CodeableConcept(
+                                new Coding()
+                                    .setDisplay(maritalStatus.getDisplay())
+                                    .setCode(maritalStatus.getCode())
+                                    .setSystem(maritalStatus.getSystem())
+                            ));
+                        }
+                    }
+                }
             }
         }
         return fhirPatient;
@@ -145,12 +159,6 @@ public class PatientMapper {
                 birthPlace));
         }
         return extensionList;
-    }
-
-    private CodeableConcept getMaritalStatus(POCDMT000002UK01Patient itkPatient) {
-        CodeableConcept maritalStatus = new CodeableConcept();
-        maritalStatus.setText(itkPatient.getMaritalStatusCode().getCode());
-        return maritalStatus;
     }
 
     private Extension createExtension(String strUrl, String id) {
