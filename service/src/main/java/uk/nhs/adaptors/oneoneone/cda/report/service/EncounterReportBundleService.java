@@ -2,7 +2,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import static java.util.stream.Collectors.toSet;
 
-import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
+import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 
 import java.util.Collection;
 import java.util.List;
@@ -50,10 +50,11 @@ public class EncounterReportBundleService {
     private final ConsentMapper consentMapper;
     private final HealthcareServiceMapper healthcareServiceMapper;
     private final PathwayUtil pathwayUtil;
+    private final MessageHeaderService messageHeaderService;
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) throws XmlException {
         Bundle bundle = new Bundle();
-        bundle.setType(TRANSACTION);
+        bundle.setType(MESSAGE);
 
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
@@ -63,6 +64,7 @@ public class EncounterReportBundleService {
         List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
             encounter.getSubject(), new Reference(encounter));
 
+        addEntry(bundle, messageHeaderService.createMessageHeader());
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);

@@ -16,6 +16,8 @@ import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.MessageHeader;
+import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Practitioner;
@@ -29,6 +31,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
@@ -43,6 +46,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.mockito.ArgumentMatchers.any;
@@ -84,6 +88,8 @@ public class EncounterReportBundleServiceTest {
     private static final IdType CONDITION_ID = newRandomUuid();
     private static final QuestionnaireResponse QUESTIONNAIRE_RESPONSE;
     private static final IdType QUESTIONNAIRE_RESPONSE_ID = newRandomUuid();
+    private static final MessageHeader MESSAGE_HEADER;
+    private static final IdType MESSAGE_HEADER_ID = newRandomUuid();
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -137,6 +143,9 @@ public class EncounterReportBundleServiceTest {
         QUESTIONNAIRE_RESPONSE = new QuestionnaireResponse();
         QUESTIONNAIRE_RESPONSE.setId(QUESTIONNAIRE_RESPONSE_ID);
 
+        MESSAGE_HEADER = new MessageHeader();
+        MESSAGE_HEADER.setId(MESSAGE_HEADER_ID);
+
         ENCOUNTER = new Encounter();
         ENCOUNTER.setStatus(FINISHED);
         ENCOUNTER.setIdElement(ENCOUNTER_ID);
@@ -167,6 +176,8 @@ public class EncounterReportBundleServiceTest {
     private ConsentMapper consentMapper;
     @Mock
     private PathwayUtil pathwayUtil;
+    @Mock
+    private MessageHeaderService messageHeaderService;
 
     @BeforeEach
     public void setUp() throws XmlException {
@@ -179,6 +190,7 @@ public class EncounterReportBundleServiceTest {
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(Collections.singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
         when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
+        when(messageHeaderService.createMessageHeader()).thenReturn(MESSAGE_HEADER);
         Encounter.DiagnosisComponent diagnosisComponent = new Encounter.DiagnosisComponent();
         diagnosisComponent.setCondition(new Reference());
         diagnosisComponent.setRole(new CodeableConcept());
@@ -193,24 +205,25 @@ public class EncounterReportBundleServiceTest {
         POCDMT000002UK01ClinicalDocument1 document = mock(POCDMT000002UK01ClinicalDocument1.class);
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
-
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(15);
+        assertThat(encounterBundle.getType()).isEqualTo(MESSAGE);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(16);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
-        verifyEntry(entries.get(0), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
-        verifyEntry(entries.get(1), SERVICE_PROVIDER_ID.getValue(), ResourceType.Organization);
-        verifyEntry(entries.get(2), PRACTITIONER_ID.getValue(), ResourceType.Practitioner);
-        verifyEntry(entries.get(3), LOCATION_ID.getValue(), ResourceType.Location);
-        verifyEntry(entries.get(4), PATIENT_ID.getValue(), ResourceType.Patient);
-        verifyEntry(entries.get(5), HEALTHCARE_SERVICE_ID.getValue(), ResourceType.HealthcareService);
-        verifyEntry(entries.get(6), REFERRAL_REQUEST_ID.getValue(), ResourceType.ReferralRequest);
-        verifyEntry(entries.get(7), APPOINTMENT_ID.getValue(), ResourceType.Appointment);
-        verifyEntry(entries.get(8), EPISODE_OF_CARE_ID.getValue(), ResourceType.EpisodeOfCare);
-        verifyEntry(entries.get(9), COMPOSITION_ID.getValue(), ResourceType.Composition);
-        verifyEntry(entries.get(10), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
-        verifyEntry(entries.get(11), CONSENT_ID.getValue(), ResourceType.Consent);
-        verifyEntry(entries.get(12), CONDITION_ID.getValue(), ResourceType.Condition);
-        verifyEntry(entries.get(13), QUESTIONNAIRE_RESPONSE_ID.getValue(), ResourceType.QuestionnaireResponse);
-        verifyEntry(entries.get(14), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+        verifyEntry(entries.get(0), MESSAGE_HEADER_ID.getValue(), ResourceType.MessageHeader);
+        verifyEntry(entries.get(1), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
+        verifyEntry(entries.get(2), SERVICE_PROVIDER_ID.getValue(), ResourceType.Organization);
+        verifyEntry(entries.get(3), PRACTITIONER_ID.getValue(), ResourceType.Practitioner);
+        verifyEntry(entries.get(4), LOCATION_ID.getValue(), ResourceType.Location);
+        verifyEntry(entries.get(5), PATIENT_ID.getValue(), ResourceType.Patient);
+        verifyEntry(entries.get(6), HEALTHCARE_SERVICE_ID.getValue(), ResourceType.HealthcareService);
+        verifyEntry(entries.get(7), REFERRAL_REQUEST_ID.getValue(), ResourceType.ReferralRequest);
+        verifyEntry(entries.get(8), APPOINTMENT_ID.getValue(), ResourceType.Appointment);
+        verifyEntry(entries.get(9), EPISODE_OF_CARE_ID.getValue(), ResourceType.EpisodeOfCare);
+        verifyEntry(entries.get(10), COMPOSITION_ID.getValue(), ResourceType.Composition);
+        verifyEntry(entries.get(11), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
+        verifyEntry(entries.get(12), CONSENT_ID.getValue(), ResourceType.Consent);
+        verifyEntry(entries.get(13), CONDITION_ID.getValue(), ResourceType.Condition);
+        verifyEntry(entries.get(14), QUESTIONNAIRE_RESPONSE_ID.getValue(), ResourceType.QuestionnaireResponse);
+        verifyEntry(entries.get(15), LIST_RESOURCE_ID.getValue(), ResourceType.List);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {
