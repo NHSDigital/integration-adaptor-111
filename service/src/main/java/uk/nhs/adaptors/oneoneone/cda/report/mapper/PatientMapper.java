@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
@@ -74,17 +75,21 @@ public class PatientMapper {
 
             if (itkPatient.isSetMaritalStatusCode()) {
                 if (itkPatient.getMaritalStatusCode().isSetCode()) {
-                    if (MaritalStatus.fromCode(itkPatient.getMaritalStatusCode().getCode()) != null) {
-                        MaritalStatus maritalStatus = MaritalStatus.fromCode(itkPatient.getMaritalStatusCode().getCode());
-                        if (maritalStatus.getDisplay() != null) {
-                            fhirPatient.setMaritalStatus(new CodeableConcept(
-                                new Coding()
-                                    .setDisplay(maritalStatus.getDisplay())
-                                    .setCode(maritalStatus.getCode())
-                                    .setSystem(maritalStatus.getSystem())
-                            ));
+                    MaritalStatus.fromCode(itkPatient.getMaritalStatusCode().getCode()).ifPresent(maritalStatus -> {
+                        Coding coding = new Coding();
+                        if (!StringUtils.isBlank(maritalStatus.getCode())) {
+                            coding.setCode(maritalStatus.getCode());
                         }
-                    }
+                        if (!StringUtils.isBlank(maritalStatus.getDisplay())) {
+                            coding.setDisplay(maritalStatus.getDisplay());
+                        }
+                        if (!StringUtils.isBlank(maritalStatus.getSystem())) {
+                            coding.setSystem(maritalStatus.getSystem());
+                        }
+                        if (coding.hasDisplay() || coding.hasSystem() || coding.hasCode()) {
+                            fhirPatient.setMaritalStatus(new CodeableConcept(coding));
+                        }
+                    });
                 }
             }
         }

@@ -1,5 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.enums;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import lombok.Getter;
@@ -68,10 +69,9 @@ public enum Language implements Concept {
     private final String code;
     private final String display;
 
-    public static uk.nhs.adaptors.oneoneone.cda.report.enums.Language fromCode(String code) {
+    public static Optional<uk.nhs.adaptors.oneoneone.cda.report.enums.Language> fromCode(String code) {
         return Stream.of(values())
             .filter(am -> code.toLowerCase().equals(am.code))
-            .findFirst()
-            .orElse(null);
+            .findFirst();
     }
 }
