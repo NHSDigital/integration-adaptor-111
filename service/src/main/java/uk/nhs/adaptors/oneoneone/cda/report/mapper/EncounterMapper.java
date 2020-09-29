@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.Encounter.DiagnosisComponent;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterLocationComponent;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
@@ -66,8 +65,6 @@ public class EncounterMapper {
 
     private final GroupMapper groupMapper;
 
-    private final DiagnosisMapper diagnosisMapper;
-
     public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<HealthcareService> healthcareServiceList) {
         Encounter encounter = new Encounter();
         encounter.setIdElement(newRandomUuid());
@@ -80,7 +77,6 @@ public class EncounterMapper {
         setReferralRequest(encounter, healthcareServiceList);
         setAppointment(encounter, clinicalDocument);
         setEpisodeOfCare(encounter, clinicalDocument);
-        setDiagnosis(encounter, clinicalDocument);
         setEncounterReasonAndType(encounter, clinicalDocument);
         return encounter;
     }
@@ -175,11 +171,6 @@ public class EncounterMapper {
     private void setEpisodeOfCare(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Optional<EpisodeOfCare> episodeOfCare = episodeOfCareMapper.mapEpisodeOfCare(clinicalDocument, encounter.getSubject());
         episodeOfCare.ifPresent(ofCare -> encounter.addEpisodeOfCare(new Reference(ofCare)));
-    }
-
-    private void setDiagnosis(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        DiagnosisComponent diagnosis = diagnosisMapper.mapDiagnosis(clinicalDocument, encounter);
-        encounter.addDiagnosis(diagnosis);
     }
 
     private void setEncounterReasonAndType(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {

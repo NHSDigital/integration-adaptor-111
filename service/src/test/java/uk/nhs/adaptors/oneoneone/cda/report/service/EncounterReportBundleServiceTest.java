@@ -1,5 +1,17 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
+import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
@@ -33,24 +45,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConditionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
-import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class EncounterReportBundleServiceTest {
@@ -177,15 +178,18 @@ public class EncounterReportBundleServiceTest {
     private PathwayUtil pathwayUtil;
     @Mock
     private MessageHeaderService messageHeaderService;
+    @Mock
+    private ConditionMapper conditionMapper;
 
     @BeforeEach
     public void setUp() throws XmlException {
         List<QuestionnaireResponse> questionnaireResponseList = new ArrayList<>();
         questionnaireResponseList.add(QUESTIONNAIRE_RESPONSE);
         when(encounterMapper.mapEncounter(any(), any())).thenReturn(ENCOUNTER);
+        when(conditionMapper.mapCondition(any(), any())).thenReturn(CONDITION);
         when(compositionMapper.mapComposition(any(), any())).thenReturn(COMPOSITION);
         when(listMapper.mapList(any(), any(), any())).thenReturn(LIST_RESOURCE);
-        when(carePlanMapper.mapCarePlan(any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
+        when(carePlanMapper.mapCarePlan(any(), any(), any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(Collections.singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
         when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);

@@ -93,8 +93,6 @@ public class EncounterMapperTest {
     @Mock
     private ReferralRequestMapper referralRequestMapper;
     @Mock
-    private DiagnosisMapper diagnosisMapper;
-    @Mock
     private DiagnosisComponent diagnosis;
     @Mock
     private List<HealthcareService> healthcareServiceList;
@@ -136,7 +134,6 @@ public class EncounterMapperTest {
         mockSubject();
         mockEpisodeOfCare();
         mockReferralRequest();
-        mockDiagnosis();
         mockParticipantWithAuthorInformantAndDataEnterer(clinicalDocument);
         mockEncounterTypeAndReason();
     }
@@ -185,10 +182,6 @@ public class EncounterMapperTest {
     private void mockReferralRequest() {
         when(referralRequestMapper.mapReferralRequest(any(), any()))
             .thenReturn(referralRequest);
-    }
-
-    private void mockDiagnosis() {
-        when(diagnosisMapper.mapDiagnosis(any(), any())).thenReturn(diagnosis);
     }
 
     private void mockParticipantWithAuthorInformantAndDataEnterer(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -248,7 +241,6 @@ public class EncounterMapperTest {
         assertThat(encounter.getSubjectTarget()).isEqualTo(patient);
         assertThat(encounter.getEpisodeOfCareFirstRep().getResource()).isEqualTo(episodeOfCare);
         assertThat(encounter.getIncomingReferralFirstRep().getResource()).isEqualTo(referralRequest);
-        assertThat(encounter.getDiagnosisFirstRep()).isEqualTo(diagnosis);
         assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(EncounterType.ADMS.toString());
     }
 
