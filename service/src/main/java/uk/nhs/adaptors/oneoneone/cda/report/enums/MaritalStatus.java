@@ -1,5 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.enums;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import lombok.Getter;
@@ -20,13 +21,12 @@ public enum MaritalStatus implements Concept {
     WIDOWED("W", "Widowed");
 
     private final String system = "http://hl7.org/fhir/v3/MaritalStatus";
-    private final String value;
+    private final String code;
     private final String display;
 
-    public static uk.nhs.adaptors.oneoneone.cda.report.enums.MaritalStatus fromCode(String code) {
+    public static Optional<uk.nhs.adaptors.oneoneone.cda.report.enums.MaritalStatus> fromCode(String code) {
         return Stream.of(values())
-            .filter(am -> code.toUpperCase().equals(am.value))
-            .findFirst()
-            .orElseThrow();
+            .filter(am -> code.toUpperCase().equals(am.code))
+            .findFirst();
     }
 }

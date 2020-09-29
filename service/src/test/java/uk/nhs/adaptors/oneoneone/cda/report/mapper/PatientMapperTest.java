@@ -1,5 +1,13 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.Date;
+
 import org.assertj.core.util.Arrays;
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
@@ -12,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.CE;
@@ -27,14 +36,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Place;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
 import uk.nhs.connect.iucds.cda.ucr.TS;
-
-import java.util.Date;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class PatientMapperTest {
@@ -117,7 +118,9 @@ public class PatientMapperTest {
         assertThat(fhirPatient.getExtension().size()).isEqualTo(3);
         assertThat(fhirPatient.getBirthDate()).isEqualTo(date);
         assertThat(fhirPatient.getGender().toCode()).isEqualTo("unknown");
-        assertThat(fhirPatient.getMaritalStatus().getText()).isEqualTo("MARRIED");
+        assertThat(fhirPatient.getMaritalStatus().getCoding().get(0).getDisplay()).isEqualTo("Married");
+        assertThat(fhirPatient.getMaritalStatus().getCoding().get(0).getSystem()).isEqualTo("http://hl7.org/fhir/v3/MaritalStatus");
+        assertThat(fhirPatient.getMaritalStatus().getCoding().get(0).getCode()).isEqualTo("M");
     }
 
     private void mockNames(POCDMT000002UK01Patient itkPatient) {
@@ -198,7 +201,8 @@ public class PatientMapperTest {
         when(itkPatient.isSetMaritalStatusCode()).thenReturn(true);
         CE maritalStatus = mock(CE.class);
         when(itkPatient.getMaritalStatusCode()).thenReturn(maritalStatus);
-        when(maritalStatus.getCode()).thenReturn("MARRIED");
+        when(maritalStatus.getCode()).thenReturn("m");
+        when(maritalStatus.isSetCode()).thenReturn(true);
     }
 
     private void mockEthnicGroup(POCDMT000002UK01Patient itkPatient) {
