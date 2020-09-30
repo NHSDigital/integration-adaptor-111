@@ -66,14 +66,12 @@ public class EncounterReportBundleService {
 
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
-        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter);
-        List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter);
-        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans);
-        Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
         List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
             encounter.getSubject(), new Reference(encounter));
         Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, questionnaireResponseList, condition);
+        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans);
+        Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
 
         addEntry(bundle, messageHeaderService.createMessageHeader());
         addEncounter(bundle, encounter);
