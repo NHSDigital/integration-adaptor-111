@@ -15,11 +15,11 @@ import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
@@ -37,7 +37,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Place;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PatientMapperTest {
 
     @Mock
@@ -118,7 +118,9 @@ public class PatientMapperTest {
         assertThat(fhirPatient.getExtension().size()).isEqualTo(3);
         assertThat(fhirPatient.getBirthDate()).isEqualTo(date);
         assertThat(fhirPatient.getGender().toCode()).isEqualTo("unknown");
-        assertThat(fhirPatient.getMaritalStatus().getText()).isEqualTo("MARRIED");
+        assertThat(fhirPatient.getMaritalStatus().getCoding().get(0).getDisplay()).isEqualTo("Married");
+        assertThat(fhirPatient.getMaritalStatus().getCoding().get(0).getSystem()).isEqualTo("http://hl7.org/fhir/v3/MaritalStatus");
+        assertThat(fhirPatient.getMaritalStatus().getCoding().get(0).getCode()).isEqualTo("M");
     }
 
     private void mockNames(POCDMT000002UK01Patient itkPatient) {
@@ -168,7 +170,6 @@ public class PatientMapperTest {
     private void mockExtensions(POCDMT000002UK01Patient itkPatient) {
         mockEthnicGroup(itkPatient);
         mockReligiousAffiliation(itkPatient);
-        mockBirthPlace(itkPatient);
     }
 
     private void mockBirthTime(POCDMT000002UK01Patient itkPatient) {
@@ -200,7 +201,8 @@ public class PatientMapperTest {
         when(itkPatient.isSetMaritalStatusCode()).thenReturn(true);
         CE maritalStatus = mock(CE.class);
         when(itkPatient.getMaritalStatusCode()).thenReturn(maritalStatus);
-        when(maritalStatus.getCode()).thenReturn("MARRIED");
+        when(maritalStatus.getCode()).thenReturn("m");
+        when(maritalStatus.isSetCode()).thenReturn(true);
     }
 
     private void mockEthnicGroup(POCDMT000002UK01Patient itkPatient) {

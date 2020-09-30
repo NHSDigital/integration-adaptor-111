@@ -1,6 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,8 +9,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.Locale;
 
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DateUtilTest {
     private final SimpleDateFormat isoDateformatter = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
@@ -54,5 +54,17 @@ public class DateUtilTest {
     public void shouldThrowExceptionForWrongISODateTimeFormat() {
         String dateAsString = "30/02/19891898.00";
         Assertions.assertThrows(IllegalStateException.class, () -> DateUtil.parseISODateTime(dateAsString));
+    }
+
+    @Test
+    public void shouldParsePathwaysDateFormatCorrectly() {
+        String dateAsString = "2011-02-17T17:31:14.313Z";
+        assertThat(DateUtil.parsePathwaysDate(dateAsString)).isEqualTo("2011-02-17T00:00:00+00:00");
+    }
+
+    @Test
+    public void shouldThrowExceptionForWrongPathwaysDateFormat() {
+        String dateAsString = "30/01/2020";
+        Assertions.assertThrows(IllegalStateException.class, () -> DateUtil.parsePathwaysDate(dateAsString));
     }
 }

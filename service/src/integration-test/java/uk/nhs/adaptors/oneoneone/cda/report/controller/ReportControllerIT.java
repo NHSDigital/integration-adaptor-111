@@ -1,42 +1,43 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
+import org.dom4j.DocumentException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.nhs.adaptors.containers.IntegrationTestsExtension;
+import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
+import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
+import uk.nhs.adaptors.oneoneone.utils.ResponseElement;
+import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
+
+import javax.jms.JMSException;
+import javax.jms.Message;
+import java.net.URL;
+import java.nio.file.Paths;
+import java.util.Map;
+
+import static io.restassured.RestAssured.given;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.nio.file.Files.readAllBytes;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 import static org.springframework.http.MediaType.TEXT_XML_VALUE;
-
-import static io.restassured.RestAssured.given;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.ACTION;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.BODY;
 
-import java.net.URL;
-import java.nio.file.Paths;
-import java.util.Map;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-
-import org.dom4j.DocumentException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
-import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
-import uk.nhs.adaptors.oneoneone.utils.ResponseElement;
-import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
-
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
+@ExtendWith({SpringExtension.class, IntegrationTestsExtension.class})
+@AutoConfigureMockMvc
+@DirtiesContext
 public class ReportControllerIT {
 
     public static final String MESSAGE_ID_VALUE = "2B77B3F5-3016-4A6D-821F-152CE420E58D";

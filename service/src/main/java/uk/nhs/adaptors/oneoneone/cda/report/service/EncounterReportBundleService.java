@@ -2,11 +2,12 @@ package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import static java.util.stream.Collectors.toSet;
 
-import static org.hl7.fhir.dstu3.model.Bundle.BundleType.TRANSACTION;
+import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.CarePlan;
@@ -21,6 +22,8 @@ import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Questionnaire;
+import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.Resource;
@@ -29,10 +32,12 @@ import org.springframework.stereotype.Component;
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConditionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Component
@@ -45,17 +50,32 @@ public class EncounterReportBundleService {
     private final CarePlanMapper carePlanMapper;
     private final ConsentMapper consentMapper;
     private final HealthcareServiceMapper healthcareServiceMapper;
+    private final PathwayUtil pathwayUtil;
+    private final MessageHeaderService messageHeaderService;
+    private final ConditionMapper conditionMapper;
 
-    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+    private static void addEntry(Bundle bundle, Resource resource) {
+        bundle.addEntry()
+            .setFullUrl(resource.getIdElement().getValue())
+            .setResource(resource);
+    }
+
+    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) throws XmlException {
         Bundle bundle = new Bundle();
-        bundle.setType(TRANSACTION);
+        bundle.setType(MESSAGE);
 
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter);
         Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans);
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
+        List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
+            encounter.getSubject(), new Reference(encounter));
+        Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter);
+        List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, questionnaireResponseList, condition);
 
+        addEntry(bundle, messageHeaderService.createMessageHeader());
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
@@ -68,7 +88,8 @@ public class EncounterReportBundleService {
         addComposition(bundle, composition);
         addCarePlan(bundle, carePlans);
         addConsent(bundle, consent);
-        addCondition(bundle, encounter);
+        addCondition(bundle, condition);
+        addQuestionnaireResponses(bundle, questionnaireResponseList);
 
         ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
         addList(bundle, listResource);
@@ -178,13 +199,8 @@ public class EncounterReportBundleService {
         }
     }
 
-    private void addCondition(Bundle bundle, Encounter encounter) {
-        if (encounter.hasDiagnosis()) {
-            Condition condition = (Condition) encounter.getDiagnosisFirstRep().getConditionTarget();
-            if (condition != null) {
-                addEntry(bundle, condition);
-            }
-        }
+    private void addCondition(Bundle bundle, Condition condition) {
+        addEntry(bundle, condition);
     }
 
     private void addComposition(Bundle bundle, Composition composition) {
@@ -214,13 +230,20 @@ public class EncounterReportBundleService {
         }
     }
 
-    private void addConsent(Bundle bundle, Consent consent) {
-        addEntry(bundle, consent);
+    private void addQuestionnaireResponses(Bundle bundle, List<QuestionnaireResponse> questionnaireResponseList) {
+        if (questionnaireResponseList != null) {
+            if (questionnaireResponseList.size() > 0) {
+                for (QuestionnaireResponse questionnaireResponse : questionnaireResponseList) {
+                    addEntry(bundle, questionnaireResponse);
+                    if (questionnaireResponse.hasQuestionnaire()) {
+                        addEntry(bundle, (Questionnaire) questionnaireResponse.getQuestionnaire().getResource());
+                    }
+                }
+            }
+        }
     }
 
-    private static void addEntry(Bundle bundle, Resource resource) {
-        bundle.addEntry()
-            .setFullUrl(resource.getIdElement().getValue())
-            .setResource(resource);
+    private void addConsent(Bundle bundle, Consent consent) {
+        addEntry(bundle, consent);
     }
 }

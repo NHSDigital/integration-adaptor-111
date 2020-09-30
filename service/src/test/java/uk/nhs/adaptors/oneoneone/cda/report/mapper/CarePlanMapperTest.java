@@ -4,19 +4,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hl7.fhir.dstu3.model.CarePlan;
+import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
@@ -30,7 +33,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 import uk.nhs.connect.iucds.cda.ucr.ST;
 import uk.nhs.connect.iucds.cda.ucr.StrucDocText;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CarePlanMapperTest {
     private static final String URN_UUID = "urn:uuid:";
     private static final String LANG = "EN";
@@ -70,10 +73,26 @@ public class CarePlanMapperTest {
     @Mock
     private NodeUtil nodeUtil;
 
+    @Mock
+    private QuestionnaireResponse questionnaireResponse;
+
+    @Mock
+    private Condition condition;
+
+    @Mock
+    private Encounter.EncounterLocationComponent locationComponent;
+
+    @Mock
+    private Reference location;
+
+    private List<QuestionnaireResponse> questionnaireResponseList;
+
+    private List<Encounter.EncounterLocationComponent> locationComponentList;
+
     @InjectMocks
     private CarePlanMapper carePlanMapper;
 
-    @Before
+    @BeforeEach
     public void setup() {
         POCDMT000002UK01Component2 component2 = mock(POCDMT000002UK01Component2.class);
         POCDMT000002UK01Component3 component3 = mock(POCDMT000002UK01Component3.class);
@@ -99,13 +118,24 @@ public class CarePlanMapperTest {
         when(encounter.getSubject()).thenReturn(subjectReference);
         when(encounter.getSubjectTarget()).thenReturn(subject);
         when(encounter.getPeriod()).thenReturn(period);
+
+        locationComponentList = new ArrayList<>();
+        locationComponentList.add(locationComponent);
+
+        when(encounter.hasLocation()).thenReturn(true);
+        when(encounter.getLocation()).thenReturn(locationComponentList);
+        when(locationComponent.hasLocation()).thenReturn(true);
+        when(locationComponent.getLocation()).thenReturn(location);
+
+        questionnaireResponseList = new ArrayList<>();
+        questionnaireResponseList.add(questionnaireResponse);
     }
 
     @Test
     public void shouldMapITKReportToCarePlan() {
         mockSection();
 
-        List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter);
+        List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, questionnaireResponseList, condition);
         assertThat(carePlans).isNotEmpty();
 
         CarePlan carePlan = carePlans.get(0);
@@ -123,6 +153,10 @@ public class CarePlanMapperTest {
         assertThat(carePlan.getText().getDivAsString()).isEqualTo(DIV_AS_STRING);
         assertThat(carePlan.getTitle()).isEqualTo(TITLE);
         assertThat(carePlan.getDescription()).isEqualTo(DESCRIPTION);
+
+        assertThat(carePlan.getAuthor().get(0)).isEqualTo(location);
+        assertThat(carePlan.getAddresses().get(0).getResource()).isEqualTo(condition);
+        assertThat(carePlan.getSupportingInfo().get(0).getResource()).isEqualTo(questionnaireResponse);
     }
 
     private void mockSection() {

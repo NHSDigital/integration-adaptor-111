@@ -1,23 +1,13 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
-
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.AppointmentMapper;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -29,7 +19,16 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 import uk.nhs.connect.npfit.hl7.localisation.TemplateContent;
 
-@RunWith(MockitoJUnitRunner.class)
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 public class AppointmentServiceTest {
 
     private static final String APPOINTMENT_REFERENCE = "COCD_TP146093GB01#AppointmentReference";
@@ -47,7 +46,7 @@ public class AppointmentServiceTest {
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument1;
     private POCDMT000002UK01Section section;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         clinicalDocument1 = mock(POCDMT000002UK01ClinicalDocument1.class);
         POCDMT000002UK01Component2 component2 = mock(POCDMT000002UK01Component2.class);
