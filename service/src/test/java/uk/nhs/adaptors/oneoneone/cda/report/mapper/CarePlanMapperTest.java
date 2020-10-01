@@ -80,14 +80,12 @@ public class CarePlanMapperTest {
     private Condition condition;
 
     @Mock
-    private Encounter.EncounterLocationComponent locationComponent;
+    private Reference organization;
 
     @Mock
-    private Reference location;
+    private Patient patient;
 
     private List<QuestionnaireResponse> questionnaireResponseList;
-
-    private List<Encounter.EncounterLocationComponent> locationComponentList;
 
     @InjectMocks
     private CarePlanMapper carePlanMapper;
@@ -113,19 +111,14 @@ public class CarePlanMapperTest {
         title.setLanguage(LANG);
         cs.setCode(LANG);
 
-        Patient subject = mock(Patient.class);
-        Reference subjectReference = new Reference(subject);
-        when(encounter.getSubject()).thenReturn(subjectReference);
-        when(encounter.getSubjectTarget()).thenReturn(subject);
+        when(encounter.getSubject()).thenReturn(new Reference(patient));
+        when(encounter.getSubjectTarget()).thenReturn(patient);
         when(encounter.getPeriod()).thenReturn(period);
 
-        locationComponentList = new ArrayList<>();
-        locationComponentList.add(locationComponent);
-
-        when(encounter.hasLocation()).thenReturn(true);
-        when(encounter.getLocation()).thenReturn(locationComponentList);
-        when(locationComponent.hasLocation()).thenReturn(true);
-        when(locationComponent.getLocation()).thenReturn(location);
+        when(encounter.hasSubject()).thenReturn(true);
+        when(encounter.getSubjectTarget()).thenReturn(patient);
+        when(patient.hasManagingOrganization()).thenReturn(true);
+        when(patient.getManagingOrganization()).thenReturn(organization);
 
         questionnaireResponseList = new ArrayList<>();
         questionnaireResponseList.add(questionnaireResponse);
@@ -154,7 +147,7 @@ public class CarePlanMapperTest {
         assertThat(carePlan.getTitle()).isEqualTo(TITLE);
         assertThat(carePlan.getDescription()).isEqualTo(DESCRIPTION);
 
-        assertThat(carePlan.getAuthor().get(0)).isEqualTo(location);
+        assertThat(carePlan.getAuthor().get(0)).isEqualTo(organization);
         assertThat(carePlan.getAddresses().get(0).getResource()).isEqualTo(condition);
         assertThat(carePlan.getSupportingInfo().get(0).getResource()).isEqualTo(questionnaireResponse);
     }
@@ -168,15 +161,11 @@ public class CarePlanMapperTest {
         when(section.isSetText()).thenReturn(true);
         when(section.getText()).thenReturn(strucDocText);
         when(section.getText().sizeOfContentArray()).thenReturn(1);
-
         when(section.getTitle()).thenReturn(title);
         when(nodeUtil.getNodeValueString(section.getTitle())).thenReturn(TITLE);
-
         when(section.getText()).thenReturn(strucDocText);
-
         when(section.getLanguageCode()).thenReturn(cs);
         when(nodeUtil.getNodeValueString(cs)).thenReturn(LANG);
-
         when(nodeUtil.getNodeValueString(section.getText().getContentArray(0))).thenReturn(DESCRIPTION);
     }
 }

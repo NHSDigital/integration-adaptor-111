@@ -18,6 +18,7 @@ import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Narrative;
+import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
@@ -95,14 +96,10 @@ public class CarePlanMapper {
             carePlan.setSupportingInfo(supportingInformationList);
         }
 
-        if (encounter.hasLocation()) {
-            List<Reference> authorList = new ArrayList<>();
-            for (Encounter.EncounterLocationComponent author : encounter.getLocation()) {
-                if (author.hasLocation()) {
-                    authorList.add(author.getLocation());
-                }
+        if (encounter.hasSubject()) {
+            if (((Patient) encounter.getSubjectTarget()).hasManagingOrganization()) {
+                carePlan.addAuthor(((Patient) encounter.getSubjectTarget()).getManagingOrganization());
             }
-            carePlan.setAuthor(authorList);
         }
 
         return carePlan;
