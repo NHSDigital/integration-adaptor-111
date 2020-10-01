@@ -6,7 +6,6 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +13,7 @@ import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Composition;
+import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Identifier;
@@ -113,16 +113,14 @@ public class CompositionMapper {
             }
         }
 
-        List<Reference> carePlanReferences = getCarePlanReferences(carePlans);
-        if (!carePlanReferences.isEmpty()) {
-            for (Reference carePlanReference : carePlanReferences) {
-                composition.addSection(buildSectionComponentFromReference(carePlanReference));
+        if (!carePlans.isEmpty()) {
+            for (CarePlan carePlan : carePlans) {
+                composition.addSection(buildSectionComponentFromResource(carePlan));
             }
         }
 
-        Reference referralRequestReference = getReferralRequestReference(encounter);
-        if (referralRequestReference != null) {
-            composition.addSection(buildSectionComponentFromReference(referralRequestReference));
+        if (encounter.hasIncomingReferral()) {
+            composition.addSection(buildSectionComponentFromReference(encounter.getIncomingReferralFirstRep()));
         }
 
         return composition;
@@ -133,29 +131,15 @@ public class CompositionMapper {
         return new CodeableConcept(coding);
     }
 
-    private List<Reference> getCarePlanReferences(List<CarePlan> carePlans) {
-        List<Reference> references = new ArrayList<>();
-
-        if (!carePlans.isEmpty()) {
-            for (CarePlan carePlan : carePlans) {
-                references.add(new Reference(carePlan));
-            }
-        }
-
-        return references;
+    private Composition.SectionComponent buildSectionComponentFromResource(DomainResource resource) {
+        return new Composition.SectionComponent()
+            .setTitle(resource.fhirType())
+            .addEntry(new Reference(resource));
     }
 
     private Composition.SectionComponent buildSectionComponentFromReference(Reference reference) {
         return new Composition.SectionComponent()
             .setTitle(reference.getResource().fhirType())
             .addEntry(reference);
-    }
-
-    private Reference getReferralRequestReference(Encounter encounter) {
-        if (encounter.hasIncomingReferral()) {
-            return encounter.getIncomingReferralFirstRep();
-        }
-
-        return null;
     }
 }
