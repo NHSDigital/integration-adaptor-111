@@ -15,7 +15,6 @@ import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Consent;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.ListResource;
@@ -77,7 +76,6 @@ public class EncounterReportBundleService {
         ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument,
             encounter, healthcareServiceList, questionnaireResponseList);
 
-
         addEntry(bundle, messageHeaderService.createMessageHeader());
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
@@ -87,7 +85,6 @@ public class EncounterReportBundleService {
         addHealthcareService(bundle, healthcareServiceList);
         addIncomingReferral(bundle, referralRequest);
         addAppointment(bundle, encounter);
-        addEpisodeOfCare(bundle, encounter);
         addComposition(bundle, composition);
         addCarePlan(bundle, carePlans);
         addConsent(bundle, consent);
@@ -107,21 +104,6 @@ public class EncounterReportBundleService {
 
     private void addEncounter(Bundle bundle, Encounter encounter) {
         addEntry(bundle, encounter);
-    }
-
-    private void addEpisodeOfCare(Bundle bundle, Encounter encounter) {
-        if (encounter.hasEpisodeOfCare()) {
-            EpisodeOfCare episodeOfCare = (EpisodeOfCare) encounter.getEpisodeOfCareFirstRep().getResource();
-            addEntry(bundle, episodeOfCare);
-
-            if (episodeOfCare.hasCareManager()) {
-                addEntry(bundle, episodeOfCare.getCareManagerTarget());
-            }
-
-            if (episodeOfCare.hasManagingOrganization()) {
-                addEntry(bundle, episodeOfCare.getManagingOrganizationTarget());
-            }
-        }
     }
 
     private void addServiceProvider(Bundle bundle, Encounter encounter) {

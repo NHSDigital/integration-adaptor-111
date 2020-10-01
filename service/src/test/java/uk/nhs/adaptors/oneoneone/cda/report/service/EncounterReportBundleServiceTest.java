@@ -22,7 +22,6 @@ import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Consent;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.IdType;
@@ -71,8 +70,6 @@ public class EncounterReportBundleServiceTest {
     private static final Encounter.EncounterLocationComponent ENCOUNTER_LOCATION_COMPONENT;
     private static final Patient PATIENT;
     private static final IdType PATIENT_ID = newRandomUuid();
-    private static final EpisodeOfCare EPISODE_OF_CARE;
-    private static final IdType EPISODE_OF_CARE_ID = newRandomUuid();
     private static final ReferralRequest REFERRAL_REQUEST;
     private static final IdType REFERRAL_REQUEST_ID = newRandomUuid();
     private static final Composition COMPOSITION;
@@ -117,9 +114,6 @@ public class EncounterReportBundleServiceTest {
         PATIENT = new Patient();
         PATIENT.setId(PATIENT_ID);
 
-        EPISODE_OF_CARE = new EpisodeOfCare();
-        EPISODE_OF_CARE.setId(EPISODE_OF_CARE_ID);
-
         REFERRAL_REQUEST = new ReferralRequest();
         REFERRAL_REQUEST.setId(REFERRAL_REQUEST_ID);
 
@@ -157,7 +151,6 @@ public class EncounterReportBundleServiceTest {
         ENCOUNTER.setLocation(Collections.singletonList(ENCOUNTER_LOCATION_COMPONENT));
         ENCOUNTER.setSubject(new Reference(PATIENT));
         ENCOUNTER.setSubjectTarget(PATIENT);
-        ENCOUNTER.addEpisodeOfCare(new Reference(EPISODE_OF_CARE));
         ENCOUNTER.addIncomingReferral(new Reference(REFERRAL_REQUEST));
     }
 
@@ -213,7 +206,7 @@ public class EncounterReportBundleServiceTest {
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
         assertThat(encounterBundle.getType()).isEqualTo(MESSAGE);
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(16);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(15);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), MESSAGE_HEADER_ID.getValue(), ResourceType.MessageHeader);
         verifyEntry(entries.get(1), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
@@ -224,13 +217,12 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(6), HEALTHCARE_SERVICE_ID.getValue(), ResourceType.HealthcareService);
         verifyEntry(entries.get(7), REFERRAL_REQUEST_ID.getValue(), ResourceType.ReferralRequest);
         verifyEntry(entries.get(8), APPOINTMENT_ID.getValue(), ResourceType.Appointment);
-        verifyEntry(entries.get(9), EPISODE_OF_CARE_ID.getValue(), ResourceType.EpisodeOfCare);
-        verifyEntry(entries.get(10), COMPOSITION_ID.getValue(), ResourceType.Composition);
-        verifyEntry(entries.get(11), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
-        verifyEntry(entries.get(12), CONSENT_ID.getValue(), ResourceType.Consent);
-        verifyEntry(entries.get(13), CONDITION_ID.getValue(), ResourceType.Condition);
-        verifyEntry(entries.get(14), QUESTIONNAIRE_RESPONSE_ID.getValue(), ResourceType.QuestionnaireResponse);
-        verifyEntry(entries.get(15), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+        verifyEntry(entries.get(9), COMPOSITION_ID.getValue(), ResourceType.Composition);
+        verifyEntry(entries.get(10), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
+        verifyEntry(entries.get(11), CONSENT_ID.getValue(), ResourceType.Consent);
+        verifyEntry(entries.get(12), CONDITION_ID.getValue(), ResourceType.Condition);
+        verifyEntry(entries.get(13), QUESTIONNAIRE_RESPONSE_ID.getValue(), ResourceType.QuestionnaireResponse);
+        verifyEntry(entries.get(14), LIST_RESOURCE_ID.getValue(), ResourceType.List);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {

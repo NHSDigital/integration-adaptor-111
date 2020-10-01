@@ -14,7 +14,6 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterLocationComponent;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
-import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Organization;
@@ -55,8 +54,6 @@ public class EncounterMapper {
 
     private final AppointmentService appointmentService;
 
-    private final EpisodeOfCareMapper episodeOfCareMapper;
-
     private final PatientMapper patientMapper;
 
     private final GroupMapper groupMapper;
@@ -71,7 +68,6 @@ public class EncounterMapper {
         setSubject(encounter, clinicalDocument);
         encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument, encounter));
         setAppointment(encounter, clinicalDocument);
-        setEpisodeOfCare(encounter, clinicalDocument);
         setEncounterReasonAndType(encounter, clinicalDocument);
         return encounter;
     }
@@ -150,11 +146,6 @@ public class EncounterMapper {
         Reference patient = encounter.getSubject();
         appointmentService.retrieveAppointment(patient, clinicalDocument).ifPresent(appointment ->
             encounter.setAppointment(new Reference(appointment)));
-    }
-
-    private void setEpisodeOfCare(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        Optional<EpisodeOfCare> episodeOfCare = episodeOfCareMapper.mapEpisodeOfCare(clinicalDocument, encounter.getSubject());
-        episodeOfCare.ifPresent(ofCare -> encounter.addEpisodeOfCare(new Reference(ofCare)));
     }
 
     private void setEncounterReasonAndType(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {

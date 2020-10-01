@@ -12,13 +12,10 @@ import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.Encounter.DiagnosisComponent;
-import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.codesystems.EncounterType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,17 +76,11 @@ public class EncounterMapperTest {
     @Mock
     private Patient patient;
     @Mock
-    private EpisodeOfCare episodeOfCare;
-    @Mock
     private Encounter.EncounterLocationComponent locationComponent;
     @Mock
     private PatientMapper patientMapper;
     @Mock
-    private EpisodeOfCareMapper episodeOfCareMapper;
-    @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
-    @Mock
-    private DiagnosisComponent diagnosis;
     @Mock
     private List<HealthcareService> healthcareServiceList;
     @Mock
@@ -128,7 +119,6 @@ public class EncounterMapperTest {
         mockServiceProvider();
         mockAppointment();
         mockSubject();
-        mockEpisodeOfCare();
         mockParticipantWithAuthorInformantAndDataEnterer(clinicalDocument);
         mockEncounterTypeAndReason();
     }
@@ -167,11 +157,6 @@ public class EncounterMapperTest {
 
     private void mockSubject() {
         when(patientMapper.mapPatient(any())).thenReturn(patient);
-    }
-
-    private void mockEpisodeOfCare() {
-        when(episodeOfCareMapper.mapEpisodeOfCare(any(POCDMT000002UK01ClinicalDocument1.class), any(Reference.class)))
-            .thenReturn(Optional.of(episodeOfCare));
     }
 
     private void mockParticipantWithAuthorInformantAndDataEnterer(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -229,7 +214,6 @@ public class EncounterMapperTest {
         assertThat(encounter.getServiceProviderTarget()).isEqualTo(serviceProvider);
         assertThat(encounter.getLocationFirstRep()).isEqualTo(locationComponent);
         assertThat(encounter.getSubjectTarget()).isEqualTo(patient);
-        assertThat(encounter.getEpisodeOfCareFirstRep().getResource()).isEqualTo(episodeOfCare);
         assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(EncounterType.ADMS.toString());
     }
 
