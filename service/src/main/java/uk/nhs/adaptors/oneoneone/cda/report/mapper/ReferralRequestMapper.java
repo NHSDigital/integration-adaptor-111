@@ -41,7 +41,7 @@ public class ReferralRequestMapper {
     private final ProcedureRequestMapper procedureRequestMapper;
 
     public ReferralRequest mapReferralRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
-        List<HealthcareService> healthcareServiceList) {
+        List<HealthcareService> healthcareServiceList, List<QuestionnaireResponse> questionnaireResponseList) {
 
         ReferralRequest referralRequest = new ReferralRequest();
         referralRequest.setIdElement(newRandomUuid());
@@ -68,12 +68,13 @@ public class ReferralRequestMapper {
             referralRequest.addRecipient(new Reference(healthcareService));
         }
 
+        addCondition(referralRequest, clinicalDocument, encounter, questionnaireResponseList);
+
         return referralRequest;
     }
 
-    public ReferralRequest addCondition(ReferralRequest referralRequest, POCDMT000002UK01ClinicalDocument1 clinicalDocument,
-        Encounter encounter,
-        List<QuestionnaireResponse> questionnaireResponseList) {
+    private void addCondition(ReferralRequest referralRequest, POCDMT000002UK01ClinicalDocument1 clinicalDocument,
+        Encounter encounter, List<QuestionnaireResponse> questionnaireResponseList) {
         if (clinicalDocument.getComponent() != null) {
             if (clinicalDocument.getComponent().isSetStructuredBody()) {
                 for (CodeableConcept code : getClinicalDiscriminatorCodes(clinicalDocument.getComponent().getStructuredBody())) {
@@ -81,7 +82,6 @@ public class ReferralRequestMapper {
                 }
             }
         }
-        return referralRequest;
     }
 
     private List<CodeableConcept> getClinicalDiscriminatorCodes(POCDMT000002UK01StructuredBody structuredBody) {

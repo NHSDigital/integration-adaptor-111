@@ -9,7 +9,7 @@ import uk.nhs.connect.iucds.cda.ucr.CE;
 @UtilityClass
 public class CodeUtil {
 
-    public CodeableConcept createCodeableConceptList(CE ce) {
+    public static CodeableConcept createCodeableConceptList(CE ce) {
         CodeableConcept codeableConcept = new CodeableConcept();
         Coding coding = new Coding();
         coding.setCode(ce.getCodeSystem());

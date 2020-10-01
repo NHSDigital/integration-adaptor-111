@@ -67,9 +67,7 @@ public class ReferralRequestMapperTest {
         when(component2.isSetStructuredBody()).thenReturn(true);
 
         ReferralRequest referralRequest = referralRequestMapper
-            .mapReferralRequest(clinicalDocument, encounter, healthcareServiceList);
-        referralRequest = referralRequestMapper.addCondition(referralRequest, clinicalDocument, encounter,
-            questionnaireResponseList);
+            .mapReferralRequest(clinicalDocument, encounter, healthcareServiceList, questionnaireResponseList);
 
         assertThat(ReferralRequest.ReferralRequestStatus.ACTIVE).isEqualTo(referralRequest.getStatus());
         assertThat(ReferralRequest.ReferralCategory.PLAN).isEqualTo(referralRequest.getIntent());

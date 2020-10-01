@@ -1,15 +1,25 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Appointment.AppointmentStatus.BOOKED;
+import static org.hl7.fhir.dstu3.model.Appointment.ParticipantRequired.REQUIRED;
+import static org.hl7.fhir.dstu3.model.Appointment.ParticipationStatus.ACCEPTED;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.CDNPfITCDAUrl;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
@@ -19,16 +29,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.StrucDocContent;
 import uk.nhs.connect.iucds.cda.ucr.StrucDocText;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hl7.fhir.dstu3.model.Appointment.AppointmentStatus.BOOKED;
-import static org.hl7.fhir.dstu3.model.Appointment.ParticipantRequired.REQUIRED;
-import static org.hl7.fhir.dstu3.model.Appointment.ParticipationStatus.ACCEPTED;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AppointmentMapperTest {
@@ -49,26 +49,23 @@ public class AppointmentMapperTest {
     public void shouldMapAppointment() {
         POCDMT000002UK01Entry entry = mockEntry();
         POCDMT000002UK01Section section = mockSection();
-        ReferralRequest referralRequest = mock(ReferralRequest.class);
         Reference patient = mock(Reference.class);
 
         when(locationMapper.mapRoleToLocation(any())).thenReturn(location);
 
-        Optional<Appointment> appointmentOptional = appointmentMapper.mapAppointment(entry, section, patient);
-        assertThat(appointmentOptional.isPresent());
-        Appointment appointment = appointmentMapper.addReferralRequest(appointmentOptional.get(), referralRequest);
-        assertThat(appointment.getIdElement().getValue()).startsWith("urn:uuid:");
-        assertThat(appointment.getStatus()).isEqualTo(BOOKED);
-        assertThat((ReferralRequest) appointment.getIncomingReferral().get(0).getResource()).isEqualTo(referralRequest);
-        assertThat(appointment.getStart()).isNull();
-        assertThat(appointment.getEnd()).isNull();
-        assertThat(appointment.getMinutesDuration()).isEqualTo(0);
-        assertThat(appointment.getDescription()).isEqualTo(TITLE);
-        assertThat(appointment.getComment()).isEqualTo(COMMENT);
-        assertThat(appointment.getParticipantFirstRep().getActor()).isEqualTo(patient);
-        assertThat(appointment.getParticipantFirstRep().getRequired()).isEqualTo(REQUIRED);
-        assertThat(appointment.getParticipantFirstRep().getStatus()).isEqualTo(ACCEPTED);
-        assertThat(appointment.getReasonFirstRep().getText()).isEqualTo(REASON);
+        Optional<Appointment> appointment = appointmentMapper.mapAppointment(entry, section, patient);
+        assertThat(appointment.isPresent());
+        assertThat(appointment.get().getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(appointment.get().getStatus()).isEqualTo(BOOKED);
+        assertThat(appointment.get().getStart()).isNull();
+        assertThat(appointment.get().getEnd()).isNull();
+        assertThat(appointment.get().getMinutesDuration()).isEqualTo(0);
+        assertThat(appointment.get().getDescription()).isEqualTo(TITLE);
+        assertThat(appointment.get().getComment()).isEqualTo(COMMENT);
+        assertThat(appointment.get().getParticipantFirstRep().getActor()).isEqualTo(patient);
+        assertThat(appointment.get().getParticipantFirstRep().getRequired()).isEqualTo(REQUIRED);
+        assertThat(appointment.get().getParticipantFirstRep().getStatus()).isEqualTo(ACCEPTED);
+        assertThat(appointment.get().getReasonFirstRep().getText()).isEqualTo(REASON);
     }
 
     private POCDMT000002UK01Entry mockEntry() {

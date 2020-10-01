@@ -11,7 +11,6 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Appointment;
@@ -44,7 +43,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.AppointmentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConditionMapper;
@@ -52,7 +50,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
-import uk.nhs.adaptors.oneoneone.cda.report.objects.EncounterHelper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -93,7 +91,6 @@ public class EncounterReportBundleServiceTest {
     private static final IdType QUESTIONNAIRE_RESPONSE_ID = newRandomUuid();
     private static final MessageHeader MESSAGE_HEADER;
     private static final IdType MESSAGE_HEADER_ID = newRandomUuid();
-    private static final EncounterHelper ENCOUNTER_HELPER;
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -162,10 +159,6 @@ public class EncounterReportBundleServiceTest {
         ENCOUNTER.setSubjectTarget(PATIENT);
         ENCOUNTER.addEpisodeOfCare(new Reference(EPISODE_OF_CARE));
         ENCOUNTER.addIncomingReferral(new Reference(REFERRAL_REQUEST));
-
-        ENCOUNTER_HELPER = new EncounterHelper();
-        ENCOUNTER_HELPER.setEncounter(ENCOUNTER);
-        ENCOUNTER_HELPER.setAppointment(Optional.of(APPOINTMENT));
     }
 
     @InjectMocks
@@ -189,13 +182,13 @@ public class EncounterReportBundleServiceTest {
     @Mock
     private ConditionMapper conditionMapper;
     @Mock
-    private AppointmentMapper appointmentMapper;
+    private ReferralRequestMapper referralRequestMapper;
 
     @BeforeEach
     public void setUp() throws XmlException {
         List<QuestionnaireResponse> questionnaireResponseList = new ArrayList<>();
         questionnaireResponseList.add(QUESTIONNAIRE_RESPONSE);
-        when(encounterMapper.mapEncounter(any(), any())).thenReturn(ENCOUNTER_HELPER);
+        when(encounterMapper.mapEncounter(any(), any())).thenReturn(ENCOUNTER);
         when(conditionMapper.mapCondition(any(), any())).thenReturn(CONDITION);
         when(compositionMapper.mapComposition(any(), any())).thenReturn(COMPOSITION);
         when(listMapper.mapList(any(), any(), any())).thenReturn(LIST_RESOURCE);
@@ -204,6 +197,7 @@ public class EncounterReportBundleServiceTest {
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
         when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
         when(messageHeaderService.createMessageHeader()).thenReturn(MESSAGE_HEADER);
+        when(referralRequestMapper.mapReferralRequest(any(), any(), any(), any())).thenReturn(REFERRAL_REQUEST);
         Encounter.DiagnosisComponent diagnosisComponent = new Encounter.DiagnosisComponent();
         diagnosisComponent.setCondition(new Reference());
         diagnosisComponent.setRole(new CodeableConcept());

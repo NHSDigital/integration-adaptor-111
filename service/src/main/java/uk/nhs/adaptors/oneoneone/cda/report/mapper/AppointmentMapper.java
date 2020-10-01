@@ -8,7 +8,6 @@ import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.springframework.stereotype.Component;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
@@ -88,10 +87,5 @@ public class AppointmentMapper {
             appointmentParticipantComponents.add(appointmentParticipantComponent);
         }
         return appointmentParticipantComponents;
-    }
-
-    public Appointment addReferralRequest(Appointment appointment, ReferralRequest referralRequest) {
-        appointment.addIncomingReferral(new Reference(referralRequest));
-        return appointment;
     }
 }

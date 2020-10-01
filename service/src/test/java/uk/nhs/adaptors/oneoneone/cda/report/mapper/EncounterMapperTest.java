@@ -19,7 +19,6 @@ import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.dstu3.model.codesystems.EncounterType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.nhs.adaptors.oneoneone.cda.report.objects.EncounterHelper;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.connect.iucds.cda.ucr.CDNPfITCDAUrl;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Author;
@@ -83,8 +81,6 @@ public class EncounterMapperTest {
     @Mock
     private EpisodeOfCare episodeOfCare;
     @Mock
-    private ReferralRequest referralRequest;
-    @Mock
     private Encounter.EncounterLocationComponent locationComponent;
     @Mock
     private PatientMapper patientMapper;
@@ -92,8 +88,6 @@ public class EncounterMapperTest {
     private EpisodeOfCareMapper episodeOfCareMapper;
     @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
-    @Mock
-    private ReferralRequestMapper referralRequestMapper;
     @Mock
     private DiagnosisComponent diagnosis;
     @Mock
@@ -114,9 +108,6 @@ public class EncounterMapperTest {
     private POCDMT000002UK01InfrastructureRootTypeId typeId;
     @Mock
     private CDNPfITCDAUrl cdnPfITCDAUrl;
-    @Mock
-    private AppointmentMapper appointmentMapper;
-    private Optional<Appointment> optionalAppointment;
 
     @BeforeEach
     public void setUp() {
@@ -130,8 +121,6 @@ public class EncounterMapperTest {
         when(recordTarget.getPatientRole()).thenReturn(patientRole);
         when(patientRole.getProviderOrganization()).thenReturn(organization);
 
-        optionalAppointment = Optional.of(appointment);
-
         mockClinicalDocument(clinicalDocument);
         mockParticipant(clinicalDocument);
         mockLocation();
@@ -140,7 +129,6 @@ public class EncounterMapperTest {
         mockAppointment();
         mockSubject();
         mockEpisodeOfCare();
-        mockReferralRequest();
         mockParticipantWithAuthorInformantAndDataEnterer(clinicalDocument);
         mockEncounterTypeAndReason();
     }
@@ -186,11 +174,6 @@ public class EncounterMapperTest {
             .thenReturn(Optional.of(episodeOfCare));
     }
 
-    private void mockReferralRequest() {
-        when(referralRequestMapper.mapReferralRequest(any(), any(), any()))
-            .thenReturn(referralRequest);
-    }
-
     private void mockParticipantWithAuthorInformantAndDataEnterer(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         mockParticipant(clinicalDocument);
 
@@ -232,9 +215,9 @@ public class EncounterMapperTest {
 
     @Test
     public void shouldMapEncounter() {
-        EncounterHelper encounterHelper = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
 
-        verifyEncounter(encounterHelper.getEncounter());
+        verifyEncounter(encounter);
     }
 
     private void verifyEncounter(Encounter encounter) {
@@ -254,20 +237,18 @@ public class EncounterMapperTest {
     public void mapEncounterTest() {
         mockParticipant(clinicalDocument);
 
-        EncounterHelper encounterHelper = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
-        encounterHelper.setAppointment(optionalAppointment);
-        encounterHelper.setReferralRequest(referralRequest);
-        verifyEncounter(encounterHelper.getEncounter());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        verifyEncounter(encounter);
     }
 
     @Test
     @SuppressWarnings("MagicNumber")
     public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
-        EncounterHelper encounterHelper = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
-        verifyEncounter(encounterHelper.getEncounter());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        verifyEncounter(encounter);
 
-        assertThat(encounterHelper.getEncounter().getParticipant().size()).isEqualTo(5);
-        for (Encounter.EncounterParticipantComponent component : encounterHelper.getEncounter().getParticipant()) {
+        assertThat(encounter.getParticipant().size()).isEqualTo(5);
+        for (Encounter.EncounterParticipantComponent component : encounter.getParticipant()) {
             assertThat(component).isEqualTo(encounterParticipantComponent);
         }
     }
