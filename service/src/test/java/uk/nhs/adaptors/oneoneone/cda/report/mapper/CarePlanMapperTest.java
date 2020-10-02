@@ -10,6 +10,7 @@ import java.util.List;
 import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
@@ -83,7 +84,13 @@ public class CarePlanMapperTest {
     private Encounter.EncounterLocationComponent locationComponent;
 
     @Mock
-    private Reference location;
+    private Reference locationref;
+
+    @Mock
+    private Location location;
+
+    @Mock
+    private Reference organization;
 
     private List<QuestionnaireResponse> questionnaireResponseList;
 
@@ -125,8 +132,10 @@ public class CarePlanMapperTest {
         when(encounter.hasLocation()).thenReturn(true);
         when(encounter.getLocation()).thenReturn(locationComponentList);
         when(locationComponent.hasLocation()).thenReturn(true);
-        when(locationComponent.getLocation()).thenReturn(location);
-
+        when(locationComponent.getLocation()).thenReturn(locationref);
+        when(locationref.getResource()).thenReturn(location);
+        when(location.hasManagingOrganization()).thenReturn(true);
+        when(location.getManagingOrganization()).thenReturn(organization);
         questionnaireResponseList = new ArrayList<>();
         questionnaireResponseList.add(questionnaireResponse);
     }
@@ -154,7 +163,7 @@ public class CarePlanMapperTest {
         assertThat(carePlan.getTitle()).isEqualTo(TITLE);
         assertThat(carePlan.getDescription()).isEqualTo(DESCRIPTION);
 
-        assertThat(carePlan.getAuthor().get(0)).isEqualTo(location);
+        assertThat(carePlan.getAuthor().get(0)).isEqualTo(organization);
         assertThat(carePlan.getAddresses().get(0).getResource()).isEqualTo(condition);
         assertThat(carePlan.getSupportingInfo().get(0).getResource()).isEqualTo(questionnaireResponse);
     }
