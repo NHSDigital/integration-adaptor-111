@@ -6,7 +6,7 @@ import static java.util.Collections.emptyList;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -47,6 +47,8 @@ public class ConsentMapper {
     private static final String NPFIT_CDA_CONTENT = "2.16.840.1.113883.2.1.3.2.4.18.16";
     private static final String SYSTEM_CODE = "887031000000108";
     private static final String PERMISSION_TO_VIEW = "COCD_TP146050GB01#PermissionToView";
+    private static final String DIV_START = "<div>";
+    private static final String DIV_END = "</div>";
 
     public Consent mapConsent(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
         Consent consent = new Consent();
@@ -59,7 +61,6 @@ public class ConsentMapper {
             consent.setIdentifier(docIdentifier);
         }
 
-        Date now = new Date();
         consent.setLanguage(encounter.getLanguage());
         consent.setStatus(Consent.ConsentState.ACTIVE)
             .setPeriod(encounter.getPeriod())
@@ -69,7 +70,6 @@ public class ConsentMapper {
             .setData(List.of(new ConsentDataComponent()
                 .setMeaning(ConsentDataMeaning.RELATED)
                 .setReference(new Reference(encounter))))
-            .setDateTime(now)
             .setPolicyRule(OPT_OUT_URI);
 
         extractAuthCodesFromDoc(consent, clinicalDocument);
@@ -133,7 +133,8 @@ public class ConsentMapper {
             Narrative narrative = new Narrative();
             narrative.setStatus(GENERATED);
             if (section.isSetText()) {
-                narrative.setDivAsString(section.getText().xmlText());
+                narrative.setDivAsString(Arrays.asList(DIV_START, section.getText().xmlText(), DIV_END)
+                    .stream().collect(Collectors.joining()));
                 consent.setText(narrative);
             }
         }
