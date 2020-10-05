@@ -58,7 +58,7 @@ public class ReferralRequestMapperTest {
 
     @Test
     public void shouldMapReferralRequest() {
-        when(procedureRequestMapper.mapProcedureRequest(any(), any())).thenReturn(procedureRequest);
+        when(procedureRequestMapper.mapProcedureRequest(any(), any(), any())).thenReturn(procedureRequest);
 
         ReferralRequest referralRequest = referralRequestMapper
             .mapReferralRequest(clinicalDocument, encounter, healthcareServiceList, condition);

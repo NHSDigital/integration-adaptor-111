@@ -3,8 +3,14 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +24,12 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncompassingEncounter;
 
 @ExtendWith(MockitoExtension.class)
 public class ProcedureRequestMapperTest {
+    private static final String DISPLAY_NAME = "Go to the nearest Emergency Department within 4 hours.";
+    private static final String CODE = "Dx009";
+    private static final String CODESYSTEM = "2.16.840.1.113883.2.1.3.2.4.17.325";
+
+    private List<Reference> reasonReferenceList = new ArrayList<>();
+
     @InjectMocks
     private ProcedureRequestMapper procedureRequestMapper;
     @Mock
@@ -30,12 +42,16 @@ public class ProcedureRequestMapperTest {
     private Reference patient;
     @Mock
     private CE ce;
+    @Mock
+    private ReferralRequest referralRequest;
+    @Mock
+    private Reference reasonReference;
+    @Mock
+    private Period occurence;
 
-    @Test
-    public void patientMapperTest() {
-        String displayName = "Go to the nearest Emergency Department within 4 hours.";
-        String code = "Dx009";
-        String codesystem = "2.16.840.1.113883.2.1.3.2.4.17.325";
+    @BeforeEach
+    public void setUp() {
+        reasonReferenceList.add(reasonReference);
 
         when(clinicalDocument1.isSetComponentOf()).thenReturn(true);
         when(clinicalDocument1.getComponentOf()).thenReturn(component1);
@@ -43,20 +59,29 @@ public class ProcedureRequestMapperTest {
         when(encompassingEncounter.isSetDischargeDispositionCode()).thenReturn(true);
         when(encompassingEncounter.getDischargeDispositionCode()).thenReturn(ce);
         when(ce.isSetDisplayName()).thenReturn(true);
-        when(ce.getDisplayName()).thenReturn(displayName);
+        when(ce.getDisplayName()).thenReturn(DISPLAY_NAME);
         when(ce.isSetCode()).thenReturn(true);
-        when(ce.getCode()).thenReturn(code);
+        when(ce.getCode()).thenReturn(CODE);
         when(ce.isSetCodeSystem()).thenReturn(true);
-        when(ce.getCodeSystem()).thenReturn(codesystem);
+        when(ce.getCodeSystem()).thenReturn(CODESYSTEM);
+        when(referralRequest.getOccurrence()).thenReturn(occurence);
+        when(referralRequest.getReasonReference()).thenReturn(reasonReferenceList);
+    }
 
-        ProcedureRequest procedureRequest = procedureRequestMapper.mapProcedureRequest(clinicalDocument1, patient);
+    @Test
+    public void patientMapperTest() {
+        ProcedureRequest procedureRequest = procedureRequestMapper.mapProcedureRequest(clinicalDocument1, patient,
+            referralRequest);
 
-        assertThat(procedureRequest.getStatus()).isEqualTo(ProcedureRequest.ProcedureRequestStatus.UNKNOWN);
+        assertThat(procedureRequest.getStatus()).isEqualTo(ProcedureRequest.ProcedureRequestStatus.ACTIVE);
         assertThat(procedureRequest.getIntent()).isEqualTo(ProcedureRequest.ProcedureRequestIntent.PLAN);
         assertThat(procedureRequest.getPriority()).isEqualTo(ProcedureRequest.ProcedureRequestPriority.ROUTINE);
-        assertThat(procedureRequest.getCode().getCoding().get(0).getDisplay()).isEqualTo(displayName);
-        assertThat(procedureRequest.getCode().getCoding().get(0).getCode()).isEqualTo(code);
-        assertThat(procedureRequest.getCode().getCoding().get(0).getSystem()).isEqualTo(codesystem);
+        assertThat(procedureRequest.getCode().getCoding().get(0).getDisplay()).isEqualTo(DISPLAY_NAME);
+        assertThat(procedureRequest.getCode().getCoding().get(0).getCode()).isEqualTo(CODE);
+        assertThat(procedureRequest.getCode().getCoding().get(0).getSystem()).isEqualTo(CODESYSTEM);
         assertThat(procedureRequest.getSubject()).isEqualTo(patient);
+        assertThat(procedureRequest.getDoNotPerform()).isEqualTo(false);
+        assertThat(procedureRequest.getOccurrence()).isEqualTo(occurence);
+        assertThat(procedureRequest.getReasonReference()).isEqualTo(reasonReferenceList);
     }
 }

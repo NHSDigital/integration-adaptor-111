@@ -7,6 +7,7 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,8 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 @Component
 @RequiredArgsConstructor
 public class ProcedureRequestMapper {
-    public ProcedureRequest mapProcedureRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Reference patient) {
+    public ProcedureRequest mapProcedureRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Reference patient,
+        ReferralRequest referralRequest) {
         ProcedureRequest procedureRequest = new ProcedureRequest();
         if (clinicalDocument.isSetComponentOf()) {
             if (clinicalDocument.getComponentOf().getEncompassingEncounter() != null) {
@@ -36,11 +38,14 @@ public class ProcedureRequestMapper {
                     if (StringUtils.isNotBlank(coding.getCode()) || StringUtils.isNotBlank(coding.getDisplay())
                         || StringUtils.isNotBlank(coding.getSystem())) {
                         procedureRequest.setIdElement(newRandomUuid());
-                        procedureRequest.setStatus(ProcedureRequest.ProcedureRequestStatus.UNKNOWN);
-                        procedureRequest.setIntent(ProcedureRequest.ProcedureRequestIntent.PLAN);
-                        procedureRequest.setPriority(ProcedureRequest.ProcedureRequestPriority.ROUTINE);
-                        procedureRequest.setCode(new CodeableConcept().addCoding(coding));
-                        procedureRequest.setSubject(patient);
+                        procedureRequest.setStatus(ProcedureRequest.ProcedureRequestStatus.ACTIVE)
+                            .setIntent(ProcedureRequest.ProcedureRequestIntent.PLAN)
+                            .setPriority(ProcedureRequest.ProcedureRequestPriority.ROUTINE)
+                            .setCode(new CodeableConcept().addCoding(coding))
+                            .setSubject(patient)
+                            .setDoNotPerform(false)
+                            .setOccurrence(referralRequest.getOccurrence())
+                            .setReasonReference(referralRequest.getReasonReference());
                     }
                 }
             }

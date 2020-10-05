@@ -48,8 +48,9 @@ public class ReferralRequestMapper {
             .setRequester(new ReferralRequest.ReferralRequestRequesterComponent()
                 .setAgent(transformerDevice)
                 .setOnBehalfOf(encounter.getServiceProvider()))
-            .addSupportingInfo(new Reference(procedureRequestMapper.mapProcedureRequest(clinicalDocument, encounter.getSubject())))
-            .addReasonReference(condition);
+            .addReasonReference(condition)
+            .addSupportingInfo(new Reference(procedureRequestMapper.mapProcedureRequest(clinicalDocument, encounter.getSubject(),
+                referralRequest)));
 
         for (HealthcareService healthcareService : healthcareServiceList) {
             referralRequest.addRecipient(new Reference(healthcareService));
