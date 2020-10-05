@@ -1,11 +1,9 @@
-# integration-adaptor-111
-National Integration Adaptors - Adaptor for NHS 111 Post Event Message
-
+# Quick reference
+- Maintained by: NHS Digital
+- Where to get help: https://github.com/nhsconnect/integration-adaptor-111
+- Where to file issues: https://github.com/nhsconnect/integration-adaptor-111/issues
+  
 ## How to use this image
-
-### Requirements:
-1. JDK 14
-2. Docker
 
 ### Clone the repository
 
