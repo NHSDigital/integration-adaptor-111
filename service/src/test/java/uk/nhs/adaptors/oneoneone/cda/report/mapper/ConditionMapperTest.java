@@ -5,8 +5,12 @@ import static org.hl7.fhir.dstu3.model.Condition.ConditionClinicalStatus.ACTIVE;
 import static org.hl7.fhir.dstu3.model.Condition.ConditionVerificationStatus.UNKNOWN;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,8 +40,7 @@ public class ConditionMapperTest {
     private static final String EFFECTIVE_TIME_STRING = "201706011400+00";
     private static final String CONIDITION_TEXT = "Condition text";
     private static final String LANGUAGE_CODE = "en";
-    private static final String LANGUAGE_SYSTEM = "http://hl7.org/fhir/ValueSet/languages";
-    private static final String LANGUAGE_DISPLAY = "English";
+    private static final String QUESTIONNAIRE_RESPONSE_ID = "questionnaire_response_id";
 
     @InjectMocks
     private ConditionMapper conditionMapper;
@@ -72,6 +75,9 @@ public class ConditionMapperTest {
     private NodeUtil nodeUtil;
     @Mock
     private Reference patient;
+    @Mock
+    private QuestionnaireResponse questionnaireResponse;
+    private List<QuestionnaireResponse> questionnaireResponseList;
 
     @BeforeEach
     public void setUp() {
@@ -79,6 +85,8 @@ public class ConditionMapperTest {
         component3Array[0] = component3;
         POCDMT000002UK01Component5[] component5Array = new POCDMT000002UK01Component5[1];
         component5Array[0] = component5;
+        questionnaireResponseList = new ArrayList<>();
+        questionnaireResponseList.add(questionnaireResponse);
 
         when(encounter.getSubject()).thenReturn(patient);
         when(clinicalDocument.getComponent()).thenReturn(component2);
@@ -105,18 +113,20 @@ public class ConditionMapperTest {
         when(section.getLanguageCode()).thenReturn(cs);
         when(cs.isSetCode()).thenReturn(true);
         when(cs.getCode()).thenReturn(LANGUAGE_CODE);
+
+        when(questionnaireResponse.hasId()).thenReturn(true);
+        when(questionnaireResponse.getId()).thenReturn(QUESTIONNAIRE_RESPONSE_ID);
     }
 
     @Test
     public void mapCondition() {
-        Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter);
+        Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter, questionnaireResponseList);
 
         assertThat(condition.getClinicalStatus()).isEqualTo(ACTIVE);
         assertThat(condition.getVerificationStatus()).isEqualTo(UNKNOWN);
         assertThat(condition.getAssertedDate()).isEqualTo(DateUtil.parse(EFFECTIVE_TIME_STRING));
         assertThat(condition.getCategoryFirstRep().getText()).isEqualTo(CONIDITION_TEXT);
-        assertThat(condition.getCode().getCoding().get(0).getCode()).isEqualTo(LANGUAGE_CODE);
-        assertThat(condition.getCode().getCoding().get(0).getSystem()).isEqualTo(LANGUAGE_SYSTEM);
-        assertThat(condition.getCode().getCoding().get(0).getDisplay()).isEqualTo(LANGUAGE_DISPLAY);
+        assertThat(condition.getCode().getText()).isEqualTo(LANGUAGE_CODE);
+        assertThat(condition.getEvidence().get(0).getDetail().get(0).getReference()).isEqualTo(QUESTIONNAIRE_RESPONSE_ID);
     }
 }

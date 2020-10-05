@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 @Component
 @RequiredArgsConstructor
 public class ProcedureRequestMapper {
-    public ProcedureRequest mapProcedureRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+    public ProcedureRequest mapProcedureRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Reference patient) {
         ProcedureRequest procedureRequest = new ProcedureRequest();
         if (clinicalDocument.isSetComponentOf()) {
             if (clinicalDocument.getComponentOf().getEncompassingEncounter() != null) {
@@ -35,10 +36,11 @@ public class ProcedureRequestMapper {
                     if (StringUtils.isNotBlank(coding.getCode()) || StringUtils.isNotBlank(coding.getDisplay())
                         || StringUtils.isNotBlank(coding.getSystem())) {
                         procedureRequest.setIdElement(newRandomUuid());
-                        procedureRequest.setStatus(ProcedureRequest.ProcedureRequestStatus.NULL);
-                        procedureRequest.setIntent(ProcedureRequest.ProcedureRequestIntent.NULL);
-                        procedureRequest.setPriority(ProcedureRequest.ProcedureRequestPriority.NULL);
+                        procedureRequest.setStatus(ProcedureRequest.ProcedureRequestStatus.UNKNOWN);
+                        procedureRequest.setIntent(ProcedureRequest.ProcedureRequestIntent.PLAN);
+                        procedureRequest.setPriority(ProcedureRequest.ProcedureRequestPriority.ROUTINE);
                         procedureRequest.setCode(new CodeableConcept().addCoding(coding));
+                        procedureRequest.setSubject(patient);
                     }
                 }
             }

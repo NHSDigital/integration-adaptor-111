@@ -10,7 +10,6 @@ import java.util.List;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
-import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component2;
 
 @ExtendWith(MockitoExtension.class)
 public class ReferralRequestMapperTest {
@@ -39,9 +37,7 @@ public class ReferralRequestMapperTest {
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
     private Encounter encounter;
     @Mock
-    private List<QuestionnaireResponse> questionnaireResponseList;
-    @Mock
-    private POCDMT000002UK01Component2 component2;
+    private Reference condition;
     @Mock
     private ProcedureRequestMapper procedureRequestMapper;
     @Mock
@@ -62,12 +58,10 @@ public class ReferralRequestMapperTest {
 
     @Test
     public void shouldMapReferralRequest() {
-        when(procedureRequestMapper.mapProcedureRequest(any())).thenReturn(procedureRequest);
-        when(clinicalDocument.getComponent()).thenReturn(component2);
-        when(component2.isSetStructuredBody()).thenReturn(true);
+        when(procedureRequestMapper.mapProcedureRequest(any(), any())).thenReturn(procedureRequest);
 
         ReferralRequest referralRequest = referralRequestMapper
-            .mapReferralRequest(clinicalDocument, encounter, healthcareServiceList, questionnaireResponseList);
+            .mapReferralRequest(clinicalDocument, encounter, healthcareServiceList, condition);
 
         assertThat(ReferralRequest.ReferralRequestStatus.ACTIVE).isEqualTo(referralRequest.getStatus());
         assertThat(ReferralRequest.ReferralCategory.PLAN).isEqualTo(referralRequest.getIntent());

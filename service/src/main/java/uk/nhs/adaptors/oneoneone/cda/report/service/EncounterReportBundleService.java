@@ -21,6 +21,7 @@ import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.ProcedureRequest;
 import org.hl7.fhir.dstu3.model.Questionnaire;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
@@ -71,10 +72,10 @@ public class EncounterReportBundleService {
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
         List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
             encounter.getSubject(), new Reference(encounter));
-        Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter);
+        Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter, questionnaireResponseList);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, questionnaireResponseList, condition);
         ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument,
-            encounter, healthcareServiceList, questionnaireResponseList);
+            encounter, healthcareServiceList, new Reference(condition));
 
         addEntry(bundle, messageHeaderService.createMessageHeader());
         addEncounter(bundle, encounter);
@@ -180,6 +181,10 @@ public class EncounterReportBundleService {
 
         if (referralRequest.hasRequester()) {
             addEntry(bundle, referralRequest.getRequester().getOnBehalfOfTarget());
+        }
+
+        if (referralRequest.hasSupportingInfo()) {
+            addEntry(bundle, (ProcedureRequest) referralRequest.getSupportingInfoFirstRep().getResource());
         }
     }
 

@@ -13,6 +13,8 @@ public class CodeUtil {
         CodeableConcept codeableConcept = new CodeableConcept();
         Coding coding = new Coding();
         coding.setCode(ce.getCodeSystem());
+        coding.setDisplay(ce.getDisplayName());
+        coding.setSystem(ce.getCode());
         codeableConcept.addCoding(coding);
 
         return codeableConcept;

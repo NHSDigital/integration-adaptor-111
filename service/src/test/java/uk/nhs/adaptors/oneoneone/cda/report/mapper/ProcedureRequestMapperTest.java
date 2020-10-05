@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,6 +27,8 @@ public class ProcedureRequestMapperTest {
     @Mock
     private POCDMT000002UK01EncompassingEncounter encompassingEncounter;
     @Mock
+    private Reference patient;
+    @Mock
     private CE ce;
 
     @Test
@@ -46,13 +49,14 @@ public class ProcedureRequestMapperTest {
         when(ce.isSetCodeSystem()).thenReturn(true);
         when(ce.getCodeSystem()).thenReturn(codesystem);
 
-        ProcedureRequest procedureRequest = procedureRequestMapper.mapProcedureRequest(clinicalDocument1);
+        ProcedureRequest procedureRequest = procedureRequestMapper.mapProcedureRequest(clinicalDocument1, patient);
 
-        assertThat(procedureRequest.getStatus()).isEqualTo(ProcedureRequest.ProcedureRequestStatus.NULL);
-        assertThat(procedureRequest.getIntent()).isEqualTo(ProcedureRequest.ProcedureRequestIntent.NULL);
-        assertThat(procedureRequest.getPriority()).isEqualTo(ProcedureRequest.ProcedureRequestPriority.NULL);
+        assertThat(procedureRequest.getStatus()).isEqualTo(ProcedureRequest.ProcedureRequestStatus.UNKNOWN);
+        assertThat(procedureRequest.getIntent()).isEqualTo(ProcedureRequest.ProcedureRequestIntent.PLAN);
+        assertThat(procedureRequest.getPriority()).isEqualTo(ProcedureRequest.ProcedureRequestPriority.ROUTINE);
         assertThat(procedureRequest.getCode().getCoding().get(0).getDisplay()).isEqualTo(displayName);
         assertThat(procedureRequest.getCode().getCoding().get(0).getCode()).isEqualTo(code);
         assertThat(procedureRequest.getCode().getCoding().get(0).getSystem()).isEqualTo(codesystem);
+        assertThat(procedureRequest.getSubject()).isEqualTo(patient);
     }
 }

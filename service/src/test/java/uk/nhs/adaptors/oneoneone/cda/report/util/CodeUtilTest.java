@@ -1,7 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import static org.mockito.Mockito.when;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
@@ -20,8 +19,14 @@ public class CodeUtilTest {
     @Test
     public void shouldCreateCodeableConcept() {
         String codeSystem = "code system";
+        String displayName = "displayName";
+        String code = "code";
         when(ce.getCodeSystem()).thenReturn(codeSystem);
+        when(ce.getCode()).thenReturn(code);
+        when(ce.getDisplayName()).thenReturn(displayName);
         CodeableConcept codeableConcept = CodeUtil.createCodeableConceptList(ce);
         assertThat(codeableConcept.getCoding().get(0).getCode()).isEqualTo(codeSystem);
+        assertThat(codeableConcept.getCoding().get(0).getDisplay()).isEqualTo(displayName);
+        assertThat(codeableConcept.getCoding().get(0).getSystem()).isEqualTo(code);
     }
 }
