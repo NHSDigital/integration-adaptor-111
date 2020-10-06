@@ -1,12 +1,20 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
+import org.apache.commons.io.IOUtils;
 import org.dom4j.DocumentException;
+import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.skyscreamer.jsonassert.Customization;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.skyscreamer.jsonassert.comparator.CustomComparator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.io.Resource;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -16,15 +24,15 @@ import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
 import uk.nhs.adaptors.oneoneone.utils.ResponseElement;
 import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
 
+import javax.jms.IllegalStateException;
 import javax.jms.JMSException;
 import javax.jms.Message;
-import java.net.URL;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
-import static java.nio.charset.Charset.defaultCharset;
-import static java.nio.file.Files.readAllBytes;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -46,6 +54,42 @@ public class ReportControllerIT {
     private static final String EXPECTED_ACTION = "urn:nhs-itk:services:201005:SendNHS111Report-v2-0Response";
     private static final String EXPECTED_BODY = "<itk:SimpleMessageResponse xmlns:itk=\"urn:nhs-itk:ns:201005\">OK:%s</itk"
         + ":SimpleMessageResponse>";
+    private static final List<String> IGNORED_JSON_PATHS = List.of(
+        "entry[*].fullUrl",
+        "entry[*].resource.addresses[*].reference",
+        "entry[*].resource.appointment.reference",
+        "entry[*].resource.author[*].reference",
+        "entry[*].resource.authoredOn",
+        "entry[*].resource.careManager.reference",
+        "entry[*].resource.consentingParty[*].reference",
+        "entry[*].resource.context.reference",
+        "entry[*].resource.custodian.reference",
+        "entry[*].resource.data[*].reference.reference",
+        "entry[*].resource.date",
+        "entry[*].resource.dateTime",
+        "entry[*].resource.encounter.reference",
+        "entry[*].resource.entry[*].item.reference",
+        "entry[*].resource.episodeOfCare[*].reference",
+        "entry[*].resource.generalPractitioner[*].reference",
+        "entry[*].resource.incomingReferral[*].reference",
+        "entry[*].resource.location[*].location.reference",
+        "entry[*].resource.location[*].reference",
+        "entry[*].resource.managingOrganization.reference",
+        "entry[*].resource.occurrencePeriod.end",
+        "entry[*].resource.occurrencePeriod.start",
+        "entry[*].resource.organization[*].reference",
+        "entry[*].resource.participant[*].actor.reference",
+        "entry[*].resource.participant[*].individual.reference",
+        "entry[*].resource.patient.reference",
+        "entry[*].resource.providedBy.reference",
+        "entry[*].resource.questionnaire.reference",
+        "entry[*].resource.recipient[*].reference",
+        "entry[*].resource.requester.onBehalfOf.reference",
+        "entry[*].resource.serviceProvider.reference",
+        "entry[*].resource.subject.reference",
+        "entry[*].resource.supportingInfo[*].reference",
+        "entry[*].resource.timestamp");
+
     @Autowired
     private FhirJsonValidator validator;
     @LocalServerPort
@@ -59,6 +103,12 @@ public class ReportControllerIT {
 
     @Autowired
     private ResponseParserUtil responseParserUtil;
+
+    @Value("classpath:json/expectedResult.json")
+    private Resource expectedJson;
+
+    @Value("classpath:xml/ITK_Report_request.xml")
+    private Resource itkReportRequest;
 
     @Test
     public void postReportInvalidBody() {
@@ -75,11 +125,11 @@ public class ReportControllerIT {
     }
 
     @Test
-    public void postReportValidBody() throws JMSException, DocumentException {
+    public void postReportValidBody() throws JMSException, DocumentException, JSONException, IOException {
         String responseBody = given()
             .port(port)
             .contentType(APPLICATION_XML_VALUE)
-            .body(getResourceAsString("/xml/ITK_Report_request.xml"))
+            .body(IOUtils.toString(itkReportRequest.getInputStream(), StandardCharsets.UTF_8))
             .when()
             .post(REPORT_ENDPOINT)
             .then()
@@ -93,18 +143,26 @@ public class ReportControllerIT {
         assertThat(responseElementsMap.get(BODY)).isEqualTo(String.format(EXPECTED_BODY, MESSAGE_ID_VALUE));
 
         Message jmsMessage = jmsTemplate.receive(amqpProperties.getQueueName());
+        if (jmsMessage == null) {
+            throw new IllegalStateException("Message must not be null");
+        }
         String messageBody = jmsMessage.getBody(String.class);
 
         assertThat(validator.isValid(messageBody)).isEqualTo(true);
         assertThat(jmsMessage.getStringProperty(MESSAGE_ID)).isEqualTo(MESSAGE_ID_VALUE);
+
+        assertMessageContent(messageBody);
     }
 
-    private String getResourceAsString(String path) {
-        try {
-            URL reportXmlResource = this.getClass().getResource(path);
-            return new String(readAllBytes(Paths.get(reportXmlResource.getPath())), defaultCharset());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    private void assertMessageContent(String actual) throws JSONException, IOException {
+        var expected = IOUtils.toString(expectedJson.getInputStream(), StandardCharsets.UTF_8);
+
+        //when comparing json objects, this will ignore various json paths that contain random values like ids or timestamps
+        var customizations = IGNORED_JSON_PATHS.stream()
+            .map(jsonPath -> new Customization(jsonPath, (o1, o2) -> true))
+            .toArray(Customization[]::new);
+
+        JSONAssert.assertEquals(expected, actual,
+            new CustomComparator(JSONCompareMode.STRICT, customizations));
     }
 }

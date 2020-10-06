@@ -43,6 +43,7 @@ public class EncounterReportService {
     private String toJsonString(Bundle encounterBundle) {
         return fhirContext
             .newJsonParser()
+            .setPrettyPrint(true)
             .encodeResourceToString(encounterBundle);
     }
 }
