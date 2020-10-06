@@ -19,7 +19,6 @@ import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
-import org.hl7.fhir.dstu3.model.codesystems.EncounterType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +39,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01DataEnterer;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InfrastructureRootTypeId;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
@@ -108,8 +106,6 @@ public class EncounterMapperTest {
     private POCDMT000002UK01Encounter encounter;
     @Mock
     private POCDMT000002UK01Component2 component2;
-    @Mock
-    private POCDMT000002UK01InfrastructureRootTypeId typeId;
     @Mock
     private CDNPfITCDAUrl cdnPfITCDAUrl;
     @Mock
@@ -223,9 +219,6 @@ public class EncounterMapperTest {
         when(component3.getSection()).thenReturn(section01);
         when(section01.getEntryArray()).thenReturn(entryArray);
         when(entry.getEncounter()).thenReturn(encounter);
-        when(encounter.isSetTypeId()).thenReturn(true);
-        when(encounter.getTypeId()).thenReturn(typeId);
-        when(typeId.getAssigningAuthorityName()).thenReturn(EncounterType.ADMS.toString());
         when(entry.isSetEncounter()).thenReturn(true);
         when(encounter.isSetText()).thenReturn(true);
         when(encounter.getText()).thenReturn(encounterTextED);
@@ -251,7 +244,6 @@ public class EncounterMapperTest {
         assertThat(encounter.getSubjectTarget()).isEqualTo(patient);
         assertThat(encounter.getEpisodeOfCareFirstRep().getResource()).isEqualTo(episodeOfCare);
         assertThat(encounter.getIncomingReferralFirstRep().getResource()).isEqualTo(referralRequest);
-        assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(EncounterType.ADMS.toString());
         assertThat(encounter.getText().getDiv().toString()).isEqualTo(encounterDivText);
     }
 

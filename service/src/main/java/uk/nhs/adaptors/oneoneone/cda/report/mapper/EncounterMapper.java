@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.Appointment;
-import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterLocationComponent;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
@@ -26,7 +25,6 @@ import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
-import org.hl7.fhir.dstu3.model.codesystems.EncounterType;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -189,9 +187,7 @@ public class EncounterMapper {
                 POCDMT000002UK01Section section = component3.getSection();
                 for (POCDMT000002UK01Entry entry : section.getEntryArray()) {
                     if (entry.isSetEncounter()) {
-                        POCDMT000002UK01Encounter encounterITK = entry.getEncounter();
-                        addEncounterType(encounterITK, encounter);
-                        addEncounterText(encounterITK, encounter);
+                        addEncounterText(entry.getEncounter(), encounter);
                     }
                 }
             }
@@ -205,15 +201,6 @@ public class EncounterMapper {
             patient = patientMapper.mapPatient(patientRole);
         }
         return Optional.of(patient);
-    }
-
-    private void addEncounterType(POCDMT000002UK01Encounter encounterITK, Encounter encounter) {
-        if (encounterITK.isSetTypeId()) {
-            EncounterType encounterType = EncounterType.fromCode(encounterITK.getTypeId().getAssigningAuthorityName());
-            if (encounterType != null) {
-                encounter.addType(new CodeableConcept().setText(encounterType.toString()));
-            }
-        }
     }
 
     private void addEncounterText(POCDMT000002UK01Encounter encounterITK, Encounter encounter) {
