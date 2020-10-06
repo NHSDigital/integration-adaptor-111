@@ -144,8 +144,8 @@ public class EncounterMapper {
 
     private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Reference patient = encounter.getSubject();
-        appointmentService.retrieveAppointment(patient, clinicalDocument).ifPresent(appointment ->
-            encounter.setAppointment(new Reference(appointment)));
+        appointmentService.retrieveAppointment(patient, clinicalDocument)
+            .map(Reference::new).ifPresent(encounter::setAppointment);
     }
 
     private void setEncounterReasonAndType(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {

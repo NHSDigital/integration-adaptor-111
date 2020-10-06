@@ -4,6 +4,7 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
@@ -105,11 +106,9 @@ public class ConditionMapper {
     }
 
     private List<CodeableConcept> getClinicalDiscriminatorCodes(POCDMT000002UK01StructuredBody structuredBody) {
-        if (structuredBody == null) {
-            return Collections.emptyList();
-        }
-        return StructuredBodyUtil
-            .getEntriesOfType(structuredBody, CLINICAL_DISCRIMINATOR)
+        return Optional.ofNullable(structuredBody)
+            .map(body -> StructuredBodyUtil.getEntriesOfType(body, CLINICAL_DISCRIMINATOR))
+            .orElse(Collections.emptyList())
             .stream()
             .filter(POCDMT000002UK01Entry::isSetObservation)
             .map(POCDMT000002UK01Entry::getObservation)
