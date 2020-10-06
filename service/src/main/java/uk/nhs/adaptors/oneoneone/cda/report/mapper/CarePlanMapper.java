@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
@@ -99,7 +100,10 @@ public class CarePlanMapper {
             List<Reference> authorList = new ArrayList<>();
             for (Encounter.EncounterLocationComponent author : encounter.getLocation()) {
                 if (author.hasLocation()) {
-                    authorList.add(author.getLocation());
+                    Location location = (Location) author.getLocation().getResource();
+                    if (location.hasManagingOrganization()) {
+                        authorList.add(location.getManagingOrganization());
+                    }
                 }
             }
             carePlan.setAuthor(authorList);
