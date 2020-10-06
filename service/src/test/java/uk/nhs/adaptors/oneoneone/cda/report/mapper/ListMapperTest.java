@@ -53,7 +53,10 @@ public class ListMapperTest {
         assertThat(listResource.getStatus()).isEqualTo(CURRENT);
         assertThat(listResource.getTitle()).isEqualTo("111 Report List");
         assertThat(listResource.getMode()).isEqualTo(WORKING);
-        assertThat(listResource.getOrderedBy().getText()).isEqualTo("event-date");
+        Coding orderByCode = listResource.getOrderedBy().getCodingFirstRep();
+        assertThat(orderByCode.getSystem()).isEqualTo("http://hl7.org/fhir/list-order");
+        assertThat(orderByCode.getCode()).isEqualTo("event-date");
+        assertThat(orderByCode.getDisplay()).isEqualTo("Sorted by Event Date");
         Coding code = listResource.getCode().getCodingFirstRep();
         assertThat(code.getSystem()).isEqualTo("http://snomed.info/sct");
         assertThat(code.getCode()).isEqualTo("225390008");
