@@ -1,5 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.DocumentException;
 import org.json.JSONException;
@@ -50,6 +51,7 @@ import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.BODY;
 @ExtendWith({SpringExtension.class, IntegrationTestsExtension.class})
 @AutoConfigureMockMvc
 @DirtiesContext
+@Slf4j
 public class ReportControllerIT {
 
     public static final String MESSAGE_ID_VALUE = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
@@ -169,6 +171,7 @@ public class ReportControllerIT {
     }
 
     private void assertMessageContent(String actual) throws JSONException, IOException {
+        LOGGER.info("Validating message content:\n{}", actual);
         var expected = IOUtils.toString(expectedJson.getInputStream(), StandardCharsets.UTF_8);
 
         //when comparing json objects, this will ignore various json paths that contain random values like ids or timestamps
