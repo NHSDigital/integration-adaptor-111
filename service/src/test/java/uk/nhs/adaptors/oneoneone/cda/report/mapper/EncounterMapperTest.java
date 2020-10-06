@@ -1,8 +1,17 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.Encounter.DiagnosisComponent;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Organization;
@@ -18,8 +27,11 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.CDNPfITCDAUrl;
+import uk.nhs.connect.iucds.cda.ucr.ED;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Author;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component2;
@@ -36,16 +48,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RecordTarget;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 import uk.nhs.connect.iucds.cda.ucr.TS;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class EncounterMapperTest {
@@ -93,8 +95,6 @@ public class EncounterMapperTest {
     @Mock
     private ReferralRequestMapper referralRequestMapper;
     @Mock
-    private DiagnosisComponent diagnosis;
-    @Mock
     private List<HealthcareService> healthcareServiceList;
     @Mock
     private POCDMT000002UK01Component3 component3;
@@ -112,6 +112,10 @@ public class EncounterMapperTest {
     private POCDMT000002UK01InfrastructureRootTypeId typeId;
     @Mock
     private CDNPfITCDAUrl cdnPfITCDAUrl;
+    @Mock
+    private ED encounterTextED;
+    @Mock
+    private NodeUtil nodeUtil;
 
     @BeforeEach
     public void setUp() {
@@ -205,6 +209,8 @@ public class EncounterMapperTest {
     }
 
     private void mockEncounterTypeAndReason() {
+        String encounterText = "Encounter text";
+
         POCDMT000002UK01Component3[] componentArray = new POCDMT000002UK01Component3[1];
         componentArray[0] = component3;
         POCDMT000002UK01Entry[] entryArray = new POCDMT000002UK01Entry[1];
@@ -221,6 +227,9 @@ public class EncounterMapperTest {
         when(encounter.getTypeId()).thenReturn(typeId);
         when(typeId.getAssigningAuthorityName()).thenReturn(EncounterType.ADMS.toString());
         when(entry.isSetEncounter()).thenReturn(true);
+        when(encounter.isSetText()).thenReturn(true);
+        when(encounter.getText()).thenReturn(encounterTextED);
+        when(nodeUtil.getNodeValueString(any())).thenReturn(encounterText);
     }
 
     @Test
@@ -231,6 +240,7 @@ public class EncounterMapperTest {
 
     private void verifyEncounter(Encounter encounter) {
         String uuidBeginning = "urn:uuid:";
+        String encounterDivText = "<div xmlns=\"http://www.w3.org/1999/xhtml\">Encounter text</div>";
         assertThat(encounter.getIdElement().getValue()).startsWith(uuidBeginning);
         assertThat(encounter.getStatus()).isEqualTo(FINISHED);
         assertThat(encounter.getPeriod()).isEqualTo(period);
@@ -242,6 +252,7 @@ public class EncounterMapperTest {
         assertThat(encounter.getEpisodeOfCareFirstRep().getResource()).isEqualTo(episodeOfCare);
         assertThat(encounter.getIncomingReferralFirstRep().getResource()).isEqualTo(referralRequest);
         assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(EncounterType.ADMS.toString());
+        assertThat(encounter.getText().getDiv().toString()).isEqualTo(encounterDivText);
     }
 
     @Test
