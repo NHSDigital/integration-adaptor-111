@@ -3,6 +3,8 @@ package uk.nhs.adaptors.oneoneone.cda.report.controller;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.DocumentException;
 import org.json.JSONException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.skyscreamer.jsonassert.Customization;
@@ -29,8 +31,10 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -109,6 +113,16 @@ public class ReportControllerIT {
 
     @Value("classpath:xml/ITK_Report_request.xml")
     private Resource itkReportRequest;
+
+    @BeforeAll
+    public static void setUp() {
+        TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
+    }
+
+    @AfterAll
+    public static void tearDown() {
+        TimeZone.setDefault(null);
+    }
 
     @Test
     public void postReportInvalidBody() {
