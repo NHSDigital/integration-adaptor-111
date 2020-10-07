@@ -113,10 +113,8 @@ public class CompositionMapper {
             }
         }
 
-        if (!carePlans.isEmpty()) {
-            for (CarePlan carePlan : carePlans) {
-                composition.addSection(buildSectionComponentFromResource(carePlan));
-            }
+        for (CarePlan carePlan : carePlans) {
+            composition.addSection(buildSectionComponentFromResource(carePlan));
         }
 
         if (encounter.hasIncomingReferral()) {

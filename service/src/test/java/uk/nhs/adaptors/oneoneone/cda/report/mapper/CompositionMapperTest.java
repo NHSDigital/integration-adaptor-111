@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.hl7.fhir.dstu3.model.CarePlan;
@@ -34,7 +34,7 @@ public class CompositionMapperTest {
 
     private final IBaseResource episodeOfCareRefResource = new EpisodeOfCare();
     private final CarePlan carePlan = new CarePlan();
-    private final List<CarePlan> carePlans = Arrays.asList(carePlan);
+    private final List<CarePlan> carePlans = Collections.singletonList(carePlan);
     @InjectMocks
     private CompositionMapper compositionMapper;
     @Mock
