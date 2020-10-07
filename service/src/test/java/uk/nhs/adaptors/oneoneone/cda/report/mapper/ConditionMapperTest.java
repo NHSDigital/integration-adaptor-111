@@ -126,7 +126,7 @@ public class ConditionMapperTest {
         assertThat(condition.getVerificationStatus()).isEqualTo(UNKNOWN);
         assertThat(condition.getAssertedDate()).isEqualTo(DateUtil.parse(EFFECTIVE_TIME_STRING));
         assertThat(condition.getCategoryFirstRep().getText()).isEqualTo(CONIDITION_TEXT);
-        assertThat(condition.getCode().getText()).isEqualTo(LANGUAGE_CODE);
+        assertThat(condition.getLanguage()).isEqualTo(LANGUAGE_CODE);
         assertThat(condition.getEvidence().get(0).getDetail().get(0).getReference()).isEqualTo(QUESTIONNAIRE_RESPONSE_ID);
     }
 }

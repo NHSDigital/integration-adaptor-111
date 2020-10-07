@@ -72,7 +72,7 @@ public class EncounterReportBundleService {
         List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
             encounter.getSubject(), new Reference(encounter));
         Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, questionnaireResponseList);
-        Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter);
+        Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter, questionnaireResponseList);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, condition);
         ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument,
             encounter, healthcareServiceList, new Reference(condition));

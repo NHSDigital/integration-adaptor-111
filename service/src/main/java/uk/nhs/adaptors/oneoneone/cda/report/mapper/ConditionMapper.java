@@ -76,7 +76,7 @@ public class ConditionMapper {
                     if (component.getSection() != null) {
                         if (component.getSection().isSetLanguageCode()) {
                             if (component.getSection().getLanguageCode().isSetCode()) {
-                                condition.setCode(new CodeableConcept().setText(component.getSection().getLanguageCode().getCode()));
+                                condition.setLanguage(component.getSection().getLanguageCode().getCode());
                             }
                         }
                     }
