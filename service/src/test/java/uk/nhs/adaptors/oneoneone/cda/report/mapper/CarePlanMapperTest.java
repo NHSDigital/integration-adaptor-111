@@ -40,7 +40,6 @@ public class CarePlanMapperTest {
     private static final String SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
     private static final String INFORMATION_ADVICE_GIVEN = "1052951000000105";
     private static final String DESCRIPTION = "description";
-    private static final String DIV_AS_STRING = String.format("<div xmlns=\"http://www.w3.org/1999/xhtml\">%s</div>", DESCRIPTION);
     private static final String TITLE = "title";
 
     @Mock
@@ -151,7 +150,6 @@ public class CarePlanMapperTest {
         assertThat(carePlan.getSubjectTarget()).isEqualTo(encounter.getSubjectTarget());
         assertThat(carePlan.getLanguage()).isEqualTo(LANG);
 
-        assertThat(carePlan.getText().getDivAsString()).isEqualTo(DIV_AS_STRING);
         assertThat(carePlan.getTitle()).isEqualTo(TITLE);
         assertThat(carePlan.getDescription()).isEqualTo(DESCRIPTION);
 
@@ -165,7 +163,6 @@ public class CarePlanMapperTest {
         when(section.getCode()).thenReturn(code);
         when(section.isSetLanguageCode()).thenReturn(true);
         when(section.isSetTitle()).thenReturn(true);
-        when(section.isSetText()).thenReturn(true);
         when(section.getText()).thenReturn(strucDocText);
         when(section.getText().sizeOfContentArray()).thenReturn(1);
 

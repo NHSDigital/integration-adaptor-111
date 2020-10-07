@@ -5,7 +5,6 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanIntent.PLAN;
 import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanStatus.COMPLETED;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,12 +75,6 @@ public class CarePlanMapper {
 
         if (cpSection.getText().sizeOfContentArray() > 0) {
             String cpTextContent = nodeUtil.getNodeValueString(cpSection.getText().getContentArray(0));
-            Narrative narrative = new Narrative();
-            narrative.setDivAsString(cpTextContent);
-            narrative.setStatus(GENERATED);
-            if (cpSection.isSetText()) {
-                carePlan.setText(narrative);
-            }
             carePlan.setDescription(cpTextContent);
         }
 
