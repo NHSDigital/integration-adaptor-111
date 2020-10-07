@@ -13,7 +13,6 @@ import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
-import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -74,9 +73,6 @@ public class CarePlanMapperTest {
     private NodeUtil nodeUtil;
 
     @Mock
-    private QuestionnaireResponse questionnaireResponse;
-
-    @Mock
     private Condition condition;
 
     @Mock
@@ -90,8 +86,6 @@ public class CarePlanMapperTest {
 
     @Mock
     private Reference organization;
-
-    private List<QuestionnaireResponse> questionnaireResponseList;
 
     private List<Encounter.EncounterLocationComponent> locationComponentList;
 
@@ -135,15 +129,13 @@ public class CarePlanMapperTest {
         when(locationref.getResource()).thenReturn(location);
         when(location.hasManagingOrganization()).thenReturn(true);
         when(location.getManagingOrganization()).thenReturn(organization);
-        questionnaireResponseList = new ArrayList<>();
-        questionnaireResponseList.add(questionnaireResponse);
     }
 
     @Test
     public void shouldMapITKReportToCarePlan() {
         mockSection();
 
-        List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, questionnaireResponseList, condition);
+        List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, condition);
         assertThat(carePlans).isNotEmpty();
 
         CarePlan carePlan = carePlans.get(0);
@@ -163,7 +155,6 @@ public class CarePlanMapperTest {
 
         assertThat(carePlan.getAuthor().get(0)).isEqualTo(organization);
         assertThat(carePlan.getAddresses().get(0).getResource()).isEqualTo(condition);
-        assertThat(carePlan.getSupportingInfo().get(0).getResource()).isEqualTo(questionnaireResponse);
     }
 
     private void mockSection() {

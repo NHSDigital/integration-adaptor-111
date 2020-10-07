@@ -3,16 +3,15 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 
+import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.UNKNOWN;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.Address;
-import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.Enumerations;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.RelatedPerson;
@@ -48,15 +47,7 @@ public class RelatedPersonMapper {
         relatedPerson.setIdElement(newRandomUuid());
         relatedPerson.setActive(true)
             .setPatient(encounter.getSubject())
-            .setGender(Enumerations.AdministrativeGender.UNKNOWN);
-
-        if (relatedEntity.isSetCode()) {
-            if (relatedEntity.getCode().isSetDisplayName()) {
-                relatedPerson.setRelationship(
-                    new CodeableConcept().setText(
-                        relatedEntity.getCode().getDisplayName()));
-            }
-        }
+            .setGender(UNKNOWN);
 
         if (relatedEntity.isSetRelatedPerson()) {
             relatedPerson.setName(getHumanNameFromITK(relatedEntity.getRelatedPerson()));
