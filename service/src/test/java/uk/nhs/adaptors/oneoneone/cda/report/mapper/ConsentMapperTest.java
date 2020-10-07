@@ -122,7 +122,6 @@ public class ConsentMapperTest {
         assertThat(consent.getIdElement().getValue()).startsWith(URN_UUID);
         assertThat(consent.getStatus()).isEqualTo(Consent.ConsentState.ACTIVE);
 
-        assertThat(consent.hasDateTime()).isTrue();
         assertThat(consent.getLanguage()).isEqualTo(LANG);
         assertThat(consent.getPeriod()).isEqualTo(period);
         assertThat(consent.getText()).isNotNull();

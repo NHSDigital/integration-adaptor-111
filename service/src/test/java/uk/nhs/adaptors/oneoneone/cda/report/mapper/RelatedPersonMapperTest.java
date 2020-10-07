@@ -3,7 +3,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.Enumerations;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.RelatedPerson;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,10 +20,11 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RelatedEntity;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.UNKNOWN;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class RelatedPersonTest {
+public class RelatedPersonMapperTest {
 
     @InjectMocks
     private RelatedPersonMapper relatedPersonMapper;
@@ -86,6 +86,7 @@ public class RelatedPersonTest {
         assertThat(relatedPerson.getNameFirstRep()).isEqualTo(humanName);
         assertThat(relatedPerson.getTelecomFirstRep()).isEqualTo(contactPoint);
         assertThat(relatedPerson.getAddressFirstRep()).isEqualTo(address);
-        assertThat(relatedPerson.getGender()).isEqualTo(Enumerations.AdministrativeGender.UNKNOWN);
+        assertThat(relatedPerson.getGender()).isEqualTo(UNKNOWN);
+        assertThat(relatedPerson.getRelationship().isEmpty()).isTrue();
     }
 }

@@ -17,6 +17,8 @@ import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.codesystems.EncounterType;
+import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +28,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.CDNPfITCDAUrl;
+import uk.nhs.connect.iucds.cda.ucr.ED;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Author;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component2;
@@ -35,7 +39,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01DataEnterer;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InfrastructureRootTypeId;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
@@ -96,9 +99,11 @@ public class EncounterMapperTest {
     @Mock
     private POCDMT000002UK01Component2 component2;
     @Mock
-    private POCDMT000002UK01InfrastructureRootTypeId typeId;
-    @Mock
     private CDNPfITCDAUrl cdnPfITCDAUrl;
+    @Mock
+    private ED encounterTextED;
+    @Mock
+    private NodeUtil nodeUtil;
 
     @BeforeEach
     public void setUp() {
@@ -180,6 +185,8 @@ public class EncounterMapperTest {
     }
 
     private void mockEncounterTypeAndReason() {
+        String encounterText = "Encounter text";
+
         POCDMT000002UK01Component3[] componentArray = new POCDMT000002UK01Component3[1];
         componentArray[0] = component3;
         POCDMT000002UK01Entry[] entryArray = new POCDMT000002UK01Entry[1];
@@ -192,10 +199,10 @@ public class EncounterMapperTest {
         when(component3.getSection()).thenReturn(section01);
         when(section01.getEntryArray()).thenReturn(entryArray);
         when(entry.getEncounter()).thenReturn(encounter);
-        when(encounter.isSetTypeId()).thenReturn(true);
-        when(encounter.getTypeId()).thenReturn(typeId);
-        when(typeId.getAssigningAuthorityName()).thenReturn(EncounterType.ADMS.toString());
         when(entry.isSetEncounter()).thenReturn(true);
+        when(encounter.isSetText()).thenReturn(true);
+        when(encounter.getText()).thenReturn(encounterTextED);
+        when(nodeUtil.getNodeValueString(any())).thenReturn(encounterText);
     }
 
     @Test
@@ -207,6 +214,7 @@ public class EncounterMapperTest {
 
     private void verifyEncounter(Encounter encounter) {
         String uuidBeginning = "urn:uuid:";
+        String encounterDivText = "<div xmlns=\"http://www.w3.org/1999/xhtml\">Encounter text</div>";
         assertThat(encounter.getIdElement().getValue()).startsWith(uuidBeginning);
         assertThat(encounter.getStatus()).isEqualTo(FINISHED);
         assertThat(encounter.getPeriod()).isEqualTo(period);
@@ -214,7 +222,7 @@ public class EncounterMapperTest {
         assertThat(encounter.getServiceProviderTarget()).isEqualTo(serviceProvider);
         assertThat(encounter.getLocationFirstRep()).isEqualTo(locationComponent);
         assertThat(encounter.getSubjectTarget()).isEqualTo(patient);
-        assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(EncounterType.ADMS.toString());
+        assertThat(encounter.getText().getDiv().toString()).isEqualTo(encounterDivText);
     }
 
     @Test

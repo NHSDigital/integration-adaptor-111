@@ -182,10 +182,10 @@ public class EncounterReportBundleServiceTest {
         List<QuestionnaireResponse> questionnaireResponseList = new ArrayList<>();
         questionnaireResponseList.add(QUESTIONNAIRE_RESPONSE);
         when(encounterMapper.mapEncounter(any(), any())).thenReturn(ENCOUNTER);
-        when(conditionMapper.mapCondition(any(), any(), any())).thenReturn(CONDITION);
-        when(compositionMapper.mapComposition(any(), any())).thenReturn(COMPOSITION);
+        when(conditionMapper.mapCondition(any(), any())).thenReturn(CONDITION);
+        when(compositionMapper.mapComposition(any(), any(), any())).thenReturn(COMPOSITION);
         when(listMapper.mapList(any(), any(), any())).thenReturn(LIST_RESOURCE);
-        when(carePlanMapper.mapCarePlan(any(), any(), any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
+        when(carePlanMapper.mapCarePlan(any(), any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(Collections.singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
         when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);

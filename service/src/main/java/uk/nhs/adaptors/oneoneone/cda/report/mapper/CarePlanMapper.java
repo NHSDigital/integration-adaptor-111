@@ -19,7 +19,6 @@ import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Narrative;
-import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
@@ -40,8 +39,7 @@ public class CarePlanMapper {
     private final ConditionMapper conditionMapper;
     private final NodeUtil nodeUtil;
 
-    public List<CarePlan> mapCarePlan(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
-        List<QuestionnaireResponse> questionnaireResponseList, Condition condition) {
+    public List<CarePlan> mapCarePlan(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, Condition condition) {
         if (clinicalDocument.getComponent().isSetStructuredBody()) {
             POCDMT000002UK01StructuredBody structuredBody = getStructuredBody(clinicalDocument);
 
@@ -49,15 +47,14 @@ public class CarePlanMapper {
                 .map(POCDMT000002UK01Component3::getSection)
                 .map(this::findCarePlanSections)
                 .flatMap(List::stream)
-                .map(section -> createCarePlanFromSection(section, encounter, questionnaireResponseList, condition))
+                .map(section -> createCarePlanFromSection(section, encounter, condition))
                 .collect(toUnmodifiableList());
         } else {
             return Collections.emptyList();
         }
     }
 
-    public CarePlan createCarePlanFromSection(POCDMT000002UK01Section cpSection, Encounter encounter,
-        List<QuestionnaireResponse> questionnaireResponseList, Condition condition) {
+    public CarePlan createCarePlanFromSection(POCDMT000002UK01Section cpSection, Encounter encounter, Condition condition) {
         CarePlan carePlan = new CarePlan();
         carePlan.setIdElement(newRandomUuid());
         carePlan
@@ -86,14 +83,6 @@ public class CarePlanMapper {
                 carePlan.setText(narrative);
             }
             carePlan.setDescription(cpTextContent);
-        }
-
-        if (!questionnaireResponseList.isEmpty()) {
-            List<Reference> supportingInformationList = new ArrayList<>();
-            for (QuestionnaireResponse questionnaireResponse : questionnaireResponseList) {
-                supportingInformationList.add(new Reference(questionnaireResponse));
-            }
-            carePlan.setSupportingInfo(supportingInformationList);
         }
 
         if (encounter.hasLocation()) {
