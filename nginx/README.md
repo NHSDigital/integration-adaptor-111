@@ -30,7 +30,7 @@ The 111 application by itself does not offer TLS termination. If there is a need
 
 6. Create the CSR with client private key
 
-  > `openssl req -new -key client.key -out client.csr`
+  > `openssl req -new -key client_private.key -out client.csr`
 
 7. Create the client public certificate
 
@@ -38,7 +38,7 @@ The 111 application by itself does not offer TLS termination. If there is a need
 
 8. Create a PKCS12 cert for client
 
-  > `openssl pkcs12 -export -inkey client.key -in client.cer -out client.p12`
+  > `openssl pkcs12 -export -inkey client_private.key -in client_public.cer -out client_pkcs.p12`
 
 ## Running the local environment
 
