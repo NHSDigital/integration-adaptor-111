@@ -40,6 +40,10 @@ server {
       if ($ssl_client_s_dn_cn != "<%= ENV['SERVER_SSL_CN'] %>") {
         return 403 "Mutual authentication failed"; # Server using an SSL cert for different domain than the one in client cert
       }
+
+      if (<%= ENV['SERVER_SSL_EXPIRED'] %> == "true") {
+        return 403 "Mutual authentication failed"; # Server SSL has expired
+      }
     }
 
     location /auth_test {
@@ -52,6 +56,7 @@ server {
     Request Server CN: $ssl_server_name
     Client Verify: $ssl_client_verify
     Server CN from Cert: <%= ENV['SERVER_SSL_CN'] %>
+    Server SSL expired: <%= ENV['SERVER_SSL_EXPIRED'] %>
     ";
 }
 

@@ -60,3 +60,9 @@ run-curl73:
 
 run-curl8:
 	sh -c 'curl --cert nginx/certs/nhs_certs/test05.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test05_cert_chain.txt https://test02.oneoneone.nhs.uk:8443/auth_test --resolve test02.oneoneone.nhs.uk:8443:127.0.0.1'
+
+run-curl9:
+	sh -c 'curl --cert nginx/certs/nhs_certs/test03.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test03_cert_chain.txt https://test03.oneoneone.nhs.uk:8443/report --resolve test03.oneoneone.nhs.uk:8443:127.0.0.1'
+
+run-curl91:
+	sh -c 'curl -k --pass password --cacert nginx/certs/nhs_certs/test03_cert_chain.txt https://test03.oneoneone.nhs.uk:8443/auth_test --resolve test03.oneoneone.nhs.uk:8443:127.0.0.1'
