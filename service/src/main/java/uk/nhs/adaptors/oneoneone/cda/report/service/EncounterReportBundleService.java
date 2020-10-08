@@ -19,6 +19,7 @@ import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
@@ -38,6 +39,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -55,6 +57,7 @@ public class EncounterReportBundleService {
     private final MessageHeaderService messageHeaderService;
     private final ConditionMapper conditionMapper;
     private final ReferralRequestMapper referralRequestMapper;
+    private final ObservationMapper observationMapper;
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
@@ -76,6 +79,7 @@ public class EncounterReportBundleService {
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, condition);
         ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument,
             encounter, healthcareServiceList, new Reference(condition));
+        List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
 
         addEntry(bundle, messageHeaderService.createMessageHeader());
         addEncounter(bundle, encounter);
@@ -91,6 +95,7 @@ public class EncounterReportBundleService {
         addConsent(bundle, consent);
         addCondition(bundle, condition);
         addQuestionnaireResponses(bundle, questionnaireResponseList);
+        addObservations(bundle, observations);
 
         ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
         addList(bundle, listResource);
@@ -230,6 +235,10 @@ public class EncounterReportBundleService {
                 }
             }
         }
+    }
+
+    private void addObservations(Bundle bundle, List<Observation> observations) {
+        observations.forEach(observation -> addEntry(bundle, observation));
     }
 
     private void addConsent(Bundle bundle, Consent consent) {

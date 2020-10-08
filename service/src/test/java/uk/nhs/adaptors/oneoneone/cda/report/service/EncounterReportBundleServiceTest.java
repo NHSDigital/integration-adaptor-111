@@ -5,10 +5,12 @@ import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,6 +30,7 @@ import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.MessageHeader;
+import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Practitioner;
@@ -50,6 +53,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -88,6 +92,8 @@ public class EncounterReportBundleServiceTest {
     private static final IdType QUESTIONNAIRE_RESPONSE_ID = newRandomUuid();
     private static final MessageHeader MESSAGE_HEADER;
     private static final IdType MESSAGE_HEADER_ID = newRandomUuid();
+    private static final Observation OBSERVATION;
+    private static final IdType OBSERVATION_ID = newRandomUuid();
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -141,6 +147,9 @@ public class EncounterReportBundleServiceTest {
         MESSAGE_HEADER = new MessageHeader();
         MESSAGE_HEADER.setId(MESSAGE_HEADER_ID);
 
+        OBSERVATION = new Observation();
+        OBSERVATION.setId(OBSERVATION_ID);
+
         ENCOUNTER = new Encounter();
         ENCOUNTER.setStatus(FINISHED);
         ENCOUNTER.setIdElement(ENCOUNTER_ID);
@@ -176,6 +185,8 @@ public class EncounterReportBundleServiceTest {
     private ConditionMapper conditionMapper;
     @Mock
     private ReferralRequestMapper referralRequestMapper;
+    @Mock
+    private ObservationMapper observationMapper;
 
     @BeforeEach
     public void setUp() throws XmlException {
@@ -191,6 +202,7 @@ public class EncounterReportBundleServiceTest {
         when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
         when(messageHeaderService.createMessageHeader()).thenReturn(MESSAGE_HEADER);
         when(referralRequestMapper.mapReferralRequest(any(), any(), any(), any())).thenReturn(REFERRAL_REQUEST);
+        when(observationMapper.mapObservations(any(), eq(ENCOUNTER))).thenReturn(Arrays.asList(OBSERVATION));
         Encounter.DiagnosisComponent diagnosisComponent = new Encounter.DiagnosisComponent();
         diagnosisComponent.setCondition(new Reference());
         diagnosisComponent.setRole(new CodeableConcept());
@@ -206,7 +218,7 @@ public class EncounterReportBundleServiceTest {
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
         assertThat(encounterBundle.getType()).isEqualTo(MESSAGE);
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(15);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(16);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), MESSAGE_HEADER_ID.getValue(), ResourceType.MessageHeader);
         verifyEntry(entries.get(1), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
@@ -222,7 +234,8 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(11), CONSENT_ID.getValue(), ResourceType.Consent);
         verifyEntry(entries.get(12), CONDITION_ID.getValue(), ResourceType.Condition);
         verifyEntry(entries.get(13), QUESTIONNAIRE_RESPONSE_ID.getValue(), ResourceType.QuestionnaireResponse);
-        verifyEntry(entries.get(14), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+        verifyEntry(entries.get(14), OBSERVATION_ID.getValue(), ResourceType.Observation);
+        verifyEntry(entries.get(15), LIST_RESOURCE_ID.getValue(), ResourceType.List);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {
