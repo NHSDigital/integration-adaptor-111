@@ -5,10 +5,12 @@ import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,13 +24,13 @@ import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Consent;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.MessageHeader;
+import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Practitioner;
@@ -50,6 +52,8 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -70,8 +74,6 @@ public class EncounterReportBundleServiceTest {
     private static final Encounter.EncounterLocationComponent ENCOUNTER_LOCATION_COMPONENT;
     private static final Patient PATIENT;
     private static final IdType PATIENT_ID = newRandomUuid();
-    private static final EpisodeOfCare EPISODE_OF_CARE;
-    private static final IdType EPISODE_OF_CARE_ID = newRandomUuid();
     private static final ReferralRequest REFERRAL_REQUEST;
     private static final IdType REFERRAL_REQUEST_ID = newRandomUuid();
     private static final Composition COMPOSITION;
@@ -90,6 +92,8 @@ public class EncounterReportBundleServiceTest {
     private static final IdType QUESTIONNAIRE_RESPONSE_ID = newRandomUuid();
     private static final MessageHeader MESSAGE_HEADER;
     private static final IdType MESSAGE_HEADER_ID = newRandomUuid();
+    private static final Observation OBSERVATION;
+    private static final IdType OBSERVATION_ID = newRandomUuid();
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -115,9 +119,6 @@ public class EncounterReportBundleServiceTest {
 
         PATIENT = new Patient();
         PATIENT.setId(PATIENT_ID);
-
-        EPISODE_OF_CARE = new EpisodeOfCare();
-        EPISODE_OF_CARE.setId(EPISODE_OF_CARE_ID);
 
         REFERRAL_REQUEST = new ReferralRequest();
         REFERRAL_REQUEST.setId(REFERRAL_REQUEST_ID);
@@ -146,6 +147,9 @@ public class EncounterReportBundleServiceTest {
         MESSAGE_HEADER = new MessageHeader();
         MESSAGE_HEADER.setId(MESSAGE_HEADER_ID);
 
+        OBSERVATION = new Observation();
+        OBSERVATION.setId(OBSERVATION_ID);
+
         ENCOUNTER = new Encounter();
         ENCOUNTER.setStatus(FINISHED);
         ENCOUNTER.setIdElement(ENCOUNTER_ID);
@@ -156,7 +160,6 @@ public class EncounterReportBundleServiceTest {
         ENCOUNTER.setLocation(Collections.singletonList(ENCOUNTER_LOCATION_COMPONENT));
         ENCOUNTER.setSubject(new Reference(PATIENT));
         ENCOUNTER.setSubjectTarget(PATIENT);
-        ENCOUNTER.addEpisodeOfCare(new Reference(EPISODE_OF_CARE));
         ENCOUNTER.addIncomingReferral(new Reference(REFERRAL_REQUEST));
     }
 
@@ -180,20 +183,26 @@ public class EncounterReportBundleServiceTest {
     private MessageHeaderService messageHeaderService;
     @Mock
     private ConditionMapper conditionMapper;
+    @Mock
+    private ReferralRequestMapper referralRequestMapper;
+    @Mock
+    private ObservationMapper observationMapper;
 
     @BeforeEach
     public void setUp() throws XmlException {
         List<QuestionnaireResponse> questionnaireResponseList = new ArrayList<>();
         questionnaireResponseList.add(QUESTIONNAIRE_RESPONSE);
         when(encounterMapper.mapEncounter(any(), any())).thenReturn(ENCOUNTER);
+        when(conditionMapper.mapCondition(any(), any(), any())).thenReturn(CONDITION);
         when(compositionMapper.mapComposition(any(), any(), any())).thenReturn(COMPOSITION);
-        when(conditionMapper.mapCondition(any(), any())).thenReturn(CONDITION);
         when(listMapper.mapList(any(), any(), any())).thenReturn(LIST_RESOURCE);
-        when(carePlanMapper.mapCarePlan(any(), any(), any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
+        when(carePlanMapper.mapCarePlan(any(), any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(Collections.singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
         when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
         when(messageHeaderService.createMessageHeader()).thenReturn(MESSAGE_HEADER);
+        when(referralRequestMapper.mapReferralRequest(any(), any(), any(), any())).thenReturn(REFERRAL_REQUEST);
+        when(observationMapper.mapObservations(any(), eq(ENCOUNTER))).thenReturn(Arrays.asList(OBSERVATION));
         Encounter.DiagnosisComponent diagnosisComponent = new Encounter.DiagnosisComponent();
         diagnosisComponent.setCondition(new Reference());
         diagnosisComponent.setRole(new CodeableConcept());
@@ -220,12 +229,12 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(6), HEALTHCARE_SERVICE_ID.getValue(), ResourceType.HealthcareService);
         verifyEntry(entries.get(7), REFERRAL_REQUEST_ID.getValue(), ResourceType.ReferralRequest);
         verifyEntry(entries.get(8), APPOINTMENT_ID.getValue(), ResourceType.Appointment);
-        verifyEntry(entries.get(9), EPISODE_OF_CARE_ID.getValue(), ResourceType.EpisodeOfCare);
-        verifyEntry(entries.get(10), COMPOSITION_ID.getValue(), ResourceType.Composition);
-        verifyEntry(entries.get(11), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
-        verifyEntry(entries.get(12), CONSENT_ID.getValue(), ResourceType.Consent);
-        verifyEntry(entries.get(13), CONDITION_ID.getValue(), ResourceType.Condition);
-        verifyEntry(entries.get(14), QUESTIONNAIRE_RESPONSE_ID.getValue(), ResourceType.QuestionnaireResponse);
+        verifyEntry(entries.get(9), COMPOSITION_ID.getValue(), ResourceType.Composition);
+        verifyEntry(entries.get(10), CAREPLAN_ID.getValue(), ResourceType.CarePlan);
+        verifyEntry(entries.get(11), CONSENT_ID.getValue(), ResourceType.Consent);
+        verifyEntry(entries.get(12), CONDITION_ID.getValue(), ResourceType.Condition);
+        verifyEntry(entries.get(13), QUESTIONNAIRE_RESPONSE_ID.getValue(), ResourceType.QuestionnaireResponse);
+        verifyEntry(entries.get(14), OBSERVATION_ID.getValue(), ResourceType.Observation);
         verifyEntry(entries.get(15), LIST_RESOURCE_ID.getValue(), ResourceType.List);
     }
 

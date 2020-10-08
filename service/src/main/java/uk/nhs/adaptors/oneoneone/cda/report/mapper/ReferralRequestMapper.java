@@ -16,6 +16,7 @@ import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Component
 @RequiredArgsConstructor
@@ -23,8 +24,10 @@ public class ReferralRequestMapper {
 
     private static final int SECONDS_IN_HOUR = 60 * 60;
     private final Reference transformerDevice = new Reference("Device/1");
+    private final ProcedureRequestMapper procedureRequestMapper;
 
-    public ReferralRequest mapReferralRequest(Encounter encounter, List<HealthcareService> healthcareServiceList) {
+    public ReferralRequest mapReferralRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
+        List<HealthcareService> healthcareServiceList, Reference condition) {
 
         ReferralRequest referralRequest = new ReferralRequest();
         referralRequest.setIdElement(newRandomUuid());
@@ -44,7 +47,10 @@ public class ReferralRequestMapper {
             .setAuthoredOn(now)
             .setRequester(new ReferralRequest.ReferralRequestRequesterComponent()
                 .setAgent(transformerDevice)
-                .setOnBehalfOf(encounter.getServiceProvider()));
+                .setOnBehalfOf(encounter.getServiceProvider()))
+            .addReasonReference(condition)
+            .addSupportingInfo(new Reference(procedureRequestMapper.mapProcedureRequest(clinicalDocument, encounter.getSubject(),
+                referralRequest)));
 
         for (HealthcareService healthcareService : healthcareServiceList) {
             referralRequest.addRecipient(new Reference(healthcareService));

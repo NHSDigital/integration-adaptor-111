@@ -4,6 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -12,6 +19,7 @@ import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
+import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -57,9 +65,14 @@ public class CompositionMapperTest {
     private ReferralRequest referralRequest;
     @Mock
     private POCDMT000002UK01Component2 component2;
+    @Mock
+    private QuestionnaireResponse questionnaireResponse;
+    private List<QuestionnaireResponse> questionnaireResponseList;
 
     @BeforeEach
     public void setUp() {
+        questionnaireResponseList = new ArrayList<>();
+        questionnaireResponseList.add(questionnaireResponse);
         POCDMT000002UK01RelatedDocument1[] relatedDocsArray = {mock(POCDMT000002UK01RelatedDocument1.class)};
         when(clinicalDocument.getRelatedDocumentArray()).thenReturn(relatedDocsArray);
         when(clinicalDocument.getRelatedDocumentArray(0)).thenReturn(relatedDocument1);
@@ -82,10 +95,12 @@ public class CompositionMapperTest {
 
     @Test
     public void mapComposition() {
-        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans);
+        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans, questionnaireResponseList);
+
+        Coding code = composition.getType().getCodingFirstRep();
+        String questionnaireResponseTitle = "QuestionnaireResponse";
 
         assertThat(composition.getTitle()).isEqualTo("111 Report");
-        Coding code = composition.getType().getCodingFirstRep();
         assertThat(code.getCode()).isEqualTo("371531000");
         assertThat(code.getSystem()).isEqualTo("http://snomed.info/sct");
         assertThat(code.getDisplay()).isEqualTo("Report of clinical encounter (record artifact)");
@@ -94,5 +109,7 @@ public class CompositionMapperTest {
         assertThat(composition.getRelatesTo().get(0).getCode()).isEqualTo(Composition.DocumentRelationshipType.REPLACES);
         assertThat(composition.getSection().get(0).getTitle()).isEqualTo("CarePlan");
         assertThat(composition.getSection().get(1).getTitle()).isEqualTo("ReferralRequest");
+        assertThat(composition.getSection().get(2).getEntry().get(0).getResource()).isEqualTo(questionnaireResponse);
+        assertThat(composition.getSection().get(2).getTitle()).isEqualTo(questionnaireResponseTitle);
     }
 }

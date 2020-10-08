@@ -13,11 +13,13 @@ import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Composition;
+import org.hl7.fhir.dstu3.model.Composition.SectionComponent;
 import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Narrative;
+import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
@@ -42,7 +44,8 @@ public class CompositionMapper {
     private final AuthorMapper authorMapper;
     private final NodeUtil nodeUtil;
 
-    public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, List<CarePlan> carePlans) {
+    public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, List<CarePlan> carePlans,
+        List<QuestionnaireResponse> questionnaireResponseList) {
 
         Composition composition = new Composition();
         composition.setIdElement(newRandomUuid());
@@ -96,7 +99,7 @@ public class CompositionMapper {
                 POCDMT000002UK01Section section = component3.getSection();
                 for (POCDMT000002UK01Component5 component5 : section.getComponentArray()) {
                     POCDMT000002UK01Section sectionComponent5 = component5.getSection();
-                    Composition.SectionComponent sectionComponent = new Composition.SectionComponent();
+                    SectionComponent sectionComponent = new SectionComponent();
                     if (sectionComponent5.isSetTitle()) {
                         sectionComponent.setTitle(nodeUtil.getAllText(sectionComponent5.getTitle().getDomNode()));
                     }
@@ -113,6 +116,8 @@ public class CompositionMapper {
             }
         }
 
+        addPathwaysToSection(composition, questionnaireResponseList);
+
         for (CarePlan carePlan : carePlans) {
             composition.addSection(buildSectionComponentFromResource(carePlan));
         }
@@ -127,6 +132,16 @@ public class CompositionMapper {
     private CodeableConcept createCodeableConcept() {
         Coding coding = new Coding(SNOMED_SYSTEM, SNOMED_CODE, SNOMED_CODE_DISPLAY);
         return new CodeableConcept(coding);
+    }
+
+    private void addPathwaysToSection(Composition composition, List<QuestionnaireResponse> questionnaireResponseList) {
+        String questionnaireResponseTitle = "QuestionnaireResponse";
+        for (QuestionnaireResponse questionnaireResponse : questionnaireResponseList) {
+            SectionComponent sectionComponent = new SectionComponent();
+            sectionComponent.addEntry(new Reference(questionnaireResponse));
+            sectionComponent.setTitle(questionnaireResponseTitle);
+            composition.addSection(sectionComponent);
+        }
     }
 
     private Composition.SectionComponent buildSectionComponentFromResource(DomainResource resource) {

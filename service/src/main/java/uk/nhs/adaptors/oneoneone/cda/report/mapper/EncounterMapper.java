@@ -4,30 +4,29 @@ import static java.util.Arrays.stream;
 
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.hl7.fhir.dstu3.model.Appointment;
-import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterLocationComponent;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
-import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.HealthcareService;
+import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.ReferralRequest;
-import org.hl7.fhir.dstu3.model.codesystems.EncounterType;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
+import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
@@ -40,6 +39,10 @@ import uk.nhs.connect.iucds.cda.ucr.TS;
 @Component
 @AllArgsConstructor
 public class EncounterMapper {
+
+    private static final String DIV_START = "<div>";
+
+    private static final String DIV_END = "</div>";
 
     private final PeriodMapper periodMapper;
 
@@ -55,15 +58,13 @@ public class EncounterMapper {
 
     private final LocationMapper locationMapper;
 
-    private final ReferralRequestMapper referralRequestMapper;
-
     private final AppointmentService appointmentService;
-
-    private final EpisodeOfCareMapper episodeOfCareMapper;
 
     private final PatientMapper patientMapper;
 
     private final GroupMapper groupMapper;
+
+    private final NodeUtil nodeUtil;
 
     public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<HealthcareService> healthcareServiceList) {
         Encounter encounter = new Encounter();
@@ -74,9 +75,7 @@ public class EncounterMapper {
         setServiceProvider(encounter, clinicalDocument);
         setSubject(encounter, clinicalDocument);
         encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument, encounter));
-        setReferralRequest(encounter, healthcareServiceList);
         setAppointment(encounter, clinicalDocument);
-        setEpisodeOfCare(encounter, clinicalDocument);
         setEncounterReasonAndType(encounter, clinicalDocument);
         return encounter;
     }
@@ -151,26 +150,10 @@ public class EncounterMapper {
         return encounterParticipantComponents;
     }
 
-    private void setReferralRequest(Encounter encounter, List<HealthcareService> healthcareServiceList) {
-        ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(encounter, healthcareServiceList);
-        Reference referralRequestRef = new Reference(referralRequest);
-        encounter.addIncomingReferral(referralRequestRef);
-    }
-
     private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        Reference referralRequest = encounter.getIncomingReferralFirstRep();
         Reference patient = encounter.getSubject();
-
-        Optional<Appointment> appointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument);
-        if (appointment.isPresent()) {
-            encounter.setAppointment(new Reference(appointment.get()));
-            encounter.setAppointmentTarget(appointment.get());
-        }
-    }
-
-    private void setEpisodeOfCare(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        Optional<EpisodeOfCare> episodeOfCare = episodeOfCareMapper.mapEpisodeOfCare(clinicalDocument, encounter.getSubject());
-        episodeOfCare.ifPresent(ofCare -> encounter.addEpisodeOfCare(new Reference(ofCare)));
+        appointmentService.retrieveAppointment(patient, clinicalDocument)
+            .map(Reference::new).ifPresent(encounter::setAppointment);
     }
 
     private void setEncounterReasonAndType(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -179,13 +162,7 @@ public class EncounterMapper {
                 POCDMT000002UK01Section section = component3.getSection();
                 for (POCDMT000002UK01Entry entry : section.getEntryArray()) {
                     if (entry.isSetEncounter()) {
-                        POCDMT000002UK01Encounter encounterITK = entry.getEncounter();
-                        if (encounterITK.isSetTypeId()) {
-                            EncounterType encounterType = EncounterType.fromCode(encounterITK.getTypeId().getAssigningAuthorityName());
-                            if (encounterType != null) {
-                                encounter.addType(new CodeableConcept().setText(encounterType.toString()));
-                            }
-                        }
+                        addEncounterText(entry.getEncounter(), encounter);
                     }
                 }
             }
@@ -199,5 +176,16 @@ public class EncounterMapper {
             patient = patientMapper.mapPatient(patientRole);
         }
         return Optional.of(patient);
+    }
+
+    private void addEncounterText(POCDMT000002UK01Encounter encounterITK, Encounter encounter) {
+        if (encounterITK.isSetText()) {
+            String divString = nodeUtil.getNodeValueString(encounterITK.getText());
+            Narrative narrative = new Narrative();
+            narrative.setStatus(GENERATED);
+            narrative.setDivAsString(Arrays.asList(DIV_START, divString, DIV_END)
+                .stream().collect(Collectors.joining()));
+            encounter.setText(narrative);
+        }
     }
 }
