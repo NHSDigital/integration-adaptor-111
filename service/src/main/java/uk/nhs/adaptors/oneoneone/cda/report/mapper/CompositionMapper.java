@@ -9,10 +9,12 @@ import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 import java.util.Date;
 import java.util.List;
 
+import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Composition.SectionComponent;
+import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Identifier;
@@ -42,7 +44,7 @@ public class CompositionMapper {
     private final AuthorMapper authorMapper;
     private final NodeUtil nodeUtil;
 
-    public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
+    public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, List<CarePlan> carePlans,
         List<QuestionnaireResponse> questionnaireResponseList) {
 
         Composition composition = new Composition();
@@ -114,6 +116,14 @@ public class CompositionMapper {
             }
         }
 
+        for (CarePlan carePlan : carePlans) {
+            composition.addSection(buildSectionComponentFromResource(carePlan));
+        }
+
+        if (encounter.hasIncomingReferral()) {
+            composition.addSection(buildSectionComponentFromReference(encounter.getIncomingReferralFirstRep()));
+        }
+
         addPathwaysToSection(composition, questionnaireResponseList);
 
         return composition;
@@ -122,6 +132,18 @@ public class CompositionMapper {
     private CodeableConcept createCodeableConcept() {
         Coding coding = new Coding(SNOMED_SYSTEM, SNOMED_CODE, SNOMED_CODE_DISPLAY);
         return new CodeableConcept(coding);
+    }
+
+    private SectionComponent buildSectionComponentFromResource(DomainResource resource) {
+        return new SectionComponent()
+            .setTitle(resource.fhirType())
+            .addEntry(new Reference(resource));
+    }
+
+    private SectionComponent buildSectionComponentFromReference(Reference reference) {
+        return new SectionComponent()
+            .setTitle(reference.getResource().fhirType())
+            .addEntry(reference);
     }
 
     private void addPathwaysToSection(Composition composition, List<QuestionnaireResponse> questionnaireResponseList) {
