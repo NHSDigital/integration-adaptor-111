@@ -24,16 +24,16 @@ public class ProcedureRequestMapper {
             if (clinicalDocument.getComponentOf().getEncompassingEncounter() != null) {
                 if (clinicalDocument.getComponentOf().getEncompassingEncounter().isSetDischargeDispositionCode()) {
                     Coding coding = new Coding();
-                    CE dichargeCode = clinicalDocument.getComponentOf().getEncompassingEncounter().getDischargeDispositionCode();
+                    CE dischargeCode = clinicalDocument.getComponentOf().getEncompassingEncounter().getDischargeDispositionCode();
 
-                    if (dichargeCode.isSetDisplayName()) {
-                        coding.setDisplay(dichargeCode.getDisplayName());
+                    if (dischargeCode.isSetDisplayName()) {
+                        coding.setDisplay(dischargeCode.getDisplayName());
                     }
-                    if (dichargeCode.isSetCode()) {
-                        coding.setCode(dichargeCode.getCode());
+                    if (dischargeCode.isSetCode()) {
+                        coding.setCode(dischargeCode.getCode());
                     }
-                    if (dichargeCode.isSetCodeSystem()) {
-                        coding.setSystem(dichargeCode.getCodeSystem());
+                    if (dischargeCode.isSetCodeSystem()) {
+                        coding.setSystem(dischargeCode.getCodeSystem());
                     }
                     if (StringUtils.isNotBlank(coding.getCode()) || StringUtils.isNotBlank(coding.getDisplay())
                         || StringUtils.isNotBlank(coding.getSystem())) {
