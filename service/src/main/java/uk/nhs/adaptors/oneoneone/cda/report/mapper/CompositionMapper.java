@@ -116,8 +116,6 @@ public class CompositionMapper {
             }
         }
 
-        addPathwaysToSection(composition, questionnaireResponseList);
-
         for (CarePlan carePlan : carePlans) {
             composition.addSection(buildSectionComponentFromResource(carePlan));
         }
@@ -126,12 +124,26 @@ public class CompositionMapper {
             composition.addSection(buildSectionComponentFromReference(encounter.getIncomingReferralFirstRep()));
         }
 
+        addPathwaysToSection(composition, questionnaireResponseList);
+
         return composition;
     }
 
     private CodeableConcept createCodeableConcept() {
         Coding coding = new Coding(SNOMED_SYSTEM, SNOMED_CODE, SNOMED_CODE_DISPLAY);
         return new CodeableConcept(coding);
+    }
+
+    private SectionComponent buildSectionComponentFromResource(DomainResource resource) {
+        return new SectionComponent()
+            .setTitle(resource.fhirType())
+            .addEntry(new Reference(resource));
+    }
+
+    private SectionComponent buildSectionComponentFromReference(Reference reference) {
+        return new SectionComponent()
+            .setTitle(reference.getResource().fhirType())
+            .addEntry(reference);
     }
 
     private void addPathwaysToSection(Composition composition, List<QuestionnaireResponse> questionnaireResponseList) {
@@ -142,17 +154,5 @@ public class CompositionMapper {
             sectionComponent.setTitle(questionnaireResponseTitle);
             composition.addSection(sectionComponent);
         }
-    }
-
-    private Composition.SectionComponent buildSectionComponentFromResource(DomainResource resource) {
-        return new Composition.SectionComponent()
-            .setTitle(resource.fhirType())
-            .addEntry(new Reference(resource));
-    }
-
-    private Composition.SectionComponent buildSectionComponentFromReference(Reference reference) {
-        return new Composition.SectionComponent()
-            .setTitle(reference.getResource().fhirType())
-            .addEntry(reference);
     }
 }

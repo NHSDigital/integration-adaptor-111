@@ -38,8 +38,8 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -74,12 +74,12 @@ public class EncounterReportBundleService {
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
         List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
             encounter.getSubject(), new Reference(encounter));
-        List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, condition);
         Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter, questionnaireResponseList);
+        List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, condition);
+        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans, questionnaireResponseList);
         ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument,
             encounter, healthcareServiceList, new Reference(condition));
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
-        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans, questionnaireResponseList);
 
         addEntry(bundle, messageHeaderService.createMessageHeader());
         addEncounter(bundle, encounter);
