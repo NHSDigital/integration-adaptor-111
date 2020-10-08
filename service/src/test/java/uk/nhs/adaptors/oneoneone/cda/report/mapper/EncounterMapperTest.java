@@ -12,13 +12,10 @@ import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
-import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -79,19 +76,11 @@ public class EncounterMapperTest {
     @Mock
     private Patient patient;
     @Mock
-    private EpisodeOfCare episodeOfCare;
-    @Mock
-    private ReferralRequest referralRequest;
-    @Mock
     private Encounter.EncounterLocationComponent locationComponent;
     @Mock
     private PatientMapper patientMapper;
     @Mock
-    private EpisodeOfCareMapper episodeOfCareMapper;
-    @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
-    @Mock
-    private ReferralRequestMapper referralRequestMapper;
     @Mock
     private List<HealthcareService> healthcareServiceList;
     @Mock
@@ -132,8 +121,6 @@ public class EncounterMapperTest {
         mockServiceProvider();
         mockAppointment();
         mockSubject();
-        mockEpisodeOfCare();
-        mockReferralRequest();
         mockParticipantWithAuthorInformantAndDataEnterer(clinicalDocument);
         mockEncounterTypeAndReason();
     }
@@ -167,21 +154,11 @@ public class EncounterMapperTest {
     }
 
     private void mockAppointment() {
-        when(appointmentService.retrieveAppointment(any(), any(), any())).thenReturn(Optional.of(appointment));
+        when(appointmentService.retrieveAppointment(any(), any())).thenReturn(Optional.of(appointment));
     }
 
     private void mockSubject() {
         when(patientMapper.mapPatient(any())).thenReturn(patient);
-    }
-
-    private void mockEpisodeOfCare() {
-        when(episodeOfCareMapper.mapEpisodeOfCare(any(POCDMT000002UK01ClinicalDocument1.class), any(Reference.class)))
-            .thenReturn(Optional.of(episodeOfCare));
-    }
-
-    private void mockReferralRequest() {
-        when(referralRequestMapper.mapReferralRequest(any(), any()))
-            .thenReturn(referralRequest);
     }
 
     private void mockParticipantWithAuthorInformantAndDataEnterer(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -228,6 +205,7 @@ public class EncounterMapperTest {
     @Test
     public void shouldMapEncounter() {
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+
         verifyEncounter(encounter);
     }
 
@@ -238,12 +216,9 @@ public class EncounterMapperTest {
         assertThat(encounter.getStatus()).isEqualTo(FINISHED);
         assertThat(encounter.getPeriod()).isEqualTo(period);
         assertThat(encounter.getParticipantFirstRep()).isEqualTo(encounterParticipantComponent);
-        assertThat(encounter.getAppointmentTarget()).isEqualTo(appointment);
         assertThat(encounter.getServiceProviderTarget()).isEqualTo(serviceProvider);
         assertThat(encounter.getLocationFirstRep()).isEqualTo(locationComponent);
         assertThat(encounter.getSubjectTarget()).isEqualTo(patient);
-        assertThat(encounter.getEpisodeOfCareFirstRep().getResource()).isEqualTo(episodeOfCare);
-        assertThat(encounter.getIncomingReferralFirstRep().getResource()).isEqualTo(referralRequest);
         assertThat(encounter.getText().getDiv().toString()).isEqualTo(encounterDivText);
     }
 

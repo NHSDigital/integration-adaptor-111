@@ -12,11 +12,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterLocationComponent;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
-import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Narrative;
@@ -24,7 +22,6 @@ import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -61,11 +58,7 @@ public class EncounterMapper {
 
     private final LocationMapper locationMapper;
 
-    private final ReferralRequestMapper referralRequestMapper;
-
     private final AppointmentService appointmentService;
-
-    private final EpisodeOfCareMapper episodeOfCareMapper;
 
     private final PatientMapper patientMapper;
 
@@ -82,9 +75,7 @@ public class EncounterMapper {
         setServiceProvider(encounter, clinicalDocument);
         setSubject(encounter, clinicalDocument);
         encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument, encounter));
-        setReferralRequest(encounter, healthcareServiceList);
         setAppointment(encounter, clinicalDocument);
-        setEpisodeOfCare(encounter, clinicalDocument);
         setEncounterReasonAndType(encounter, clinicalDocument);
         return encounter;
     }
@@ -159,26 +150,10 @@ public class EncounterMapper {
         return encounterParticipantComponents;
     }
 
-    private void setReferralRequest(Encounter encounter, List<HealthcareService> healthcareServiceList) {
-        ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(encounter, healthcareServiceList);
-        Reference referralRequestRef = new Reference(referralRequest);
-        encounter.addIncomingReferral(referralRequestRef);
-    }
-
     private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        Reference referralRequest = encounter.getIncomingReferralFirstRep();
         Reference patient = encounter.getSubject();
-
-        Optional<Appointment> appointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument);
-        if (appointment.isPresent()) {
-            encounter.setAppointment(new Reference(appointment.get()));
-            encounter.setAppointmentTarget(appointment.get());
-        }
-    }
-
-    private void setEpisodeOfCare(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        Optional<EpisodeOfCare> episodeOfCare = episodeOfCareMapper.mapEpisodeOfCare(clinicalDocument, encounter.getSubject());
-        episodeOfCare.ifPresent(ofCare -> encounter.addEpisodeOfCare(new Reference(ofCare)));
+        appointmentService.retrieveAppointment(patient, clinicalDocument)
+            .map(Reference::new).ifPresent(encounter::setAppointment);
     }
 
     private void setEncounterReasonAndType(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
