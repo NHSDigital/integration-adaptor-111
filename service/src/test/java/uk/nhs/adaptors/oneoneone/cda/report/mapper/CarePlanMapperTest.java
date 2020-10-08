@@ -13,7 +13,6 @@ import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
-import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +40,6 @@ public class CarePlanMapperTest {
     private static final String SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
     private static final String INFORMATION_ADVICE_GIVEN = "1052951000000105";
     private static final String DESCRIPTION = "description";
-    private static final String DIV_AS_STRING = String.format("<div xmlns=\"http://www.w3.org/1999/xhtml\">%s</div>", DESCRIPTION);
     private static final String TITLE = "title";
 
     @Mock
@@ -75,9 +73,6 @@ public class CarePlanMapperTest {
     private NodeUtil nodeUtil;
 
     @Mock
-    private QuestionnaireResponse questionnaireResponse;
-
-    @Mock
     private Condition condition;
 
     @Mock
@@ -91,8 +86,6 @@ public class CarePlanMapperTest {
 
     @Mock
     private Reference organization;
-
-    private List<QuestionnaireResponse> questionnaireResponseList;
 
     private List<Encounter.EncounterLocationComponent> locationComponentList;
 
@@ -136,15 +129,13 @@ public class CarePlanMapperTest {
         when(locationref.getResource()).thenReturn(location);
         when(location.hasManagingOrganization()).thenReturn(true);
         when(location.getManagingOrganization()).thenReturn(organization);
-        questionnaireResponseList = new ArrayList<>();
-        questionnaireResponseList.add(questionnaireResponse);
     }
 
     @Test
     public void shouldMapITKReportToCarePlan() {
         mockSection();
 
-        List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, questionnaireResponseList, condition);
+        List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, condition);
         assertThat(carePlans).isNotEmpty();
 
         CarePlan carePlan = carePlans.get(0);
@@ -159,13 +150,11 @@ public class CarePlanMapperTest {
         assertThat(carePlan.getSubjectTarget()).isEqualTo(encounter.getSubjectTarget());
         assertThat(carePlan.getLanguage()).isEqualTo(LANG);
 
-        assertThat(carePlan.getText().getDivAsString()).isEqualTo(DIV_AS_STRING);
         assertThat(carePlan.getTitle()).isEqualTo(TITLE);
         assertThat(carePlan.getDescription()).isEqualTo(DESCRIPTION);
 
         assertThat(carePlan.getAuthor().get(0)).isEqualTo(organization);
         assertThat(carePlan.getAddresses().get(0).getResource()).isEqualTo(condition);
-        assertThat(carePlan.getSupportingInfo().get(0).getResource()).isEqualTo(questionnaireResponse);
     }
 
     private void mockSection() {
@@ -174,7 +163,6 @@ public class CarePlanMapperTest {
         when(section.getCode()).thenReturn(code);
         when(section.isSetLanguageCode()).thenReturn(true);
         when(section.isSetTitle()).thenReturn(true);
-        when(section.isSetText()).thenReturn(true);
         when(section.getText()).thenReturn(strucDocText);
         when(section.getText().sizeOfContentArray()).thenReturn(1);
 

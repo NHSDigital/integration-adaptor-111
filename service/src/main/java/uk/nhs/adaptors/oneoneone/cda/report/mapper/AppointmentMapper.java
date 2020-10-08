@@ -28,17 +28,15 @@ import static org.hl7.fhir.dstu3.model.Appointment.ParticipationStatus.ACCEPTED;
 @AllArgsConstructor
 public class AppointmentMapper {
 
-    private static final int MINUTES_DURATION = 10;
     private final LocationMapper locationMapper;
 
     private final NodeUtil nodeUtil;
 
     public Optional<Appointment> mapAppointment(POCDMT000002UK01Entry entry, POCDMT000002UK01Section matchingSection,
-        Reference referralRequest, Reference patient) {
+        Reference patient) {
         POCDMT000002UK01Encounter itkEncounter = entry.getEncounter();
         Appointment appointment = new Appointment()
-            .setStatus(BOOKED)
-            .addIncomingReferral(referralRequest);
+            .setStatus(BOOKED);
         appointment.setIdElement(IdType.newRandomUuid());
 
         if (matchingSection != null) {

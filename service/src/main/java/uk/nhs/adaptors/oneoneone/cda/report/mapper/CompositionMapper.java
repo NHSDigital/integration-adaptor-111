@@ -7,14 +7,19 @@ import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
 import java.util.Date;
+import java.util.List;
 
+import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Composition;
+import org.hl7.fhir.dstu3.model.Composition.SectionComponent;
+import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Narrative;
+import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
@@ -39,7 +44,8 @@ public class CompositionMapper {
     private final AuthorMapper authorMapper;
     private final NodeUtil nodeUtil;
 
-    public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
+    public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, List<CarePlan> carePlans,
+        List<QuestionnaireResponse> questionnaireResponseList) {
 
         Composition composition = new Composition();
         composition.setIdElement(newRandomUuid());
@@ -93,7 +99,7 @@ public class CompositionMapper {
                 POCDMT000002UK01Section section = component3.getSection();
                 for (POCDMT000002UK01Component5 component5 : section.getComponentArray()) {
                     POCDMT000002UK01Section sectionComponent5 = component5.getSection();
-                    Composition.SectionComponent sectionComponent = new Composition.SectionComponent();
+                    SectionComponent sectionComponent = new SectionComponent();
                     if (sectionComponent5.isSetTitle()) {
                         sectionComponent.setTitle(nodeUtil.getAllText(sectionComponent5.getTitle().getDomNode()));
                     }
@@ -110,11 +116,43 @@ public class CompositionMapper {
             }
         }
 
+        for (CarePlan carePlan : carePlans) {
+            composition.addSection(buildSectionComponentFromResource(carePlan));
+        }
+
+        if (encounter.hasIncomingReferral()) {
+            composition.addSection(buildSectionComponentFromReference(encounter.getIncomingReferralFirstRep()));
+        }
+
+        addPathwaysToSection(composition, questionnaireResponseList);
+
         return composition;
     }
 
     private CodeableConcept createCodeableConcept() {
         Coding coding = new Coding(SNOMED_SYSTEM, SNOMED_CODE, SNOMED_CODE_DISPLAY);
         return new CodeableConcept(coding);
+    }
+
+    private SectionComponent buildSectionComponentFromResource(DomainResource resource) {
+        return new SectionComponent()
+            .setTitle(resource.fhirType())
+            .addEntry(new Reference(resource));
+    }
+
+    private SectionComponent buildSectionComponentFromReference(Reference reference) {
+        return new SectionComponent()
+            .setTitle(reference.getResource().fhirType())
+            .addEntry(reference);
+    }
+
+    private void addPathwaysToSection(Composition composition, List<QuestionnaireResponse> questionnaireResponseList) {
+        String questionnaireResponseTitle = "QuestionnaireResponse";
+        for (QuestionnaireResponse questionnaireResponse : questionnaireResponseList) {
+            SectionComponent sectionComponent = new SectionComponent();
+            sectionComponent.addEntry(new Reference(questionnaireResponse));
+            sectionComponent.setTitle(questionnaireResponseTitle);
+            composition.addSection(sectionComponent);
+        }
     }
 }

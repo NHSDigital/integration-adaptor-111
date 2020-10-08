@@ -42,7 +42,6 @@ public class AppointmentServiceTest {
     @Mock
     private Appointment appointment;
     private Reference patient;
-    private Reference referralRequest;
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument1;
     private POCDMT000002UK01Section section;
 
@@ -54,7 +53,6 @@ public class AppointmentServiceTest {
         POCDMT000002UK01Component3 component3 = mock(POCDMT000002UK01Component3.class);
         section = mock(POCDMT000002UK01Section.class);
         patient = mock(Reference.class);
-        referralRequest = mock(Reference.class);
 
         when(clinicalDocument1.getComponent()).thenReturn(component2);
         when(component2.getStructuredBody()).thenReturn(structuredBody);
@@ -66,9 +64,9 @@ public class AppointmentServiceTest {
     public void shouldCreateAppointmentForExistingAppointmentEntryAndSection() {
         mockAppointmentEntry(section);
         mockAppointmentSection(section);
-        when(appointmentMapper.mapAppointment(any(), any(), any(), any())).thenReturn(Optional.of(appointment));
+        when(appointmentMapper.mapAppointment(any(), any(), any())).thenReturn(Optional.of(appointment));
 
-        Optional<Appointment> resultAppointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument1);
+        Optional<Appointment> resultAppointment = appointmentService.retrieveAppointment(patient, clinicalDocument1);
 
         assertTrue(resultAppointment.isPresent());
         assertThat(resultAppointment.get()).isEqualTo(appointment);
@@ -102,7 +100,7 @@ public class AppointmentServiceTest {
         when(section.getEntryArray()).thenReturn(new POCDMT000002UK01Entry[] {});
         mockAppointmentSection(section);
 
-        Optional<Appointment> resultAppointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument1);
+        Optional<Appointment> resultAppointment = appointmentService.retrieveAppointment(patient, clinicalDocument1);
 
         assertFalse(resultAppointment.isPresent());
     }
@@ -112,7 +110,7 @@ public class AppointmentServiceTest {
         when(section.getComponentArray()).thenReturn(new POCDMT000002UK01Component5[] {});
         mockAppointmentEntry(section);
 
-        Optional<Appointment> resultAppointment = appointmentService.retrieveAppointment(referralRequest, patient, clinicalDocument1);
+        Optional<Appointment> resultAppointment = appointmentService.retrieveAppointment(patient, clinicalDocument1);
 
         assertFalse(resultAppointment.isPresent());
     }
