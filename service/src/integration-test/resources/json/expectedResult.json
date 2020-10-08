@@ -22,25 +22,14 @@
       "fullUrl": "urn:uuid:60fbaa9b-7e78-4fd3-8e54-3bb95c85b4d2",
       "resource": {
         "resourceType": "Encounter",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Example diagnosis text</div>"
+        },
         "status": "finished",
-        "type": [
-          {
-            "text": "ADMS"
-          }
-        ],
         "subject": {
           "reference": "urn:uuid:bebfe3dc-d20a-4467-ab68-276780e36433"
         },
-        "episodeOfCare": [
-          {
-            "reference": "urn:uuid:892fdbe9-53b0-4030-97c6-824123bd0eb9"
-          }
-        ],
-        "incomingReferral": [
-          {
-            "reference": "urn:uuid:baddcdc1-e478-49aa-816b-6de7760a463f"
-          }
-        ],
         "participant": [
           {
             "type": [
@@ -186,9 +175,6 @@
         "active": true,
         "patient": {
           "reference": "urn:uuid:bebfe3dc-d20a-4467-ab68-276780e36433"
-        },
-        "relationship": {
-          "text": "Spouse"
         },
         "name": [
           {
@@ -496,40 +482,15 @@
           {
             "reference": "urn:uuid:c5ed049f-5260-4320-9325-224cc7db02ea"
           }
-        ]
-      }
-    },
-    {
-      "fullUrl": "urn:uuid:ab6d083d-28eb-4cf0-b8fb-fc36cec82719",
-      "resource": {
-        "resourceType": "Appointment",
-        "status": "booked",
-        "reason": [
+        ],
+        "reasonReference": [
           {
-            "text": "Patient convenience appointment"
+            "reference": "urn:uuid:94266c31-4a8c-46b1-a3fe-8abd1a14dadc"
           }
         ],
-        "description": "Appointment Reference",
-        "comment": "\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    ",
-        "incomingReferral": [
+        "supportingInfo": [
           {
-            "reference": "urn:uuid:baddcdc1-e478-49aa-816b-6de7760a463f"
-          }
-        ],
-        "participant": [
-          {
-            "actor": {
-              "reference": "urn:uuid:bebfe3dc-d20a-4467-ab68-276780e36433"
-            },
-            "required": "required",
-            "status": "accepted"
-          },
-          {
-            "actor": {
-              "reference": "urn:uuid:c79bb071-4ffc-4c48-ba36-3f14936d89f7"
-            },
-            "required": "required",
-            "status": "accepted"
+            "reference": "urn:uuid:6f21012a-f053-4fb5-b94c-c6ec4179412e"
           }
         ]
       }
@@ -537,74 +498,36 @@
     {
       "fullUrl": "urn:uuid:c79bb071-4ffc-4c48-ba36-3f14936d89f7",
       "resource": {
-        "resourceType": "Location",
-        "name": "CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST",
-        "description": "Psychiatric Community Care Services",
-        "address": {
-          "use": "work",
-          "line": [
-            "Great George Street"
-          ],
-          "city": "Leeds",
-          "postalCode": "LE13EX"
-        }
-      }
-    },
-    {
-      "fullUrl": "urn:uuid:892fdbe9-53b0-4030-97c6-824123bd0eb9",
-      "resource": {
-        "resourceType": "EpisodeOfCare",
+        "resourceType": "ProcedureRequest",
         "status": "active",
-        "type": [
+        "intent": "plan",
+        "priority": "routine",
+        "doNotPerform": false,
+        "code": {
+          "coding": [
+            {
+              "system": "2.16.840.1.113883.2.1.3.2.4.17.325",
+              "code": "Dx009",
+              "display": "Go to the nearest Emergency Department within 4 hours."
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:d053a74a-8123-4972-8f92-80a099ac6ff7"
+        },
+        "occurrencePeriod": {
+          "start": "2020-10-08T10:33:19+00:00",
+          "end": "2020-10-08T11:33:19+00:00"
+        },
+        "reasonReference": [
           {
-            "text": "NHS111Encounter"
-          }
-        ],
-        "patient": {
-          "reference": "urn:uuid:bebfe3dc-d20a-4467-ab68-276780e36433"
-        },
-        "managingOrganization": {
-          "reference": "urn:uuid:207b79d4-16a8-423d-9c0c-961dc2a80aa1"
-        },
-        "period": {
-          "start": "2011-05-19T19:45:00+00:00",
-          "end": "2011-05-19T20:15:00+00:00"
-        },
-        "careManager": {
-          "reference": "urn:uuid:03477804-00b8-4497-9c1b-d3faae8468c3"
-        }
-      }
-    },
-    {
-      "fullUrl": "urn:uuid:03477804-00b8-4497-9c1b-d3faae8468c3",
-      "resource": {
-        "resourceType": "Practitioner",
-        "active": true,
-        "name": [
-          {
-            "use": "official",
-            "family": "Cornwell",
-            "given": [
-              "Dave"
-            ]
+            "reference": "urn:uuid:94266c31-4a8c-46b1-a3fe-8abd1a14dadc"
           }
         ]
       }
     },
     {
       "fullUrl": "urn:uuid:207b79d4-16a8-423d-9c0c-961dc2a80aa1",
-      "resource": {
-        "resourceType": "Organization",
-        "identifier": [
-          {
-            "value": "VDE232323"
-          }
-        ],
-        "name": "Medway South Out of Hours Centre"
-      }
-    },
-    {
-      "fullUrl": "urn:uuid:9b1de0d8-6d79-4219-8db3-b372444845e0",
       "resource": {
         "resourceType": "Composition",
         "identifier": {
@@ -635,9 +558,6 @@
         ],
         "title": "111 Report",
         "confidentiality": "V",
-        "custodian": {
-          "reference": "urn:uuid:207b79d4-16a8-423d-9c0c-961dc2a80aa1"
-        },
         "relatesTo": [
           {
             "code": "replaces",
@@ -703,6 +623,214 @@
               "status": "generated",
               "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;\n                                                        SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2019 16:00\n                                                        Location: WEST LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;\n                                                        Patient has history of violence towards health care\n                                                        professionals\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;An injury or other health problem was described.\n                                                        &lt;urn:br/&gt;The individual was described as breathing and conscious.\n                                                        &lt;urn:br/&gt;Loss of at least a mugful of blood in the last 30 minutes\n                                                        was not described.\n                                                        &lt;urn:br/&gt;An illness or other health problem was described. - Insect\n                                                        Bite\n                                                        &lt;urn:br/&gt;Fighting for breath was not described.\n                                                        &lt;urn:br/&gt;A heart attack, chest/upper back pain, recent probable\n                                                        stroke, recent fit/seizure or suicide attempt was not described\n                                                        as the main call reason.\n                                                        &lt;urn:br/&gt;New confusion, a diabetic hypo, a probable allergic\n                                                        reaction or successful resuscitation was not described as being\n                                                        the main call reason.\n                                                        &lt;urn:br/&gt;The individual was described as being warm to touch.\n                                                        &lt;urn:br/&gt;An insect or spider bite or sting was described. - Tick\n                                                        Bite\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:content styleCode=&quot;bold&quot; xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Plan Summary:&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Remove any jewellery or tight clothing from the area.\n                                                        &lt;urn:br/&gt;Antihistamine medication and creams help reduce swelling\n                                                        and itching. They can be bought from pharmacies. Talk to the\n                                                        pharmacist for advice. Follow the instructions in the pack.\n                                                        &lt;urn:br/&gt;Unless advised not to, or they have already been given,\n                                                        paracetamol or ibuprofen can be used to relieve pain. Follow the\n                                                        instructions in the pack. If in doubt ask a pharmacist.\n                                                    &lt;/urn:content&gt;\n                                                &lt;/xml-fragment&gt;</div>"
             }
+          },
+          {
+            "title": "CarePlan",
+            "entry": [
+              {
+                "reference": "urn:uuid:4d19d41e-70a8-4dbd-bf08-b7f781f3202a"
+              }
+            ]
+          },
+          {
+            "title": "CarePlan",
+            "entry": [
+              {
+                "reference": "urn:uuid:bdd6b7a3-e14c-4a4a-991d-93ed4c6f6e5a"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:42482d86-6207-459e-88df-a2b72929a0b9"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:0cafc4be-c225-44cd-a6f7-b890dc71b52b"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:17f7fa34-e4db-425b-b6ab-7f5209f48dae"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:ed8de4d0-49f5-4c40-91d9-49f0ba07036a"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:005ed4df-37b7-4e62-9a77-b7989c79f691"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:84a39edc-c3f7-45e6-92e7-a90ed3651dff"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:df6c4d11-38ea-4bb3-bbfa-88b24bf79182"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:c7b76d10-c11f-4032-b846-1bc7827bdaa9"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:9585dad4-4729-4615-a1d4-f51fc171813b"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:cb2fc1fd-cded-4a7f-ae1c-ae4a07b88165"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:db00972c-2ae1-4c44-a1d8-970b6d4382e6"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:c0d7ef3c-d7d3-4514-bbb6-ace553ac2c26"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:fd86a39e-1e95-41cc-b92a-ebd4b0752df7"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:78ac3392-b90b-415d-a126-d1adcdee20bf"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:e839bc41-dde7-4900-ace3-d8f7a0b68f7b"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:88bdcc44-68e0-40d8-86ad-580f50ca9ebd"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:05bc99eb-724b-4dcc-b762-e45c1c033262"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:1a6d16de-b2a9-4a78-9390-028d3182b2cd"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:4088ac09-d963-4039-98b9-f8ab17782c66"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:6e707738-9af7-4613-ab75-22adab462f04"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:4e7b5fab-1590-49f1-9bd0-660c25ba9b0b"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:ef2894fa-a800-475e-bad5-35c267ae0d01"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:7dd202c5-57af-41dd-9890-85228f1f7966"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "urn:uuid:21cac0f0-0af6-42a7-9b82-04a8fbd0703d"
+              }
+            ]
           }
         ]
       }
@@ -727,10 +855,6 @@
       "fullUrl": "urn:uuid:0d4aa52f-7f4b-49a8-810f-426b0459e7c4",
       "resource": {
         "resourceType": "CarePlan",
-        "text": {
-          "status": "generated",
-          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service</div>"
-        },
         "status": "completed",
         "intent": "plan",
         "title": "CarePlan Advice",
@@ -751,81 +875,7 @@
         ],
         "addresses": [
           {
-            "reference": "urn:uuid:c99bf6ea-0c0a-402e-92af-551fb0c098e9"
-          }
-        ],
-        "supportingInfo": [
-          {
-            "reference": "urn:uuid:45703c8b-38dc-4a28-a598-24ce9e2a425e"
-          },
-          {
-            "reference": "urn:uuid:b5d1ccb0-8a8c-46fc-9fb6-c2676650ffcc"
-          },
-          {
-            "reference": "urn:uuid:c913a380-17e9-43a1-b862-3b91941031e3"
-          },
-          {
-            "reference": "urn:uuid:c94f5fc8-167f-40c5-959b-a3b73aba44a4"
-          },
-          {
-            "reference": "urn:uuid:9150bef7-2a22-4065-87ff-88e8b3689adb"
-          },
-          {
-            "reference": "urn:uuid:3f16eea7-01d7-45e4-a758-c31d6fd64337"
-          },
-          {
-            "reference": "urn:uuid:606e24c0-bbe3-42af-921b-c8a9eb30cf79"
-          },
-          {
-            "reference": "urn:uuid:7d31d777-617e-44c3-b942-33308655ba50"
-          },
-          {
-            "reference": "urn:uuid:023d6f66-6642-49e9-b062-a8123ce6ea2c"
-          },
-          {
-            "reference": "urn:uuid:af594bf5-748c-4727-a9f2-67bbafc426a4"
-          },
-          {
-            "reference": "urn:uuid:d00362cf-9279-4f4c-a61c-9eabaa6e900d"
-          },
-          {
-            "reference": "urn:uuid:c9c17817-9f6e-4c43-b069-936bc3677e26"
-          },
-          {
-            "reference": "urn:uuid:23a51a4e-8797-4057-9171-0283cdf232b6"
-          },
-          {
-            "reference": "urn:uuid:df6da018-500b-4f17-abce-d27701aadf26"
-          },
-          {
-            "reference": "urn:uuid:b2880999-5203-41f0-a331-d41ac233b003"
-          },
-          {
-            "reference": "urn:uuid:97a58bdd-4a22-40aa-8bb8-0c94f1470408"
-          },
-          {
-            "reference": "urn:uuid:56ac4c00-befd-40d0-9c33-3b78c423d1cb"
-          },
-          {
-            "reference": "urn:uuid:127973cb-cb51-4b33-b094-4758a4062108"
-          },
-          {
-            "reference": "urn:uuid:a3c055dd-a267-4ff8-a434-901480abcec1"
-          },
-          {
-            "reference": "urn:uuid:a00135a9-68ec-4145-b997-23cd08ad20a4"
-          },
-          {
-            "reference": "urn:uuid:d0401474-7a8f-4d40-bd00-c3ab37abdf03"
-          },
-          {
-            "reference": "urn:uuid:0cfcb813-eeb3-46f0-bcf0-1921b756427e"
-          },
-          {
-            "reference": "urn:uuid:ebe99ba6-a8d8-4b4a-8055-4fb7b31e0d5c"
-          },
-          {
-            "reference": "urn:uuid:7b4d1f3e-3d4b-4b15-aeff-27db43752953"
+            "reference": "urn:uuid:94266c31-4a8c-46b1-a3fe-8abd1a14dadc"
           }
         ]
       }
@@ -834,10 +884,6 @@
       "fullUrl": "urn:uuid:f1501e5d-083c-4fd0-9ad0-e2cdc912d13f",
       "resource": {
         "resourceType": "CarePlan",
-        "text": {
-          "status": "generated",
-          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">SAMPLE: Irrelevant Data purely for testing Care Plan Advice\n                                                        Date/Time: 01 June 2019 16:00\n                                                        Location: WEST LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service</div>"
-        },
         "status": "completed",
         "intent": "plan",
         "title": "CarePlan Advice III",
@@ -859,80 +905,6 @@
         "addresses": [
           {
             "reference": "urn:uuid:c99bf6ea-0c0a-402e-92af-551fb0c098e9"
-          }
-        ],
-        "supportingInfo": [
-          {
-            "reference": "urn:uuid:45703c8b-38dc-4a28-a598-24ce9e2a425e"
-          },
-          {
-            "reference": "urn:uuid:b5d1ccb0-8a8c-46fc-9fb6-c2676650ffcc"
-          },
-          {
-            "reference": "urn:uuid:c913a380-17e9-43a1-b862-3b91941031e3"
-          },
-          {
-            "reference": "urn:uuid:c94f5fc8-167f-40c5-959b-a3b73aba44a4"
-          },
-          {
-            "reference": "urn:uuid:9150bef7-2a22-4065-87ff-88e8b3689adb"
-          },
-          {
-            "reference": "urn:uuid:3f16eea7-01d7-45e4-a758-c31d6fd64337"
-          },
-          {
-            "reference": "urn:uuid:606e24c0-bbe3-42af-921b-c8a9eb30cf79"
-          },
-          {
-            "reference": "urn:uuid:7d31d777-617e-44c3-b942-33308655ba50"
-          },
-          {
-            "reference": "urn:uuid:023d6f66-6642-49e9-b062-a8123ce6ea2c"
-          },
-          {
-            "reference": "urn:uuid:af594bf5-748c-4727-a9f2-67bbafc426a4"
-          },
-          {
-            "reference": "urn:uuid:d00362cf-9279-4f4c-a61c-9eabaa6e900d"
-          },
-          {
-            "reference": "urn:uuid:c9c17817-9f6e-4c43-b069-936bc3677e26"
-          },
-          {
-            "reference": "urn:uuid:23a51a4e-8797-4057-9171-0283cdf232b6"
-          },
-          {
-            "reference": "urn:uuid:df6da018-500b-4f17-abce-d27701aadf26"
-          },
-          {
-            "reference": "urn:uuid:b2880999-5203-41f0-a331-d41ac233b003"
-          },
-          {
-            "reference": "urn:uuid:97a58bdd-4a22-40aa-8bb8-0c94f1470408"
-          },
-          {
-            "reference": "urn:uuid:56ac4c00-befd-40d0-9c33-3b78c423d1cb"
-          },
-          {
-            "reference": "urn:uuid:127973cb-cb51-4b33-b094-4758a4062108"
-          },
-          {
-            "reference": "urn:uuid:a3c055dd-a267-4ff8-a434-901480abcec1"
-          },
-          {
-            "reference": "urn:uuid:a00135a9-68ec-4145-b997-23cd08ad20a4"
-          },
-          {
-            "reference": "urn:uuid:d0401474-7a8f-4d40-bd00-c3ab37abdf03"
-          },
-          {
-            "reference": "urn:uuid:0cfcb813-eeb3-46f0-bcf0-1921b756427e"
-          },
-          {
-            "reference": "urn:uuid:ebe99ba6-a8d8-4b4a-8055-4fb7b31e0d5c"
-          },
-          {
-            "reference": "urn:uuid:7b4d1f3e-3d4b-4b15-aeff-27db43752953"
           }
         ]
       }
@@ -1000,6 +972,7 @@
       "fullUrl": "urn:uuid:c99bf6ea-0c0a-402e-92af-551fb0c098e9",
       "resource": {
         "resourceType": "Condition",
+        "language": "en",
         "clinicalStatus": "active",
         "verificationStatus": "unknown",
         "category": [
@@ -1010,9 +983,9 @@
         "code": {
           "coding": [
             {
-              "system": "http://hl7.org/fhir/ValueSet/languages",
-              "code": "en",
-              "display": "English"
+              "system": "22298006",
+              "code": "2.16.840.1.113883.2.1.3.2.4.15",
+              "display": "Myocardial infarction"
             }
           ]
         },
@@ -1022,7 +995,177 @@
         "context": {
           "reference": "urn:uuid:60fbaa9b-7e78-4fd3-8e54-3bb95c85b4d2"
         },
-        "assertedDate": "2017-06-01T14:00:00+00:00"
+        "assertedDate": "2017-06-01T14:00:00+00:00",
+        "evidence": [
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:42482d86-6207-459e-88df-a2b72929a0b9"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:0cafc4be-c225-44cd-a6f7-b890dc71b52b"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:17f7fa34-e4db-425b-b6ab-7f5209f48dae"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:ed8de4d0-49f5-4c40-91d9-49f0ba07036a"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:005ed4df-37b7-4e62-9a77-b7989c79f691"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:84a39edc-c3f7-45e6-92e7-a90ed3651dff"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:df6c4d11-38ea-4bb3-bbfa-88b24bf79182"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:c7b76d10-c11f-4032-b846-1bc7827bdaa9"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:9585dad4-4729-4615-a1d4-f51fc171813b"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:cb2fc1fd-cded-4a7f-ae1c-ae4a07b88165"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:db00972c-2ae1-4c44-a1d8-970b6d4382e6"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:c0d7ef3c-d7d3-4514-bbb6-ace553ac2c26"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:fd86a39e-1e95-41cc-b92a-ebd4b0752df7"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:78ac3392-b90b-415d-a126-d1adcdee20bf"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:e839bc41-dde7-4900-ace3-d8f7a0b68f7b"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:88bdcc44-68e0-40d8-86ad-580f50ca9ebd"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:05bc99eb-724b-4dcc-b762-e45c1c033262"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:1a6d16de-b2a9-4a78-9390-028d3182b2cd"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:4088ac09-d963-4039-98b9-f8ab17782c66"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:6e707738-9af7-4613-ab75-22adab462f04"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:4e7b5fab-1590-49f1-9bd0-660c25ba9b0b"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:ef2894fa-a800-475e-bad5-35c267ae0d01"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:7dd202c5-57af-41dd-9890-85228f1f7966"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "urn:uuid:21cac0f0-0af6-42a7-9b82-04a8fbd0703d"
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -3093,6 +3236,29 @@
     {
       "fullUrl": "urn:uuid:77a6ca7a-bf82-4dde-996b-aed975977dfa",
       "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "33962009",
+              "display": "Presenting complaint"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:d053a74a-8123-4972-8f92-80a099ac6ff7"
+        },
+        "context": {
+          "reference": "urn:uuid:1342211a-4b49-4b65-81e7-beb70767a2c8"
+        },
+        "valueString": "Patient has an insect bite."
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b6ed41dd-ca5d-4758-a9dd-6339084d8cf4",
+      "resource": {
         "resourceType": "List",
         "status": "current",
         "mode": "working",
@@ -3112,7 +3278,7 @@
         "encounter": {
           "reference": "urn:uuid:60fbaa9b-7e78-4fd3-8e54-3bb95c85b4d2"
         },
-        "date": "2020-10-06T15:43:11+01:00",
+        "date": "2020-10-08T10:33:19+00:00",
         "source": {
           "reference": "Device/1"
         },
@@ -3424,11 +3590,6 @@
           {
             "item": {
               "reference": "urn:uuid:d76e5f95-61b5-4a05-8587-977a07a1cd20"
-            }
-          },
-          {
-            "item": {
-              "reference": "urn:uuid:b5d1ccb0-8a8c-46fc-9fb6-c2676650ffcc"
             }
           }
         ]
