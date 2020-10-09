@@ -12,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import uk.nhs.adaptors.oneoneone.cda.report.comparator.ResourceComparator;
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -37,6 +39,9 @@ public class ListMapperTest {
 
     @Mock
     private II ii;
+
+    @Mock
+    private ResourceComparator resourceComparator;
 
     private List<Resource> resourcesCreated = asList(new HealthcareService(), new QuestionnaireResponse());
 

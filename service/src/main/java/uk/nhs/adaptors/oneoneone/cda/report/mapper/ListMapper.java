@@ -1,6 +1,16 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import lombok.RequiredArgsConstructor;
+import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
+import static org.hl7.fhir.dstu3.model.ListResource.ListMode.WORKING;
+import static org.hl7.fhir.dstu3.model.ListResource.ListStatus.CURRENT;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Encounter;
@@ -10,16 +20,10 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.ResourceType;
 import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.comparator.ResourceComparator;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
-import static org.hl7.fhir.dstu3.model.ListResource.ListMode.WORKING;
-import static org.hl7.fhir.dstu3.model.ListResource.ListStatus.CURRENT;
 
 @Component
 @RequiredArgsConstructor
@@ -37,6 +41,8 @@ public class ListMapper {
         ResourceType.Condition, ResourceType.Questionnaire, ResourceType.QuestionnaireResponse,
         ResourceType.Observation, ResourceType.Organization, ResourceType.Practitioner, ResourceType.Provenance,
         ResourceType.ReferralRequest, ResourceType.RelatedPerson);
+
+    private final ResourceComparator resourceComparator;
 
     public ListResource mapList(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
         Collection<Resource> resourcesCreated) {
@@ -61,7 +67,12 @@ public class ListMapper {
             .setSource(TRANSFORMER_DEVICE)
             .setOrderedBy(createOrderByConcept());
 
-        resourcesCreated.stream()
+        List<Resource> resourcesCreatedOrderedList = new ArrayList();
+
+        resourcesCreated.stream().sequential().collect(Collectors.toCollection(() -> resourcesCreatedOrderedList));
+        resourcesCreatedOrderedList.sort(resourceComparator);
+
+        resourcesCreatedOrderedList.stream()
             .filter(it -> TRIAGE_RESOURCES.contains(it.getResourceType()))
             .map(Resource::getIdElement)
             .map(Reference::new)

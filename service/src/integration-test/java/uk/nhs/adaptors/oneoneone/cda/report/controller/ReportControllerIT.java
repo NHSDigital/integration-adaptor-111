@@ -54,7 +54,7 @@ import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.BODY;
 @Slf4j
 public class ReportControllerIT {
 
-    private static final String APPLICATION_XML_UTF_8 = APPLICATION_XML_VALUE+";charset=UTF-8";
+    private static final String APPLICATION_XML_UTF_8 = APPLICATION_XML_VALUE + ";charset=UTF-8";
     public static final String MESSAGE_ID_VALUE = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
     public static final String MESSAGE_ID = "messageId";
     private static final String REPORT_ENDPOINT = "/report";
