@@ -76,9 +76,10 @@ public class EncounterReportBundleService {
             encounter.getSubject(), new Reference(encounter));
         Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter, questionnaireResponseList);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, condition);
-        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans, questionnaireResponseList);
         ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument,
             encounter, healthcareServiceList, new Reference(condition));
+        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans, questionnaireResponseList,
+            referralRequest);
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
 
         addEntry(bundle, messageHeaderService.createMessageHeader());

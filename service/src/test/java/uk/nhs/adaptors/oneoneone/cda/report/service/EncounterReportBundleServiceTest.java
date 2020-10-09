@@ -194,7 +194,7 @@ public class EncounterReportBundleServiceTest {
         questionnaireResponseList.add(QUESTIONNAIRE_RESPONSE);
         when(encounterMapper.mapEncounter(any(), any())).thenReturn(ENCOUNTER);
         when(conditionMapper.mapCondition(any(), any(), any())).thenReturn(CONDITION);
-        when(compositionMapper.mapComposition(any(), any(), any(), any())).thenReturn(COMPOSITION);
+        when(compositionMapper.mapComposition(any(), any(), any(), any(), any())).thenReturn(COMPOSITION);
         when(listMapper.mapList(any(), any(), any())).thenReturn(LIST_RESOURCE);
         when(carePlanMapper.mapCarePlan(any(), any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(Collections.singletonList(HEALTHCARE_SERVICE));
