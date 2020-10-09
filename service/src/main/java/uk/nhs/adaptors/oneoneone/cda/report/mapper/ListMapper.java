@@ -5,11 +5,9 @@ import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
 import static org.hl7.fhir.dstu3.model.ListResource.ListMode.WORKING;
 import static org.hl7.fhir.dstu3.model.ListResource.ListStatus.CURRENT;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
@@ -22,7 +20,7 @@ import org.hl7.fhir.dstu3.model.ResourceType;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import uk.nhs.adaptors.oneoneone.cda.report.comparator.ResourceComparator;
+import uk.nhs.adaptors.oneoneone.cda.report.comparator.ResourceDateComparator;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Component
@@ -42,7 +40,7 @@ public class ListMapper {
         ResourceType.Observation, ResourceType.Organization, ResourceType.Practitioner, ResourceType.Provenance,
         ResourceType.ReferralRequest, ResourceType.RelatedPerson);
 
-    private final ResourceComparator resourceComparator;
+    private final ResourceDateComparator resourceDateComparator;
 
     public ListResource mapList(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
         Collection<Resource> resourcesCreated) {
@@ -67,12 +65,8 @@ public class ListMapper {
             .setSource(TRANSFORMER_DEVICE)
             .setOrderedBy(createOrderByConcept());
 
-        List<Resource> resourcesCreatedOrderedList = new ArrayList();
-
-        resourcesCreated.stream().sequential().collect(Collectors.toCollection(() -> resourcesCreatedOrderedList));
-        resourcesCreatedOrderedList.sort(resourceComparator);
-
-        resourcesCreatedOrderedList.stream()
+        resourcesCreated.stream()
+            .sorted(resourceDateComparator)
             .filter(it -> TRIAGE_RESOURCES.contains(it.getResourceType()))
             .map(Resource::getIdElement)
             .map(Reference::new)
