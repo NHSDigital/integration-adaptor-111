@@ -65,6 +65,7 @@ public class EncounterReportServiceTest {
         when(encounterReportBundleService.createEncounterBundle(clinicalDoc)).thenReturn(encounterBundle);
         IParser parser = mock(IParser.class);
         when(fhirContext.newJsonParser()).thenReturn(parser);
+        when(parser.setPrettyPrint(true)).thenReturn(parser);
         when(parser.encodeResourceToString(encounterBundle)).thenReturn(ENCOUNTER_REPORT_MAPPING);
         Session session = mock(Session.class);
         when(session.createTextMessage(any())).thenReturn(textMessage);
