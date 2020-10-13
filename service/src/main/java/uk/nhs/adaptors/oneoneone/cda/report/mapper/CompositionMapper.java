@@ -16,11 +16,11 @@ import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Composition.SectionComponent;
 import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.springframework.stereotype.Component;
@@ -45,17 +45,10 @@ public class CompositionMapper {
     private final NodeUtil nodeUtil;
 
     public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, List<CarePlan> carePlans,
-        List<QuestionnaireResponse> questionnaireResponseList) {
+        List<QuestionnaireResponse> questionnaireResponseList, ReferralRequest referralRequest) {
 
         Composition composition = new Composition();
         composition.setIdElement(newRandomUuid());
-
-        if (encounter.getEpisodeOfCareFirstRep().getResource() != null) {
-            EpisodeOfCare episodeOfCare = (EpisodeOfCare) encounter.getEpisodeOfCareFirstRep().getResource();
-            composition
-                .setCustodian(episodeOfCare.getManagingOrganization())
-                .setCustodianTarget(episodeOfCare.getManagingOrganizationTarget());
-        }
 
         Identifier docIdentifier = new Identifier();
         docIdentifier.setUse(USUAL);
@@ -66,9 +59,7 @@ public class CompositionMapper {
             .setType(createCodeableConcept())
             .setStatus(FINAL)
             .setEncounter(new Reference(encounter))
-            .setEncounterTarget(encounter)
             .setSubject(encounter.getSubject())
-            .setSubjectTarget(encounter.getSubjectTarget())
             .setDate(new Date())
             .setIdentifier(docIdentifier);
 
@@ -120,8 +111,8 @@ public class CompositionMapper {
             composition.addSection(buildSectionComponentFromResource(carePlan));
         }
 
-        if (encounter.hasIncomingReferral()) {
-            composition.addSection(buildSectionComponentFromReference(encounter.getIncomingReferralFirstRep()));
+        if (!referralRequest.isEmpty()) {
+            composition.addSection(buildSectionComponentFromResource(referralRequest));
         }
 
         addPathwaysToSection(composition, questionnaireResponseList);
@@ -138,12 +129,6 @@ public class CompositionMapper {
         return new SectionComponent()
             .setTitle(resource.fhirType())
             .addEntry(new Reference(resource));
-    }
-
-    private SectionComponent buildSectionComponentFromReference(Reference reference) {
-        return new SectionComponent()
-            .setTitle(reference.getResource().fhirType())
-            .addEntry(reference);
     }
 
     private void addPathwaysToSection(Composition composition, List<QuestionnaireResponse> questionnaireResponseList) {
