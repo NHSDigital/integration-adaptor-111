@@ -48,9 +48,17 @@ echo ${NGINX_PRIVATE_CERT} | sed 's/-----BEGIN RSA PRIVATE KEY----- //' | sed 's
 echo "-----END RSA PRIVATE KEY-----" >> ${CERTS_DIR}/server_private.key
 
 # crl
-# echo "-----BEGIN X509 CRL-----" > ${CERTS_DIR}/revocation_list.crl
-# echo ${NGINX_CRL} | sed 's/-----BEGIN X509 CRL----- //' | sed 's/-----BEGIN X509 CRL-----//' | sed 's/ -----END X509 CRL-----//' | sed 's/-----END X509 CRL-----//' | sed 's/ /\n/g' >> ${CERTS_DIR}/revocation_list.crl
-# echo "-----END X509 CRL-----" >> ${CERTS_DIR}/revocation_list.crl
+# crl is not mandatory check if it is set
+
+if [ $(echo ${NGINX_CRL} | wc -m) -gt 1 ]
+then
+  echo "-----BEGIN X509 CRL-----" > ${CERTS_DIR}/revocation_list.crl
+  echo ${NGINX_CRL} | sed 's/-----BEGIN X509 CRL----- //' | sed 's/-----BEGIN X509 CRL-----//' | sed 's/ -----END X509 CRL-----//' | sed 's/-----END X509 CRL-----//' | sed 's/ /\n/g' >> ${CERTS_DIR}/revocation_list.crl
+  echo "-----END X509 CRL-----" >> ${CERTS_DIR}/revocation_list.crl
+else
+  echo "Env variable for CRL not set"
+  rm -f ${CERTS_DIR}/revocation_list.crl
+fi
 
 
 # combine CA with client public
