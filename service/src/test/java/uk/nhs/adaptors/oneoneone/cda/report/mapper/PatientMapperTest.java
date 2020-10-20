@@ -10,11 +10,14 @@ import java.util.Date;
 
 import org.assertj.core.util.Arrays;
 import org.hl7.fhir.dstu3.model.Address;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.ContactPoint;
+import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.Type;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,6 +29,7 @@ import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.CS;
 import uk.nhs.connect.iucds.cda.ucr.EN;
+import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Birthplace;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Guardian;
@@ -40,6 +44,10 @@ import uk.nhs.connect.iucds.cda.ucr.TS;
 @ExtendWith(MockitoExtension.class)
 public class PatientMapperTest {
 
+    private static final String NHS_NUMBER_VERIFIED_OID = "2.16.840.1.113883.2.1.4.1";
+    private static final String NHS_NUMBER = "99937478324";
+    private static final String NHS_VERIFICATION_STATUS =
+        "https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-NHSNumberVerificationStatus-1";
     @Mock
     private AddressMapper addressMapper;
 
@@ -95,6 +103,7 @@ public class PatientMapperTest {
 
         mockNames(itkPatient);
         mockAddress(patientRole);
+        mockIdentifier(patientRole);
         mockContactPoint(patientRole);
         mockGeneralPractitioner(patientRole);
         mockLanguage(itkPatient);
@@ -121,6 +130,22 @@ public class PatientMapperTest {
         assertThat(fhirPatient.getMaritalStatus().getCoding().get(0).getDisplay()).isEqualTo("Married");
         assertThat(fhirPatient.getMaritalStatus().getCoding().get(0).getSystem()).isEqualTo("http://hl7.org/fhir/v3/MaritalStatus");
         assertThat(fhirPatient.getMaritalStatus().getCoding().get(0).getCode()).isEqualTo("M");
+        assertThat(fhirPatient.getIdentifierFirstRep().getValue()).isEqualTo(NHS_NUMBER);
+        Extension extension = fhirPatient.getIdentifierFirstRep().getExtensionFirstRep();
+        assertThat(extension.getUrl()).isEqualTo(NHS_VERIFICATION_STATUS);
+        Type value = extension.getValue();
+        assertThat(value).isInstanceOf(CodeableConcept.class);
+        CodeableConcept codeableConcept = (CodeableConcept) value;
+        assertThat(codeableConcept.getCodingFirstRep().getSystem()).isEqualTo(NHS_VERIFICATION_STATUS);
+        assertThat(codeableConcept.getCodingFirstRep().getCode()).isEqualTo("01");
+    }
+
+    private void mockIdentifier(POCDMT000002UK01PatientRole patientRole) {
+        II id = mock(II.class);
+        when(id.getRoot()).thenReturn(NHS_NUMBER_VERIFIED_OID);
+        when(id.getExtension()).thenReturn(NHS_NUMBER);
+        II[] ids = new II[] {id};
+        when(patientRole.getIdArray()).thenReturn(ids);
     }
 
     private void mockNames(POCDMT000002UK01Patient itkPatient) {
