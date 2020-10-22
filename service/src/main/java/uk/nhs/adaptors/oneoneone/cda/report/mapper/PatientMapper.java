@@ -1,12 +1,14 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
+
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +19,7 @@ import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Enumerations;
 import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.HumanName;
+import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Reference;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Component;
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.enums.MaritalStatus;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01LanguageCommunication;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Patient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
@@ -34,6 +38,12 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 @AllArgsConstructor
 public class PatientMapper {
 
+    private static final String NHS_NUMBER_VERIFIED_OID = "2.16.840.1.113883.2.1.4.1";
+    private static final String NHS_NUMBER_UNVERIFIED_OID = "2.16.840.1.113883.2.1.3.2.4.18.23";
+
+    private static final String NHS_FHIR_ID_SYSTEM = "https://fhir.nhs.uk/Id/nhs-number";
+    private static final String NHS_VERIFICATION_STATUS =
+        "https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-NHSNumberVerificationStatus-1";
     private final AddressMapper addressMapper;
     private final ContactPointMapper contactPointMapper;
     private final PeriodMapper periodMapper;
@@ -46,6 +56,7 @@ public class PatientMapper {
         Patient fhirPatient = new Patient();
         fhirPatient.setIdElement(newRandomUuid());
         if (patientRole.isSetPatient()) {
+            fhirPatient.setIdentifier(getNhsNumbers(patientRole));
             POCDMT000002UK01Patient itkPatient = patientRole.getPatient();
             fhirPatient.setActive(true);
             fhirPatient.setName(getNames(itkPatient));
@@ -96,10 +107,43 @@ public class PatientMapper {
         return fhirPatient;
     }
 
+    private List<Identifier> getNhsNumbers(POCDMT000002UK01PatientRole patientRole) {
+        return stream(patientRole.getIdArray())
+            .filter(it -> asList(NHS_NUMBER_VERIFIED_OID, NHS_NUMBER_UNVERIFIED_OID).contains(it.getRoot()))
+            .map(it -> {
+                Identifier identifier = new Identifier()
+                    .setValue(it.getExtension())
+                    .setSystem(NHS_FHIR_ID_SYSTEM);
+                identifier.setExtension(getNhsNumberExtension(it));
+                return identifier;
+            })
+            .collect(toList());
+    }
+
+    private List<Extension> getNhsNumberExtension(II it) {
+        Extension extension = new Extension(NHS_VERIFICATION_STATUS);
+        Coding code = new Coding()
+            .setSystem(NHS_VERIFICATION_STATUS)
+            .setCode(mapNhsNumberVerificationStatus(it));
+        extension.setValue(new CodeableConcept(code));
+        return asList(extension);
+    }
+
+    private String mapNhsNumberVerificationStatus(II it) {
+        switch (it.getRoot()) {
+            case NHS_NUMBER_VERIFIED_OID:
+                return "01";
+            case NHS_NUMBER_UNVERIFIED_OID:
+                return "02";
+            default:
+                return null;
+        }
+    }
+
     private List<HumanName> getNames(POCDMT000002UK01Patient itkPatient) {
         if (itkPatient.sizeOfNameArray() > 0) {
-            return Arrays.stream(itkPatient.getNameArray())
-                .map(humanNameMapper::mapHumanName).collect(Collectors.toList());
+            return stream(itkPatient.getNameArray())
+                .map(humanNameMapper::mapHumanName).collect(toList());
         } else {
             return Collections.emptyList();
         }
@@ -107,8 +151,8 @@ public class PatientMapper {
 
     private List<Address> getAddresses(POCDMT000002UK01PatientRole patientRole) {
         if (patientRole.sizeOfAddrArray() > 0) {
-            return Arrays.stream(patientRole.getAddrArray())
-                .map(addressMapper::mapAddress).collect(Collectors.toList());
+            return stream(patientRole.getAddrArray())
+                .map(addressMapper::mapAddress).collect(toList());
         } else {
             return Collections.emptyList();
         }
@@ -116,9 +160,9 @@ public class PatientMapper {
 
     private List<ContactPoint> getContactPoints(POCDMT000002UK01PatientRole patientRole) {
         if (patientRole.sizeOfTelecomArray() > 0) {
-            return Arrays.stream(patientRole.getTelecomArray())
+            return stream(patientRole.getTelecomArray())
                 .map(contactPointMapper::mapContactPoint)
-                .collect(Collectors.toList());
+                .collect(toList());
         } else {
             return Collections.emptyList();
         }
@@ -139,9 +183,9 @@ public class PatientMapper {
 
     private List<Patient.ContactComponent> getContactComponents(POCDMT000002UK01Patient itkPatient) {
         if (itkPatient.sizeOfGuardianArray() > 0) {
-            return Arrays.stream(itkPatient.getGuardianArray())
+            return stream(itkPatient.getGuardianArray())
                 .map(guardianMapper::mapGuardian)
-                .collect(Collectors.toList());
+                .collect(toList());
         } else {
             return Collections.emptyList();
         }
