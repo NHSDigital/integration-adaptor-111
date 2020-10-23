@@ -56,8 +56,14 @@ then
   echo ${NGINX_CRL} | sed 's/-----BEGIN X509 CRL----- //' | sed 's/-----BEGIN X509 CRL-----//' | sed 's/ -----END X509 CRL-----//' | sed 's/-----END X509 CRL-----//' | sed 's/ /\n/g' >> ${CERTS_DIR}/revocation_list.crl
   echo "-----END X509 CRL-----" >> ${CERTS_DIR}/revocation_list.crl
 else
+  if [ $(echo ${NGINX_CRL_URL} | wc -m) -gt 1 ]
+  then
+    echo "Downloading CRL from URL: ${NGINX_CRL_URL}"
+    wget -O ${CERTS_DIR}/revocation_list.crl ${NGINX_CRL_URL}
+  else
   echo "Env variable for CRL not set"
   rm -f ${CERTS_DIR}/revocation_list.crl
+  fi
 fi
 
 

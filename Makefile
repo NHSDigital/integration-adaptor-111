@@ -13,6 +13,9 @@ build-adapter:
 build-tests:
 	sh -c 'docker build -t local/111-tests -f Dockerfile.tests .'
 
+build-crl:
+	sh -c 'cp nginx/certs/nhs_certs/test_111_3.crl nginx/crl_server_content/revocation_list.crl && docker build -t local/111-crl -f Dockerfile.crl . && rm nginx/crl_server_content/revocation_list.crl'
+
 run-all:
 	sh -c '. ./nginx/scripts/export_cert_values.sh && docker-compose -f docker-compose.yml up -d nginx'
 
@@ -26,6 +29,8 @@ clean-all:
 	sh -c 'docker rm -f -v $$(docker ps -a -q)'
 
 reset: stop-all build run-all status
+
+restart: stop-all run-all status
 
 run-curl:
 	sh -c 'curl --cacert nginx/certs/ca.cer https://integration-adaptor-111.local:8443 --resolve integration-adaptor-111.local:8443:127.0.0.1'
@@ -75,7 +80,7 @@ run-curl92:
 	sh -c 'curl --cert nginx/certs/nhs_certs/test04.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test04_cert_chain.txt https://test04.oneoneone.nhs.uk:8443/auth_test --resolve test04.oneoneone.nhs.uk:8443:127.0.0.1'
 
 run-curl93:
-	sh -c 'curl --cert nginx/certs/nhs_certs/test02.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test02_cert_chain.txt https://test04.oneoneone.nhs.uk:8443/auth_test --resolve test02.oneoneone.nhs.uk:8443:127.0.0.1'
+	sh -c 'curl --cert nginx/certs/nhs_certs/test02.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test02_cert_chain.txt https://test04.oneoneone.nhs.uk:8443/auth_test --resolve test04.oneoneone.nhs.uk:8443:127.0.0.1'
 
 
 # CRL
