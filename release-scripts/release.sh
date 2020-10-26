@@ -2,7 +2,7 @@
 
 set -e
 
-export RELEASE_VERSION=0.1.0
+export RELEASE_VERSION=0.2.0
 cd ..
 
 docker build -t local/111:${RELEASE_VERSION} .
