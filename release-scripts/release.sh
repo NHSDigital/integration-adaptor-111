@@ -5,7 +5,7 @@ set -e
 export RELEASE_VERSION=0.2.0
 cd ..
 
-docker build -t local/111:${RELEASE_VERSION} .
+docker build -t local/111:${RELEASE_VERSION} -f Dockerfile.111 .
 
 docker tag local/111:${RELEASE_VERSION} nhsdev/nia-111-adaptor:${RELEASE_VERSION}
 
