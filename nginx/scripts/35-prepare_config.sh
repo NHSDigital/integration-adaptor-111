@@ -18,15 +18,16 @@ fi
 # Check if the server certificate is revoked by CRL - if so the page will always return 403
 if [ -f ${CERTS_DIR}/revocation_list.crl ]
 then
-  openssl verify -verbose -crl_check -CAfile ${CERTS_DIR}/ca.crt -CRLfile ${CERTS_DIR}/revocation_list.crl ${CERTS_DIR}/server_public.crt > ssl_check.log
+  openssl verify -verbose -crl_check -CAfile ${CERTS_DIR}/ca.crt -CRLfile ${CERTS_DIR}/revocation_list.crl ${CERTS_DIR}/server_public.crt > ssl_check.log 2>&1
   SERVER_SSL_REVOKED_STATUS="$?"
-  echo "SERVER_SSL_REVOKED_STATUS: ${SERVER_SSL_REVOKED_STATUS}"
   cat ssl_check.log
-  if [ SERVER_SSL_REVOKED_STATUS = "0" ]
+  if [ ${SERVER_SSL_REVOKED_STATUS} = "0" ]
   then
+    echo "Cert ok, status ${SERVER_SSL_REVOKED_STATUS}"
     SERVER_SSL_REVOKED=0 # Cert is not revoked
   else
     SERVER_SSL_REVOKED=1 # Cert is revoked
+    echo "Cert revoked, status ${SERVER_SSL_REVOKED_STATUS}"
   fi
 else
   echo "Skipping CRL check - CRL not set"
