@@ -25,6 +25,8 @@ server {
       error_log /dev/stdout;
       access_log /dev/stdout;
 
+      set $true 1;
+
       if ($ssl_client_verify != SUCCESS) {
         return 403 "Mutual authentication failed"; # General fail from nginx
       }
@@ -40,6 +42,14 @@ server {
       if ($ssl_client_s_dn_cn != "<%= ENV['SERVER_SSL_CN'] %>") {
         return 403 "Mutual authentication failed"; # Server using an SSL cert for different domain than the one in client cert
       }
+
+      if ($true = <%= ENV['SERVER_SSL_EXPIRED'] %>) {
+        return 403 "Mutual authentication failed"; # Server SSL has expired
+      }
+
+      if ($true = <%= ENV['SERVER_SSL_REVOKED'] %>) {
+        return 403 "Mutual authentication failed"; # Server SSL has been revoked
+      }
     }
 
     location /auth_test {
@@ -52,6 +62,8 @@ server {
     Request Server CN: $ssl_server_name
     Client Verify: $ssl_client_verify
     Server CN from Cert: <%= ENV['SERVER_SSL_CN'] %>
+    Server SSL expired (0: Cert OK, 1: Cert expired): <%= ENV['SERVER_SSL_EXPIRED'] %>
+    Server SSL revoked (0: Cert OK, 1: Cert revoked): <%= ENV['SERVER_SSL_REVOKED'] %>
     ";
 }
 

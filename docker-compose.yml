@@ -32,6 +32,7 @@ services:
       - "integration-adaptor-111:adapter"
     depends_on: 
       - integration-adaptor-111
+      - crl-server
     environment:
       - NGINX_ADAPTER_HOSTNAME=adapter
       - NGINX_ADAPTER_PORT=8080
@@ -40,9 +41,17 @@ services:
       - NGINX_CLIENT_PUBLIC_CERT
       - NGINX_CA_CERT
       - NGINX_CRL
+      - NGINX_CRL_URL
       - DEBUG=true
       - RUN_IN_DOCKER=true
       - SERVICE_HEALTHCHECK=/actuator/health
+
+  crl-server:
+    image: local/111-crl:latest
+    ports:
+      - "8580:3000"
+    networks:
+      - 111network
 
   activemq:
     image: rmohr/activemq:5.15.9
