@@ -139,13 +139,6 @@ public class ItkValidatorTest {
     }
 
     @Test
-    public void shouldFailWhenSoapActionIsInvalid() {
-        String invalidActionService = "InvalidActionService";
-        when(soapAction.getText()).thenReturn(invalidActionService);
-        checkExceptionThrownAndErrorMessage("Invalid Soap Action value: " + invalidActionService);
-    }
-
-    @Test
     public void shouldFailWhenSoapActionAndItkServiceDiffer() {
         when(itkService.getValue()).thenReturn("invalidActionService");
         checkExceptionThrownAndErrorMessage("Soap Action is not equal to ITK service");

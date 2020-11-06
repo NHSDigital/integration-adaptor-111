@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <s:Envelope xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
     <s:Header>
-        <a:Action s:mustUnderstand="1">urn:nhs-itk:services:201005:SendNHS111Report-v2-0</a:Action>
+        <a:Action s:mustUnderstand="1">urn:nhs-itk:services:201005:SendNHS111Report-v2-0_DMS</a:Action>
         <a:MessageID>2B77B3F5-3016-4A6D-821F-152CE420E58D</a:MessageID>
         <a:ReplyTo>
             <a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>
         </a:ReplyTo>
         <a:To s:mustUnderstand="1">http://localhost:8080/report</a:To>
         <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
-            <wsu:Timestamp xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="D6CD5232-14CF-11DF-9423-1F9A910D4703">
+            <wsu:Timestamp
+                    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                    wsu:Id="D6CD5232-14CF-11DF-9423-1F9A910D4703">
                 <wsu:Created>2020-09-03T12:07:58Z</wsu:Created>
                 <wsu:Expires>2020-09-03T12:17:58Z</wsu:Expires>
             </wsu:Timestamp>
@@ -18,47 +20,39 @@
         </wsse:Security>
     </s:Header>
     <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
         <itk:DistributionEnvelope xmlns:itk="urn:nhs-itk:ns:201005"
                                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <itk:header service="urn:nhs-itk:services:201005:SendNHS111Report-v2-0" trackingid="7D6F23E0-AE1A-11DB-9808-B18E1E0994CD">
-                <!-- the address list is not needed, as the end point has been looked up and is in the SOAP header
+
+            <itk:header service="urn:nhs-itk:services:201005:SendNHS111Report-v2-0_DMS"
+                        trackingid="7D6F23E0-AE1A-11DB-9808-B18E1E0994CD">
                 <itk:addresslist>
                     <itk:address uri="urn:nhs-uk:addressing:ods:EM396"/>
-                </itk:addresslist> -->
-                <!-- an audit identification of the sending organisation - use the send organisation's ODS site code -->
+                </itk:addresslist>
                 <itk:auditIdentity>
                     <itk:id uri="urn:nhs-uk:identity:ods:5L399"/>
                 </itk:auditIdentity>
-                <!-- for 111 CDA documents (to A&E; GP; OOH etc.) there should only be 1 CDA document per transmission, so manifest should only have 1 item -->
                 <itk:manifest count="1">
-                    <!-- CDA documents have a mimetype of application/cda+xml. id is the id of the CDA payload (<payload@id>) -->
-                    <!-- for more details of manifest attributes see the ITK Core pack -->
-                    <itk:manifestitem mimetype="application/cda+xml" id="uuid_7D6F23E0-AE1A-11DB-9808-B18E1E0994EE"
-                                      profileid="urn:nhs-en:profile:nhs111CDADocument-v2-0"/>
+                    <itk:manifestitem mimetype="text/xml" id="uuid_7D6F23E0-AE1A-11DB-9808-B18E1E0994EE" profileid="urn:nhs-en:profile:IntegratedUrgentCareCDADocument-v3-1"/>
                 </itk:manifest>
-                <!-- the sender address - use the ODS org site code of the sender, with a SDS idenifier of the sending person if available -->
                 <itk:senderAddress uri="urn:nhs-uk:addressing:ods:5L399:445510770"/>
-                <!-- handlingSpecification contains the interaction id from the 111 specification - key is always fixed; value varies depending on recipient -->
                 <itk:handlingSpecification>
-                    <itk:spec value="urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0"
-                              key="urn:nhs-itk:ns:201005:interaction"/>
+                    <itk:spec value="urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0" key="urn:nhs-itk:ns:201005:interaction"/>
                 </itk:handlingSpecification>
             </itk:header>
             <itk:payloads count="1">
-                <!-- this matches the manifestitem@id for the payload being referenced by the manifest -->
                 <itk:payload id="uuid_7D6F23E0-AE1A-11DB-9808-B18E1E0994EE">
-                    <!-- the document goes here -->
-                    <ClinicalDocument xmlns:npfitlc="NPFIT:HL7:Localisation"
-                                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                                      xmlns="urn:hl7-org:v3"
-                                      xsi:schemaLocation="urn:hl7-org:v3 ../../schemas/POCD_MT000002UK01.xsd"
-                                      classCode="DOCCLIN" moodCode="EVN">
+                    <ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:npfitlc="NPFIT:HL7:Localisation"
+                                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" classCode="DOCCLIN"
+                                      moodCode="EVN">
+
+
                         <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
                         <npfitlc:messageType root="2.16.840.1.113883.2.1.3.2.4.18.17" extension="POCD_MT200001GB02"/>
                         <id root="A709A442-3CF4-476E-8377-376500E829C9"/>
-                        <code code="819551000000100" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
-                        <title>NHS 111 Report</title>
-                        <effectiveTime value="201105192000+00"/>
+                        <code code="1066271000000101" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+                        <title>Integrated Urgent Care Report</title>
+                        <effectiveTime value="201701012000+00"/>
                         <confidentialityCode code="V" displayName="very restricted"
                                              codeSystem="2.16.840.1.113883.1.11.16926"/>
                         <setId root="411910CF-1A76-4330-98FE-C345DDEE5553"/>
@@ -92,8 +86,6 @@
                                     <administrativeGenderCode codeSystem="2.16.840.1.113883.2.1.3.2.4.16.25"
                                                               displayName="Male" code="1"/>
                                     <birthTime value="19890101"/>
-                                    <maritalStatusCode codeSystem="2.16.840.1.113883.2.1.3.2.4.16.25"
-                                                              displayName="married" code="m"/>
                                     <languageCommunication>
                                         <templateId extension="COCD_TP145201GB01#languageCommunication"
                                                     root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
@@ -113,12 +105,6 @@
                                     </addr>
                                     <standardIndustryClassCode code="001" displayName="GP Practice"
                                                                codeSystem="2.16.840.1.113883.2.1.3.2.4.17.289"/>
-                                    <asOrganizationPartOf>
-                                        <effectiveTime>
-                                            <low value="201105191945+00"/>
-                                            <high value="201105192015+00"/>
-                                        </effectiveTime>
-                                    </asOrganizationPartOf>
                                 </providerOrganization>
                             </patientRole>
                         </recordTarget>
@@ -127,7 +113,7 @@
                                                extension="COCD_TP145200GB01#AssignedAuthor"/>
                             <functionCode code="OA" displayName="Originating Author"
                                           codeSystem="2.16.840.1.113883.2.1.3.2.4.17.178"/>
-                            <time value="201105192000+00"/>
+                            <time value="201701012000+00"/>
                             <assignedAuthor classCode="ASSIGNED">
                                 <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
                                             extension="COCD_TP145200GB01#AssignedAuthor"/>
@@ -152,10 +138,10 @@
                             </assignedAuthor>
                         </author>
                         <informant typeCode="INF" contextControlCode="OP">
-                            <npfitlc:contentId extension="COCD_TP145007UK03#RelatedEntity"
+                            <npfitlc:contentId extension="COCD_TP145007UK05#RelatedEntity"
                                                root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
                             <relatedEntity classCode="PRS">
-                                <templateId extension="COCD_TP145007UK03#RelatedEntity"
+                                <templateId extension="COCD_TP145007UK05#RelatedEntity"
                                             root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
                                 <code code="01" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.45" displayName="Spouse"/>
                                 <addr use="HP">
@@ -165,12 +151,9 @@
                                     <postalCode>ME5 7TY</postalCode>
                                 </addr>
                                 <telecom value="tel:07886554123" use="MC"/>
-                                <effectiveTime>
-                                    <low value="201105191945+00"/>
-                                    <high value="201105192015+00"/>
-                                </effectiveTime>
+                                <telecom value="tel:01783678321" use="HP"/>
                                 <relatedPerson classCode="PSN" determinerCode="INSTANCE">
-                                    <templateId extension="COCD_TP145007UK03#relationshipHolder"
+                                    <templateId extension="COCD_TP145007UK05#relationshipHolder"
                                                 root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
                                     <name>
                                         <given>Helga</given>
@@ -189,16 +172,7 @@
                                     <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
                                                 extension="COCD_TP145018UK03#representedCustodianOrganization"/>
                                     <id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="5L3"/>
-                                    <name>Broomfield Foundation Trust</name>
-                                    <telecom use="WP" value="tel:0123476895"/>
-                                    <addr use="WP">
-                                        <streetAddressLine>Broomfield Hospital</streetAddressLine>
-                                        <streetAddressLine>Bocking End</streetAddressLine>
-                                        <postalCode>CM7 9AB</postalCode>
-                                        <city>Braintree</city>
-                                        <county>Essex</county>
-                                        <country>UK</country>
-                                    </addr>
+                                    <name>Medway NHS Foundation Trust</name>
                                 </representedCustodianOrganization>
                             </assignedCustodian>
                         </custodian>
@@ -241,10 +215,6 @@
                         <participant typeCode="REFT" contextControlCode="OP">
                             <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
                                                extension="COCD_TP145214GB01#AssociatedEntity"/>
-                            <time>
-                                <low value="201105191945+00"/>
-                                <high value="201105192015+00"/>
-                            </time>
                             <associatedEntity classCode="ASSIGNED">
                                 <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
                                             extension="COCD_TP145214GB01#AssociatedEntity"/>
@@ -264,16 +234,29 @@
                                 </scopingOrganization>
                             </associatedEntity>
                         </participant>
-                        <!-- this is an example of a document replacing another document -->
-                        <relatedDocument typeCode="RPLC">
-                            <parentDocument classCode="DOCCLIN" moodCode="EVN">
-                                <id root="A709A442-3CF4-476E-8377-376500E82AAA"/>
-                                <code code="819551000000100" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
-                                <setId root="411910CF-1A76-4330-98FE-C345DDEE5553"/>
-                                <versionNumber value="1"/>
-                            </parentDocument>
-                        </relatedDocument>
-                        <!-- the Consent example here assumes the use of vocab DocumentConsentSnCT. If no consent information is available, assume Consent given, and use the code documented here-->
+                        <participant typeCode="CALLBCK" contextControlCode="OP">
+                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
+                                               extension="COCD_TP145212GB02#Workgroup"/>
+                            <associatedEntity classCode="ASSIGNED">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                            extension="COCD_TP145212GB02#Workgroup"/>
+                                <id nullFlavor="UNK"/>
+                                <code code="01" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.266"
+                                      displayName="Call Centre"/>
+                                <telecom value="tel:08001111111"/>
+                                <associatedPerson classCode="PSN" determinerCode="INSTANCE">
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                extension="COCD_TP145212GB02#assignedPerson"/>
+                                    <name>Call Centre Manager</name>
+                                </associatedPerson>
+                                <scopingOrganization classCode="ORG" determinerCode="INSTANCE">
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                extension="COCD_TP145212GB02#representedOrganization"/>
+                                    <id root="2.16.840.1.113883.2.1.3.2.4.19.2" extension="06HAK"/>
+                                    <name>111 CALL CENTRE</name>
+                                </scopingOrganization>
+                            </associatedEntity>
+                        </participant>
                         <authorization typeCode="AUTH">
                             <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
                                                extension="COCD_TP146226GB02#Consent"/>
@@ -292,16 +275,17 @@
                             <encompassingEncounter classCode="ENC" moodCode="EVN">
                                 <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
                                             extension="COCD_TP146232GB01#EncompassingEncounter"/>
+                                <id root="2.16.840.1.113883.2.1.3.2.4.18.49" extension="LOC665"/>
                                 <id root="2.16.840.1.113883.2.1.3.2.4.18.34" extension="CASEREF1234"/>
                                 <id root="2.16.840.1.113883.2.1.3.2.4.18.35" extension="CASEID123"/>
                                 <code code="NHS111Encounter" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.326"
                                       displayName="NHS111 Encounter"/>
                                 <effectiveTime>
-                                    <low value="201105191945+00"/>
-                                    <high value="201105192015+00"/>
+                                    <low value="201701011945+00"/>
+                                    <high value="201701012015+00"/>
                                 </effectiveTime>
-                                <dischargeDispositionCode code="Dx009" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.325"
-                                                          displayName="Go to the nearest Emergency Department within 4 hours."/>
+                                <dischargeDispositionCode code="Dx001" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.325"
+                                                          displayName="Passed onto clinical hub"/>
                                 <responsibleParty typeCode="RESP">
                                     <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
                                                 extension="COCD_TP146232GB01#responsibleParty"/>
@@ -329,36 +313,6 @@
                                         </representedOrganization>
                                     </assignedEntity>
                                 </responsibleParty>
-                                <encounterParticipant typeCode="CON">
-                                    <time>
-                                        <low value="201105191945+00"/>
-                                        <high value="201105192015+00"/>
-                                    </time>
-                                    <assignedEntity classCode="ASSIGNED">
-                                        <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
-                                                    extension="COCD_TP145210GB01#AssignedEntity"/>
-                                        <id nullFlavor="NI"/>
-                                        <code code="R0010" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.196"
-                                              displayName="Medical Director"/>
-                                        <telecom value="tel:01634775667" use="H"/>
-                                        <telecom value="tel:01634451628" use="HV"/>
-                                        <telecom value="mailto:Joe.Blogg@emailfree.co.uk" use="H"/>
-                                        <assignedPerson classCode="PSN" determinerCode="INSTANCE">
-                                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
-                                                        extension="COCD_TP145210GB01#assignedPerson"/>
-                                            <name>
-                                                <given>Dave</given>
-                                                <family>Cornwell</family>
-                                            </name>
-                                        </assignedPerson>
-                                        <representedOrganization classCode="ORG" determinerCode="INSTANCE">
-                                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
-                                                        extension="COCD_TP145210GB01#representedOrganization"/>
-                                            <id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="VDE232323"/>
-                                            <name>Medway South Out of Hours Centre</name>
-                                        </representedOrganization>
-                                    </assignedEntity>
-                                </encounterParticipant>
                                 <location typeCode="LOC">
                                     <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
                                                 extension="COCD_TP146232GB01#location"/>
@@ -377,11 +331,13 @@
                                             <addr use="PHYS">
                                                 <streetAddressLine>2, Brancaster Road</streetAddressLine>
                                                 <city>Medway</city>
-                                                <postalCode>ME5 FL5</postalCode>
+                                                <postalCode>ME5 4LS</postalCode>
                                                 <desc>Follow the high street and turn left by Boots</desc>
                                                 <country>GB</country>
                                                 <country>Great Britain</country>
+                                                <addressKey>962145269574</addressKey>
                                                 <additionalLocator>+38.265789-85.623415</additionalLocator>
+                                                <additionalLocator>X575776,Y163180</additionalLocator>
                                             </addr>
                                         </location>
                                     </healthCareFacility>
@@ -393,53 +349,6 @@
                                 <component typeCode="COMP" contextConductionInd="true">
                                     <section classCode="DOCSECT" moodCode="EVN">
                                         <id root="7AFDCAD6-1CE3-45A6-A176-DDAC27F46C87"/>
-                                        <entry typeCode="COMP" contextConductionInd="true">
-                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
-                                                               extension="COCD_TP146093GB01#AppointmentReference"/>
-                                            <encounter classCode="ENC" moodCode="APT">
-                                                <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"
-                                                        assigningAuthorityName="ADMS"/>
-                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
-                                                            extension="COCD_TP146093GB01#AppointmentReference"/>
-                                                <id root="2.16.840.1.113883.2.1.3.2.4.17.541"
-                                                    extension="eb4f7f21-3962-4416-9a29-a46dd6ee5f17"/>
-                                                <code code="01" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.542"
-                                                      displayName="Patient convenience appointment"/>
-                                                <text>Example diagnosis text</text>
-                                                <statusCode codeSystem="2.16.840.1.113883.2.1.3.2.4.17.70"
-                                                            code="role"/>
-                                                <effectiveTime value="201706011400+00"/>
-                                                <priorityCode code="1" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.326"/>
-                                                <participant typeCode="LOC" contextControlCode="OP">
-                                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
-                                                                extension="COCD_TP146093GB01#location"/>
-                                                    <participantRole classCode="ASSIGNED">
-                                                        <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
-                                                                    extension="COCD_TP146093GB01#assignedEntity"/>
-                                                        <id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="Q36"/>
-                                                        <addr use="WP">
-                                                            <streetAddressLine>Great George Street</streetAddressLine>
-                                                            <city>Leeds</city>
-                                                            <postalCode>LE13EX</postalCode>
-                                                        </addr>
-                                                        <playingEntity classCode="ORG" determinerCode="INSTANCE">
-                                                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
-                                                                        extension="COCD_TP146093GB01#assignedOrganization"/>
-                                                            <name>CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST</name>
-                                                            <desc>Psychiatric Community Care Services</desc>
-                                                        </playingEntity>
-                                                    </participantRole>
-                                                </participant>
-                                            </encounter>
-                                        </entry>
-                                        <entry typeCode="COMP" contextConductionInd="true">
-                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146092GB01#ClinicalDiscriminator"/>
-                                            <observation classCode="OBS" moodCode="EVN">
-                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146092GB01#ClinicalDiscriminator"/>
-                                                <code code="CD" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.540"/>
-                                                <value xsi:type="CV" code="22298006" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Myocardial infarction"/>
-                                            </observation>
-                                        </entry>
                                         <entry typeCode="COMP" contextConductionInd="true">
                                             <npfitlc:contentId extension="COCD_TP146002GB01#ObservationMedia"
                                                                root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
@@ -485,12 +394,72 @@
                                                        codeSystem="2.16.840.1.113883.2.1.3.2.4.17.524"/>
                                             </observation>
                                         </entry>
+                                        <entry typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
+                                                               extension="COCD_TP146092GB01#ClinicalDiscriminator"/>
+                                            <observation classCode="OBS" moodCode="EVN">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                            extension="COCD_TP146092GB01#ClinicalDiscriminator"/>
+                                                <code code="CD" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.540"/>
+                                                <value xsi:type="CV" code="22298006"
+                                                       codeSystem="2.16.840.1.113883.2.1.3.2.4.15"
+                                                       displayName="Myocardial infarction"/>
+                                            </observation>
+                                        </entry>
+                                        <entry typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
+                                                               extension="COCD_TP146092GB01#ClinicalDiscriminator"/>
+                                            <observation classCode="OBS" moodCode="EVN">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                            extension="COCD_TP146092GB01#ClinicalDiscriminator"/>
+                                                <code code="CD" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.540"/>
+                                                <value xsi:type="CV" code="Dx011"
+                                                       codeSystem="2.16.840.1.113883.2.1.3.2.4.24"
+                                                       displayName="heart attack"/>
+                                            </observation>
+                                        </entry>
+                                        <entry typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
+                                                               extension="COCD_TP146093GB01#AppointmentReference"/>
+                                            <encounter classCode="ENC" moodCode="APT">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                            extension="COCD_TP146093GB01#AppointmentReference"/>
+                                                <id root="2.16.840.1.113883.2.1.3.2.4.17.541"
+                                                    extension="eb4f7f21-3962-4416-9a29-a46dd6ee5f17"/>
+                                                <code code="01" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.542"
+                                                      displayName="Patient convenience appointment"/>
+                                                <effectiveTime value="201706011400+00"/>
+                                                <participant typeCode="LOC" contextControlCode="OP">
+                                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                                extension="COCD_TP146093GB01#location"/>
+                                                    <participantRole classCode="ASSIGNED">
+                                                        <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                                    extension="COCD_TP146093GB01#assignedEntity"/>
+                                                        <id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="Q36"/>
+                                                        <addr use="WP">
+                                                            <streetAddressLine>Great George Street</streetAddressLine>
+                                                            <city>Leeds</city>
+                                                            <postalCode>LE13EX</postalCode>
+                                                        </addr>
+                                                        <playingEntity classCode="ORG" determinerCode="INSTANCE">
+                                                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                                        extension="COCD_TP146093GB01#assignedOrganization"/>
+                                                            <name>CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST</name>
+                                                            <desc>Psychiatric Community Care Services</desc>
+                                                        </playingEntity>
+                                                    </participantRole>
+                                                </participant>
+                                            </encounter>
+                                        </entry>
                                         <component typeCode="COMP" contextConductionInd="true">
-                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146246GB01#Section1"/>
+                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
+                                                               extension="COCD_TP146246GB01#Section1"/>
                                             <section classCode="DOCSECT" moodCode="EVN">
-                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146246GB01#Section1"/>
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                            extension="COCD_TP146246GB01#Section1"/>
                                                 <id root="41D9F90F-6DB7-4939-BEF5-F8D75D79ECDD"/>
-                                                <code code="887031000000108" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Consent for information sharing"/>
+                                                <code code="887031000000108" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"
+                                                      displayName="Consent for information sharing"/>
                                                 <title>Permission to View</title>
                                                 <text>
                                                     <table>
@@ -518,39 +487,41 @@
                                             <section classCode="DOCSECT" moodCode="EVN">
                                                 <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
                                                             extension="COCD_TP146246GB01#Section1"/>
-                                                <id root="41D9F90F-6DB7-4939-BEF5-F8D75D79ECDD"/>
-                                                <title>Permission To View</title>
-                                                <text>
-                                                    <table>
-                                                        <tbody>
-                                                            <tr>
-                                                                <th>Permission to view outcome</th>
-                                                                <td>Permission to view obtained</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>Date obtained</th>
-                                                                <td>19-May-2011, 20:00</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>Date expires</th>
-                                                                <td>26-May-2011, 20:00</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </text>
-                                            </section>
-                                        </component>
-                                        <component typeCode="COMP" contextConductionInd="true">
-                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
-                                                               extension="COCD_TP146246GB01#Section1"/>
-                                            <section classCode="DOCSECT" moodCode="EVN">
-                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
-                                                            extension="COCD_TP146246GB01#Section1"/>
                                                 <id root="773110DB-288F-4B32-8DE1-362646A65E9A"/>
-                                                <title>Patient’s Reported Condition</title>
+                                                <code code="886891000000102" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"
+                                                      displayName="Presenting complaints or issues"/>
+                                                <title>Primary Reason for Call</title>
                                                 <text>
-                                                    <content>Patient has an insect bite.</content>
+                                                    <content>Patient feels dizzy.</content>
                                                 </text>
+                                                <component typeCode="COMP" contextConductionInd="true">
+                                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                                extension="COCD_TP146246GB01#component1"/>
+                                                    <section classCode="DOCSECT" moodCode="EVN">
+                                                        <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                                    extension="COCD_TP146246GB01#section2"/>
+                                                        <id root="BBC110DB-288F-4B32-8DE1-362646A65AAF"/>
+                                                        <title>SUBSUB2</title>
+                                                        <text>
+                                                            <content>SUBSUB2</content>
+                                                        </text>
+                                                        <component typeCode="COMP" contextConductionInd="true">
+                                                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                                        extension="COCD_TP146246GB01#component2"/>
+                                                            <section classCode="DOCSECT" moodCode="EVN">
+
+                                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                                            extension="COCD_TP146246GB01#section3"/>
+
+                                                                <id root="DDD110DB-288F-4B32-8DE1-362646A65DDD"/>
+                                                                <title>SUBSUB3</title>
+                                                                <text>
+                                                                    <content>SUBSUB3</content>
+                                                                </text>
+                                                            </section>
+                                                        </component>
+                                                    </section>
+                                                </component>
                                             </section>
                                         </component>
                                         <component typeCode="COMP" contextConductionInd="true">
@@ -560,54 +531,13 @@
                                                 <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
                                                             extension="COCD_TP146246GB01#Section1"/>
                                                 <id root="8271D2F1-126F-4A14-A1AC-C6C8023243CF"/>
-                                                <title>Case Summary</title>
+                                                <code code="887181000000106" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"
+                                                      displayName="Clinical summary"/>
+                                                <title>Clinical Summary</title>
                                                 <text>
-                                                    <content styleCode="bold">Disposition:</content>
-                                                    <br/>
-                                                    <content>Go to the nearest Emergency Department within 4 hours.
-                                                    </content>
-                                                    <br/>
-                                                    <content styleCode="bold">Selected care service:</content>
-                                                    <br/>
-                                                    <content>Dx009</content>
-                                                    <br/>
-                                                    <content styleCode="bold">Pathways Assessment:</content>
-                                                    <br/>
-                                                    <content>An injury or other health problem was described.
-                                                        <br/>The individual was described as breathing and conscious.
-                                                        <br/>Loss of at least a mugful of blood in the last 30 minutes
-                                                        was not described.
-                                                        <br/>An illness or other health problem was described. - Insect
-                                                        Bite
-                                                        <br/>Fighting for breath was not described.
-                                                        <br/>A heart attack, chest/upper back pain, recent probable
-                                                        stroke, recent fit/seizure or suicide attempt was not described
-                                                        as the main call reason.
-                                                        <br/>New confusion, a diabetic hypo, a probable allergic
-                                                        reaction or successful resuscitation was not described as being
-                                                        the main call reason.
-                                                        <br/>The individual was described as being warm to touch.
-                                                        <br/>An insect or spider bite or sting was described. - Tick
-                                                        Bite
-                                                        <br/>A sting/bite occurring within the last hour was not
-                                                        described.
-                                                        <br/>10 or more stings were not described.
-                                                        <br/>Nausea or vomiting since the sting was not described.
-                                                        <br/>A sting involving the eyes or mouth was not described.
-                                                        <br/>A fever was not described.
-                                                        <br/>An insect still attached to the skin was described.
-                                                        <br/>A tick bite was described.
-                                                        <br/>
-                                                    </content>
-                                                    <content styleCode="bold">Advice given:</content>
-                                                    <br/>
-                                                    <content>Remove any jewellery or tight clothing from the area.
-                                                        <br/>Antihistamine medication and creams help reduce swelling
-                                                        and itching. They can be bought from pharmacies. Talk to the
-                                                        pharmacist for advice. Follow the instructions in the pack.
-                                                        <br/>Unless advised not to, or they have already been given,
-                                                        paracetamol or ibuprofen can be used to relieve pain. Follow the
-                                                        instructions in the pack. If in doubt ask a pharmacist.
+                                                    <content>
+                                                        Patient fels nausea and dizzy after waking up. Lasted 30
+                                                        minutes.
                                                     </content>
                                                 </text>
                                             </section>
@@ -618,11 +548,114 @@
                                             <section classCode="DOCSECT" moodCode="EVN">
                                                 <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
                                                             extension="COCD_TP146246GB01#Section1"/>
-                                                <id root="773110DB-288F-4B32-8DE1-362646A65E9B"/>
-                                                <title>Patient Special Notes</title>
+                                                <id root="773110DB-288F-4B32-8531-362646A65E9B"/>
+                                                <code code="38651000000103" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"
+                                                      displayName="Other note"/>
+                                                <title>Additional Patient Notes</title>
                                                 <text>
-                                                    <content>Patient has history of violence towards health care
-                                                        professionals
+                                                    Additional Patient Notes
+                                                    <br/>
+                                                    Additional Patient Notes abc 01-Feb-2017, 12:00
+                                                    <br/>
+                                                </text>
+                                                <component typeCode="COMP" contextConductionInd="true">
+                                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                                extension="COCD_TP146246GB01#component1"/>
+                                                    <section classCode="DOCSECT" moodCode="EVN">
+                                                        <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                                    extension="COCD_TP146246GB01#section2"/>
+                                                        <id root="773990DB-288F-4B32-8531-362646A65E9B"/>
+                                                        <text>These are more notes, nested under the top one.</text>
+                                                    </section>
+                                                </component>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
+                                                               extension="COCD_TP146246GB01#Section1"/>
+                                            <section classCode="DOCSECT" moodCode="EVN">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                            extension="COCD_TP146246GB01#Section1"/>
+                                                <id root="773110DB-288F-4B32-8CC1-362646665E9A"/>
+                                                <code code="913341000000104" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"
+                                                      displayName="Disposition details"/>
+                                                <title>Disposition Details</title>
+                                                <text>
+                                                    <content>Lie down.</content>
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
+                                                               extension="COCD_TP146246GB01#Section1"/>
+                                            <section classCode="DOCSECT" moodCode="EVN">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                            extension="COCD_TP146246GB01#Section1"/>
+                                                <id root="773110DB-288F-4B32-8EB1-362646665E9A"/>
+                                                <code code="1052951000000105"
+                                                      codeSystem="2.16.840.1.113883.2.1.3.2.4.15"
+                                                      displayName="Information and advice given"/>
+                                                <title>Information and advice given</title>
+                                                <text>
+                                                    <content>Do not perform any strenuous activities.</content>
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
+                                                               extension="COCD_TP146246GB01#Section1"/>
+                                            <section classCode="DOCSECT" moodCode="EVN">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                            extension="COCD_TP146246GB01#Section1"/>
+                                                <id root="773110DB-288F-4B32-8A31-362646665E9A"/>
+                                                <code code="886921000000105" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"
+                                                      displayName="Allergies and adverse reaction"/>
+                                                <title>Recorded Allergies</title>
+                                                <text>
+                                                    <content>No known allergies or adverse reaction.</content>
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
+                                                               extension="COCD_TP146246GB01#Section1"/>
+                                            <section classCode="DOCSECT" moodCode="EVN">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                            extension="COCD_TP146246GB01#Section1"/>
+                                                <id root="773110DB-288F-4B32-8A94-362646665E9A"/>
+                                                <code code="4281000179108" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"
+                                                      displayName="Triage form"/>
+                                                <title>Triage Report</title>
+                                                <text>
+                                                    <content>An injury or other health problem was described.
+                                                        <br/>The individual was described as breathing and conscious.
+                                                        <br/>Loss of at least a mugful of blood in the last 30 minutes
+                                                        was not described.
+                                                        <br/>An illness or other health problem was described. -
+                                                        Dizziness
+                                                        <br/>Fighting for breath was not described.
+                                                        <br/>A heart attack, chest/upper back pain, recent probable
+                                                        stroke, recent fit/seizure or suicide attempt was not described
+                                                        as the main call reason.
+                                                        <br/>Dizziness and nausea was described.
+                                                        <br/>
+                                                    </content>
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
+                                                               extension="COCD_TP146246GB01#Section1"/>
+                                            <section classCode="DOCSECT" moodCode="EVN">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                                            extension="COCD_TP146246GB01#Section1"/>
+                                                <id root="C3A0F8FB-35FA-4358-B46E-6F9EE6AC6CF2"/>
+                                                <code code="933361000000108" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"
+                                                      displayName="Medications and medical devices"/>
+                                                <title>Prescribed Items</title>
+                                                <text>
+                                                    <content>
+                                                        Medications
                                                     </content>
                                                 </text>
                                             </section>
@@ -646,127 +679,11 @@
                                                 </text>
                                             </section>
                                         </component>
-                                        <component typeCode="COMP" contextConductionInd="true">
-                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
-                                                               extension="COCD_TP146246GB01#Section1"/>
-                                            <section classCode="DOCSECT" moodCode="EVN">
-                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
-                                                            extension="COCD_TP146246GB01#Section1"/>
-                                                <id root="8271D2F1-126F-4A14-A1AC-C6C8023243FF"/>
-                                                <code code="1052951000000105"
-                                                      codeSystem="2.16.840.1.113883.2.1.3.2.4.15"
-                                                      displayName="CarePlan advice"/>
-                                                <title>CarePlan Advice</title>
-                                                <text>
-                                                    <content>
-                                                        SAMPLE: Irrelevant Data purely for testing Care Plan Advice
-                                                        Date/Time: 01 June 2017 14:00
-                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST
-                                                        Psychiatric Community Care Service
-                                                    </content>
-                                                    <content>
-                                                        Patient has history of violence towards health care
-                                                        professionals
-                                                    </content>
-                                                    <content>An injury or other health problem was described.
-                                                        <br/>The individual was described as breathing and conscious.
-                                                        <br/>Loss of at least a mugful of blood in the last 30 minutes
-                                                        was not described.
-                                                        <br/>An illness or other health problem was described. - Insect
-                                                        Bite
-                                                        <br/>Fighting for breath was not described.
-                                                        <br/>A heart attack, chest/upper back pain, recent probable
-                                                        stroke, recent fit/seizure or suicide attempt was not described
-                                                        as the main call reason.
-                                                        <br/>New confusion, a diabetic hypo, a probable allergic
-                                                        reaction or successful resuscitation was not described as being
-                                                        the main call reason.
-                                                        <br/>The individual was described as being warm to touch.
-                                                        <br/>An insect or spider bite or sting was described. - Tick
-                                                        Bite
-                                                        <br/>A sting/bite occurring within the last hour was not
-                                                        described.
-                                                        <br/>10 or more stings were not described.
-                                                        <br/>Nausea or vomiting since the sting was not described.
-                                                        <br/>A sting involving the eyes or mouth was not described.
-                                                        <br/>A fever was not described.
-                                                        <br/>An insect still attached to the skin was described.
-                                                        <br/>A tick bite was described.
-                                                        <br/>
-                                                    </content>
-                                                    <content styleCode="bold">Plan Summary:</content>
-                                                    <br/>
-                                                    <content>Remove any jewellery or tight clothing from the area.
-                                                        <br/>Antihistamine medication and creams help reduce swelling
-                                                        and itching. They can be bought from pharmacies. Talk to the
-                                                        pharmacist for advice. Follow the instructions in the pack.
-                                                        <br/>Unless advised not to, or they have already been given,
-                                                        paracetamol or ibuprofen can be used to relieve pain. Follow the
-                                                        instructions in the pack. If in doubt ask a pharmacist.
-                                                    </content>
-                                                </text>
-                                                <languageCode codeSystem="2.16.840.1.113883.2.1.3.2.4.17.70" code="en"/>
-                                            </section>
-                                        </component>
-                                        <component typeCode="COMP" contextConductionInd="true">
-                                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16"
-                                                               extension="COCD_TP146246GB01#Section1"/>
-                                            <section classCode="DOCSECT" moodCode="EVN">
-                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
-                                                            extension="COCD_TP146246GB01#Section1"/>
-                                                <id root="8271D2F1-126F-4A14-A1AC-C6C8023243FF"/>
-                                                <code code="1052951000000105"
-                                                      codeSystem="2.16.840.1.113883.2.1.3.2.4.15"
-                                                      displayName="CarePlan advice"/>
-                                                <title>CarePlan Advice III</title>
-                                                <text>
-                                                    <content>
-                                                        SAMPLE: Irrelevant Data purely for testing Care Plan Advice
-                                                        Date/Time: 01 June 2019 16:00
-                                                        Location: WEST LONDON COMMUNITY HEALTHCARE NHS TRUST
-                                                        Psychiatric Community Care Service
-                                                    </content>
-                                                    <content>
-                                                        Patient has history of violence towards health care
-                                                        professionals
-                                                    </content>
-                                                    <content>An injury or other health problem was described.
-                                                        <br/>The individual was described as breathing and conscious.
-                                                        <br/>Loss of at least a mugful of blood in the last 30 minutes
-                                                        was not described.
-                                                        <br/>An illness or other health problem was described. - Insect
-                                                        Bite
-                                                        <br/>Fighting for breath was not described.
-                                                        <br/>A heart attack, chest/upper back pain, recent probable
-                                                        stroke, recent fit/seizure or suicide attempt was not described
-                                                        as the main call reason.
-                                                        <br/>New confusion, a diabetic hypo, a probable allergic
-                                                        reaction or successful resuscitation was not described as being
-                                                        the main call reason.
-                                                        <br/>The individual was described as being warm to touch.
-                                                        <br/>An insect or spider bite or sting was described. - Tick
-                                                        Bite
-                                                    </content>
-                                                    <content styleCode="bold">Plan Summary:</content>
-                                                    <br/>
-                                                    <content>Remove any jewellery or tight clothing from the area.
-                                                        <br/>Antihistamine medication and creams help reduce swelling
-                                                        and itching. They can be bought from pharmacies. Talk to the
-                                                        pharmacist for advice. Follow the instructions in the pack.
-                                                        <br/>Unless advised not to, or they have already been given,
-                                                        paracetamol or ibuprofen can be used to relieve pain. Follow the
-                                                        instructions in the pack. If in doubt ask a pharmacist.
-                                                    </content>
-                                                </text>
-                                                <languageCode codeSystem="2.16.840.1.113883.2.1.3.2.4.17.70" code="en"/>
-                                            </section>
-                                        </component>
                                     </section>
                                 </component>
                             </structuredBody>
                         </component>
                     </ClinicalDocument>
-                    <!-- the document ends here -->
                 </itk:payload>
             </itk:payloads>
         </itk:DistributionEnvelope>
