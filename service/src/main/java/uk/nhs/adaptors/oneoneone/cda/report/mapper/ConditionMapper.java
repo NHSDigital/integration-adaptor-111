@@ -48,9 +48,11 @@ public class ConditionMapper {
             .setClinicalStatus(Condition.ConditionClinicalStatus.ACTIVE)
             .setVerificationStatus(Condition.ConditionVerificationStatus.UNKNOWN)
             .setSubject(encounter.getSubject())
-            .setContext(new Reference(encounter))
-            .setEvidence(evidenceOf(questionnaireResponseList));
+            .setContext(new Reference(encounter));
 
+        if (questionnaireResponseList != null) {
+            condition.setEvidence(evidenceOf(questionnaireResponseList));
+        }
         addConditionReason(clinicalDocument, condition);
 
         if (clinicalDocument.getComponent().isSetStructuredBody()) {

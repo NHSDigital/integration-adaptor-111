@@ -88,22 +88,7 @@ public class CompositionMapper {
         if (clinicalDocument.getComponent().isSetStructuredBody()) {
             for (POCDMT000002UK01Component3 component3 : clinicalDocument.getComponent().getStructuredBody().getComponentArray()) {
                 POCDMT000002UK01Section section = component3.getSection();
-                for (POCDMT000002UK01Component5 component5 : section.getComponentArray()) {
-                    POCDMT000002UK01Section sectionComponent5 = component5.getSection();
-                    SectionComponent sectionComponent = new SectionComponent();
-                    if (sectionComponent5.isSetTitle()) {
-                        sectionComponent.setTitle(nodeUtil.getAllText(sectionComponent5.getTitle().getDomNode()));
-                    }
-                    Narrative narrative = new Narrative();
-                    narrative.setStatus(GENERATED);
-                    String divText = sectionComponent5.getText().xmlText();
-                    XhtmlNode xhtmlNode = new XhtmlNode();
-                    xhtmlNode.setNodeType(NodeType.Document);
-                    xhtmlNode.addText(divText);
-                    narrative.setDiv(xhtmlNode);
-                    sectionComponent.setText(narrative);
-                    composition.addSection(sectionComponent);
-                }
+                addSectionToComposition(composition, section);
             }
         }
 
@@ -115,9 +100,39 @@ public class CompositionMapper {
             composition.addSection(buildSectionComponentFromResource(referralRequest));
         }
 
-        addPathwaysToSection(composition, questionnaireResponseList);
+        if (questionnaireResponseList != null) {
+            addPathwaysToSection(composition, questionnaireResponseList);
+        }
 
         return composition;
+    }
+
+    private void addSectionToComposition(Composition composition, POCDMT000002UK01Section section) {
+        for (POCDMT000002UK01Component5 component5 : section.getComponentArray()) {
+            POCDMT000002UK01Section innerSection = component5.getSection();
+            composition.addSection(getSectionText(innerSection));
+
+            if (isNotEmpty(innerSection.getComponentArray())) {
+                addSectionToComposition(composition, innerSection);
+            }
+        }
+    }
+
+    private SectionComponent getSectionText(POCDMT000002UK01Section sectionComponent5) {
+        SectionComponent sectionComponent = new SectionComponent();
+        if (sectionComponent5.isSetTitle()) {
+            sectionComponent.setTitle(nodeUtil.getAllText(sectionComponent5.getTitle().getDomNode()));
+        }
+        Narrative narrative = new Narrative();
+        narrative.setStatus(GENERATED);
+        String divText = sectionComponent5.getText().xmlText();
+        XhtmlNode xhtmlNode = new XhtmlNode();
+        xhtmlNode.setNodeType(NodeType.Document);
+        xhtmlNode.addText(divText);
+        narrative.setDiv(xhtmlNode);
+        sectionComponent.setText(narrative);
+
+        return sectionComponent;
     }
 
     private CodeableConcept createCodeableConcept() {

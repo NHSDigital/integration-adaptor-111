@@ -22,7 +22,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
 
 @Component
 public class ItkValidator {
-    private static final String ACTION_SERVICE = "urn:nhs-itk:services:201005:SendNHS111Report-v2-0";
     private static final String SOAP_ACTION_XPATH = "//*[local-name()='Action']";
     private static final String ITK_MANIFEST_XPATH = "//*[local-name()='manifest']";
     private static final String ITK_AUDIT_IDENTITY_XPATH = "//*[local-name()='auditIdentity']";
@@ -30,7 +29,8 @@ public class ItkValidator {
     private static final String ITK_PAYLOAD_XPATH = "//*[local-name()='payload']";
     private static final String SOAP_VALIDATION_FAILED_MSG = "Soap validation failed";
     private static final List<String> PROFILE_IDS = asList("urn:nhs-en:profile:nhs111CDADocument-v2-0",
-        "urn:nhs-en:profile:nullificationDocument-v5-0");
+        "urn:nhs-en:profile:nullificationDocument-v5-0", "urn:nhs-en:profile:IntegratedUrgentCareCDADocument-v3-1",
+        "urn:nhs-en:profile:nhs111CDADocument-v3-1");
     private static final String AUDIT_IDENTITY = "urn:nhs-uk:identity:ods:5L399";
     private static final String AUDIT_IDENTITY_ID_XPATH = "//*[local-name()='id']";
 
@@ -117,10 +117,6 @@ public class ItkValidator {
 
         String soapAction = actionNode.getText();
         String itkService = itkHeader.attribute("service").getValue();
-
-        if (!StringUtils.equals(ACTION_SERVICE, soapAction)) {
-            throw new SoapClientException(SOAP_VALIDATION_FAILED_MSG, "Invalid Soap Action value: " + soapAction);
-        }
 
         if (!StringUtils.equals(soapAction, itkService)) {
             throw new SoapClientException(SOAP_VALIDATION_FAILED_MSG, "Soap Action is not equal to ITK service");
