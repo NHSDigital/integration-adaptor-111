@@ -59,6 +59,8 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @ExtendWith(MockitoExtension.class)
 public class EncounterReportBundleServiceTest {
+    private static final String SPECIFICATION_KEY = "urn:nhs-itk:ns:201005:interaction";
+    private static final String SPECIFICATION_VALUE = "urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0";
     private static final Encounter ENCOUNTER;
     private static final IdType ENCOUNTER_ID = newRandomUuid();
     private static final Organization SERVICE_PROVIDER;
@@ -200,7 +202,7 @@ public class EncounterReportBundleServiceTest {
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(Collections.singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
         when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
-        when(messageHeaderService.createMessageHeader()).thenReturn(MESSAGE_HEADER);
+        when(messageHeaderService.createMessageHeader(any(), any())).thenReturn(MESSAGE_HEADER);
         when(referralRequestMapper.mapReferralRequest(any(), any(), any(), any())).thenReturn(REFERRAL_REQUEST);
         when(observationMapper.mapObservations(any(), eq(ENCOUNTER))).thenReturn(Arrays.asList(OBSERVATION));
         Encounter.DiagnosisComponent diagnosisComponent = new Encounter.DiagnosisComponent();
@@ -216,7 +218,7 @@ public class EncounterReportBundleServiceTest {
     public void shouldCreateEncounterBundle() throws XmlException {
         POCDMT000002UK01ClinicalDocument1 document = mock(POCDMT000002UK01ClinicalDocument1.class);
 
-        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document);
+        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, SPECIFICATION_KEY, SPECIFICATION_VALUE);
         assertThat(encounterBundle.getType()).isEqualTo(MESSAGE);
         assertThat(encounterBundle.getEntry().size()).isEqualTo(16);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();

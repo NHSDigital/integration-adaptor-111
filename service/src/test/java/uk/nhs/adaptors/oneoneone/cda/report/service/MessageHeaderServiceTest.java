@@ -23,6 +23,8 @@ public class MessageHeaderServiceTest {
     private static final String EVENT_DISPLAY_VALUE = "ITK GP Connect Send Document";
     private static final String MESSAGE_SOURCE_NAME = "NHS 111 Adaptor";
     private static final String ENDPOINT = "https://gp.endpoint.com";
+    private static final String SPECIFICATION_KEY = "urn:nhs-itk:ns:201005:interaction";
+    private static final String SPECIFICATION_VALUE = "urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0";
 
     @Mock
     private SoapProperties soapProperties;
@@ -37,7 +39,7 @@ public class MessageHeaderServiceTest {
 
     @Test
     public void shouldCreateMessageHeader() {
-        MessageHeader messageHeader = messageHeaderService.createMessageHeader();
+        MessageHeader messageHeader = messageHeaderService.createMessageHeader(SPECIFICATION_KEY, SPECIFICATION_VALUE);
 
         assertThat(messageHeader.getId()).isNotEmpty();
         Coding event = messageHeader.getEvent();
@@ -47,5 +49,7 @@ public class MessageHeaderServiceTest {
         MessageSourceComponent source = messageHeader.getSource();
         assertThat(source.getName()).isEqualTo(MESSAGE_SOURCE_NAME);
         assertThat(source.getEndpoint()).isEqualTo(ENDPOINT);
+        assertThat(messageHeader.getReason().getCodingFirstRep().getSystem()).isEqualTo(SPECIFICATION_KEY);
+        assertThat(messageHeader.getReason().getCodingFirstRep().getCode()).isEqualTo(SPECIFICATION_VALUE);
     }
 }

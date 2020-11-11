@@ -13,6 +13,7 @@ import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElemen
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_HEADER;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.MESSAGE_ID;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_HEADER;
+import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SPECIFICATION;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils.extractClinicalDocument;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils.extractDistributionEnvelope;
 import static uk.nhs.adaptors.oneoneone.xml.XmlValidator.validate;
@@ -72,6 +73,8 @@ public class ReportController {
             itkValidator.checkItkConformance(reportElementsMap);
             soapValidator.checkSoapItkConformance(reportElementsMap.get(SOAP_HEADER));
             String trackingId = reportElementsMap.get(ITK_HEADER).attribute("trackingid").getValue();
+            String specificationKey = reportElementsMap.get(SPECIFICATION).attribute("key").getValue();
+            String specificationValue = reportElementsMap.get(SPECIFICATION).attribute("value").getValue();
             messageId = reportElementsMap.get(MESSAGE_ID).getText();
             toAddress = getValueOrDefaultAddress(reportElementsMap.get(ADDRESS));
 
@@ -86,7 +89,7 @@ public class ReportController {
             validate(clinicalDocument);
 
             encounterReportService.transformAndPopulateToGP(clinicalDocument,
-                messageId, trackingId);
+                messageId, trackingId, specificationKey, specificationValue);
 
             return new ResponseEntity<>(itkResponseUtil.createSuccessResponseEntity(messageId, randomUUID().toString().toUpperCase()), OK);
         } catch (DocumentException e) {

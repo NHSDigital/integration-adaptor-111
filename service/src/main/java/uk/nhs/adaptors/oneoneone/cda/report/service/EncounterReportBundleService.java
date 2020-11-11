@@ -65,7 +65,8 @@ public class EncounterReportBundleService {
             .setResource(resource);
     }
 
-    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) throws XmlException {
+    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, String specificationKey,
+        String specificationValue) throws XmlException {
         Bundle bundle = new Bundle();
         bundle.setType(MESSAGE);
 
@@ -82,7 +83,7 @@ public class EncounterReportBundleService {
             referralRequest);
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
 
-        addEntry(bundle, messageHeaderService.createMessageHeader());
+        addEntry(bundle, messageHeaderService.createMessageHeader(specificationKey, specificationValue));
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
