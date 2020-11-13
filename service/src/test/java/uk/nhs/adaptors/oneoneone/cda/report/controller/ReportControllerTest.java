@@ -1,25 +1,8 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
-import org.apache.xmlbeans.XmlException;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
-import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
-import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkResponseUtil;
-import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
-import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
-import uk.nhs.adaptors.oneoneone.cda.report.validation.SoapValidator;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-
-import java.net.URL;
-import java.nio.file.Paths;
-
 import static java.nio.charset.Charset.defaultCharset;
 import static java.nio.file.Files.readAllBytes;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -29,6 +12,28 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
+
+import java.net.URL;
+import java.nio.file.Paths;
+
+import org.apache.xmlbeans.XmlException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
+
+import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkResponseUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHeaderParserUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
+import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
+import uk.nhs.adaptors.oneoneone.cda.report.validation.SoapValidator;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportControllerTest {
@@ -52,6 +57,9 @@ public class ReportControllerTest {
     @Mock
     private SoapValidator soapValidator;
 
+    @Spy
+    private ReportItkHeaderParserUtil headerParserUtil;
+
     @Test
     public void postReportValidRequest() throws XmlException {
         when(itkResponseUtil.createSuccessResponseEntity(eq(MESSAGE_ID), anyString())).thenReturn(RESPONSE_XML);
@@ -61,13 +69,18 @@ public class ReportControllerTest {
         ResponseEntity<String> response = reportController.postReport(validRequest);
 
         ArgumentCaptor<POCDMT000002UK01ClinicalDocument1> captor = ArgumentCaptor.forClass(POCDMT000002UK01ClinicalDocument1.class);
-        verify(encounterReportService).transformAndPopulateToGP(captor.capture(), eq(MESSAGE_ID), eq(TRACKING_ID), anyString(),
-            anyString());
+        ArgumentCaptor<ItkReportHeader> captorHeader = ArgumentCaptor.forClass(ItkReportHeader.class);
+        verify(encounterReportService).transformAndPopulateToGP(captor.capture(), eq(MESSAGE_ID), captorHeader.capture());
         POCDMT000002UK01ClinicalDocument1 clinicalDocument = captor.getValue();
         assertThat(clinicalDocument.getId().getRoot()).isEqualTo("A709A442-3CF4-476E-8377-376500E829C9");
         assertThat(clinicalDocument.getSetId().getRoot()).isEqualTo("411910CF-1A76-4330-98FE-C345DDEE5553");
         assertThat(response.getStatusCode()).isEqualTo(OK);
         assertThat(response.getBody()).isEqualTo(RESPONSE_XML);
+        ItkReportHeader headerValue = captorHeader.getValue();
+        assertThat(headerValue.getTrackingId()).isEqualTo("7D6F23E0-AE1A-11DB-9808-B18E1E0994CD");
+        assertThat(headerValue.getSpecKey()).isEqualTo("urn:nhs-itk:ns:201005:interaction");
+        assertThat(headerValue.getSpecVal()).isEqualTo("urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0");
+        assertThat(headerValue.getAddressList().get(0)).isEqualTo("urn:nhs-uk:addressing:ods:EM396");
     }
 
     private String getValidXmlReportRequest() {

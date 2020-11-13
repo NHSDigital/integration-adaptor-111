@@ -47,6 +47,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConditionMapper;
@@ -218,7 +219,7 @@ public class EncounterReportBundleServiceTest {
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
         when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
-        when(messageHeaderService.createMessageHeader(any(), any())).thenReturn(MESSAGE_HEADER);
+        when(messageHeaderService.createMessageHeader(any())).thenReturn(MESSAGE_HEADER);
         when(referralRequestMapper.mapReferralRequest(any(), any(), any(), any())).thenReturn(REFERRAL_REQUEST);
         when(observationMapper.mapObservations(any(), eq(ENCOUNTER))).thenReturn(Arrays.asList(OBSERVATION));
         when(practitionerRoleMapper.mapAuthorRoles(any())).thenReturn(singletonList(AUTHOR_ROLE));
@@ -233,9 +234,12 @@ public class EncounterReportBundleServiceTest {
     @Test
     @SuppressWarnings("MagicNumber")
     public void shouldCreateEncounterBundle() throws XmlException {
+        ItkReportHeader itkReportHeader = new ItkReportHeader();
+        itkReportHeader.setSpecKey(SPECIFICATION_KEY);
+        itkReportHeader.setSpecVal(SPECIFICATION_VALUE);
         POCDMT000002UK01ClinicalDocument1 document = mock(POCDMT000002UK01ClinicalDocument1.class);
 
-        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, SPECIFICATION_KEY, SPECIFICATION_VALUE);
+        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader);
         assertThat(encounterBundle.getType()).isEqualTo(MESSAGE);
         assertThat(encounterBundle.getEntry().size()).isEqualTo(18);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();

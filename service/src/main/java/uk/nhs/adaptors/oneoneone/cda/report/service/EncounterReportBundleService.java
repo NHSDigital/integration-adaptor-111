@@ -32,6 +32,7 @@ import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConditionMapper;
@@ -68,8 +69,7 @@ public class EncounterReportBundleService {
             .setResource(resource);
     }
 
-    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, String specificationKey,
-        String specificationValue) throws XmlException {
+    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header) throws XmlException {
         Bundle bundle = new Bundle();
         bundle.setType(MESSAGE);
 
@@ -87,7 +87,7 @@ public class EncounterReportBundleService {
             referralRequest, authorPractitionerRoles);
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
 
-        addEntry(bundle, messageHeaderService.createMessageHeader(specificationKey, specificationValue));
+        addEntry(bundle, messageHeaderService.createMessageHeader(header));
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
