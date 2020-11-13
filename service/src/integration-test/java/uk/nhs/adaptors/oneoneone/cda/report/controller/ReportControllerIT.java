@@ -98,6 +98,8 @@ public class ReportControllerIT {
         "entry[*].resource.serviceProvider.reference",
         "entry[*].resource.subject.reference",
         "entry[*].resource.supportingInfo[*].reference",
+        "entry[*].resource.practitioner.reference",
+        "entry[*].resource.organization.reference",
         "entry[*].resource.timestamp");
 
     @Autowired

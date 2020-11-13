@@ -16,11 +16,11 @@ import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterLocationComponent;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
 import org.hl7.fhir.dstu3.model.Group;
-import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
@@ -48,8 +48,6 @@ public class EncounterMapper {
 
     private final ParticipantMapper participantMapper;
 
-    private final AuthorMapper authorMapper;
-
     private final InformantMapper informantMapper;
 
     private final DataEntererMapper dataEntererMapper;
@@ -66,7 +64,7 @@ public class EncounterMapper {
 
     private final NodeUtil nodeUtil;
 
-    public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<HealthcareService> healthcareServiceList) {
+    public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<PractitionerRole> practitionerRoles) {
         Encounter encounter = new Encounter();
         encounter.setIdElement(newRandomUuid());
         encounter.setStatus(FINISHED);
@@ -74,7 +72,7 @@ public class EncounterMapper {
         encounter.setPeriod(getPeriod(clinicalDocument));
         setServiceProvider(encounter, clinicalDocument);
         setSubject(encounter, clinicalDocument);
-        encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument, encounter));
+        encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument, practitionerRoles, encounter));
         setAppointment(encounter, clinicalDocument);
         setEncounterReasonAndType(encounter, clinicalDocument);
         return encounter;
@@ -120,14 +118,16 @@ public class EncounterMapper {
     }
 
     private List<EncounterParticipantComponent> getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument,
-        Encounter encounter) {
+        List<PractitionerRole> practitionerRoles, Encounter encounter) {
         List<EncounterParticipantComponent> encounterParticipantComponents = stream(clinicalDocument
             .getParticipantArray())
             .map(participantMapper::mapEncounterParticipant)
             .collect(Collectors.toList());
-        if (clinicalDocument.sizeOfAuthorArray() > 0) {
-            stream(clinicalDocument.getAuthorArray())
-                .map(authorMapper::mapAuthorIntoParticipantComponent)
+        if (practitionerRoles.size() > 0) {
+            practitionerRoles.stream()
+                .map(it -> new EncounterParticipantComponent()
+                    .setIndividual(it.getPractitioner())
+                    .setIndividualTarget(it.getPractitionerTarget()))
                 .forEach(encounterParticipantComponents::add);
         }
         if (clinicalDocument.sizeOfInformantArray() > 0) {
