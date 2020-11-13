@@ -61,7 +61,8 @@ public class ReportControllerTest {
         ResponseEntity<String> response = reportController.postReport(validRequest);
 
         ArgumentCaptor<POCDMT000002UK01ClinicalDocument1> captor = ArgumentCaptor.forClass(POCDMT000002UK01ClinicalDocument1.class);
-        verify(encounterReportService).transformAndPopulateToGP(captor.capture(), eq(MESSAGE_ID), eq(TRACKING_ID));
+        verify(encounterReportService).transformAndPopulateToGP(captor.capture(), eq(MESSAGE_ID), eq(TRACKING_ID), anyString(),
+            anyString());
         POCDMT000002UK01ClinicalDocument1 clinicalDocument = captor.getValue();
         assertThat(clinicalDocument.getId().getRoot()).isEqualTo("A709A442-3CF4-476E-8377-376500E829C9");
         assertThat(clinicalDocument.getSetId().getRoot()).isEqualTo("411910CF-1A76-4330-98FE-C345DDEE5553");

@@ -4,6 +4,7 @@ import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.Date;
 
+import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
@@ -23,7 +24,7 @@ public class MessageHeaderService {
 
     private final SoapProperties soapProperties;
 
-    public MessageHeader createMessageHeader() {
+    public MessageHeader createMessageHeader(String specificationKey, String specificationValue) {
         MessageHeader header = new MessageHeader();
 
         header.setIdElement(newRandomUuid());
@@ -31,6 +32,10 @@ public class MessageHeaderService {
         header.setEvent(getEvent());
         header.setSource(getSource());
         header.setTimestamp(new Date());
+        header.setReason(new CodeableConcept().addCoding(
+            new Coding()
+                .setCode(specificationValue)
+                .setSystem(specificationKey)));
 
         return header;
     }

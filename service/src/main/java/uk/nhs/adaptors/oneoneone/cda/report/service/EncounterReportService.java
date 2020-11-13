@@ -29,8 +29,9 @@ public class EncounterReportService {
     private final AmqpProperties amqpProperties;
 
     public void transformAndPopulateToGP(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument,
-        String messageId, String trackingId) throws XmlException {
-        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(clinicalDocumentDocument);
+        String messageId, String trackingId, String specificationKey, String specificationValue) throws XmlException {
+        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(clinicalDocumentDocument, specificationKey,
+            specificationValue);
 
         jmsTemplate.send(amqpProperties.getQueueName(), session -> {
             TextMessage message = session.createTextMessage(toJsonString(encounterBundle));

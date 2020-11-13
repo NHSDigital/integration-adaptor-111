@@ -6,5 +6,6 @@ public enum ReportElement {
     ITK_PAYLOADS,
     ITK_HEADER,
     ADDRESS,
-    SOAP_HEADER
+    SOAP_HEADER,
+    SPECIFICATION
 }
