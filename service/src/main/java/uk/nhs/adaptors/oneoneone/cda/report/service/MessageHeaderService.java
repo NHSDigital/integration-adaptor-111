@@ -1,5 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
+import static java.util.stream.Collectors.toList;
+
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.Date;
@@ -7,10 +9,12 @@ import java.util.Date;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.MessageHeader;
+import org.hl7.fhir.dstu3.model.MessageHeader.MessageDestinationComponent;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.config.SoapProperties;
 
 @Component
@@ -24,7 +28,7 @@ public class MessageHeaderService {
 
     private final SoapProperties soapProperties;
 
-    public MessageHeader createMessageHeader(String specificationKey, String specificationValue) {
+    public MessageHeader createMessageHeader(ItkReportHeader itkHeader) {
         MessageHeader header = new MessageHeader();
 
         header.setIdElement(newRandomUuid());
@@ -34,8 +38,12 @@ public class MessageHeaderService {
         header.setTimestamp(new Date());
         header.setReason(new CodeableConcept().addCoding(
             new Coding()
-                .setCode(specificationValue)
-                .setSystem(specificationKey)));
+                .setCode(itkHeader.getSpecVal())
+                .setSystem(itkHeader.getSpecKey())));
+        header.setDestination(itkHeader.getAddressList().stream()
+            .map(it -> new MessageDestinationComponent()
+                .setEndpoint(it))
+            .collect(toList()));
 
         return header;
     }

@@ -8,12 +8,11 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 import static org.springframework.http.MediaType.TEXT_XML_VALUE;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ADDRESS;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.DISTRIBUTION_ENVELOPE;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_HEADER;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.MESSAGE_ID;
+import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_ADDRESS;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_HEADER;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SPECIFICATION;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils.extractClinicalDocument;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils.extractDistributionEnvelope;
 import static uk.nhs.adaptors.oneoneone.xml.XmlValidator.validate;
@@ -34,8 +33,10 @@ import lombok.extern.slf4j.Slf4j;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.ItkXmlException;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapMustUnderstandException;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkResponseUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHeaderParserUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportParserUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
@@ -59,6 +60,7 @@ public class ReportController {
     private final ItkResponseUtil itkResponseUtil;
     private final ItkValidator itkValidator;
     private final SoapValidator soapValidator;
+    private final ReportItkHeaderParserUtil headerParserUtil;
 
     @PostMapping(value = "/report",
         consumes = {APPLICATION_XML_VALUE, TEXT_XML_VALUE},
@@ -67,19 +69,17 @@ public class ReportController {
     @ResponseStatus(value = ACCEPTED)
     public ResponseEntity<String> postReport(@RequestBody String reportXml) {
         String toAddress = null;
-        String messageId = null;
+        String messageId;
         try {
             Map<ReportElement, Element> reportElementsMap = ReportParserUtil.parseReportXml(reportXml);
             itkValidator.checkItkConformance(reportElementsMap);
             soapValidator.checkSoapItkConformance(reportElementsMap.get(SOAP_HEADER));
-            String trackingId = reportElementsMap.get(ITK_HEADER).attribute("trackingid").getValue();
-            String specificationKey = reportElementsMap.get(SPECIFICATION).attribute("key").getValue();
-            String specificationValue = reportElementsMap.get(SPECIFICATION).attribute("value").getValue();
+            ItkReportHeader headerValues = headerParserUtil.getHeaderValues(reportElementsMap.get(ITK_HEADER));
             messageId = reportElementsMap.get(MESSAGE_ID).getText();
-            toAddress = getValueOrDefaultAddress(reportElementsMap.get(ADDRESS));
+            toAddress = getValueOrDefaultAddress(reportElementsMap.get(SOAP_ADDRESS));
 
             LOGGER.info("ITK SOAP message received. MessageId: {}, ItkTrackingId: {}",
-                messageId, trackingId);
+                messageId, headerValues.getTrackingId());
 
             DistributionEnvelopeDocument distributionEnvelope = extractDistributionEnvelope(reportElementsMap
                 .get(DISTRIBUTION_ENVELOPE));
@@ -88,8 +88,7 @@ public class ReportController {
 
             validate(clinicalDocument);
 
-            encounterReportService.transformAndPopulateToGP(clinicalDocument,
-                messageId, trackingId, specificationKey, specificationValue);
+            encounterReportService.transformAndPopulateToGP(clinicalDocument, messageId, headerValues);
 
             return new ResponseEntity<>(itkResponseUtil.createSuccessResponseEntity(messageId, randomUUID().toString().toUpperCase()), OK);
         } catch (DocumentException e) {

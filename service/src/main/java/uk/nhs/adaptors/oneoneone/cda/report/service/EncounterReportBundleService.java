@@ -22,6 +22,7 @@ import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
 import org.hl7.fhir.dstu3.model.Questionnaire;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
@@ -31,6 +32,7 @@ import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConditionMapper;
@@ -39,6 +41,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -58,6 +61,7 @@ public class EncounterReportBundleService {
     private final ConditionMapper conditionMapper;
     private final ReferralRequestMapper referralRequestMapper;
     private final ObservationMapper observationMapper;
+    private final PractitionerRoleMapper practitionerRoleMapper;
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
@@ -65,13 +69,13 @@ public class EncounterReportBundleService {
             .setResource(resource);
     }
 
-    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, String specificationKey,
-        String specificationValue) throws XmlException {
+    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header) throws XmlException {
         Bundle bundle = new Bundle();
         bundle.setType(MESSAGE);
 
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        List<PractitionerRole> authorPractitionerRoles = practitionerRoleMapper.mapAuthorRoles(clinicalDocument.getAuthorArray());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, authorPractitionerRoles);
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
         List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
             encounter.getSubject(), new Reference(encounter));
@@ -80,10 +84,10 @@ public class EncounterReportBundleService {
         ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument,
             encounter, healthcareServiceList, new Reference(condition));
         Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans, questionnaireResponseList,
-            referralRequest);
+            referralRequest, authorPractitionerRoles);
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
 
-        addEntry(bundle, messageHeaderService.createMessageHeader(specificationKey, specificationValue));
+        addEntry(bundle, messageHeaderService.createMessageHeader(header));
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
@@ -92,17 +96,25 @@ public class EncounterReportBundleService {
         addHealthcareService(bundle, healthcareServiceList);
         addIncomingReferral(bundle, referralRequest);
         addAppointment(bundle, encounter);
-        addComposition(bundle, composition);
+        addEntry(bundle, composition);
         addCarePlan(bundle, carePlans);
-        addConsent(bundle, consent);
-        addCondition(bundle, condition);
+        addEntry(bundle, consent);
+        addEntry(bundle, condition);
         addQuestionnaireResponses(bundle, questionnaireResponseList);
         addObservations(bundle, observations);
+        addAuthors(bundle, authorPractitionerRoles);
 
         ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
-        addList(bundle, listResource);
+        addEntry(bundle, listResource);
 
         return bundle;
+    }
+
+    private void addAuthors(Bundle bundle, List<PractitionerRole> authorPractitionerRoles) {
+        authorPractitionerRoles.stream().forEach(it -> {
+            addEntry(bundle, it);
+            addEntry(bundle, it.getOrganizationTarget());
+        });
     }
 
     private ListResource getReferenceFromBundle(Bundle bundle, POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
@@ -195,21 +207,6 @@ public class EncounterReportBundleService {
         }
     }
 
-    private void addCondition(Bundle bundle, Condition condition) {
-        addEntry(bundle, condition);
-    }
-
-    private void addComposition(Bundle bundle, Composition composition) {
-        addEntry(bundle, composition);
-        if (composition.hasAuthor()) {
-            addEntry(bundle, (Resource) composition.getAuthorFirstRep().getResource());
-        }
-    }
-
-    private void addList(Bundle bundle, ListResource listResource) {
-        addEntry(bundle, listResource);
-    }
-
     private void addCarePlan(Bundle bundle, List<CarePlan> carePlans) {
         carePlans.stream().forEach(carePlan -> addEntry(bundle, carePlan));
     }
@@ -241,9 +238,5 @@ public class EncounterReportBundleService {
 
     private void addObservations(Bundle bundle, List<Observation> observations) {
         observations.forEach(observation -> addEntry(bundle, observation));
-    }
-
-    private void addConsent(Bundle bundle, Consent consent) {
-        addEntry(bundle, consent);
     }
 }

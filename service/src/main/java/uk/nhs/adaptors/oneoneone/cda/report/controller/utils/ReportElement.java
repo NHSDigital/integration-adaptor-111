@@ -5,7 +5,6 @@ public enum ReportElement {
     DISTRIBUTION_ENVELOPE,
     ITK_PAYLOADS,
     ITK_HEADER,
-    ADDRESS,
-    SOAP_HEADER,
-    SPECIFICATION
+    SOAP_ADDRESS,
+    SOAP_HEADER
 }

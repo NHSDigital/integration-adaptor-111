@@ -1,5 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
+import static java.util.Collections.singletonList;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
@@ -11,7 +13,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlException;
@@ -34,6 +35,7 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Practitioner;
+import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
@@ -45,6 +47,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConditionMapper;
@@ -53,6 +56,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -96,6 +100,10 @@ public class EncounterReportBundleServiceTest {
     private static final IdType MESSAGE_HEADER_ID = newRandomUuid();
     private static final Observation OBSERVATION;
     private static final IdType OBSERVATION_ID = newRandomUuid();
+    private static final PractitionerRole AUTHOR_ROLE;
+    private static final IdType AUTHOR_ROLE_ID = newRandomUuid();
+    private static final Organization AUTHOR_ORG;
+    private static final IdType AUTHOR_ORG_ID = newRandomUuid();
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -105,7 +113,7 @@ public class EncounterReportBundleServiceTest {
         PRACTITIONER.setIdElement(PRACTITIONER_ID);
         PRACTITIONER.setActive(true);
         PRACTITIONER_NAME = new HumanName();
-        PRACTITIONER.setName(Collections.singletonList(PRACTITIONER_NAME));
+        PRACTITIONER.setName(singletonList(PRACTITIONER_NAME));
         ENCOUNTER_PARTICIPANT_COMPONENT = new Encounter.EncounterParticipantComponent();
         ENCOUNTER_PARTICIPANT_COMPONENT.setIndividual(new Reference(PRACTITIONER));
         ENCOUNTER_PARTICIPANT_COMPONENT.setIndividualTarget(PRACTITIONER);
@@ -152,14 +160,21 @@ public class EncounterReportBundleServiceTest {
         OBSERVATION = new Observation();
         OBSERVATION.setId(OBSERVATION_ID);
 
+        AUTHOR_ROLE = new PractitionerRole();
+        AUTHOR_ROLE.setId(AUTHOR_ROLE_ID);
+
+        AUTHOR_ORG = new Organization();
+        AUTHOR_ORG.setId(AUTHOR_ORG_ID);
+        AUTHOR_ROLE.setOrganizationTarget(AUTHOR_ORG);
+
         ENCOUNTER = new Encounter();
         ENCOUNTER.setStatus(FINISHED);
         ENCOUNTER.setIdElement(ENCOUNTER_ID);
-        ENCOUNTER.setParticipant(Collections.singletonList(ENCOUNTER_PARTICIPANT_COMPONENT));
+        ENCOUNTER.setParticipant(singletonList(ENCOUNTER_PARTICIPANT_COMPONENT));
         ENCOUNTER.setServiceProviderTarget(SERVICE_PROVIDER);
         ENCOUNTER.setAppointment(new Reference(APPOINTMENT));
         ENCOUNTER.setAppointmentTarget(APPOINTMENT);
-        ENCOUNTER.setLocation(Collections.singletonList(ENCOUNTER_LOCATION_COMPONENT));
+        ENCOUNTER.setLocation(singletonList(ENCOUNTER_LOCATION_COMPONENT));
         ENCOUNTER.setSubject(new Reference(PATIENT));
         ENCOUNTER.setSubjectTarget(PATIENT);
         ENCOUNTER.addIncomingReferral(new Reference(REFERRAL_REQUEST));
@@ -189,6 +204,8 @@ public class EncounterReportBundleServiceTest {
     private ReferralRequestMapper referralRequestMapper;
     @Mock
     private ObservationMapper observationMapper;
+    @Mock
+    private PractitionerRoleMapper practitionerRoleMapper;
 
     @BeforeEach
     public void setUp() throws XmlException {
@@ -196,15 +213,16 @@ public class EncounterReportBundleServiceTest {
         questionnaireResponseList.add(QUESTIONNAIRE_RESPONSE);
         when(encounterMapper.mapEncounter(any(), any())).thenReturn(ENCOUNTER);
         when(conditionMapper.mapCondition(any(), any(), any())).thenReturn(CONDITION);
-        when(compositionMapper.mapComposition(any(), any(), any(), any(), any())).thenReturn(COMPOSITION);
+        when(compositionMapper.mapComposition(any(), any(), any(), any(), any(), any())).thenReturn(COMPOSITION);
         when(listMapper.mapList(any(), any(), any())).thenReturn(LIST_RESOURCE);
-        when(carePlanMapper.mapCarePlan(any(), any(), any())).thenReturn(Collections.singletonList(CAREPLAN));
-        when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(Collections.singletonList(HEALTHCARE_SERVICE));
+        when(carePlanMapper.mapCarePlan(any(), any(), any())).thenReturn(singletonList(CAREPLAN));
+        when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
         when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
-        when(messageHeaderService.createMessageHeader(any(), any())).thenReturn(MESSAGE_HEADER);
+        when(messageHeaderService.createMessageHeader(any())).thenReturn(MESSAGE_HEADER);
         when(referralRequestMapper.mapReferralRequest(any(), any(), any(), any())).thenReturn(REFERRAL_REQUEST);
         when(observationMapper.mapObservations(any(), eq(ENCOUNTER))).thenReturn(Arrays.asList(OBSERVATION));
+        when(practitionerRoleMapper.mapAuthorRoles(any())).thenReturn(singletonList(AUTHOR_ROLE));
         Encounter.DiagnosisComponent diagnosisComponent = new Encounter.DiagnosisComponent();
         diagnosisComponent.setCondition(new Reference());
         diagnosisComponent.setRole(new CodeableConcept());
@@ -216,11 +234,14 @@ public class EncounterReportBundleServiceTest {
     @Test
     @SuppressWarnings("MagicNumber")
     public void shouldCreateEncounterBundle() throws XmlException {
+        ItkReportHeader itkReportHeader = new ItkReportHeader();
+        itkReportHeader.setSpecKey(SPECIFICATION_KEY);
+        itkReportHeader.setSpecVal(SPECIFICATION_VALUE);
         POCDMT000002UK01ClinicalDocument1 document = mock(POCDMT000002UK01ClinicalDocument1.class);
 
-        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, SPECIFICATION_KEY, SPECIFICATION_VALUE);
+        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader);
         assertThat(encounterBundle.getType()).isEqualTo(MESSAGE);
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(16);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(18);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), MESSAGE_HEADER_ID.getValue(), ResourceType.MessageHeader);
         verifyEntry(entries.get(1), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
@@ -237,7 +258,9 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(12), CONDITION_ID.getValue(), ResourceType.Condition);
         verifyEntry(entries.get(13), QUESTIONNAIRE_RESPONSE_ID.getValue(), ResourceType.QuestionnaireResponse);
         verifyEntry(entries.get(14), OBSERVATION_ID.getValue(), ResourceType.Observation);
-        verifyEntry(entries.get(15), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+        verifyEntry(entries.get(15), AUTHOR_ROLE_ID.getValue(), ResourceType.PractitionerRole);
+        verifyEntry(entries.get(16), AUTHOR_ORG_ID.getValue(), ResourceType.Organization);
+        verifyEntry(entries.get(17), LIST_RESOURCE_ID.getValue(), ResourceType.List);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {

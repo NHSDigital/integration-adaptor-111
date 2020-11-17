@@ -7,12 +7,11 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
@@ -28,7 +27,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.CDNPfITCDAUrl;
 import uk.nhs.connect.iucds.cda.ucr.ED;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Author;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component2;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
@@ -51,8 +49,6 @@ public class EncounterMapperTest {
     private ParticipantMapper participantMapper;
     @Mock
     private PeriodMapper periodMapper;
-    @Mock
-    private AuthorMapper authorMapper;
     @Mock
     private InformantMapper informantMapper;
     @Mock
@@ -81,8 +77,6 @@ public class EncounterMapperTest {
     private PatientMapper patientMapper;
     @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
-    @Mock
-    private List<HealthcareService> healthcareServiceList;
     @Mock
     private POCDMT000002UK01Component3 component3;
     @Mock
@@ -164,18 +158,14 @@ public class EncounterMapperTest {
     private void mockParticipantWithAuthorInformantAndDataEnterer(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         mockParticipant(clinicalDocument);
 
-        POCDMT000002UK01Author author = mock(POCDMT000002UK01Author.class);
         POCDMT000002UK01Informant12 informant = mock(POCDMT000002UK01Informant12.class);
         POCDMT000002UK01DataEnterer dataEnterer = mock(POCDMT000002UK01DataEnterer.class);
 
-        when(clinicalDocument.sizeOfAuthorArray()).thenReturn(1);
-        when(clinicalDocument.getAuthorArray()).thenReturn(new POCDMT000002UK01Author[] {author});
         when(clinicalDocument.sizeOfInformantArray()).thenReturn(1);
         when(clinicalDocument.getInformantArray()).thenReturn(new POCDMT000002UK01Informant12[] {informant});
         when(clinicalDocument.isSetDataEnterer()).thenReturn(true);
         when(clinicalDocument.getDataEnterer()).thenReturn(dataEnterer);
 
-        when(authorMapper.mapAuthorIntoParticipantComponent(any())).thenReturn(encounterParticipantComponent);
         when(informantMapper.mapInformantIntoParticipantComponent(any())).thenReturn(Optional.of(encounterParticipantComponent));
         when(dataEntererMapper.mapDataEntererIntoParticipantComponent(any())).thenReturn(encounterParticipantComponent);
         when(participantMapper.mapEncounterRelatedPerson(any(), any())).thenReturn(encounterParticipantComponent);
@@ -204,7 +194,7 @@ public class EncounterMapperTest {
 
     @Test
     public void shouldMapEncounter() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>());
 
         verifyEncounter(encounter);
     }
@@ -226,17 +216,17 @@ public class EncounterMapperTest {
     public void mapEncounterTest() {
         mockParticipant(clinicalDocument);
 
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>());
         verifyEncounter(encounter);
     }
 
     @Test
     @SuppressWarnings("MagicNumber")
     public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, healthcareServiceList);
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>());
         verifyEncounter(encounter);
 
-        assertThat(encounter.getParticipant().size()).isEqualTo(5);
+        assertThat(encounter.getParticipant().size()).isEqualTo(4);
         for (Encounter.EncounterParticipantComponent component : encounter.getParticipant()) {
             assertThat(component).isEqualTo(encounterParticipantComponent);
         }

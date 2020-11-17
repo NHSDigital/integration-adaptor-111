@@ -14,6 +14,7 @@ import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,6 +53,8 @@ public class CompositionMapperTest {
     @Mock
     private ReferralRequest referralRequest;
     @Mock
+    private List<PractitionerRole> practitionerRoles;
+    @Mock
     private POCDMT000002UK01Component2 component2;
     @Mock
     private QuestionnaireResponse questionnaireResponse;
@@ -79,7 +82,7 @@ public class CompositionMapperTest {
     @Test
     public void shouldMapComposition() {
         Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans, questionnaireResponseList,
-            referralRequest);
+            referralRequest, practitionerRoles);
 
         Coding code = composition.getType().getCodingFirstRep();
         String questionnaireResponseTitle = "QuestionnaireResponse";

@@ -3,6 +3,8 @@ package uk.nhs.adaptors.oneoneone.cda.report.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
@@ -13,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.config.SoapProperties;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,6 +28,7 @@ public class MessageHeaderServiceTest {
     private static final String ENDPOINT = "https://gp.endpoint.com";
     private static final String SPECIFICATION_KEY = "urn:nhs-itk:ns:201005:interaction";
     private static final String SPECIFICATION_VALUE = "urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0";
+    private static final String ADDRESS = "the_address";
 
     @Mock
     private SoapProperties soapProperties;
@@ -39,7 +43,11 @@ public class MessageHeaderServiceTest {
 
     @Test
     public void shouldCreateMessageHeader() {
-        MessageHeader messageHeader = messageHeaderService.createMessageHeader(SPECIFICATION_KEY, SPECIFICATION_VALUE);
+        ItkReportHeader itkReportHeader = new ItkReportHeader();
+        itkReportHeader.setSpecKey(SPECIFICATION_KEY);
+        itkReportHeader.setSpecVal(SPECIFICATION_VALUE);
+        itkReportHeader.setAddressList(Arrays.asList(ADDRESS));
+        MessageHeader messageHeader = messageHeaderService.createMessageHeader(itkReportHeader);
 
         assertThat(messageHeader.getId()).isNotEmpty();
         Coding event = messageHeader.getEvent();
@@ -51,5 +59,6 @@ public class MessageHeaderServiceTest {
         assertThat(source.getEndpoint()).isEqualTo(ENDPOINT);
         assertThat(messageHeader.getReason().getCodingFirstRep().getSystem()).isEqualTo(SPECIFICATION_KEY);
         assertThat(messageHeader.getReason().getCodingFirstRep().getCode()).isEqualTo(SPECIFICATION_VALUE);
+        assertThat(messageHeader.getDestinationFirstRep().getEndpoint()).isEqualTo(ADDRESS);
     }
 }

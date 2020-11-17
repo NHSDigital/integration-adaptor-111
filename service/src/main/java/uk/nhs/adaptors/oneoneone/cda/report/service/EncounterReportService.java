@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import ca.uhn.fhir.context.FhirContext;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -29,16 +30,15 @@ public class EncounterReportService {
     private final AmqpProperties amqpProperties;
 
     public void transformAndPopulateToGP(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument,
-        String messageId, String trackingId, String specificationKey, String specificationValue) throws XmlException {
-        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(clinicalDocumentDocument, specificationKey,
-            specificationValue);
+        String messageId, ItkReportHeader header) throws XmlException {
+        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(clinicalDocumentDocument, header);
 
         jmsTemplate.send(amqpProperties.getQueueName(), session -> {
             TextMessage message = session.createTextMessage(toJsonString(encounterBundle));
             message.setStringProperty(MESSAGE_ID, messageId);
             return message;
         });
-        LOGGER.info("Successfully sent FHIR message to queue. MessageId: {}, ItkTrackingId: {}", messageId, trackingId);
+        LOGGER.info("Successfully sent FHIR message to queue. MessageId: {}, ItkTrackingId: {}", messageId, header.getTrackingId());
     }
 
     private String toJsonString(Bundle encounterBundle) {

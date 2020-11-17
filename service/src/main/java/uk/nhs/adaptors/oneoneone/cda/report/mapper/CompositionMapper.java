@@ -18,6 +18,7 @@ import org.hl7.fhir.dstu3.model.DomainResource;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Narrative;
+import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
@@ -27,7 +28,6 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
-import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Author;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component5;
@@ -41,11 +41,10 @@ public class CompositionMapper {
     private static final String SNOMED_CODE = "371531000";
     private static final String SNOMED_CODE_DISPLAY = "Report of clinical encounter (record artifact)";
     private static final String COMPOSITION_TITLE = "111 Report";
-    private final AuthorMapper authorMapper;
     private final NodeUtil nodeUtil;
 
     public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, List<CarePlan> carePlans,
-        List<QuestionnaireResponse> questionnaireResponseList, ReferralRequest referralRequest) {
+        List<QuestionnaireResponse> questionnaireResponseList, ReferralRequest referralRequest, List<PractitionerRole> practitionerRoles) {
 
         Composition composition = new Composition();
         composition.setIdElement(newRandomUuid());
@@ -78,12 +77,8 @@ public class CompositionMapper {
                 .setTarget(relatedDocIdentifier);
         }
 
-        if (clinicalDocument.sizeOfAuthorArray() > 0) {
-            for (POCDMT000002UK01Author author : clinicalDocument.getAuthorArray()) {
-                Encounter.EncounterParticipantComponent authorComponent = (authorMapper.mapAuthorIntoParticipantComponent(author));
-                composition.addAuthor(authorComponent.getIndividual());
-            }
-        }
+        practitionerRoles.stream()
+            .forEach(it -> composition.addAuthor(it.getPractitioner()));
 
         if (clinicalDocument.getComponent().isSetStructuredBody()) {
             for (POCDMT000002UK01Component3 component3 : clinicalDocument.getComponent().getStructuredBody().getComponentArray()) {

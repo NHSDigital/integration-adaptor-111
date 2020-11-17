@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
+
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -62,10 +64,13 @@ public class EncounterReportServiceTest {
 
     @Test
     public void shouldTransformAndPopulateToGP() throws JMSException, XmlException {
+        ItkReportHeader header = new ItkReportHeader();
+        header.setTrackingId(TRACKING_ID);
+        header.setSpecKey(SPECIFICATION_KEY);
+        header.setSpecVal(SPECIFICATION_VALUE);
         POCDMT000002UK01ClinicalDocument1 clinicalDoc = mock(POCDMT000002UK01ClinicalDocument1.class);
         Bundle encounterBundle = mock(Bundle.class);
-        when(encounterReportBundleService.createEncounterBundle(clinicalDoc, SPECIFICATION_KEY,
-            SPECIFICATION_VALUE)).thenReturn(encounterBundle);
+        when(encounterReportBundleService.createEncounterBundle(clinicalDoc, header)).thenReturn(encounterBundle);
         IParser parser = mock(IParser.class);
         when(fhirContext.newJsonParser()).thenReturn(parser);
         when(parser.setPrettyPrint(true)).thenReturn(parser);
@@ -73,7 +78,8 @@ public class EncounterReportServiceTest {
         Session session = mock(Session.class);
         when(session.createTextMessage(any())).thenReturn(textMessage);
 
-        encounterReportService.transformAndPopulateToGP(clinicalDoc, MESSAGE_ID, TRACKING_ID, SPECIFICATION_KEY, SPECIFICATION_VALUE);
+
+        encounterReportService.transformAndPopulateToGP(clinicalDoc, MESSAGE_ID, header);
 
         ArgumentCaptor<MessageCreator> argumentCaptor = ArgumentCaptor.forClass(MessageCreator.class);
         verify(jmsTemplate).send(eq(QUEUE_NAME), argumentCaptor.capture());
