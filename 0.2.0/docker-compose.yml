@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  integration-adaptor-111:
+    image: nhsdev/nia-111-adaptor:0.2.0
+    ports:
+      - "8080:8080"
+    environment:
+      - PEM111_AMQP_BROKER=amqp://activemq:5672
+      - LOG_LEVEL=DEBUG
+
+  activemq:
+    image: rmohr/activemq:5.15.9
+    ports:
+      - "8161:8161"
+      - "5672:5672"
