@@ -12,10 +12,10 @@ The NHS 111 Report adaptor can receive messages from the NHS 111 service and pos
 ## Adaptor Scope
 The main objective of the 111 Adaptor is to hide complex legacy standards and instead present a simple and consistent interface aligned to current NHSD national standards.  The adaptor receives ITK 2.2 wrapped Clinical Document Architecture (CDA) XML documents over web services, and converts them into structured FHIR messages before posting them onto the GP system's inbound event queue.
 
-As with all National Integration Adaptors, the 111 adaptor is a self-hosted component - packaged as a [docker image](https://hub.docker.com/r/nhsdev/nia-111-adaptor), you must deploy it within your own environment.
+The 111 adaptor consists of two docker images:[proxy](https://hub.docker.com/r/nhsdev/nia-111-nginx-adaptor) and [adaptor](https://hub.docker.com/r/nhsdev/nia-111-adaptor), you must deploy it within your own environment.
 
 The following diagram illustrates the NHS 111 Report adaptor: 
-![111 SysContext](/img/111 SysContext.png)
+![111 SysContext](/img/111SysContext.png)
 
 ## Configuration
 The adaptor reads its configuration from environment variables. The following sections describe the environment variables used to configure the adaptor.
@@ -33,6 +33,14 @@ You need to configure the following environment variables to enable this:
 Incoming SOAP ITK message is validated. One of the requirements is to check SOAP To field - it's the URL of /report endpoint. You can set the expected value using the following env variable:
 * PEM111_SOAP_SEND_TO
 
+### TLS Mutual Authentication
+Nginx proxy is used to handle TLS MA. In order to configure it you need to set the following env variables:
+* NGINX_PUBLIC_CERT - Server public certificate
+* NGINX_PRIVATE_CERT - Server private certificate
+* NGINX_CLIENT_PUBLIC_CERT - Client public certificate
+* NGINX_CA_CERT - Root certificate
+* NGINX_CRL - Certificate revocation list
+* NGINX_CRL_URL - CRL URL - Nginx can download CRL on startup
 
 ## ITK to FHIR Mapping
 Even though the adaptor removes this complexity, the FHIR field mappings have been documented [here](doc/ITK_FHIR_mapping.docx) for information.
