@@ -1,14 +1,12 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Appointment;
@@ -78,11 +76,8 @@ public class EncounterReportBundleService {
 
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
         List<PractitionerRole> authorPractitionerRoles = practitionerRoleMapper.mapAuthorRoles(clinicalDocument.getAuthorArray());
-        PractitionerRole responsibleParty = practitionerRoleMapper.mapResponsibleParty(clinicalDocument);
-        List<PractitionerRole> practitionerRoles = Stream.of(authorPractitionerRoles, asList(responsibleParty))
-            .flatMap(it -> it.stream())
-            .filter(it -> it != null)
-            .collect(toList());
+        List<PractitionerRole> practitionerRoles = new ArrayList<>(authorPractitionerRoles);
+        practitionerRoleMapper.mapResponsibleParty(clinicalDocument).ifPresent(practitionerRoles::add);
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, practitionerRoles);
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
         List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,

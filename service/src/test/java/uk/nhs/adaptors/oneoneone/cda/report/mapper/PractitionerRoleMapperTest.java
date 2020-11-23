@@ -76,7 +76,7 @@ public class PractitionerRoleMapperTest {
     public void shouldMapResponsibleParty() {
         mockResponsibleParty();
 
-        PractitionerRole role = practitionerRoleMapper.mapResponsibleParty(clinicalDocument);
+        PractitionerRole role = practitionerRoleMapper.mapResponsibleParty(clinicalDocument).get();
 
         Coding codingFirstRep = role.getCodeFirstRep().getCodingFirstRep();
         assertThat(codingFirstRep.getCode()).isEqualTo(CODE);

@@ -2,11 +2,13 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
+import static java.util.Optional.empty;
 
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
@@ -51,12 +53,11 @@ public class PractitionerRoleMapper {
         return roles;
     }
 
-    public PractitionerRole mapResponsibleParty(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        PractitionerRole role = null;
+    public Optional<PractitionerRole> mapResponsibleParty(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         if (clinicalDocument.isSetComponentOf()) {
             POCDMT000002UK01Component1 componentOf = clinicalDocument.getComponentOf();
             if (componentOf.getEncompassingEncounter().isSetResponsibleParty()) {
-                role = new PractitionerRole();
+                PractitionerRole role = new PractitionerRole();
                 role.setIdElement(newRandomUuid());
                 POCDMT000002UK01ResponsibleParty responsibleParty = componentOf.getEncompassingEncounter().getResponsibleParty();
                 POCDMT000002UK01AssignedEntity assignedEntity = responsibleParty.getAssignedEntity();
@@ -69,9 +70,10 @@ public class PractitionerRoleMapper {
                 Practitioner practitioner = practitionerMapper.mapPractitioner(assignedEntity);
                 role.setPractitioner(new Reference(practitioner));
                 role.setPractitionerTarget(practitioner);
+                return Optional.of(role);
             }
         }
-        return role;
+        return empty();
     }
 
     private CodeableConcept getCode(CE code) {
