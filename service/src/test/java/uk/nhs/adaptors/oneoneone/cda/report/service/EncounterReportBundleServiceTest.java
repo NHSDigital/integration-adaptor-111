@@ -14,6 +14,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Appointment;
@@ -104,6 +105,10 @@ public class EncounterReportBundleServiceTest {
     private static final IdType AUTHOR_ROLE_ID = newRandomUuid();
     private static final Organization AUTHOR_ORG;
     private static final IdType AUTHOR_ORG_ID = newRandomUuid();
+    private static final PractitionerRole PRACTITIONER_ROLE;
+    private static final IdType PRACTITIONER_ROLE_ID = newRandomUuid();
+    private static final Organization PRACTITIONER_ORG;
+    private static final IdType PRACTITIONER_ORG_ID = newRandomUuid();
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -167,6 +172,12 @@ public class EncounterReportBundleServiceTest {
         AUTHOR_ORG.setId(AUTHOR_ORG_ID);
         AUTHOR_ROLE.setOrganizationTarget(AUTHOR_ORG);
 
+        PRACTITIONER_ORG = new Organization();
+        PRACTITIONER_ORG.setId(PRACTITIONER_ORG_ID);
+        PRACTITIONER_ROLE = new PractitionerRole();
+        PRACTITIONER_ROLE.setId(PRACTITIONER_ROLE_ID);
+        PRACTITIONER_ROLE.setOrganizationTarget(PRACTITIONER_ORG);
+
         ENCOUNTER = new Encounter();
         ENCOUNTER.setStatus(FINISHED);
         ENCOUNTER.setIdElement(ENCOUNTER_ID);
@@ -223,6 +234,7 @@ public class EncounterReportBundleServiceTest {
         when(referralRequestMapper.mapReferralRequest(any(), any(), any(), any())).thenReturn(REFERRAL_REQUEST);
         when(observationMapper.mapObservations(any(), eq(ENCOUNTER))).thenReturn(Arrays.asList(OBSERVATION));
         when(practitionerRoleMapper.mapAuthorRoles(any())).thenReturn(singletonList(AUTHOR_ROLE));
+        when(practitionerRoleMapper.mapResponsibleParty(any())).thenReturn(Optional.of(PRACTITIONER_ROLE));
         Encounter.DiagnosisComponent diagnosisComponent = new Encounter.DiagnosisComponent();
         diagnosisComponent.setCondition(new Reference());
         diagnosisComponent.setRole(new CodeableConcept());
@@ -241,7 +253,7 @@ public class EncounterReportBundleServiceTest {
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader);
         assertThat(encounterBundle.getType()).isEqualTo(MESSAGE);
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(18);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(20);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), MESSAGE_HEADER_ID.getValue(), ResourceType.MessageHeader);
         verifyEntry(entries.get(1), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
@@ -260,7 +272,9 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(14), OBSERVATION_ID.getValue(), ResourceType.Observation);
         verifyEntry(entries.get(15), AUTHOR_ROLE_ID.getValue(), ResourceType.PractitionerRole);
         verifyEntry(entries.get(16), AUTHOR_ORG_ID.getValue(), ResourceType.Organization);
-        verifyEntry(entries.get(17), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+        verifyEntry(entries.get(17), PRACTITIONER_ROLE_ID.getValue(), ResourceType.PractitionerRole);
+        verifyEntry(entries.get(18), PRACTITIONER_ORG_ID.getValue(), ResourceType.Organization);
+        verifyEntry(entries.get(19), LIST_RESOURCE_ID.getValue(), ResourceType.List);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {

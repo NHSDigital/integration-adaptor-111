@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toSet;
 
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -75,7 +76,9 @@ public class EncounterReportBundleService {
 
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
         List<PractitionerRole> authorPractitionerRoles = practitionerRoleMapper.mapAuthorRoles(clinicalDocument.getAuthorArray());
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, authorPractitionerRoles);
+        List<PractitionerRole> practitionerRoles = new ArrayList<>(authorPractitionerRoles);
+        practitionerRoleMapper.mapResponsibleParty(clinicalDocument).ifPresent(practitionerRoles::add);
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, practitionerRoles);
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
         List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
             encounter.getSubject(), new Reference(encounter));
@@ -102,7 +105,7 @@ public class EncounterReportBundleService {
         addEntry(bundle, condition);
         addQuestionnaireResponses(bundle, questionnaireResponseList);
         addObservations(bundle, observations);
-        addAuthors(bundle, authorPractitionerRoles);
+        addPractitionerRoles(bundle, practitionerRoles);
 
         ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
         addEntry(bundle, listResource);
@@ -110,11 +113,12 @@ public class EncounterReportBundleService {
         return bundle;
     }
 
-    private void addAuthors(Bundle bundle, List<PractitionerRole> authorPractitionerRoles) {
-        authorPractitionerRoles.stream().forEach(it -> {
-            addEntry(bundle, it);
-            addEntry(bundle, it.getOrganizationTarget());
-        });
+    private void addPractitionerRoles(Bundle bundle, List<PractitionerRole> authorPractitionerRoles) {
+        authorPractitionerRoles.stream()
+            .forEach(it -> {
+                addEntry(bundle, it);
+                addEntry(bundle, it.getOrganizationTarget());
+            });
     }
 
     private ListResource getReferenceFromBundle(Bundle bundle, POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
