@@ -12,12 +12,14 @@ import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.CarePlan;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Consent;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.HealthcareService;
+import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Observation;
@@ -51,6 +53,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 @AllArgsConstructor
 public class EncounterReportBundleService {
 
+    private static final String BUNDLE_IDENTIFIER_TYPE = "ClinicalDocument VersionNumber";
     private final EncounterMapper encounterMapper;
     private final CompositionMapper compositionMapper;
     private final ListMapper listMapper;
@@ -115,7 +118,9 @@ public class EncounterReportBundleService {
     private Bundle createBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
         bundle.setType(MESSAGE);
-        bundle.setId(clinicalDocument.getVersionNumber().getValue().toString());
+        bundle.setIdentifier(new Identifier()
+            .setType(new CodeableConcept().setText(BUNDLE_IDENTIFIER_TYPE))
+            .setValue(clinicalDocument.getVersionNumber().getValue().toString()));
         return bundle;
     }
 

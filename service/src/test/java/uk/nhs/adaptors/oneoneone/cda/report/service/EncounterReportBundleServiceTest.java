@@ -261,7 +261,7 @@ public class EncounterReportBundleServiceTest {
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader);
         assertThat(encounterBundle.getType()).isEqualTo(MESSAGE);
-        assertThat(encounterBundle.getId()).isEqualTo(TWO.toString());
+        assertThat(encounterBundle.getIdentifier().getValue()).isEqualTo(TWO.toString());
         assertThat(encounterBundle.getEntry().size()).isEqualTo(20);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), MESSAGE_HEADER_ID.getValue(), ResourceType.MessageHeader);
