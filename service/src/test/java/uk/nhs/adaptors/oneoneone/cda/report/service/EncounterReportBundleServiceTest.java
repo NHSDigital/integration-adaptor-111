@@ -1,5 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
+import static java.math.BigInteger.TWO;
 import static java.util.Collections.singletonList;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,6 +12,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,6 +62,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
+import uk.nhs.connect.iucds.cda.ucr.INT;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @ExtendWith(MockitoExtension.class)
@@ -109,6 +112,7 @@ public class EncounterReportBundleServiceTest {
     private static final IdType PRACTITIONER_ROLE_ID = newRandomUuid();
     private static final Organization PRACTITIONER_ORG;
     private static final IdType PRACTITIONER_ORG_ID = newRandomUuid();
+    private static final BigInteger VERSION = TWO;
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -217,9 +221,14 @@ public class EncounterReportBundleServiceTest {
     private ObservationMapper observationMapper;
     @Mock
     private PractitionerRoleMapper practitionerRoleMapper;
+    @Mock
+    private POCDMT000002UK01ClinicalDocument1 document;
 
     @BeforeEach
     public void setUp() throws XmlException {
+        INT versionNumber = mock(INT.class);
+        when(versionNumber.getValue()).thenReturn(VERSION);
+        when(document.getVersionNumber()).thenReturn(versionNumber);
         List<QuestionnaireResponse> questionnaireResponseList = new ArrayList<>();
         questionnaireResponseList.add(QUESTIONNAIRE_RESPONSE);
         when(encounterMapper.mapEncounter(any(), any())).thenReturn(ENCOUNTER);
@@ -249,10 +258,10 @@ public class EncounterReportBundleServiceTest {
         ItkReportHeader itkReportHeader = new ItkReportHeader();
         itkReportHeader.setSpecKey(SPECIFICATION_KEY);
         itkReportHeader.setSpecVal(SPECIFICATION_VALUE);
-        POCDMT000002UK01ClinicalDocument1 document = mock(POCDMT000002UK01ClinicalDocument1.class);
 
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader);
         assertThat(encounterBundle.getType()).isEqualTo(MESSAGE);
+        assertThat(encounterBundle.getId()).isEqualTo(TWO.toString());
         assertThat(encounterBundle.getEntry().size()).isEqualTo(20);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), MESSAGE_HEADER_ID.getValue(), ResourceType.MessageHeader);
