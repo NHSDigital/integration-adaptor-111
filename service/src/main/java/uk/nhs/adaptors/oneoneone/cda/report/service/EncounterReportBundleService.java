@@ -71,8 +71,7 @@ public class EncounterReportBundleService {
     }
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header) throws XmlException {
-        Bundle bundle = new Bundle();
-        bundle.setType(MESSAGE);
+        Bundle bundle = createBundle(clinicalDocument);
 
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
         List<PractitionerRole> authorPractitionerRoles = practitionerRoleMapper.mapAuthorRoles(clinicalDocument.getAuthorArray());
@@ -110,6 +109,13 @@ public class EncounterReportBundleService {
         ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
         addEntry(bundle, listResource);
 
+        return bundle;
+    }
+
+    private Bundle createBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        Bundle bundle = new Bundle();
+        bundle.setType(MESSAGE);
+        bundle.setId(clinicalDocument.getVersionNumber().getValue().toString());
         return bundle;
     }
 
