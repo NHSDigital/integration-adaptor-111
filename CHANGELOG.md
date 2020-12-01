@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [0.5.0] - 2020-12-01
 - CDA Section nesting preserved in FHIR
-- ClinicalDocument versionBumber mapped to FHIR Bundle.id
+- ClinicalDocument versionBumber mapped to FHIR Bundle.identifier
 ## [0.4.0] - 2020-11-23
 - TLS Mutual authentication
 - PractitionerRole resource is mapped to FHIR using following mapping:
