@@ -5,6 +5,7 @@ import static org.hl7.fhir.dstu3.model.Composition.CompositionStatus.FINAL;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
+import static org.hl7.fhir.utilities.xhtml.NodeType.Document;
 
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,6 @@ import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
-import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.springframework.stereotype.Component;
 
@@ -82,8 +82,9 @@ public class CompositionMapper {
 
         if (clinicalDocument.getComponent().isSetStructuredBody()) {
             for (POCDMT000002UK01Component3 component3 : clinicalDocument.getComponent().getStructuredBody().getComponentArray()) {
-                POCDMT000002UK01Section section = component3.getSection();
-                addSectionToComposition(composition, section);
+                SectionComponent sectionComponent = new SectionComponent();
+                addSectionChildren(sectionComponent, component3.getSection());
+                composition.addSection(sectionComponent);
             }
         }
 
@@ -102,13 +103,13 @@ public class CompositionMapper {
         return composition;
     }
 
-    private void addSectionToComposition(Composition composition, POCDMT000002UK01Section section) {
+    private void addSectionChildren(SectionComponent component, POCDMT000002UK01Section section) {
         for (POCDMT000002UK01Component5 component5 : section.getComponentArray()) {
             POCDMT000002UK01Section innerSection = component5.getSection();
-            composition.addSection(getSectionText(innerSection));
-
+            SectionComponent innerCompositionSection = getSectionText(innerSection);
+            component.addSection(innerCompositionSection);
             if (isNotEmpty(innerSection.getComponentArray())) {
-                addSectionToComposition(composition, innerSection);
+                addSectionChildren(innerCompositionSection, innerSection);
             }
         }
     }
@@ -122,7 +123,7 @@ public class CompositionMapper {
         narrative.setStatus(GENERATED);
         String divText = sectionComponent5.getText().xmlText();
         XhtmlNode xhtmlNode = new XhtmlNode();
-        xhtmlNode.setNodeType(NodeType.Document);
+        xhtmlNode.setNodeType(Document);
         xhtmlNode.addText(divText);
         narrative.setDiv(xhtmlNode);
         sectionComponent.setText(narrative);
