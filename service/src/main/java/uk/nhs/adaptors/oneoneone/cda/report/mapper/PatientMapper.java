@@ -55,10 +55,10 @@ public class PatientMapper {
     public Patient mapPatient(POCDMT000002UK01PatientRole patientRole) {
         Patient fhirPatient = new Patient();
         fhirPatient.setIdElement(newRandomUuid());
+        fhirPatient.setIdentifier(getNhsNumbers(patientRole));
+        fhirPatient.setActive(true);
         if (patientRole.isSetPatient()) {
-            fhirPatient.setIdentifier(getNhsNumbers(patientRole));
             POCDMT000002UK01Patient itkPatient = patientRole.getPatient();
-            fhirPatient.setActive(true);
             fhirPatient.setName(getNames(itkPatient));
             fhirPatient.setAddress(getAddresses(patientRole));
             fhirPatient.setTelecom(getContactPoints(patientRole));

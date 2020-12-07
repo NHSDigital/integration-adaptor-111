@@ -95,7 +95,7 @@ public class PatientMapperTest {
 
     @Test
     @SuppressWarnings("MagicNumber")
-    public void patientMapperTest() {
+    public void shouldMapPatient() {
         POCDMT000002UK01PatientRole patientRole = mock(POCDMT000002UK01PatientRole.class);
         POCDMT000002UK01Patient itkPatient = mock(POCDMT000002UK01Patient.class);
         when(patientRole.isSetPatient()).thenReturn(true);
@@ -130,6 +130,21 @@ public class PatientMapperTest {
         assertThat(fhirPatient.getMaritalStatus().getCoding().get(0).getDisplay()).isEqualTo("Married");
         assertThat(fhirPatient.getMaritalStatus().getCoding().get(0).getSystem()).isEqualTo("http://hl7.org/fhir/v3/MaritalStatus");
         assertThat(fhirPatient.getMaritalStatus().getCoding().get(0).getCode()).isEqualTo("M");
+        verifyNhsNumber(fhirPatient);
+    }
+
+    @Test
+    public void shouldMapPatientNullification() {
+        POCDMT000002UK01PatientRole patientRole = mock(POCDMT000002UK01PatientRole.class);
+        when(patientRole.isSetPatient()).thenReturn(false);
+        mockIdentifier(patientRole);
+
+        Patient patient = patientMapper.mapPatient(patientRole);
+        assertThat(patient.getActive()).isEqualTo(true);
+        verifyNhsNumber(patient);
+    }
+
+    private void verifyNhsNumber(Patient fhirPatient) {
         assertThat(fhirPatient.getIdentifierFirstRep().getValue()).isEqualTo(NHS_NUMBER);
         Extension extension = fhirPatient.getIdentifierFirstRep().getExtensionFirstRep();
         assertThat(extension.getUrl()).isEqualTo(NHS_VERIFICATION_STATUS);
