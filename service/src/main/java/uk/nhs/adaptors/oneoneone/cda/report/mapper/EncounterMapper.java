@@ -81,6 +81,7 @@ public class EncounterMapper {
                     destId.setValue(id.getExtension());
 
                     ids.add(destId);
+
                 }
             }
             encounter.setIdentifier(ids);
