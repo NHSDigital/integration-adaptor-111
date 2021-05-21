@@ -10,11 +10,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.Address;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.RelatedPerson;
+import org.hl7.fhir.dstu3.model.codesystems.V3RoleCode;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -45,9 +48,18 @@ public class RelatedPersonMapper {
         RelatedPerson relatedPerson = new RelatedPerson();
 
         relatedPerson.setIdElement(newRandomUuid());
-        relatedPerson.setActive(true)
-            .setPatient(encounter.getSubject())
-            .setGender(UNKNOWN);
+        relatedPerson.setActive(true).setPatient(encounter.getSubject()).setGender(UNKNOWN);
+
+        if (relatedEntity.getCode() != null && relatedEntity.getCode().getDisplayName() != null) {
+            for (V3RoleCode code : V3RoleCode.values()) {
+                if (code.getDisplay().equalsIgnoreCase(relatedEntity.getCode().getDisplayName())) {
+                    CodeableConcept codeableConcept = new CodeableConcept(
+                            new Coding(code.getSystem(), code.name(), code.getDisplay()));
+                    relatedPerson.setRelationship(codeableConcept);
+                    break;
+                }
+            }
+        }
 
         if (relatedEntity.isSetRelatedPerson()) {
             relatedPerson.setName(getHumanNameFromITK(relatedEntity.getRelatedPerson()));
@@ -80,21 +92,15 @@ public class RelatedPersonMapper {
             return emptyList();
         }
         PN[] itkPersonName = associatedPerson.getNameArray();
-        return stream(itkPersonName)
-            .map(humanNameMapper::mapHumanName)
-            .collect(Collectors.toList());
+        return stream(itkPersonName).map(humanNameMapper::mapHumanName).collect(Collectors.toList());
     }
 
     private List<ContactPoint> getTelecomFromITK(TEL[] itkTelecom) {
-        return stream(itkTelecom)
-            .map(contactPointMapper::mapContactPoint)
-            .collect(Collectors.toList());
+        return stream(itkTelecom).map(contactPointMapper::mapContactPoint).collect(Collectors.toList());
     }
 
     private List<Address> getAddressesFromITK(AD[] itkAddressArray) {
-        return stream(itkAddressArray)
-            .map(addressMapper::mapAddress)
-            .collect(Collectors.toList());
+        return stream(itkAddressArray).map(addressMapper::mapAddress).collect(Collectors.toList());
     }
 
     private Period getPeriod(POCDMT000002UK01RelatedEntity relatedEntity) {

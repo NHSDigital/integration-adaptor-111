@@ -9,7 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @UtilityClass
 public class DateUtil {
 
@@ -46,7 +48,7 @@ public class DateUtil {
         }
     }
 
-    private static final String INPUT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.sss'Z'";
+    private static final String INPUT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.sss";
     private static final String OUTPUT_PATTERN = "yyyyMMdd";
 
     public static Date parsePathwaysDate(String dateStr) {

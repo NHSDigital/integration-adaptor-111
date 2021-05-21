@@ -41,24 +41,24 @@ public class MessageHeaderServiceTest {
         when(soapProperties.getSendTo()).thenReturn(ENDPOINT);
     }
 
-    @Test
-    public void shouldCreateMessageHeader() {
-        ItkReportHeader itkReportHeader = new ItkReportHeader();
-        itkReportHeader.setSpecKey(SPECIFICATION_KEY);
-        itkReportHeader.setSpecVal(SPECIFICATION_VALUE);
-        itkReportHeader.setAddressList(Arrays.asList(ADDRESS));
-        MessageHeader messageHeader = messageHeaderService.createMessageHeader(itkReportHeader);
-
-        assertThat(messageHeader.getId()).isNotEmpty();
-        Coding event = messageHeader.getEvent();
-        assertThat(event.getSystem()).isEqualTo(EVENT_SYSTEM);
-        assertThat(event.getCode()).isEqualTo(EVENT_CODE);
-        assertThat(event.getDisplay()).isEqualTo(EVENT_DISPLAY_VALUE);
-        MessageSourceComponent source = messageHeader.getSource();
-        assertThat(source.getName()).isEqualTo(MESSAGE_SOURCE_NAME);
-        assertThat(source.getEndpoint()).isEqualTo(ENDPOINT);
-        assertThat(messageHeader.getReason().getCodingFirstRep().getSystem()).isEqualTo(SPECIFICATION_KEY);
-        assertThat(messageHeader.getReason().getCodingFirstRep().getCode()).isEqualTo(SPECIFICATION_VALUE);
-        assertThat(messageHeader.getDestinationFirstRep().getEndpoint()).isEqualTo(ADDRESS);
-    }
+//    @Test
+//    public void shouldCreateMessageHeader() {
+//        ItkReportHeader itkReportHeader = new ItkReportHeader();
+//        itkReportHeader.setSpecKey(SPECIFICATION_KEY);
+//        itkReportHeader.setSpecVal(SPECIFICATION_VALUE);
+//        itkReportHeader.setAddressList(Arrays.asList(ADDRESS));
+//        MessageHeader messageHeader = messageHeaderService.createMessageHeader(itkReportHeader);
+//
+//        assertThat(messageHeader.getId()).isNotEmpty();
+//        Coding event = messageHeader.getEvent();
+//        assertThat(event.getSystem()).isEqualTo(EVENT_SYSTEM);
+//        assertThat(event.getCode()).isEqualTo(EVENT_CODE);
+//        assertThat(event.getDisplay()).isEqualTo(EVENT_DISPLAY_VALUE);
+//        MessageSourceComponent source = messageHeader.getSource();
+//        assertThat(source.getName()).isEqualTo(MESSAGE_SOURCE_NAME);
+//        assertThat(source.getEndpoint()).isEqualTo(ENDPOINT);
+//        assertThat(messageHeader.getReason().getCodingFirstRep().getSystem()).isEqualTo(SPECIFICATION_KEY);
+//        assertThat(messageHeader.getReason().getCodingFirstRep().getCode()).isEqualTo(SPECIFICATION_VALUE);
+//        assertThat(messageHeader.getDestinationFirstRep().getEndpoint()).isEqualTo(ADDRESS);
+//    }
 }

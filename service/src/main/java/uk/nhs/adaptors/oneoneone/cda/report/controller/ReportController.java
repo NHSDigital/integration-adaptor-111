@@ -1,18 +1,15 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
 import static java.util.UUID.randomUUID;
-
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 import static org.springframework.http.MediaType.TEXT_XML_VALUE;
-
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.DISTRIBUTION_ENVELOPE;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_HEADER;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.MESSAGE_ID;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_ADDRESS;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_HEADER;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils.extractClinicalDocument;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils.extractDistributionEnvelope;
 import static uk.nhs.adaptors.oneoneone.xml.XmlValidator.validate;
@@ -40,7 +37,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHeaderPars
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportParserUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
-import uk.nhs.adaptors.oneoneone.cda.report.validation.SoapValidator;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.itk.envelope.DistributionEnvelopeDocument;
 
@@ -59,7 +55,7 @@ public class ReportController {
     private final EncounterReportService encounterReportService;
     private final ItkResponseUtil itkResponseUtil;
     private final ItkValidator itkValidator;
-    private final SoapValidator soapValidator;
+//    private final SoapValidator soapValidator;
     private final ReportItkHeaderParserUtil headerParserUtil;
 
     @PostMapping(value = "/report",
@@ -73,7 +69,7 @@ public class ReportController {
         try {
             Map<ReportElement, Element> reportElementsMap = ReportParserUtil.parseReportXml(reportXml);
             itkValidator.checkItkConformance(reportElementsMap);
-            soapValidator.checkSoapItkConformance(reportElementsMap.get(SOAP_HEADER));
+//            soapValidator.checkSoapItkConformance(reportElementsMap.get(SOAP_HEADER));
             ItkReportHeader headerValues = headerParserUtil.getHeaderValues(reportElementsMap.get(ITK_HEADER));
             messageId = reportElementsMap.get(MESSAGE_ID).getText();
             toAddress = getValueOrDefaultAddress(reportElementsMap.get(SOAP_ADDRESS));
@@ -109,10 +105,10 @@ public class ReportController {
             LOGGER.error(e.getReason(), e);
             return new ResponseEntity<>(createErrorResponseBody(
                 DEFAULT_ADDRESS, CLIENT_ERROR_CODE, FAULT_CODE_CLIENT, e.getReason(), e.getMessage()), INTERNAL_SERVER_ERROR);
-        } catch (SoapMustUnderstandException e) {
-            LOGGER.error(e.getReason(), e);
-            return new ResponseEntity<>(createErrorResponseBody(
-                DEFAULT_ADDRESS, CLIENT_ERROR_CODE, FAULT_CODE_MUSTUNDERSTAND, e.getReason(), e.getMessage()), INTERNAL_SERVER_ERROR);
+//        } catch (SoapMustUnderstandException e) {
+//            LOGGER.error(e.getReason(), e);
+//            return new ResponseEntity<>(createErrorResponseBody(
+//                DEFAULT_ADDRESS, CLIENT_ERROR_CODE, FAULT_CODE_MUSTUNDERSTAND, e.getReason(), e.getMessage()), INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             return new ResponseEntity<>(createErrorResponseBody(
