@@ -1,7 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import static java.util.stream.Collectors.toList;
-
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.Arrays;

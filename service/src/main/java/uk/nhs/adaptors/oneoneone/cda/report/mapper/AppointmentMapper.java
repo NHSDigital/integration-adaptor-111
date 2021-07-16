@@ -1,6 +1,13 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import lombok.AllArgsConstructor;
+import static org.hl7.fhir.dstu3.model.Appointment.AppointmentStatus.BOOKED;
+import static org.hl7.fhir.dstu3.model.Appointment.ParticipantRequired.REQUIRED;
+import static org.hl7.fhir.dstu3.model.Appointment.ParticipationStatus.ACCEPTED;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Appointment.AppointmentParticipantComponent;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
@@ -9,20 +16,14 @@ import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant2;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.hl7.fhir.dstu3.model.Appointment.AppointmentStatus.BOOKED;
-import static org.hl7.fhir.dstu3.model.Appointment.ParticipantRequired.REQUIRED;
-import static org.hl7.fhir.dstu3.model.Appointment.ParticipationStatus.ACCEPTED;
 
 @Component
 @AllArgsConstructor

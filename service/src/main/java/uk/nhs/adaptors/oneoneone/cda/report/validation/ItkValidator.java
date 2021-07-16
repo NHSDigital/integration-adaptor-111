@@ -1,7 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.validation;
 
 import static java.util.Arrays.asList;
-
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.DISTRIBUTION_ENVELOPE;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_HEADER;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_PAYLOADS;
@@ -24,14 +23,16 @@ import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
 public class ItkValidator {
     private static final String SOAP_ACTION_XPATH = "//*[local-name()='Action']";
     private static final String ITK_MANIFEST_XPATH = "//*[local-name()='manifest']";
-    private static final String ITK_AUDIT_IDENTITY_XPATH = "//*[local-name()='auditIdentity']";
+    // private static final String ITK_AUDIT_IDENTITY_XPATH =
+    // "//*[local-name()='auditIdentity']";
     private static final String ITK_MANIFEST_ITEM_XPATH = "//*[local-name()='manifestitem']";
     private static final String ITK_PAYLOAD_XPATH = "//*[local-name()='payload']";
     private static final String SOAP_VALIDATION_FAILED_MSG = "Soap validation failed";
     private static final List<String> PROFILE_IDS = asList("urn:nhs-en:profile:nhs111CDADocument-v2-0",
-        "urn:nhs-en:profile:nullificationDocument-v5-0", "urn:nhs-en:profile:IntegratedUrgentCareCDADocument-v3-1",
-        "urn:nhs-en:profile:nhs111CDADocument-v3-1");
-    private static final String AUDIT_IDENTITY_ID_XPATH = "//*[local-name()='id']";
+            "urn:nhs-en:profile:nullificationDocument-v5-0", "urn:nhs-en:profile:IntegratedUrgentCareCDADocument-v3-1",
+            "urn:nhs-en:profile:nhs111CDADocument-v3-1");
+    // private static final String AUDIT_IDENTITY_ID_XPATH =
+    // "//*[local-name()='id']";
 
     public void checkItkConformance(Map<ReportElement, Element> report) throws SoapClientException {
         checkMessageIdExists(report.get(MESSAGE_ID));
@@ -68,12 +69,14 @@ public class ItkValidator {
             }
 
             if (!PROFILE_IDS.contains(profileId.getValue())) {
-                throw new SoapClientException(SOAP_VALIDATION_FAILED_MSG, "Invalid manifest profile Id: " + profileId.getValue());
+                throw new SoapClientException(SOAP_VALIDATION_FAILED_MSG,
+                        "Invalid manifest profile Id: " + profileId.getValue());
             }
         }
     }
 
-    private void checkPayloadsAndManifestsIds(List<Node> manifestItems, List<Node> payloadItems) throws SoapClientException {
+    private void checkPayloadsAndManifestsIds(List<Node> manifestItems, List<Node> payloadItems)
+            throws SoapClientException {
         for (int i = 0; i < manifestItems.size(); i++) {
             String manifestItemId = ((Element) manifestItems.get(i)).attribute("id").getValue();
             String payloadId = ((Element) payloadItems.get(i)).attribute("id").getValue();
@@ -86,14 +89,16 @@ public class ItkValidator {
 
     private void checkManifestItemCount(List<Node> manifestItems, String manifestCount) throws SoapClientException {
         if (!StringUtils.equals(String.valueOf(manifestItems.size()), manifestCount)) {
-            throw new SoapClientException(SOAP_VALIDATION_FAILED_MSG, "Manifest count attribute and manifest items size don't match");
+            throw new SoapClientException(SOAP_VALIDATION_FAILED_MSG,
+                    "Manifest count attribute and manifest items size don't match");
         }
     }
 
     private void checkPayloadCount(List<Node> payloadItems, String payloadCount) throws SoapClientException {
 
         if (!StringUtils.equals(String.valueOf(payloadItems.size()), payloadCount)) {
-            throw new SoapClientException(SOAP_VALIDATION_FAILED_MSG, "Payload count attribute and payload items size don't match");
+            throw new SoapClientException(SOAP_VALIDATION_FAILED_MSG,
+                    "Payload count attribute and payload items size don't match");
         }
     }
 

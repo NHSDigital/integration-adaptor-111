@@ -1,7 +1,6 @@
 package uk.nhs.adaptors.oneoneone.xml;
 
 import static java.util.stream.Collectors.toList;
-
 import static org.apache.logging.log4j.util.Strings.join;
 
 import java.util.ArrayList;

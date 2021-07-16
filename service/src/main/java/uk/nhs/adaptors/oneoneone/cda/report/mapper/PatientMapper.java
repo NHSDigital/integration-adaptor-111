@@ -3,7 +3,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.ArrayList;
@@ -42,8 +41,7 @@ public class PatientMapper {
     private static final String NHS_NUMBER_UNVERIFIED_OID = "2.16.840.1.113883.2.1.3.2.4.18.23";
 
     private static final String NHS_FHIR_ID_SYSTEM = "https://fhir.nhs.uk/Id/nhs-number";
-    private static final String NHS_VERIFICATION_STATUS =
-        "https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-NHSNumberVerificationStatus-1";
+    private static final String NHS_VERIFICATION_STATUS = "https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-NHSNumberVerificationStatus-1";
     private final AddressMapper addressMapper;
     private final ContactPointMapper contactPointMapper;
     private final PeriodMapper periodMapper;
@@ -66,9 +64,8 @@ public class PatientMapper {
             fhirPatient.addGeneralPractitioner(getGeneralPractioner(patientRole));
 
             if (itkPatient.sizeOfLanguageCommunicationArray() > 0) {
-                Stream.of(itkPatient.getLanguageCommunicationArray())
-                    .map(this::getLanguageCommunicationCode)
-                    .forEach(fhirPatient::setLanguage);
+                Stream.of(itkPatient.getLanguageCommunicationArray()).map(this::getLanguageCommunicationCode)
+                        .forEach(fhirPatient::setLanguage);
             }
 
             fhirPatient.setContact(getContactComponents(itkPatient));
@@ -79,9 +76,20 @@ public class PatientMapper {
             }
 
             if (itkPatient.isSetAdministrativeGenderCode()) {
-                String displayName = itkPatient.getAdministrativeGenderCode().getDisplayName();
-                fhirPatient.setGender(Enumerations.AdministrativeGender
-                    .fromCode(displayName == null ? "unknown" : displayName.toLowerCase()));
+                switch (itkPatient.getAdministrativeGenderCode().getCode()) {
+                    case "0":
+                        fhirPatient.setGender(Enumerations.AdministrativeGender.UNKNOWN);
+                        break;
+                    case "1":
+                        fhirPatient.setGender(Enumerations.AdministrativeGender.MALE);
+                        break;
+                    case "2":
+                        fhirPatient.setGender(Enumerations.AdministrativeGender.FEMALE);
+                        break;
+                    case "9":
+                        fhirPatient.setGender(Enumerations.AdministrativeGender.OTHER);
+                        break;
+                }
             }
 
             if (itkPatient.isSetMaritalStatusCode()) {
@@ -109,22 +117,17 @@ public class PatientMapper {
 
     private List<Identifier> getNhsNumbers(POCDMT000002UK01PatientRole patientRole) {
         return stream(patientRole.getIdArray())
-            .filter(it -> asList(NHS_NUMBER_VERIFIED_OID, NHS_NUMBER_UNVERIFIED_OID).contains(it.getRoot()))
-            .map(it -> {
-                Identifier identifier = new Identifier()
-                    .setValue(it.getExtension())
-                    .setSystem(NHS_FHIR_ID_SYSTEM);
-                identifier.setExtension(getNhsNumberExtension(it));
-                return identifier;
-            })
-            .collect(toList());
+                .filter(it -> asList(NHS_NUMBER_VERIFIED_OID, NHS_NUMBER_UNVERIFIED_OID).contains(it.getRoot()))
+                .map(it -> {
+                    Identifier identifier = new Identifier().setValue(it.getExtension()).setSystem(NHS_FHIR_ID_SYSTEM);
+                    identifier.setExtension(getNhsNumberExtension(it));
+                    return identifier;
+                }).collect(toList());
     }
 
     private List<Extension> getNhsNumberExtension(II it) {
         Extension extension = new Extension(NHS_VERIFICATION_STATUS);
-        Coding code = new Coding()
-            .setSystem(NHS_VERIFICATION_STATUS)
-            .setCode(mapNhsNumberVerificationStatus(it));
+        Coding code = new Coding().setSystem(NHS_VERIFICATION_STATUS).setCode(mapNhsNumberVerificationStatus(it));
         extension.setValue(new CodeableConcept(code));
         return asList(extension);
     }
@@ -142,8 +145,7 @@ public class PatientMapper {
 
     private List<HumanName> getNames(POCDMT000002UK01Patient itkPatient) {
         if (itkPatient.sizeOfNameArray() > 0) {
-            return stream(itkPatient.getNameArray())
-                .map(humanNameMapper::mapHumanName).collect(toList());
+            return stream(itkPatient.getNameArray()).map(humanNameMapper::mapHumanName).collect(toList());
         } else {
             return Collections.emptyList();
         }
@@ -151,8 +153,7 @@ public class PatientMapper {
 
     private List<Address> getAddresses(POCDMT000002UK01PatientRole patientRole) {
         if (patientRole.sizeOfAddrArray() > 0) {
-            return stream(patientRole.getAddrArray())
-                .map(addressMapper::mapAddress).collect(toList());
+            return stream(patientRole.getAddrArray()).map(addressMapper::mapAddress).collect(toList());
         } else {
             return Collections.emptyList();
         }
@@ -160,9 +161,7 @@ public class PatientMapper {
 
     private List<ContactPoint> getContactPoints(POCDMT000002UK01PatientRole patientRole) {
         if (patientRole.sizeOfTelecomArray() > 0) {
-            return stream(patientRole.getTelecomArray())
-                .map(contactPointMapper::mapContactPoint)
-                .collect(toList());
+            return stream(patientRole.getTelecomArray()).map(contactPointMapper::mapContactPoint).collect(toList());
         } else {
             return Collections.emptyList();
         }
@@ -183,9 +182,7 @@ public class PatientMapper {
 
     private List<Patient.ContactComponent> getContactComponents(POCDMT000002UK01Patient itkPatient) {
         if (itkPatient.sizeOfGuardianArray() > 0) {
-            return stream(itkPatient.getGuardianArray())
-                .map(guardianMapper::mapGuardian)
-                .collect(toList());
+            return stream(itkPatient.getGuardianArray()).map(guardianMapper::mapGuardian).collect(toList());
         } else {
             return Collections.emptyList();
         }
@@ -194,18 +191,17 @@ public class PatientMapper {
     private List<Extension> getExtensions(POCDMT000002UK01Patient itkPatient) {
         List<Extension> extensionList = new ArrayList<>();
         if (itkPatient.isSetEthnicGroupCode()) {
-            extensionList.add(createExtension("https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-EthnicCategory-1",
-                itkPatient.getEthnicGroupCode().getCode()));
+            extensionList.add(createExtension(
+                    "https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-EthnicCategory-1",
+                    itkPatient.getEthnicGroupCode().getCode()));
         }
         if (itkPatient.isSetReligiousAffiliationCode()) {
             extensionList.add(createExtension("https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect"
-                    + "-ReligiousAffiliation-1",
-                itkPatient.getReligiousAffiliationCode().getCode()));
+                    + "-ReligiousAffiliation-1", itkPatient.getReligiousAffiliationCode().getCode()));
         }
         if (itkPatient.isSetBirthplace()) {
             String birthPlace = nodeUtil.getNodeValueString(itkPatient.getBirthplace().getPlace().getName());
-            extensionList.add(createExtension("http://hl7.org/fhir/StructureDefinition/birthPlace",
-                birthPlace));
+            extensionList.add(createExtension("http://hl7.org/fhir/StructureDefinition/birthPlace", birthPlace));
         }
         return extensionList;
     }

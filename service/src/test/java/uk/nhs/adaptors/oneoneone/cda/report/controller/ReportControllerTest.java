@@ -32,7 +32,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkResponseUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHeaderParserUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
-//import uk.nhs.adaptors.oneoneone.cda.report.validation.SoapValidator;
+import uk.nhs.adaptors.oneoneone.cda.report.validation.SoapValidator;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,8 +54,8 @@ public class ReportControllerTest {
     @Mock
     private ItkValidator itkValidator;
 
-//    @Mock
-//    private SoapValidator soapValidator;
+    @Mock
+    private SoapValidator soapValidator;
 
     @Spy
     private ReportItkHeaderParserUtil headerParserUtil;

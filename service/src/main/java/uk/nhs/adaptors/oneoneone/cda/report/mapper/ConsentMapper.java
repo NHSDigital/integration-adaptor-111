@@ -2,7 +2,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
-
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 

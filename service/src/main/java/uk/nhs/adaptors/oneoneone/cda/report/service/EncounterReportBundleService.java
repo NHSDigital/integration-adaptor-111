@@ -1,7 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import static java.util.stream.Collectors.toSet;
-
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 
 import java.util.ArrayList;
@@ -9,7 +8,29 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlException;
-import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.dstu3.model.Appointment;
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.CarePlan;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Composition;
+import org.hl7.fhir.dstu3.model.Condition;
+import org.hl7.fhir.dstu3.model.Consent;
+import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Group;
+import org.hl7.fhir.dstu3.model.HealthcareService;
+import org.hl7.fhir.dstu3.model.Identifier;
+import org.hl7.fhir.dstu3.model.ListResource;
+import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.Observation;
+import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.PractitionerRole;
+import org.hl7.fhir.dstu3.model.ProcedureRequest;
+import org.hl7.fhir.dstu3.model.Questionnaire;
+import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
+import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -47,33 +68,33 @@ public class EncounterReportBundleService {
     private final PractitionerRoleMapper practitionerRoleMapper;
 
     private static void addEntry(Bundle bundle, Resource resource) {
-        bundle.addEntry()
-            .setFullUrl(resource.getIdElement().getValue())
-            .setResource(resource);
+        bundle.addEntry().setFullUrl(resource.getIdElement().getValue()).setResource(resource);
     }
 
-    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header) throws XmlException {
+    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header)
+            throws XmlException {
         Bundle bundle = createBundle(clinicalDocument);
 
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
-        List<PractitionerRole> authorPractitionerRoles = practitionerRoleMapper.mapAuthorRoles(clinicalDocument.getAuthorArray());
+        List<PractitionerRole> authorPractitionerRoles = practitionerRoleMapper
+                .mapAuthorRoles(clinicalDocument.getAuthorArray());
         List<PractitionerRole> practitionerRoles = new ArrayList<>(authorPractitionerRoles);
         practitionerRoleMapper.mapResponsibleParty(clinicalDocument).ifPresent(practitionerRoles::add);
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, practitionerRoles);
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
         List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
-            encounter.getSubject(), new Reference(encounter));
+                encounter.getSubject(), new Reference(encounter));
         Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter, questionnaireResponseList);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, condition);
-        ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument,
-            encounter, healthcareServiceList, new Reference(condition));
-        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans, questionnaireResponseList,
-            referralRequest, authorPractitionerRoles);
+        ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument, encounter,
+                healthcareServiceList, new Reference(condition));
+        Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans,
+                questionnaireResponseList, referralRequest, authorPractitionerRoles);
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
 
         CE dispositionCode = getDispositionCode(clinicalDocument);
 
-        addEntry(bundle, messageHeaderService.createMessageHeader(header,dispositionCode ));
+        addEntry(bundle, messageHeaderService.createMessageHeader(header, dispositionCode));
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
@@ -95,36 +116,37 @@ public class EncounterReportBundleService {
 
         return bundle;
     }
+
     private CE getDispositionCode(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         CE dischargeCode = null;
         if (clinicalDocument.isSetComponentOf()) {
             if (clinicalDocument.getComponentOf().getEncompassingEncounter() != null) {
                 if (clinicalDocument.getComponentOf().getEncompassingEncounter().isSetDischargeDispositionCode()) {
-                    Coding coding = new Coding();
-                    dischargeCode = clinicalDocument.getComponentOf().getEncompassingEncounter().getDischargeDispositionCode();
+                    dischargeCode = clinicalDocument.getComponentOf().getEncompassingEncounter()
+                            .getDischargeDispositionCode();
                 }
             }
         }
         return dischargeCode;
     }
+
     private Bundle createBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
         bundle.setType(MESSAGE);
-        bundle.setIdentifier(new Identifier()
-            .setType(new CodeableConcept().setText(BUNDLE_IDENTIFIER_TYPE))
-            .setValue(clinicalDocument.getVersionNumber().getValue().toString()));
+        bundle.setIdentifier(new Identifier().setType(new CodeableConcept().setText(BUNDLE_IDENTIFIER_TYPE))
+                .setValue(clinicalDocument.getVersionNumber().getValue().toString()));
         return bundle;
     }
 
     private void addPractitionerRoles(Bundle bundle, List<PractitionerRole> authorPractitionerRoles) {
-        authorPractitionerRoles.stream()
-            .forEach(it -> {
-                addEntry(bundle, it);
-                addEntry(bundle, it.getOrganizationTarget());
-            });
+        authorPractitionerRoles.stream().forEach(it -> {
+            addEntry(bundle, it);
+            addEntry(bundle, it.getOrganizationTarget());
+        });
     }
 
-    private ListResource getReferenceFromBundle(Bundle bundle, POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
+    private ListResource getReferenceFromBundle(Bundle bundle, POCDMT000002UK01ClinicalDocument1 clinicalDocument,
+            Encounter encounter) {
         Collection<Resource> resourcesCreated = bundle.getEntry().stream().map(it -> it.getResource()).collect(toSet());
         return listMapper.mapList(clinicalDocument, encounter, resourcesCreated);
     }
@@ -195,9 +217,8 @@ public class EncounterReportBundleService {
             Group group = (Group) encounter.getSubjectTarget();
             addEntry(bundle, group);
             for (Group.GroupMemberComponent groupMemberComponent : group.getMember()) {
-                bundle.addEntry()
-                    .setFullUrl(groupMemberComponent.getIdElement().getValue())
-                    .setResource(groupMemberComponent.getEntityTarget());
+                bundle.addEntry().setFullUrl(groupMemberComponent.getIdElement().getValue())
+                        .setResource(groupMemberComponent.getEntityTarget());
             }
         }
     }

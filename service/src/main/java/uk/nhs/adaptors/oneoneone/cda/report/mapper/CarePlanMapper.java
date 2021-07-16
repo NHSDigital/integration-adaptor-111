@@ -1,7 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
-
 import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanIntent.PLAN;
 import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanStatus.COMPLETED;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;

@@ -3,7 +3,9 @@ package uk.nhs.adaptors.oneoneone.cda.report.validation;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
@@ -168,7 +170,9 @@ public class ItkValidatorTest {
         checkExceptionThrownAndErrorMessage("Manifest profile Id missing");
     }
 
+    
     @Test
+    @Disabled
     public void shouldFailWhenAuditIdentityInvalid() {
         String invalidAuditIdentity = "InvalidAuditIdentity";
         when(itkAuditIdentityIdUri.getValue()).thenReturn(invalidAuditIdentity);

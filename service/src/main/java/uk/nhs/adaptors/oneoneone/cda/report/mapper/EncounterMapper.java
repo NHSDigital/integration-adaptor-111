@@ -1,7 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static java.util.Arrays.stream;
-
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
@@ -12,16 +11,33 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.catalina.Session;
-import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterLocationComponent;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
+import org.hl7.fhir.dstu3.model.Group;
+import org.hl7.fhir.dstu3.model.Identifier;
+import org.hl7.fhir.dstu3.model.Narrative;
+import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.PractitionerRole;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
-import uk.nhs.connect.iucds.cda.ucr.*;
+import uk.nhs.connect.iucds.cda.ucr.II;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncompassingEncounter;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
+import uk.nhs.connect.iucds.cda.ucr.TS;
 
 @Component
 @AllArgsConstructor
