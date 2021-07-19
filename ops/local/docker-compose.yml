@@ -4,7 +4,8 @@ services:
   integration-adaptor-111:
     #image: uk.nhs/integration-adaptor-111:0.0.1-SNAPSHOT
     build:
-      context: .
+      context: ./../../
+      dockerfile: Dockerfile.111
     ports:
       - "10001:8080"
     environment:
@@ -15,11 +16,12 @@ services:
 
   nginx:
     build:
-      context: ./nginx
-    ports: 
+      context: ./../../
+      dockerfile: Dockerfile.nginx
+    ports:
       - 8080:80
       - 8083:443
-    depends_on: 
+    depends_on:
       - integration-adaptor-111
 
   activemq:
