@@ -52,7 +52,7 @@ Even though the adaptor removes this complexity, the FHIR field mappings have be
 2. Docker
 
 ### How to run service:
-* Navigate to `ops/local`
+* In root directory
 * Run script: `start-local-environment.sh`
 
 The above script builds necessary docker images and starts the SpringBoot service and ActiveMQ
