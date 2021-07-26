@@ -20,13 +20,12 @@ import static uk.nhs.adaptors.oneoneone.xml.XmlValidator.validate;
 import java.util.Map;
 
 import org.apache.xmlbeans.XmlException;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.Element;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +60,7 @@ public class ReportController {
     private final ItkValidator itkValidator;
     private final SoapValidator soapValidator;
     private final ReportItkHeaderParserUtil headerParserUtil;
+    private final ReportParserUtil reportParserUtil;
 
     @PostMapping(value = "/report",
         consumes = {APPLICATION_XML_VALUE, TEXT_XML_VALUE},
@@ -71,11 +71,11 @@ public class ReportController {
         String toAddress = null;
         String messageId;
         try {
-            Map<ReportElement, Element> reportElementsMap = ReportParserUtil.parseReportXml(reportXml);
+            Map<ReportElement, Element> reportElementsMap = reportParserUtil.parseReportXml(reportXml);
             itkValidator.checkItkConformance(reportElementsMap);
             soapValidator.checkSoapItkConformance(reportElementsMap.get(SOAP_HEADER));
             ItkReportHeader headerValues = headerParserUtil.getHeaderValues(reportElementsMap.get(ITK_HEADER));
-            messageId = reportElementsMap.get(MESSAGE_ID).getText();
+            messageId = reportElementsMap.get(MESSAGE_ID).getNodeValue();
             toAddress = getValueOrDefaultAddress(reportElementsMap.get(SOAP_ADDRESS));
 
             LOGGER.info("ITK SOAP message received. MessageId: {}, ItkTrackingId: {}",

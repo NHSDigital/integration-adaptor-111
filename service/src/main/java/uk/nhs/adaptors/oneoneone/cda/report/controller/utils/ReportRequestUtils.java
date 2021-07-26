@@ -1,7 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
 import org.apache.xmlbeans.XmlException;
-import org.dom4j.Element;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
