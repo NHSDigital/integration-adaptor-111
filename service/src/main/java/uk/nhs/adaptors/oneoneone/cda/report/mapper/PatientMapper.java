@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.enums.MaritalStatus;
+import uk.nhs.adaptors.oneoneone.cda.report.util.GenderUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01LanguageCommunication;
@@ -79,9 +80,7 @@ public class PatientMapper {
             }
 
             if (itkPatient.isSetAdministrativeGenderCode()) {
-                String displayName = itkPatient.getAdministrativeGenderCode().getDisplayName();
-                fhirPatient.setGender(Enumerations.AdministrativeGender
-                    .fromCode(displayName == null ? "unknown" : displayName.toLowerCase()));
+                fhirPatient.setGender(GenderUtil.getGenderFromCode(itkPatient.getAdministrativeGenderCode().getCode()));
             }
 
             if (itkPatient.isSetMaritalStatusCode()) {
