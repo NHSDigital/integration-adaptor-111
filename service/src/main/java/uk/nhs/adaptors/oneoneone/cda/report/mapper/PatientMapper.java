@@ -16,7 +16,6 @@ import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.ContactPoint;
-import org.hl7.fhir.dstu3.model.Enumerations;
 import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Identifier;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.enums.MaritalStatus;
-import uk.nhs.adaptors.oneoneone.cda.report.util.GenderUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01LanguageCommunication;
@@ -80,7 +78,7 @@ public class PatientMapper {
             }
 
             if (itkPatient.isSetAdministrativeGenderCode()) {
-                fhirPatient.setGender(GenderUtil.getGenderFromCode(itkPatient.getAdministrativeGenderCode().getCode()));
+                fhirPatient.setGender(GenderMapper.getGenderFromCode(itkPatient.getAdministrativeGenderCode().getCode()));
             }
 
             if (itkPatient.isSetMaritalStatusCode()) {
