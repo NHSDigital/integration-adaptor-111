@@ -10,6 +10,10 @@ public class GenderMapper {
     private static final Map<String, AdministrativeGender> mapping = Map.of("1", MALE, "2", FEMALE, "9", OTHER);
 
     public static AdministrativeGender getGenderFromCode(String genderCode) {
-        return mapping.getOrDefault(genderCode, UNKNOWN);
+        if (genderCode == null) {
+            return mapping.getOrDefault(0, UNKNOWN);
+        } else {
+            return mapping.getOrDefault(genderCode, UNKNOWN);
+        }
     }
 }
