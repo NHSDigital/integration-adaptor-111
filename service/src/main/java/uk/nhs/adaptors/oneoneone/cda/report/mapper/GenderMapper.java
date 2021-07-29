@@ -7,13 +7,12 @@ import java.util.Map;
 
 public class GenderMapper {
 
-    private static final Map<String, AdministrativeGender> mapping = Map.of("1", MALE, "2", FEMALE, "9", OTHER);
+    private static final Map<String, AdministrativeGender> MAPPING = Map.of("1", MALE, "2", FEMALE, "9", OTHER);
 
     public static AdministrativeGender getGenderFromCode(String genderCode) {
         if (genderCode == null) {
-            return mapping.getOrDefault(0, UNKNOWN);
-        } else {
-            return mapping.getOrDefault(genderCode, UNKNOWN);
+            return UNKNOWN;
         }
+        return MAPPING.getOrDefault(genderCode, UNKNOWN);
     }
 }
