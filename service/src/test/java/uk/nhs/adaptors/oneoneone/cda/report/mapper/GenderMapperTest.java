@@ -8,8 +8,6 @@ import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.UNKNOWN
 
 import org.junit.jupiter.api.Test;
 
-
-
 public class GenderMapperTest {
 
     @Test
