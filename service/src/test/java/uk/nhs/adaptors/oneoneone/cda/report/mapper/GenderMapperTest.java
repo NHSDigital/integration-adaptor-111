@@ -1,10 +1,14 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.FEMALE;
+import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.MALE;
+import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.OTHER;
+import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.UNKNOWN;
 
 import org.junit.jupiter.api.Test;
 
-import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.*;
+
 
 public class GenderMapperTest {
 

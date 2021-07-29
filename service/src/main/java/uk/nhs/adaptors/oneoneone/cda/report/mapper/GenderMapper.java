@@ -1,7 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.Enumerations.*;
-import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.*;
+import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender;
+import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.FEMALE;
+import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.MALE;
+import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.OTHER;
+import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.UNKNOWN;
 
 import java.util.Map;
 
