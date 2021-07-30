@@ -1,6 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.io.IOUtils;
 import org.dom4j.DocumentException;
 import org.json.JSONException;
@@ -21,6 +22,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import uk.nhs.adaptors.containers.IntegrationTestsExtension;
 import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
 import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
@@ -30,6 +32,7 @@ import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
 import javax.jms.IllegalStateException;
 import javax.jms.JMSException;
 import javax.jms.Message;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneOffset;
@@ -38,12 +41,14 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import static io.restassured.RestAssured.given;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 import static org.springframework.http.MediaType.TEXT_XML_VALUE;
+
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.ACTION;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.BODY;
 
@@ -63,6 +68,7 @@ public class ReportControllerIT {
         + ":SimpleMessageResponse>";
     private static final List<String> IGNORED_JSON_PATHS = List.of(
         "entry[*].fullUrl",
+        "entry[*].resource.address[*]",
         "entry[*].resource.addresses[*].reference",
         "entry[*].resource.appointment.reference",
         "entry[*].resource.author[*].reference",
