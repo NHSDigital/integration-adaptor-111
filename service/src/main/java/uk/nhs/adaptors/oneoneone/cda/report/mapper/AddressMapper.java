@@ -29,10 +29,12 @@ public class AddressMapper {
             .forEach(address::addLine);
 
         if (itkAddress.isSetUse()) {
-            if (itkAddress.getUse().get(0).toString().equals("PHYS")) {
-                address.setType(AddressType.fromCode(getAddressUseString(itkAddress.getUse().get(0).toString())));
+            String addressTypeString = getAddressTypeString(itkAddress.getUse().get(0).toString());
+            String addressUseString = getAddressUseString(itkAddress.getUse().get(0).toString());
+            if (addressTypeString != null) {
+                address.setType(AddressType.fromCode(addressTypeString));
             } else {
-                address.setUse(AddressUse.fromCode(getAddressUseString(itkAddress.getUse().get(0).toString())));
+                address.setUse(AddressUse.fromCode(addressUseString));
             }
         }
 
@@ -67,12 +69,18 @@ public class AddressMapper {
         return address;
     }
 
+    private String getAddressTypeString(String typeCode) {
+        return switch (typeCode){
+            case "PHYS" -> "physical";
+            default -> null;
+        };
+    }
+
     private String getAddressUseString(String useCode) {
         return switch (useCode) {
             case "H", "HP" -> "home";
             case "WP" -> "work";
             case "TMP" -> "temp";
-            case "PHYS" -> "physical";
             default -> null;
         };
     }

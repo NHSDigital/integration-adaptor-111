@@ -68,7 +68,6 @@ public class ReportControllerIT {
         + ":SimpleMessageResponse>";
     private static final List<String> IGNORED_JSON_PATHS = List.of(
         "entry[*].fullUrl",
-        "entry[*].resource.address[*]",
         "entry[*].resource.addresses[*].reference",
         "entry[*].resource.appointment.reference",
         "entry[*].resource.author[*].reference",
