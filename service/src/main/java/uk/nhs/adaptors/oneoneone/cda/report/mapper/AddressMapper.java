@@ -1,11 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.Address.*;
-
 import lombok.AllArgsConstructor;
 
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.Address.AddressUse;
+import org.hl7.fhir.dstu3.model.Address.AddressType;
 import org.springframework.stereotype.Component;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
@@ -70,7 +69,7 @@ public class AddressMapper {
     }
 
     private String getAddressTypeString(String typeCode) {
-        return switch (typeCode){
+        return switch (typeCode) {
             case "PHYS" -> "physical";
             default -> null;
         };
