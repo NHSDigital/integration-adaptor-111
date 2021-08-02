@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,7 +92,7 @@ public class ReportController {
             encounterReportService.transformAndPopulateToGP(clinicalDocument, messageId, headerValues);
 
             return new ResponseEntity<>(itkResponseUtil.createSuccessResponseEntity(messageId, randomUUID().toString().toUpperCase()), OK);
-        } catch (DocumentException e) {
+        } catch (SAXException e) {
             LOGGER.error(e.getMessage(), e);
             return new ResponseEntity<>(createErrorResponseBody(
                 DEFAULT_ADDRESS, CLIENT_ERROR_CODE, FAULT_CODE_CLIENT, "This is not a valid XML message", e.getMessage()),
@@ -122,7 +123,7 @@ public class ReportController {
     }
 
     public static String getValueOrDefaultAddress(Element value) {
-        return value == null ? DEFAULT_ADDRESS : value.getText();
+        return value == null ? DEFAULT_ADDRESS : value.getNodeValue();
     }
 
     private String createErrorResponseBody(String toAddress, String errorCode, String faultCode, String errorForUser, String errorMessage) {

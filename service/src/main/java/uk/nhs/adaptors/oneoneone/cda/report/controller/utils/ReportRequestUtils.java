@@ -16,8 +16,7 @@ public final class ReportRequestUtils {
 
     public static DistributionEnvelopeDocument extractDistributionEnvelope(Element distributionEnvelope) throws ItkXmlException {
         try {
-            DistributionEnvelopeDocument envelopedDocument = DistributionEnvelopeDocument.Factory.parse(distributionEnvelope.asXML());
-            return envelopedDocument;
+            return DistributionEnvelopeDocument.Factory.parse(distributionEnvelope);
         } catch (XmlException e) {
             throw new ItkXmlException("DistributionEnvelope missing", e.getMessage(), e);
         }

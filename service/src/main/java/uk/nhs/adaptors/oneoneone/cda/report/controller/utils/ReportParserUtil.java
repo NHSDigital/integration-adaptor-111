@@ -35,19 +35,11 @@ public class ReportParserUtil {
 
     private final XmlUtils xmlUtils;
 
-    public Map<ReportElement, Element> parseReportXml(String reportXml) throws XPathExpressionException {
+    public Map<ReportElement, Element> parseReportXml(String reportXml) throws XPathExpressionException, ParserConfigurationException,
+        IOException, SAXException {
 
         Map<ReportElement, Element> reportElementsMap = new HashMap<>();
-        Document document = null;
-        try { // todo ogarnac exceptiony
-            document = parseDocument(reportXml);
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
+        Document document = parseDocument(reportXml);
 
         reportElementsMap.put(MESSAGE_ID, xmlUtils.getElement(document, MESSAGE_ID_NODE));
         reportElementsMap.put(SOAP_ADDRESS, xmlUtils.getElement(document, ADDRESS_NODE));

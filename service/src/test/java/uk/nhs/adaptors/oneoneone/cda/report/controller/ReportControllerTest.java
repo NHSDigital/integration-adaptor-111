@@ -16,6 +16,8 @@ import static org.springframework.http.HttpStatus.OK;
 import java.net.URL;
 import java.nio.file.Paths;
 
+import javax.xml.xpath.XPathExpressionException;
+
 import org.apache.xmlbeans.XmlException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,12 +59,13 @@ public class ReportControllerTest {
     @Mock
     private SoapValidator soapValidator;
 
-    @Spy
+    @Mock
     private ReportItkHeaderParserUtil headerParserUtil;
 
     @Test
     public void postReportValidRequest() throws XmlException {
         when(itkResponseUtil.createSuccessResponseEntity(eq(MESSAGE_ID), anyString())).thenReturn(RESPONSE_XML);
+//        when(headerParserUtil.getHeaderValues()).thenReturn();
 
         String validRequest = getValidXmlReportRequest();
 
@@ -101,7 +104,7 @@ public class ReportControllerTest {
     }
 
     @Test
-    public void postReportInvalidItkRequest() throws SoapClientException {
+    public void postReportInvalidItkRequest() throws SoapClientException, XPathExpressionException {
         doThrow(new SoapClientException("Soap validation failed", "ITK header missing"))
             .when(itkValidator).checkItkConformance(anyMap());
         String invalidRequest = getValidXmlReportRequest();

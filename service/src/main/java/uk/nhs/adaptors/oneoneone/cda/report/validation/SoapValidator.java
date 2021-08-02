@@ -54,7 +54,7 @@ public class SoapValidator {
         Node replyToAddress = xmlUtils.getSingleNode(soapHeader, REPLY_TO_ADDRESS_XPATH);
         if (replyToAddress != null) {
             if (!StringUtils.equals(REPLY_TO, replyToAddress.getNodeValue())) {
-                throw new SoapClientException("Soap validation failed", "Invalid ReplyTo: " + replyToAddress.getText());
+                throw new SoapClientException("Soap validation failed", "Invalid ReplyTo: " + replyToAddress.getNodeValue());
             }
         }
     }
