@@ -16,6 +16,7 @@ import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterLocationComponent;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
 import org.hl7.fhir.dstu3.model.Group;
+import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -71,11 +72,20 @@ public class EncounterMapper {
         encounter.setLocation(getLocationComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));
         setServiceProvider(encounter, clinicalDocument);
+        setIdentifiers(encounter, clinicalDocument);
         setSubject(encounter, clinicalDocument);
         encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument, practitionerRoles, encounter));
         setAppointment(encounter, clinicalDocument);
         setEncounterReasonAndType(encounter, clinicalDocument);
         return encounter;
+    }
+
+    private void setIdentifiers(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        stream(clinicalDocument.getComponentOf().getEncompassingEncounter().getIdArray())
+            .map(it -> new Identifier()
+                .setSystem(it.getRoot())
+                .setValue(it.getExtension()))
+            .forEach(encounter::addIdentifier);
     }
 
     private List<EncounterLocationComponent> getLocationComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
