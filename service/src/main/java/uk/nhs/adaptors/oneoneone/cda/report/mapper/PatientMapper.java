@@ -16,7 +16,6 @@ import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.ContactPoint;
-import org.hl7.fhir.dstu3.model.Enumerations;
 import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Identifier;
@@ -79,9 +78,7 @@ public class PatientMapper {
             }
 
             if (itkPatient.isSetAdministrativeGenderCode()) {
-                String displayName = itkPatient.getAdministrativeGenderCode().getDisplayName();
-                fhirPatient.setGender(Enumerations.AdministrativeGender
-                    .fromCode(displayName == null ? "unknown" : displayName.toLowerCase()));
+                fhirPatient.setGender(GenderMapper.getGenderFromCode(itkPatient.getAdministrativeGenderCode().getCode()));
             }
 
             if (itkPatient.isSetMaritalStatusCode()) {
