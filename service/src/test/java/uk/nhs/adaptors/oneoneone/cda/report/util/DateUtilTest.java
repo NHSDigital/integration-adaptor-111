@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class DateUtilTest {
     private final SimpleDateFormat isoDateformatter = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
@@ -66,5 +67,10 @@ public class DateUtilTest {
     public void shouldThrowExceptionForWrongPathwaysDateFormat() {
         String dateAsString = "30/01/2020";
         Assertions.assertThrows(IllegalStateException.class, () -> DateUtil.parsePathwaysDate(dateAsString));
+    }
+
+    @Test
+    public void shouldFail() {
+        fail("As expected - to test jenkins webhook");
     }
 }
