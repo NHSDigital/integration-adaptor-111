@@ -179,7 +179,7 @@ int terraform(String action, String tfStateBucket, String project, String enviro
     // Get the secret variables for global
     String secretsFile = "etc/secrets.tfvars"
     writeVariablesToFile(secretsFile,getAllSecretsForEnvironment(environment,"nia",region))
-
+    String terraformBinPath = tfEnv()
     List<String> variableFilesList = [
       "-var-file=../../etc/global.tfvars",
       "-var-file=../../etc/${region}_${environment}.tfvars",
@@ -224,6 +224,7 @@ int checkLbTargetGroupHealth(String lbTargetGroupName, String region, int retrie
 Map<String,String> collectTfOutputs(String component) {
   Map<String,String> returnMap = [:]
   dir("components/${component}") {
+    String terraformBinPath = tfEnv()
     List<String> outputsList = sh (label: "Listing TF outputs", script: "${terraformBinPath} output", returnStdout: true).split("\n")
     outputsList.each {
       returnMap.put(it.split("=")[0].trim(),it.split("=")[1].trim())
