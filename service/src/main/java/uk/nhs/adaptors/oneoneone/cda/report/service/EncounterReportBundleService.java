@@ -73,7 +73,8 @@ public class EncounterReportBundleService {
             .setResource(resource);
     }
 
-    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header) throws XmlException {
+    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header, String messageId)
+        throws XmlException {
         Bundle bundle = createBundle(clinicalDocument);
 
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
@@ -92,7 +93,7 @@ public class EncounterReportBundleService {
             referralRequest, authorPractitionerRoles);
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
 
-        addEntry(bundle, messageHeaderService.createMessageHeader(header));
+        addEntry(bundle, messageHeaderService.createMessageHeader(header, messageId));
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);

@@ -8,6 +8,7 @@ import java.util.Date;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageDestinationComponent;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
@@ -28,11 +29,12 @@ public class MessageHeaderService {
 
     private final SoapProperties soapProperties;
 
-    public MessageHeader createMessageHeader(ItkReportHeader itkHeader) {
+    public MessageHeader createMessageHeader(ItkReportHeader itkHeader, String messageId) {
         MessageHeader header = new MessageHeader();
 
         header.setIdElement(newRandomUuid());
-        header.setId(header.getIdElement());
+        header.setIdElement(new IdType("urn:uuid:" + messageId));
+        System.out.println(header.getIdElement());
         header.setEvent(getEvent());
         header.setSource(getSource());
         header.setTimestamp(new Date());

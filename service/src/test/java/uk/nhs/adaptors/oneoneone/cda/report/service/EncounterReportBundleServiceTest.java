@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Appointment;
@@ -113,6 +114,7 @@ public class EncounterReportBundleServiceTest {
     private static final Organization PRACTITIONER_ORG;
     private static final IdType PRACTITIONER_ORG_ID = newRandomUuid();
     private static final BigInteger VERSION = TWO;
+    private static final String MESSAGEID = UUID.randomUUID().toString();
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -239,7 +241,7 @@ public class EncounterReportBundleServiceTest {
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
         when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
-        when(messageHeaderService.createMessageHeader(any())).thenReturn(MESSAGE_HEADER);
+        when(messageHeaderService.createMessageHeader(any(), any())).thenReturn(MESSAGE_HEADER);
         when(referralRequestMapper.mapReferralRequest(any(), any(), any(), any())).thenReturn(REFERRAL_REQUEST);
         when(observationMapper.mapObservations(any(), eq(ENCOUNTER))).thenReturn(Arrays.asList(OBSERVATION));
         when(practitionerRoleMapper.mapAuthorRoles(any())).thenReturn(singletonList(AUTHOR_ROLE));
@@ -259,7 +261,7 @@ public class EncounterReportBundleServiceTest {
         itkReportHeader.setSpecKey(SPECIFICATION_KEY);
         itkReportHeader.setSpecVal(SPECIFICATION_VALUE);
 
-        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader);
+        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader, MESSAGEID);
         assertThat(encounterBundle.getType()).isEqualTo(MESSAGE);
         assertThat(encounterBundle.getIdentifier().getValue()).isEqualTo(TWO.toString());
         assertThat(encounterBundle.getEntry().size()).isEqualTo(20);

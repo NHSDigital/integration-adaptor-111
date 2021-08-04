@@ -29,6 +29,7 @@ public class MessageHeaderServiceTest {
     private static final String SPECIFICATION_KEY = "urn:nhs-itk:ns:201005:interaction";
     private static final String SPECIFICATION_VALUE = "urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0";
     private static final String ADDRESS = "the_address";
+    private static final String MESSAGEID = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
 
     @Mock
     private SoapProperties soapProperties;
@@ -47,7 +48,7 @@ public class MessageHeaderServiceTest {
         itkReportHeader.setSpecKey(SPECIFICATION_KEY);
         itkReportHeader.setSpecVal(SPECIFICATION_VALUE);
         itkReportHeader.setAddressList(Arrays.asList(ADDRESS));
-        MessageHeader messageHeader = messageHeaderService.createMessageHeader(itkReportHeader);
+        MessageHeader messageHeader = messageHeaderService.createMessageHeader(itkReportHeader, MESSAGEID);
 
         assertThat(messageHeader.getId()).isNotEmpty();
         Coding event = messageHeader.getEvent();
