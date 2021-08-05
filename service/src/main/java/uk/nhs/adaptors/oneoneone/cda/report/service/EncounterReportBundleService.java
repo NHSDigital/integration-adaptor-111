@@ -69,7 +69,7 @@ public class EncounterReportBundleService {
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
-            .setFullUrl("urn:uuid:" + resource.getIdElement().getValue())
+            .setFullUrl(resource.getIdElement().getValue() == null ? null : "urn:uuid:" + resource.getIdElement().getValue())
             .setResource(resource);
     }
 
