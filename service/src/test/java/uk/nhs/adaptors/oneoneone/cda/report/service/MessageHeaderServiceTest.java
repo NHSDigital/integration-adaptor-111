@@ -50,7 +50,7 @@ public class MessageHeaderServiceTest {
         itkReportHeader.setAddressList(Arrays.asList(ADDRESS));
         MessageHeader messageHeader = messageHeaderService.createMessageHeader(itkReportHeader, MESSAGEID);
 
-        assertThat(messageHeader.getId()).isNotEmpty();
+        assertThat(messageHeader.getId()).isEqualTo(MESSAGEID);
         Coding event = messageHeader.getEvent();
         assertThat(event.getSystem()).isEqualTo(EVENT_SYSTEM);
         assertThat(event.getCode()).isEqualTo(EVENT_CODE);

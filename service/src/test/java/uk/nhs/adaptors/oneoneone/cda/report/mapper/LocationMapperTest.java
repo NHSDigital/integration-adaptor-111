@@ -32,6 +32,8 @@ import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
+
 @ExtendWith(MockitoExtension.class)
 public class LocationMapperTest {
 
@@ -102,7 +104,7 @@ public class LocationMapperTest {
         Encounter.EncounterLocationComponent encounterLocationComponent = locationMapper
                 .mapOrganizationToLocationComponent(itkOrganization);
 
-        assertThat(encounterLocationComponent.getLocationTarget().getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(verifyUUID(encounterLocationComponent.getLocationTarget().getIdElement().getValue())).isEqualTo(true);
         assertThat(encounterLocationComponent.getLocationTarget().getManagingOrganizationTarget()).isEqualTo(organization);
         assertThat(encounterLocationComponent.getPeriod()).isEqualTo(period);
     }

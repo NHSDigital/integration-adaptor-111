@@ -8,6 +8,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
+
 import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.Appointment;
@@ -55,7 +57,7 @@ public class AppointmentMapperTest {
 
         Optional<Appointment> appointment = appointmentMapper.mapAppointment(entry, section, patient);
         assertThat(appointment.isPresent());
-        assertThat(appointment.get().getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(verifyUUID(appointment.get().getIdElement().getValue())).isEqualTo(true);
         assertThat(appointment.get().getStatus()).isEqualTo(BOOKED);
         assertThat(appointment.get().getStart()).isNull();
         assertThat(appointment.get().getEnd()).isNull();

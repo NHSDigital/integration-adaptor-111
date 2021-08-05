@@ -6,7 +6,7 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Appointment;
@@ -114,7 +113,7 @@ public class EncounterReportBundleServiceTest {
     private static final Organization PRACTITIONER_ORG;
     private static final IdType PRACTITIONER_ORG_ID = newRandomUuid();
     private static final BigInteger VERSION = TWO;
-    private static final String MESSAGEID = UUID.randomUUID().toString();
+    private static final String MESSAGEID = newRandomUuid().toString();
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -289,7 +288,7 @@ public class EncounterReportBundleServiceTest {
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {
-        assertThat(entry.getFullUrl()).isEqualTo(fullUrl);
+        assertThat(entry.getFullUrl()).isEqualTo("urn:uuid:" + fullUrl);
         assertThat(entry.getResource().getResourceType()).isEqualTo(resourceType);
     }
 }

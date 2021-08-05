@@ -1,12 +1,11 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Reference;
@@ -37,7 +36,7 @@ public class LocationMapper {
 
     public Location mapRoleToLocation(POCDMT000002UK01ParticipantRole role) {
         Location location = new Location();
-        location.setIdElement(IdType.newRandomUuid());
+        location.setIdElement(newRandomUuid());
         if (role.sizeOfAddrArray() > 0) {
             location.setAddress(addressMapper.mapAddress(role.getAddrArray(0)));
         }
@@ -94,7 +93,7 @@ public class LocationMapper {
             return null;
         }
 
-        location.setIdElement(IdType.newRandomUuid());
+        location.setIdElement(newRandomUuid());
         return location;
     }
 }

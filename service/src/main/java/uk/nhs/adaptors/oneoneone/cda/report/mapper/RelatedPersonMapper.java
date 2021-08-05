@@ -4,7 +4,8 @@ import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 
 import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.UNKNOWN;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -4,7 +4,7 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
 
 import java.util.ArrayList;
 import java.util.Collections;

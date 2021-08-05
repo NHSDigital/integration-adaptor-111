@@ -1,9 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
 import static org.hl7.fhir.dstu3.model.ListResource.ListMode.WORKING;
 import static org.hl7.fhir.dstu3.model.ListResource.ListStatus.CURRENT;
+
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
 
 import java.util.Collection;
 import java.util.Date;

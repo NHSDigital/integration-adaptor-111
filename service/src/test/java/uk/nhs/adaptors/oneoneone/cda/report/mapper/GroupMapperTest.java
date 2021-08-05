@@ -16,6 +16,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
+
 @ExtendWith(MockitoExtension.class)
 public class GroupMapperTest {
 
@@ -40,7 +42,7 @@ public class GroupMapperTest {
 
         group = groupMapper.mapGroup(Arrays.array(recordTarget));
 
-        assertThat(group.getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(verifyUUID(group.getIdElement().getValue())).isEqualTo(true);
         assertThat(group.getActive()).isEqualTo(true);
         assertThat(group.getType().compareTo(Group.GroupType.PERSON));
         assertThat(group.getMemberFirstRep().getEntity().getResource()).isEqualTo(fhirPatient);

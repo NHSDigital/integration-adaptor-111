@@ -5,6 +5,8 @@ import static org.hl7.fhir.dstu3.model.Observation.ObservationStatus.FINAL;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
+
 import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Coding;
@@ -89,7 +91,7 @@ public class ObservationMapperTest {
         assertThat(observations.size()).isEqualTo(1);
         Observation observation = observations.get(0);
         assertThat(observation.getStatus()).isEqualTo(FINAL);
-        assertThat(observation.getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(verifyUUID(observation.getIdElement().getValue())).isEqualTo(true);
         assertThat(observation.getValueStringType().toString()).isEqualTo(OBSERVATION_VALUE);
         Coding codingFirstRep = observation.getCode().getCodingFirstRep();
         assertThat(codingFirstRep.getCode()).isEqualTo(PRESENTING_COMPLAINT_CODE);

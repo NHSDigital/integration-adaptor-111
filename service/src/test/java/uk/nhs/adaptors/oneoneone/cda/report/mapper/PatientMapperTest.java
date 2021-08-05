@@ -6,6 +6,8 @@ import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
+
 import java.util.Date;
 
 import org.assertj.core.util.Arrays;
@@ -116,7 +118,7 @@ public class PatientMapperTest {
 
         Patient fhirPatient = patientMapper.mapPatient(patientRole);
 
-        assertThat(fhirPatient.getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(verifyUUID(fhirPatient.getIdElement().getValue())).isEqualTo(true);
         assertThat(fhirPatient.getActive()).isEqualTo(true);
         assertThat(fhirPatient.getNameFirstRep()).isEqualTo(humanName);
         assertThat(fhirPatient.getAddressFirstRep()).isEqualTo(address);

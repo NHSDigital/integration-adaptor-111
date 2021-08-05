@@ -7,6 +7,8 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -200,9 +202,8 @@ public class EncounterMapperTest {
     }
 
     private void verifyEncounter(Encounter encounter) {
-        String uuidBeginning = "urn:uuid:";
         String encounterDivText = "<div xmlns=\"http://www.w3.org/1999/xhtml\">Encounter text</div>";
-        assertThat(encounter.getIdElement().getValue()).startsWith(uuidBeginning);
+        assertThat(verifyUUID(encounter.getIdElement().getValue())).isEqualTo(true);
         assertThat(encounter.getStatus()).isEqualTo(FINISHED);
         assertThat(encounter.getPeriod()).isEqualTo(period);
         assertThat(encounter.getParticipantFirstRep()).isEqualTo(encounterParticipantComponent);

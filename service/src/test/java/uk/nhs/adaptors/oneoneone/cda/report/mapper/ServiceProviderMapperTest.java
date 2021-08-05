@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.ON;
@@ -20,6 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
 
 @ExtendWith(MockitoExtension.class)
 public class ServiceProviderMapperTest {
@@ -77,7 +80,7 @@ public class ServiceProviderMapperTest {
 
         Organization organization = serviceProviderMapper.mapServiceProvider(custodian);
 
-        assertThat(organization.getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(verifyUUID(organization.getIdElement().getValue())).isEqualTo(true);
         assertThat(organization.getActive()).isEqualTo(true);
         assertThat(organization.getAddressFirstRep()).isEqualTo(address);
         assertThat(organization.getTelecomFirstRep()).isEqualTo(telecom);

@@ -1,14 +1,15 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import lombok.AllArgsConstructor;
+
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Appointment.AppointmentParticipantComponent;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
@@ -24,6 +25,8 @@ import static org.hl7.fhir.dstu3.model.Appointment.AppointmentStatus.BOOKED;
 import static org.hl7.fhir.dstu3.model.Appointment.ParticipantRequired.REQUIRED;
 import static org.hl7.fhir.dstu3.model.Appointment.ParticipationStatus.ACCEPTED;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
+
 @Component
 @AllArgsConstructor
 public class AppointmentMapper {
@@ -37,7 +40,7 @@ public class AppointmentMapper {
         POCDMT000002UK01Encounter itkEncounter = entry.getEncounter();
         Appointment appointment = new Appointment()
             .setStatus(BOOKED);
-        appointment.setIdElement(IdType.newRandomUuid());
+        appointment.setIdElement(newRandomUuid());
 
         if (matchingSection != null) {
             appointment

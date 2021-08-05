@@ -30,9 +30,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
+
 @ExtendWith(MockitoExtension.class)
 public class ConsentMapperTest {
-    private static final String URN_UUID = "urn:uuid:";
     private static final String LANG = "EN";
     private static final String ITK_SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
     private static final String INFORMATION_ADVICE_GIVEN = "887031000000108";
@@ -119,7 +120,7 @@ public class ConsentMapperTest {
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
 
         assertThat(consent).isNotNull();
-        assertThat(consent.getIdElement().getValue()).startsWith(URN_UUID);
+        assertThat(verifyUUID(consent.getIdElement().getValue())).isEqualTo(true);
         assertThat(consent.getStatus()).isEqualTo(Consent.ConsentState.ACTIVE);
 
         assertThat(consent.getLanguage()).isEqualTo(LANG);

@@ -1,9 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.ReferralRequest.ReferralCategory.PLAN;
 import static org.hl7.fhir.dstu3.model.ReferralRequest.ReferralPriority.ROUTINE;
 import static org.hl7.fhir.dstu3.model.ReferralRequest.ReferralRequestStatus.ACTIVE;
+
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
 
 import java.util.Date;
 import java.util.List;

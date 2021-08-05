@@ -23,6 +23,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.UNKNOWN;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
+
 @ExtendWith(MockitoExtension.class)
 public class RelatedPersonMapperTest {
 
@@ -80,8 +82,7 @@ public class RelatedPersonMapperTest {
     @Test
     public void shouldMapRelatedPersonFromRelatedEntity() {
         RelatedPerson relatedPerson = relatedPersonMapper.mapRelatedPerson(informant12, encounter);
-        String uuidBeginning = "urn:uuid:";
-        assertThat(relatedPerson.getIdElement().getValue()).startsWith(uuidBeginning);
+        assertThat(verifyUUID(relatedPerson.getIdElement().getValue())).isEqualTo(true);
         assertThat(relatedPerson.getActive()).isEqualTo(true);
         assertThat(relatedPerson.getNameFirstRep()).isEqualTo(humanName);
         assertThat(relatedPerson.getTelecomFirstRep()).isEqualTo(contactPoint);

@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,6 @@ import uk.nhs.connect.iucds.cda.ucr.StrucDocText;
 
 @ExtendWith(MockitoExtension.class)
 public class CarePlanMapperTest {
-    private static final String URN_UUID = "urn:uuid:";
     private static final String LANG = "EN";
     private static final String SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
     private static final String INFORMATION_ADVICE_GIVEN = "1052951000000105";
@@ -139,7 +140,7 @@ public class CarePlanMapperTest {
         assertThat(carePlans).isNotEmpty();
 
         CarePlan carePlan = carePlans.get(0);
-        assertThat(carePlan.getIdElement().getValue()).startsWith(URN_UUID);
+        assertThat(verifyUUID(carePlan.getIdElement().getValue())).isEqualTo(true);
         assertThat(carePlan.getStatus()).isEqualTo(CarePlan.CarePlanStatus.COMPLETED);
 
         assertThat(carePlan.getIntent()).isEqualTo(CarePlan.CarePlanIntent.PLAN);

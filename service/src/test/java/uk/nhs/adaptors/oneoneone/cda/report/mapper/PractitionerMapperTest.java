@@ -21,6 +21,8 @@ import uk.nhs.connect.iucds.cda.ucr.TEL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
+
 @ExtendWith(MockitoExtension.class)
 public class PractitionerMapperTest {
 
@@ -58,7 +60,7 @@ public class PractitionerMapperTest {
 
         Practitioner practitioner = practitionerMapper.mapPractitioner(assignedEntity);
 
-        assertThat(practitioner.getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(verifyUUID(practitioner.getIdElement().getValue())).isEqualTo(true);
         assertThat(practitioner.getActive()).isEqualTo(true);
         assertThat(practitioner.getNameFirstRep()).isEqualTo(humanName);
         assertThat(practitioner.getTelecomFirstRep()).isEqualTo(contactPoint);
@@ -96,7 +98,7 @@ public class PractitionerMapperTest {
 
         Practitioner practitioner = practitionerMapper.mapPractitioner(associatedEntity);
 
-        assertThat(practitioner.getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(verifyUUID(practitioner.getIdElement().getValue())).isEqualTo(true);
         assertThat(practitioner.getActive()).isEqualTo(true);
         assertThat(practitioner.getNameFirstRep()).isEqualTo(humanName);
         assertThat(practitioner.getTelecomFirstRep()).isEqualTo(contactPoint);
@@ -115,8 +117,7 @@ public class PractitionerMapperTest {
         when(addressMapper.mapAddress(ArgumentMatchers.any())).thenReturn(address);
 
         Practitioner practitioner = practitionerMapper.mapPractitioner(associatedEntity);
-        String uuidBeginning = "urn:uuid:";
-        assertThat(practitioner.getIdElement().getValue()).startsWith(uuidBeginning);
+        assertThat(verifyUUID(practitioner.getIdElement().getValue())).isEqualTo(true);
         assertThat(practitioner.getActive()).isEqualTo(true);
         assertThat(practitioner.getNameFirstRep()).isEqualTo(humanName);
         assertThat(practitioner.getTelecomFirstRep()).isEqualTo(contactPoint);
