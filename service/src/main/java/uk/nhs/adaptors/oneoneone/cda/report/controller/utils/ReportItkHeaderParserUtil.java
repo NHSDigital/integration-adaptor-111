@@ -2,6 +2,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,21 +26,27 @@ public class ReportItkHeaderParserUtil {
     private void setAddressList(ItkReportHeader header, Element headerElement) {
         List<Element> elements = getElements(headerElement, ITK_ADDRESS_NODE);
         Optional<String> dosServiceId = elements.stream()
-            .filter(it -> it.attribute("type") != null)
+            .filter(it -> it.attribute("type") != null
+                && it.attributeValue("type").equals("2.16.840.1.113883.2.1.3.2.4.18.44")
+            )
+            .map(it -> "DOSServiceID:".concat(it.attributeValue("uri")))
+            .findFirst();
+
+        Optional<String> odsCode = elements.stream()
+            .filter(it -> it.attribute("type") == null
+                && it.attributeValue("uri").startsWith("urn:nhs-uk:addressing:ods:")
+            )
             .map(it -> it.attributeValue("uri"))
             .findFirst();
 
-        List<String> addressList = elements.stream()
-            .filter(it -> it.attribute("type") == null
-                && it.attributeValue("uri").contains("ods")
-            )
-            .map(it -> dosServiceId.isPresent()
-                ? it.attributeValue("uri") + ":DOSServiceID:" + dosServiceId.get()
-                : it.attributeValue("uri")
-            )
-            .collect(toList());
+        String address;
+        if (odsCode.isPresent() && dosServiceId.isPresent()) {
+            address = odsCode.get() + ":" + dosServiceId.get();
+        } else {
+            address = odsCode.orElseGet(dosServiceId::get);
+        }
 
-        header.setAddressList(addressList);
+        header.setAddressList(Collections.singletonList(address));
     }
 
     private void setSpecification(ItkReportHeader header, Element headerElement) {
