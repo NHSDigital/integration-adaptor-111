@@ -3,6 +3,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.dom4j.Element;
 import org.springframework.stereotype.Component;
@@ -23,8 +24,22 @@ public class ReportItkHeaderParserUtil {
 
     private void setAddressList(ItkReportHeader header, Element headerElement) {
         List<Element> elements = getElements(headerElement, ITK_ADDRESS_NODE);
-        List<String> addresses = elements.stream().map(it -> it.attributeValue("uri")).collect(toList());
-        header.setAddressList(addresses);
+        Optional<String> dosServiceId = elements.stream()
+            .filter(it -> it.attribute("type") != null)
+            .map(it -> it.attributeValue("uri"))
+            .findFirst();
+
+        List<String> addressList = elements.stream()
+            .filter(it -> it.attribute("type") == null
+                && it.attributeValue("uri").contains("ods")
+            )
+            .map(it -> dosServiceId.isPresent()
+                ? it.attributeValue("uri") + ":DOSServiceID:" + dosServiceId.get()
+                : it.attributeValue("uri")
+            )
+            .collect(toList());
+
+        header.setAddressList(addressList);
     }
 
     private void setSpecification(ItkReportHeader header, Element headerElement) {
