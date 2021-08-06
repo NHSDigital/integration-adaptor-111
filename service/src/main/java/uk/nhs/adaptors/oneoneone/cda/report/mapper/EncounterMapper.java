@@ -5,8 +5,6 @@ import static java.util.Arrays.stream;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +26,7 @@ import org.springframework.stereotype.Component;
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
@@ -65,9 +64,11 @@ public class EncounterMapper {
 
     private final NodeUtil nodeUtil;
 
+    private final ResourceUtil resourceUtil;
+
     public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<PractitionerRole> practitionerRoles) {
         Encounter encounter = new Encounter();
-        encounter.setIdElement(newRandomUuid());
+        encounter.setIdElement(resourceUtil.newRandomUuid());
         encounter.setStatus(FINISHED);
         encounter.setLocation(getLocationComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));

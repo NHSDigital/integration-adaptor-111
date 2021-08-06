@@ -5,8 +5,6 @@ import static java.util.Collections.emptyList;
 
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Authorization;
@@ -50,10 +49,11 @@ public class ConsentMapper {
     private static final String PERMISSION_TO_VIEW = "COCD_TP146050GB01#PermissionToView";
     private static final String DIV_START = "<div>";
     private static final String DIV_END = "</div>";
+    private final ResourceUtil resourceUtil;
 
     public Consent mapConsent(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
         Consent consent = new Consent();
-        consent.setIdElement(newRandomUuid());
+        consent.setIdElement(resourceUtil.newRandomUuid());
 
         if (clinicalDocument.isSetSetId()) {
             Identifier docIdentifier = new Identifier();

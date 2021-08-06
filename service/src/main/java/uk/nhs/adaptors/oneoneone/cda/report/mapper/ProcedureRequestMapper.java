@@ -1,7 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
@@ -11,12 +9,14 @@ import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Component
 @RequiredArgsConstructor
 public class ProcedureRequestMapper {
+    private final ResourceUtil resourceUtil;
     public ProcedureRequest mapProcedureRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Reference patient,
         ReferralRequest referralRequest) {
         ProcedureRequest procedureRequest = new ProcedureRequest();
@@ -37,7 +37,7 @@ public class ProcedureRequestMapper {
                     }
                     if (StringUtils.isNotBlank(coding.getCode()) || StringUtils.isNotBlank(coding.getDisplay())
                         || StringUtils.isNotBlank(coding.getSystem())) {
-                        procedureRequest.setIdElement(newRandomUuid());
+                        procedureRequest.setIdElement(resourceUtil.newRandomUuid());
                         procedureRequest.setStatus(ProcedureRequest.ProcedureRequestStatus.ACTIVE)
                             .setIntent(ProcedureRequest.ProcedureRequestIntent.PLAN)
                             .setPriority(ProcedureRequest.ProcedureRequestPriority.ROUTINE)

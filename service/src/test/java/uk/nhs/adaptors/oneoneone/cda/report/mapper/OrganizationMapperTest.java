@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.II;
@@ -27,6 +29,7 @@ public class OrganizationMapperTest {
     public static final String ORGANIZATION_NAME = "ORGANIZATION_NAME";
     public static final String GP_PRACTICE = "GP Practice";
     private static final String ODS_CODE = "SL3";
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
 
     @Mock
     private ContactPointMapper contactPointMapper;
@@ -48,6 +51,9 @@ public class OrganizationMapperTest {
 
     @Mock
     private II ii;
+
+    @Mock
+    private ResourceUtil resourceUtil;
 
     @Test
     public void shouldMapOrganization() {
@@ -71,6 +77,7 @@ public class OrganizationMapperTest {
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
         when(addressMapper.mapAddress(any())).thenReturn(address);
         when(nodeUtil.getNodeValueString(itkOrganization.getNameArray(0))).thenReturn(ORGANIZATION_NAME);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         Organization organization = organizationMapper.mapOrganization(itkOrganization);
 
@@ -79,5 +86,6 @@ public class OrganizationMapperTest {
         assertThat(organization.getTelecomFirstRep()).isEqualTo(contactPoint);
         assertThat(organization.getTypeFirstRep().getText()).isEqualTo(GP_PRACTICE);
         assertThat(organization.getIdentifierFirstRep().getValue()).isEqualTo(ODS_CODE);
+        assertThat(organization.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
     }
 }

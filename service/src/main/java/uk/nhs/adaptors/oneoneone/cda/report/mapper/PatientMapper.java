@@ -4,8 +4,6 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +27,7 @@ import org.springframework.stereotype.Component;
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.enums.MaritalStatus;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01LanguageCommunication;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Patient;
@@ -51,10 +50,11 @@ public class PatientMapper {
     private final HumanNameMapper humanNameMapper;
     private final OrganizationMapper orgMapper;
     private final NodeUtil nodeUtil;
+    private final ResourceUtil resourceUtil;
 
     public Patient mapPatient(POCDMT000002UK01PatientRole patientRole) {
         Patient fhirPatient = new Patient();
-        fhirPatient.setIdElement(newRandomUuid());
+        fhirPatient.setIdElement(resourceUtil.newRandomUuid());
         fhirPatient.setIdentifier(getNhsNumbers(patientRole));
         fhirPatient.setActive(true);
         if (patientRole.isSetPatient()) {

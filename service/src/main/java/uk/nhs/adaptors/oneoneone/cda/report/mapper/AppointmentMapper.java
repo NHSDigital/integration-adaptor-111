@@ -11,6 +11,7 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant2;
@@ -25,8 +26,6 @@ import static org.hl7.fhir.dstu3.model.Appointment.AppointmentStatus.BOOKED;
 import static org.hl7.fhir.dstu3.model.Appointment.ParticipantRequired.REQUIRED;
 import static org.hl7.fhir.dstu3.model.Appointment.ParticipationStatus.ACCEPTED;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
-
 @Component
 @AllArgsConstructor
 public class AppointmentMapper {
@@ -34,13 +33,14 @@ public class AppointmentMapper {
     private final LocationMapper locationMapper;
 
     private final NodeUtil nodeUtil;
+    private final ResourceUtil resourceUtil;
 
     public Optional<Appointment> mapAppointment(POCDMT000002UK01Entry entry, POCDMT000002UK01Section matchingSection,
         Reference patient) {
         POCDMT000002UK01Encounter itkEncounter = entry.getEncounter();
         Appointment appointment = new Appointment()
             .setStatus(BOOKED);
-        appointment.setIdElement(newRandomUuid());
+        appointment.setIdElement(resourceUtil.newRandomUuid());
 
         if (matchingSection != null) {
             appointment

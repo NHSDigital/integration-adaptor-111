@@ -5,12 +5,11 @@ import static org.hl7.fhir.dstu3.model.Observation.ObservationStatus.FINAL;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
-
 import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component2;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
@@ -39,12 +39,16 @@ public class ObservationMapperTest {
     private static final String PRESENTING_COMPLAINT_CODE = "33962009";
     private static final String PATIENTS_CONDITION_REGEXP = "Patient.s Reported Condition";
     private static final String OBSERVATION_VALUE = "Patient has an insect bite.";
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
 
     @InjectMocks
     private ObservationMapper observationMapper;
 
     @Mock
     private NodeUtil nodeUtil;
+
+    @Mock
+    private ResourceUtil resourceUtil;
 
     @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
@@ -72,6 +76,7 @@ public class ObservationMapperTest {
         ST title = mock(ST.class);
         when(nodeUtil.getNodeValueString(title)).thenReturn("Patient's Reported Condition");
         when(nodeUtil.getNodeValueString(contentItem)).thenReturn(OBSERVATION_VALUE);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
         when(innerSection.getTitle()).thenReturn(title);
         when(component5.getSection()).thenReturn(innerSection);
         POCDMT000002UK01Component5[] components5 = new POCDMT000002UK01Component5[] {component5};
@@ -91,7 +96,7 @@ public class ObservationMapperTest {
         assertThat(observations.size()).isEqualTo(1);
         Observation observation = observations.get(0);
         assertThat(observation.getStatus()).isEqualTo(FINAL);
-        assertThat(verifyUUID(observation.getIdElement().getValue())).isEqualTo(true);
+        assertThat(observation.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(observation.getValueStringType().toString()).isEqualTo(OBSERVATION_VALUE);
         Coding codingFirstRep = observation.getCode().getCodingFirstRep();
         assertThat(codingFirstRep.getCode()).isEqualTo(PRESENTING_COMPLAINT_CODE);

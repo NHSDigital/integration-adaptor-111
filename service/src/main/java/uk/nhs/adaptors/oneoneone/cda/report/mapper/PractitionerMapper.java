@@ -3,8 +3,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -15,6 +13,7 @@ import org.hl7.fhir.dstu3.model.Practitioner;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedAuthor;
@@ -32,10 +31,11 @@ public class PractitionerMapper {
     private final ContactPointMapper contactPointMapper;
 
     private final AddressMapper addressMapper;
+    private final ResourceUtil resourceUtil;
 
     public Practitioner mapPractitioner(POCDMT000002UK01AssociatedEntity associatedEntity) {
         Practitioner practitioner = new Practitioner();
-        practitioner.setIdElement(newRandomUuid());
+        practitioner.setIdElement(resourceUtil.newRandomUuid());
         practitioner.setActive(true);
         practitioner.setName(getHumanNameFromITK(associatedEntity.getAssociatedPerson()));
         practitioner.setTelecom(getTelecomFromITK(associatedEntity.getTelecomArray()));
@@ -68,7 +68,7 @@ public class PractitionerMapper {
 
     public Practitioner mapPractitioner(POCDMT000002UK01AssignedEntity assignedEntity) {
         Practitioner practitioner = new Practitioner();
-        practitioner.setIdElement(newRandomUuid());
+        practitioner.setIdElement(resourceUtil.newRandomUuid());
         practitioner.setActive(true);
         if (assignedEntity.isSetAssignedPerson()) {
             practitioner.setName(getHumanNameFromITK(assignedEntity.getAssignedPerson()));
@@ -81,7 +81,7 @@ public class PractitionerMapper {
 
     public Practitioner mapPractitioner(POCDMT000002UK01AssignedAuthor assignedAuthor) {
         Practitioner practitioner = new Practitioner();
-        practitioner.setIdElement(newRandomUuid());
+        practitioner.setIdElement(resourceUtil.newRandomUuid());
         practitioner.setActive(true);
         practitioner.setName(getHumanNameFromITK(assignedAuthor.getAssignedPerson()));
         practitioner.setTelecom(getTelecomFromITK(assignedAuthor.getTelecomArray()));

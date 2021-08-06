@@ -6,7 +6,6 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Appointment;
@@ -62,6 +62,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.INT;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -70,50 +71,50 @@ public class EncounterReportBundleServiceTest {
     private static final String SPECIFICATION_KEY = "urn:nhs-itk:ns:201005:interaction";
     private static final String SPECIFICATION_VALUE = "urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0";
     private static final Encounter ENCOUNTER;
-    private static final IdType ENCOUNTER_ID = newRandomUuid();
+    private static final IdType ENCOUNTER_ID = new IdType(UUID.randomUUID().toString());
     private static final Organization SERVICE_PROVIDER;
-    private static final IdType SERVICE_PROVIDER_ID = newRandomUuid();
+    private static final IdType SERVICE_PROVIDER_ID = new IdType(UUID.randomUUID().toString());
     private static final Encounter.EncounterParticipantComponent ENCOUNTER_PARTICIPANT_COMPONENT;
     private static final Practitioner PRACTITIONER;
-    private static final IdType PRACTITIONER_ID = newRandomUuid();
+    private static final IdType PRACTITIONER_ID = new IdType(UUID.randomUUID().toString());
     private static final HumanName PRACTITIONER_NAME;
     private static final Appointment APPOINTMENT;
-    private static final IdType APPOINTMENT_ID = newRandomUuid();
+    private static final IdType APPOINTMENT_ID = new IdType(UUID.randomUUID().toString());
     private static final Location LOCATION;
-    private static final IdType LOCATION_ID = newRandomUuid();
+    private static final IdType LOCATION_ID = new IdType(UUID.randomUUID().toString());
     private static final Encounter.EncounterLocationComponent ENCOUNTER_LOCATION_COMPONENT;
     private static final Patient PATIENT;
-    private static final IdType PATIENT_ID = newRandomUuid();
+    private static final IdType PATIENT_ID = new IdType(UUID.randomUUID().toString());
     private static final ReferralRequest REFERRAL_REQUEST;
-    private static final IdType REFERRAL_REQUEST_ID = newRandomUuid();
+    private static final IdType REFERRAL_REQUEST_ID = new IdType(UUID.randomUUID().toString());
     private static final Composition COMPOSITION;
-    private static final IdType COMPOSITION_ID = newRandomUuid();
+    private static final IdType COMPOSITION_ID = new IdType(UUID.randomUUID().toString());
     private static final ListResource LIST_RESOURCE;
-    private static final IdType LIST_RESOURCE_ID = newRandomUuid();
+    private static final IdType LIST_RESOURCE_ID = new IdType(UUID.randomUUID().toString());
     private static final CarePlan CAREPLAN;
-    private static final IdType CAREPLAN_ID = newRandomUuid();
+    private static final IdType CAREPLAN_ID = new IdType(UUID.randomUUID().toString());
     private static final HealthcareService HEALTHCARE_SERVICE;
-    private static final IdType HEALTHCARE_SERVICE_ID = newRandomUuid();
+    private static final IdType HEALTHCARE_SERVICE_ID = new IdType(UUID.randomUUID().toString());
     private static final Consent CONSENT;
-    private static final IdType CONSENT_ID = newRandomUuid();
+    private static final IdType CONSENT_ID = new IdType(UUID.randomUUID().toString());
     private static final Condition CONDITION;
-    private static final IdType CONDITION_ID = newRandomUuid();
+    private static final IdType CONDITION_ID = new IdType(UUID.randomUUID().toString());
     private static final QuestionnaireResponse QUESTIONNAIRE_RESPONSE;
-    private static final IdType QUESTIONNAIRE_RESPONSE_ID = newRandomUuid();
+    private static final IdType QUESTIONNAIRE_RESPONSE_ID = new IdType(UUID.randomUUID().toString());
     private static final MessageHeader MESSAGE_HEADER;
-    private static final IdType MESSAGE_HEADER_ID = newRandomUuid();
+    private static final IdType MESSAGE_HEADER_ID = new IdType(UUID.randomUUID().toString());
     private static final Observation OBSERVATION;
-    private static final IdType OBSERVATION_ID = newRandomUuid();
+    private static final IdType OBSERVATION_ID = new IdType(UUID.randomUUID().toString());
     private static final PractitionerRole AUTHOR_ROLE;
-    private static final IdType AUTHOR_ROLE_ID = newRandomUuid();
+    private static final IdType AUTHOR_ROLE_ID = new IdType(UUID.randomUUID().toString());
     private static final Organization AUTHOR_ORG;
-    private static final IdType AUTHOR_ORG_ID = newRandomUuid();
+    private static final IdType AUTHOR_ORG_ID = new IdType(UUID.randomUUID().toString());
     private static final PractitionerRole PRACTITIONER_ROLE;
-    private static final IdType PRACTITIONER_ROLE_ID = newRandomUuid();
+    private static final IdType PRACTITIONER_ROLE_ID = new IdType(UUID.randomUUID().toString());
     private static final Organization PRACTITIONER_ORG;
-    private static final IdType PRACTITIONER_ORG_ID = newRandomUuid();
+    private static final IdType PRACTITIONER_ORG_ID = new IdType(UUID.randomUUID().toString());
     private static final BigInteger VERSION = TWO;
-    private static final String MESSAGEID = newRandomUuid().toString();
+    private static final String MESSAGEID = new IdType(UUID.randomUUID().toString()).toString();
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -224,6 +225,8 @@ public class EncounterReportBundleServiceTest {
     private PractitionerRoleMapper practitionerRoleMapper;
     @Mock
     private POCDMT000002UK01ClinicalDocument1 document;
+    @Mock
+    private ResourceUtil resourceUtil;
 
     @BeforeEach
     public void setUp() throws XmlException {

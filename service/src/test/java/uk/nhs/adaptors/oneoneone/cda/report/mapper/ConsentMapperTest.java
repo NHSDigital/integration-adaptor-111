@@ -2,6 +2,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import org.hl7.fhir.dstu3.model.Consent;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Reference;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.CS;
 import uk.nhs.connect.iucds.cda.ucr.II;
@@ -30,8 +33,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
-
 @ExtendWith(MockitoExtension.class)
 public class ConsentMapperTest {
     private static final String LANG = "EN";
@@ -40,6 +41,7 @@ public class ConsentMapperTest {
     private static final String OPT_OUT_URI = "http://hl7.org/fhir/ConsentPolicy/opt-out";
     private static final String ROOT_ID = "411910CF-1A76-4330-98FE-C345DDEE5553";
     private static final String CODE_DISPLAY_NAME = "Code DisplayName";
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
 
     @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
@@ -77,6 +79,9 @@ public class ConsentMapperTest {
     @Mock
     private POCDMT000002UK01Entry entry;
 
+    @Mock
+    private ResourceUtil resourceUtil;
+
     @InjectMocks
     private ConsentMapper consentMapper;
 
@@ -107,6 +112,7 @@ public class ConsentMapperTest {
         when(component3.getSection()).thenReturn(section);
         when(component5.getSection()).thenReturn(section);
         when(structuredBody.getComponentArray()).thenReturn(new POCDMT000002UK01Component3[] {component3});
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
     }
 
     @Test
@@ -120,7 +126,7 @@ public class ConsentMapperTest {
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
 
         assertThat(consent).isNotNull();
-        assertThat(verifyUUID(consent.getIdElement().getValue())).isEqualTo(true);
+        assertThat(consent.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(consent.getStatus()).isEqualTo(Consent.ConsentState.ACTIVE);
 
         assertThat(consent.getLanguage()).isEqualTo(LANG);

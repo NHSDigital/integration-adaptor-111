@@ -1,7 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
-
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
@@ -34,9 +33,11 @@ public class LocationMapper {
 
     private final PeriodMapper periodMapper;
 
+    private final ResourceUtil resourceUtil;
+
     public Location mapRoleToLocation(POCDMT000002UK01ParticipantRole role) {
         Location location = new Location();
-        location.setIdElement(newRandomUuid());
+        location.setIdElement(resourceUtil.newRandomUuid());
         if (role.sizeOfAddrArray() > 0) {
             location.setAddress(addressMapper.mapAddress(role.getAddrArray(0)));
         }
@@ -54,7 +55,7 @@ public class LocationMapper {
         encounterLocationComponent.setStatus(Encounter.EncounterLocationStatus.ACTIVE);
 
         Location location = new Location();
-        location.setIdElement(newRandomUuid());
+        location.setIdElement(resourceUtil.newRandomUuid());
         Organization managingOrganization = organizationMapper.mapOrganization(organization);
         location.setManagingOrganization(new Reference(managingOrganization));
         location.setManagingOrganizationTarget(managingOrganization);
@@ -93,7 +94,7 @@ public class LocationMapper {
             return null;
         }
 
-        location.setIdElement(newRandomUuid());
+        location.setIdElement(resourceUtil.newRandomUuid());
         return location;
     }
 }

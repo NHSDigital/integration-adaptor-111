@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HealthcareService;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
@@ -19,11 +20,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @ExtendWith(MockitoExtension.class)
 public class ReferralRequestMapperTest {
 
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
     private final Reference patientRef = new Reference();
     private final Reference deviceRef = new Reference("Device/1");
     private final Reference serviceProviderRef = new Reference("HealthcareService/1");
@@ -42,6 +45,8 @@ public class ReferralRequestMapperTest {
     private ProcedureRequestMapper procedureRequestMapper;
     @Mock
     private ProcedureRequest procedureRequest;
+    @Mock
+    private ResourceUtil resourceUtil;
 
     @BeforeEach
     public void setup() {
@@ -59,6 +64,7 @@ public class ReferralRequestMapperTest {
     @Test
     public void shouldMapReferralRequest() {
         when(procedureRequestMapper.mapProcedureRequest(any(), any(), any())).thenReturn(procedureRequest);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         ReferralRequest referralRequest = referralRequestMapper
             .mapReferralRequest(clinicalDocument, encounter, healthcareServiceList, condition);
@@ -73,5 +79,6 @@ public class ReferralRequestMapperTest {
         assertThat(new Reference(encounter).getReference()).isEqualTo(referralRequest.getContext().getReference());
         assertThat(patientRef.getReference()).isEqualTo(referralRequest.getSubject().getReference());
         assertThat(referralRequest.getSupportingInfo().get(0).getResource()).isEqualTo(procedureRequest);
+        assertThat(referralRequest.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
     }
 }

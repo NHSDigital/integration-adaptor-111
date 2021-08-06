@@ -6,8 +6,6 @@ import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtilTest.verifyUUID;
-
 import java.util.Date;
 
 import org.assertj.core.util.Arrays;
@@ -16,6 +14,7 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.HumanName;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
@@ -27,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.CS;
@@ -50,6 +50,7 @@ public class PatientMapperTest {
     private static final String NHS_NUMBER = "99937478324";
     private static final String NHS_VERIFICATION_STATUS =
         "https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-NHSNumberVerificationStatus-1";
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
     @Mock
     private AddressMapper addressMapper;
 
@@ -95,6 +96,9 @@ public class PatientMapperTest {
     @Mock
     private NodeUtil nodeUtil;
 
+    @Mock
+    private ResourceUtil resourceUtil;
+
     @Test
     @SuppressWarnings("MagicNumber")
     public void shouldMapPatient() {
@@ -102,6 +106,7 @@ public class PatientMapperTest {
         POCDMT000002UK01Patient itkPatient = mock(POCDMT000002UK01Patient.class);
         when(patientRole.isSetPatient()).thenReturn(true);
         when(patientRole.getPatient()).thenReturn(itkPatient);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         mockNames(itkPatient);
         mockAddress(patientRole);
@@ -118,7 +123,7 @@ public class PatientMapperTest {
 
         Patient fhirPatient = patientMapper.mapPatient(patientRole);
 
-        assertThat(verifyUUID(fhirPatient.getIdElement().getValue())).isEqualTo(true);
+        assertThat(fhirPatient.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(fhirPatient.getActive()).isEqualTo(true);
         assertThat(fhirPatient.getNameFirstRep()).isEqualTo(humanName);
         assertThat(fhirPatient.getAddressFirstRep()).isEqualTo(address);

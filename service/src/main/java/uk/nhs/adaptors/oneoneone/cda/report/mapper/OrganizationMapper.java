@@ -1,7 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 
@@ -29,9 +28,11 @@ public class OrganizationMapper {
 
     private final NodeUtil nodeUtil;
 
+    private final ResourceUtil resourceUtil;
+
     public Organization mapOrganization(POCDMT000002UK01Organization itkOrganization) {
         Organization fhirOrganization = new Organization();
-        fhirOrganization.setIdElement(newRandomUuid());
+        fhirOrganization.setIdElement(resourceUtil.newRandomUuid());
         fhirOrganization.setName(nodeUtil.getNodeValueString(itkOrganization.getNameArray(0)));
         fhirOrganization.setAddress(Arrays
             .stream(itkOrganization.getAddrArray())

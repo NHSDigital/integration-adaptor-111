@@ -4,8 +4,6 @@ import static org.hl7.fhir.dstu3.model.ReferralRequest.ReferralCategory.PLAN;
 import static org.hl7.fhir.dstu3.model.ReferralRequest.ReferralPriority.ROUTINE;
 import static org.hl7.fhir.dstu3.model.ReferralRequest.ReferralRequestStatus.ACTIVE;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil.newRandomUuid;
-
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +15,7 @@ import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Component
@@ -26,12 +25,13 @@ public class ReferralRequestMapper {
     private static final int SECONDS_IN_HOUR = 60 * 60;
     private final Reference transformerDevice = new Reference("Device/1");
     private final ProcedureRequestMapper procedureRequestMapper;
+    private final ResourceUtil resourceUtil;
 
     public ReferralRequest mapReferralRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
         List<HealthcareService> healthcareServiceList, Reference condition) {
 
         ReferralRequest referralRequest = new ReferralRequest();
-        referralRequest.setIdElement(newRandomUuid());
+        referralRequest.setIdElement(resourceUtil.newRandomUuid());
 
         Date now = new Date();
         referralRequest
