@@ -1,10 +1,12 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.dom4j.Element;
 import org.springframework.stereotype.Component;
@@ -39,12 +41,10 @@ public class ReportItkHeaderParserUtil {
             .map(it -> it.attributeValue("uri"))
             .findFirst();
 
-        String address;
-        if (odsCode.isPresent() && dosServiceId.isPresent()) {
-            address = odsCode.get() + ":" + dosServiceId.get();
-        } else {
-            address = odsCode.orElseGet(dosServiceId::get);
-        }
+        String address = Stream.of(odsCode, dosServiceId)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(joining(":"));
 
         header.setAddressList(Collections.singletonList(address));
     }
