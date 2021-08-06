@@ -3,8 +3,11 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
@@ -44,6 +47,7 @@ public class HealthcareServiceMapper {
 
         POCDMT000002UK01IntendedRecipient intendedRecipient =
             informationRecipient.getIntendedRecipient();
+        informationRecipient.getTypeCode();
 
         HealthcareService healthcareService = new HealthcareService()
             .setActive(true);
@@ -63,10 +67,13 @@ public class HealthcareServiceMapper {
             POCDMT000002UK01Organization receivedOrganization =
                 intendedRecipient.getReceivedOrganization();
             Organization organization = organizationMapper.mapOrganization(receivedOrganization);
+            Coding code = new Coding().setCode(String.valueOf(informationRecipient.getTypeCode()));
+            organization.setType(Collections.singletonList(new CodeableConcept(code)));
             healthcareService.setProvidedBy(new Reference(organization));
             healthcareService.setProvidedByTarget(organization);
             if (receivedOrganization.sizeOfNameArray() > 0) {
                 ON name = receivedOrganization.getNameArray(0);
+
                 healthcareService.setName(nodeUtil.getAllText(name.getDomNode()));
             }
         }
