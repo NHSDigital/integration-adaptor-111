@@ -7,6 +7,8 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent.DISCHARGE_DETAILS;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -49,6 +51,7 @@ public class EncounterMapperTest {
 
     private static final String ID_ROOT = "2.16.840.1.113883.2.1.3.2.4.18.34";
     private static final String ID_EXTENSION = "CASEREF1234";
+    private static final String TEXT_REPRESENTATION = "111 Encounter Copy for Information";
     @Mock
     private ParticipantMapper participantMapper;
     @Mock
@@ -211,7 +214,7 @@ public class EncounterMapperTest {
 
     @Test
     public void shouldMapEncounter() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
 
         verifyEncounter(encounter);
     }
@@ -229,20 +232,21 @@ public class EncounterMapperTest {
         assertThat(encounter.getText().getDiv().toString()).isEqualTo(encounterDivText);
         assertThat(encounter.getIdentifierFirstRep().getValue()).isEqualTo(ID_EXTENSION);
         assertThat(encounter.getIdentifierFirstRep().getSystem()).isEqualTo(ID_ROOT);
+        assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(TEXT_REPRESENTATION);
     }
 
     @Test
     public void mapEncounterTest() {
         mockParticipant(clinicalDocument);
 
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
         verifyEncounter(encounter);
     }
 
     @Test
     @SuppressWarnings("MagicNumber")
     public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
         verifyEncounter(encounter);
 
         assertThat(encounter.getParticipant().size()).isEqualTo(4);
