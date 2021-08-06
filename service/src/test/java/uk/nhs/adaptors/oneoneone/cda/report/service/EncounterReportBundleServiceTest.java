@@ -231,7 +231,7 @@ public class EncounterReportBundleServiceTest {
         when(document.getVersionNumber()).thenReturn(versionNumber);
         List<QuestionnaireResponse> questionnaireResponseList = new ArrayList<>();
         questionnaireResponseList.add(QUESTIONNAIRE_RESPONSE);
-        when(encounterMapper.mapEncounter(any(), any())).thenReturn(ENCOUNTER);
+        when(encounterMapper.mapEncounter(any(), any(), any())).thenReturn(ENCOUNTER);
         when(conditionMapper.mapCondition(any(), any(), any())).thenReturn(CONDITION);
         when(compositionMapper.mapComposition(any(), any(), any(), any(), any(), any())).thenReturn(COMPOSITION);
         when(listMapper.mapList(any(), any(), any())).thenReturn(LIST_RESOURCE);

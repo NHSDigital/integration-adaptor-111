@@ -13,9 +13,9 @@
       "resource": {
         "resourceType": "MessageHeader",
         "event": {
-          "system": "https://fhir.nhs.uk/STU3/CodeSystem/ITK-MessageEvent-2",
-          "code": "ITK007C",
-          "display": "ITK GP Connect Send Document"
+          "system": "https://fhir.nhs.uk/STU3/CodeSystem/EventType-1",
+          "code": "referral-1",
+          "display": "Referral"
         },
         "destination": [
           {
@@ -56,6 +56,11 @@
           }
         ],
         "status": "finished",
+        "type": [
+          {
+            "text": "111 Encounter Referral"
+          }
+        ],
         "subject": {
           "reference": "urn:uuid:1809ca46-ba06-4161-85bc-e322a42fa355"
         },
