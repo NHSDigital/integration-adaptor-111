@@ -1,14 +1,13 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import static java.util.stream.Collectors.toList;
-
 import static org.apache.commons.lang3.StringUtils.substringAfter;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.Date;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageDestinationComponent;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
@@ -28,11 +27,10 @@ public class MessageHeaderService {
 
     private final SoapProperties soapProperties;
 
-    public MessageHeader createMessageHeader(ItkReportHeader itkHeader) {
+    public MessageHeader createMessageHeader(ItkReportHeader itkHeader, String messageId) {
         MessageHeader header = new MessageHeader();
 
-        header.setIdElement(newRandomUuid());
-        header.setId(header.getIdElement());
+        header.setIdElement(new IdType(messageId));
         header.setEvent(getEvent(itkHeader.getSpecVal()));
         header.setSource(getSource());
         header.setTimestamp(new Date());

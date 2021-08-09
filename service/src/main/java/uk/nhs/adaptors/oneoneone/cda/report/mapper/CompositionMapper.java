@@ -2,7 +2,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.hl7.fhir.dstu3.model.Composition.CompositionStatus.FINAL;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 import static org.hl7.fhir.utilities.xhtml.NodeType.Document;
@@ -28,6 +27,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component5;
@@ -42,12 +42,13 @@ public class CompositionMapper {
     private static final String SNOMED_CODE_DISPLAY = "Report of clinical encounter (record artifact)";
     private static final String COMPOSITION_TITLE = "111 Report";
     private final NodeUtil nodeUtil;
+    private final ResourceUtil resourceUtil;
 
     public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, List<CarePlan> carePlans,
         List<QuestionnaireResponse> questionnaireResponseList, ReferralRequest referralRequest, List<PractitionerRole> practitionerRoles) {
 
         Composition composition = new Composition();
-        composition.setIdElement(newRandomUuid());
+        composition.setIdElement(resourceUtil.newRandomUuid());
 
         Identifier docIdentifier = new Identifier();
         docIdentifier.setUse(USUAL);

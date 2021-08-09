@@ -1,7 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +17,7 @@ import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.CodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.StructuredBodyUtil;
 import uk.nhs.connect.iucds.cda.ucr.CV;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -37,12 +36,13 @@ public class ConditionMapper {
     public static final String SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
 
     private final NodeUtil nodeUtil;
+    private final ResourceUtil resourceUtil;
 
     public Condition mapCondition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
         List<QuestionnaireResponse> questionnaireResponseList) {
         Condition condition = new Condition();
 
-        condition.setIdElement(newRandomUuid());
+        condition.setIdElement(resourceUtil.newRandomUuid());
 
         condition
             .setClinicalStatus(Condition.ConditionClinicalStatus.ACTIVE)

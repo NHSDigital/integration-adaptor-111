@@ -1,7 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.ON;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
@@ -27,6 +26,7 @@ public class HealthcareServiceMapper {
     private final OrganizationMapper organizationMapper;
     private final ContactPointMapper contactPointMapper;
     private final NodeUtil nodeUtil;
+    private final ResourceUtil resourceUtil;
 
     public List<HealthcareService> mapHealthcareService(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
 
@@ -48,7 +48,7 @@ public class HealthcareServiceMapper {
         HealthcareService healthcareService = new HealthcareService()
             .setActive(true);
 
-        healthcareService.setIdElement(newRandomUuid());
+        healthcareService.setIdElement(resourceUtil.newRandomUuid());
 
         Location location = locationMapper.mapRecipientToLocation(intendedRecipient);
         healthcareService.addLocation(new Reference(location));

@@ -3,6 +3,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HealthcareService;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Resource;
@@ -14,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.comparator.ResourceDateComparator;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -27,6 +29,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ListMapperTest {
+
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
 
     @InjectMocks
     private ListMapper listMapper;
@@ -43,12 +47,16 @@ public class ListMapperTest {
     @Mock
     private ResourceDateComparator resourceDateComparator;
 
+    @Mock
+    private ResourceUtil resourceUtil;
+
     private List<Resource> resourcesCreated = asList(new HealthcareService(), new QuestionnaireResponse());
 
     @BeforeEach
     public void setUp() {
         when(clinicalDocument.getSetId()).thenReturn(ii);
         when(ii.getRoot()).thenReturn("411910CF-1A76-4330-98FE-C345DDEE5553");
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
     }
 
     @Test
@@ -67,5 +75,6 @@ public class ListMapperTest {
         assertThat(code.getCode()).isEqualTo("225390008");
         assertThat(code.getDisplay()).isEqualTo("Triage");
         assertThat(listResource.getEntry().size()).isEqualTo(1);
+        assertThat(listResource.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
     }
 }

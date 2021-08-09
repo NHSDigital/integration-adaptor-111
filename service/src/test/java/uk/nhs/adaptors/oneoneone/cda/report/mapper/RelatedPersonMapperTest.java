@@ -4,6 +4,7 @@ import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HumanName;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.RelatedPerson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,8 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
@@ -25,6 +28,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class RelatedPersonMapperTest {
+
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
 
     @InjectMocks
     private RelatedPersonMapper relatedPersonMapper;
@@ -42,6 +47,8 @@ public class RelatedPersonMapperTest {
     private ContactPoint contactPoint;
     @Mock
     private Address address;
+    @Mock
+    private ResourceUtil resourceUtil;
     private POCDMT000002UK01RelatedEntity relatedEntity;
     private POCDMT000002UK01Informant12 informant12;
 
@@ -57,6 +64,7 @@ public class RelatedPersonMapperTest {
         when(humanNameMapper.mapHumanName(ArgumentMatchers.any())).thenReturn(humanName);
         when(contactPointMapper.mapContactPoint(ArgumentMatchers.any())).thenReturn(contactPoint);
         when(addressMapper.mapAddress(ArgumentMatchers.any())).thenReturn(address);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
     }
 
     private POCDMT000002UK01Person createPerson() {
@@ -80,8 +88,7 @@ public class RelatedPersonMapperTest {
     @Test
     public void shouldMapRelatedPersonFromRelatedEntity() {
         RelatedPerson relatedPerson = relatedPersonMapper.mapRelatedPerson(informant12, encounter);
-        String uuidBeginning = "urn:uuid:";
-        assertThat(relatedPerson.getIdElement().getValue()).startsWith(uuidBeginning);
+        assertThat(relatedPerson.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(relatedPerson.getActive()).isEqualTo(true);
         assertThat(relatedPerson.getNameFirstRep()).isEqualTo(humanName);
         assertThat(relatedPerson.getTelecomFirstRep()).isEqualTo(contactPoint);

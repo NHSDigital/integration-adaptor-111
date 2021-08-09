@@ -70,14 +70,15 @@ public class EncounterReportBundleService {
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
-            .setFullUrl(resource.getIdElement().getValue())
+            .setFullUrl(resource.getIdElement().getValue() == null ? null : "urn:uuid:" + resource.getIdElement().getValue())
             .setResource(resource);
     }
 
-    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header) throws XmlException {
+    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header, String messageId)
+        throws XmlException {
         Bundle bundle = createBundle(clinicalDocument);
 
-        MessageHeader messageHeader = messageHeaderService.createMessageHeader(header);
+        MessageHeader messageHeader = messageHeaderService.createMessageHeader(header, messageId);
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
         List<PractitionerRole> authorPractitionerRoles = practitionerRoleMapper.mapAuthorRoles(clinicalDocument.getAuthorArray());
         List<PractitionerRole> practitionerRoles = new ArrayList<>(authorPractitionerRoles);
@@ -94,7 +95,7 @@ public class EncounterReportBundleService {
             referralRequest, authorPractitionerRoles);
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
 
-        addEntry(bundle, messageHeader);
+        addEntry(bundle, messageHeaderService.createMessageHeader(header, messageId));
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);

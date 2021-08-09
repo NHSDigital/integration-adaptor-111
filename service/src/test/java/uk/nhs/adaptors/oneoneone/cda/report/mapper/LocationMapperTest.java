@@ -4,6 +4,7 @@ import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HumanName;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Period;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.PN;
@@ -35,8 +37,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class LocationMapperTest {
 
-    public static final String DESCRIPTION = "description";
-    public static final String NAME = "Mick Jones";
+    private static final String DESCRIPTION = "description";
+    private static final String NAME = "Mick Jones";
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
     @Mock
     private AddressMapper addressMapper;
     @Mock
@@ -61,6 +64,8 @@ public class LocationMapperTest {
     private ContactPoint contactPoint;
     @Mock
     private NodeUtil nodeUtil;
+    @Mock
+    private ResourceUtil resourceUtil;
 
     @Test
     public void shouldMapRoleToLocation() {
@@ -79,12 +84,14 @@ public class LocationMapperTest {
         when(addressMapper.mapAddress(isA(AD.class))).thenReturn(address);
         when(humanName.getText()).thenReturn(NAME);
         when(nodeUtil.getNodeValueString(playingEntity.getDesc())).thenReturn(DESCRIPTION);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         Location location = locationMapper.mapRoleToLocation(participantRole);
 
         assertThat(location.getAddress()).isEqualTo(address);
         assertThat(location.getName()).isEqualTo(NAME);
         assertThat(location.getDescription()).isEqualTo(DESCRIPTION);
+        assertThat(location.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
     }
 
     @Test
@@ -98,11 +105,12 @@ public class LocationMapperTest {
         when(itkOrganization.getAsOrganizationPartOf()).thenReturn(partOf);
         when(partOf.getEffectiveTime()).thenReturn(effectiveTime);
         when(periodMapper.mapPeriod(any())).thenReturn(period);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         Encounter.EncounterLocationComponent encounterLocationComponent = locationMapper
                 .mapOrganizationToLocationComponent(itkOrganization);
 
-        assertThat(encounterLocationComponent.getLocationTarget().getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(encounterLocationComponent.getLocationTarget().getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(encounterLocationComponent.getLocationTarget().getManagingOrganizationTarget()).isEqualTo(organization);
         assertThat(encounterLocationComponent.getPeriod()).isEqualTo(period);
     }
@@ -120,6 +128,7 @@ public class LocationMapperTest {
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
         when(itkIntendedRecipient.isSetReceivedOrganization()).thenReturn(true);
         when(organizationMapper.mapOrganization(any())).thenReturn(organization);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         Location referenceRecipientToLocation = locationMapper
                 .mapRecipientToLocation(itkIntendedRecipient);
@@ -129,5 +138,6 @@ public class LocationMapperTest {
         assertThat(referenceRecipientToLocation.getTelecom()).isEqualTo(List.of(contactPoint));
         assertThat(referenceRecipientToLocation.getManagingOrganization()).isNotNull();
         assertThat(referenceRecipientToLocation.getManagingOrganizationTarget()).isEqualTo(organization);
+        assertThat(referenceRecipientToLocation.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
     }
 }
