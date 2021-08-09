@@ -104,5 +104,6 @@ public class CompositionMapperTest {
         assertThat(composition.getSection().get(1).getTitle()).isEqualTo("ReferralRequest");
         assertThat(composition.getSection().get(2).getEntry().get(0).getResource()).isEqualTo(questionnaireResponse);
         assertThat(composition.getSection().get(2).getTitle()).isEqualTo(questionnaireResponseTitle);
+        assertThat(composition.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
     }
 }
