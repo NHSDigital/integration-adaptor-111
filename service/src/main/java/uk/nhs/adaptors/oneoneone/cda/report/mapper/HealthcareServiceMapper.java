@@ -69,12 +69,14 @@ public class HealthcareServiceMapper {
             Organization organization = organizationMapper.mapOrganization(receivedOrganization);
             Coding code = new Coding().setCode(String.valueOf(informationRecipient.getTypeCode()));
             organization.setType(Collections.singletonList(new CodeableConcept(code)));
+            organization.setType(Collections.singletonList(new CodeableConcept(new Coding().setDisplay(nodeUtil.getAllText(receivedOrganization.getDomNode())))));
             healthcareService.setProvidedBy(new Reference(organization));
             healthcareService.setProvidedByTarget(organization);
             if (receivedOrganization.sizeOfNameArray() > 0) {
                 ON name = receivedOrganization.getNameArray(0);
-
                 healthcareService.setName(nodeUtil.getAllText(name.getDomNode()));
+
+
             }
         }
 
