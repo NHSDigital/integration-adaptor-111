@@ -13,7 +13,7 @@ public class ResourceUtilTest {
     private static final String UUID_PATTERN = "^[a-zA-Z0-9]{8}([-\\s]?(?:[a-zA-Z0-9]{4})){3}?[-\\s]?(?:[a-zA-Z0-9]{12})?$";
     private static final Pattern PATTERN = Pattern.compile(UUID_PATTERN);
 
-    public boolean verifyUUID(String uuid) {
+    private boolean verifyUUID(String uuid) {
         return PATTERN.matcher(uuid).matches();
     }
 

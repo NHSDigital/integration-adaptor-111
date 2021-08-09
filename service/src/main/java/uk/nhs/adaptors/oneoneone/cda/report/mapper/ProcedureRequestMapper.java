@@ -16,7 +16,9 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 @Component
 @RequiredArgsConstructor
 public class ProcedureRequestMapper {
+
     private final ResourceUtil resourceUtil;
+
     public ProcedureRequest mapProcedureRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Reference patient,
         ReferralRequest referralRequest) {
         ProcedureRequest procedureRequest = new ProcedureRequest();
