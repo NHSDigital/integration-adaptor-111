@@ -1,9 +1,12 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import lombok.AllArgsConstructor;
+
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.Address.AddressUse;
+import org.hl7.fhir.dstu3.model.Address.AddressType;
 import org.springframework.stereotype.Component;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 
@@ -21,11 +24,17 @@ public class AddressMapper {
         Address address = new Address();
 
         Arrays.stream(itkAddress.getStreetAddressLineArray())
-                .map(nodeUtil::getNodeValueString)
-                .forEach(address::addLine);
+            .map(nodeUtil::getNodeValueString)
+            .forEach(address::addLine);
 
         if (itkAddress.isSetUse()) {
-            address.setUse(AddressUse.fromCode(getAddressUseString(itkAddress.getUse().get(0).toString())));
+            String addressTypeString = getAddressTypeString(itkAddress.getUse().get(0).toString());
+            String addressUseString = getAddressUseString(itkAddress.getUse().get(0).toString());
+            if (addressTypeString != null) {
+                address.setType(AddressType.fromCode(addressTypeString));
+            } else {
+                address.setUse(AddressUse.fromCode(addressUseString));
+            }
         }
 
         if (itkAddress.sizeOfPostalCodeArray() > 0) {
@@ -57,6 +66,13 @@ public class AddressMapper {
         }
 
         return address;
+    }
+
+    private String getAddressTypeString(String typeCode) {
+        return switch (typeCode) {
+            case "PHYS" -> "physical";
+            default -> null;
+        };
     }
 
     private String getAddressUseString(String useCode) {

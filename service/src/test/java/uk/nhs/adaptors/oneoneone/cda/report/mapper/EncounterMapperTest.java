@@ -7,6 +7,8 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent.DISCHARGE_DETAILS;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -29,10 +31,13 @@ import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CDNPfITCDAUrl;
 import uk.nhs.connect.iucds.cda.ucr.ED;
+import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component2;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01DataEnterer;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncompassingEncounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
@@ -49,6 +54,9 @@ public class EncounterMapperTest {
 
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
 
+    private static final String ID_ROOT = "2.16.840.1.113883.2.1.3.2.4.18.34";
+    private static final String ID_EXTENSION = "CASEREF1234";
+    private static final String TEXT_REPRESENTATION = "111 Encounter Copy for Information";
     @Mock
     private ParticipantMapper participantMapper;
     @Mock
@@ -92,15 +100,19 @@ public class EncounterMapperTest {
     @Mock
     private POCDMT000002UK01Encounter encounter;
     @Mock
-    private POCDMT000002UK01Component2 component2;
+    private POCDMT000002UK01EncompassingEncounter encompassingEncounter;
     @Mock
-    private CDNPfITCDAUrl cdnPfITCDAUrl;
+    private POCDMT000002UK01Component1 component1;
+    @Mock
+    private POCDMT000002UK01Component2 component2;
     @Mock
     private ED encounterTextED;
     @Mock
     private NodeUtil nodeUtil;
     @Mock
     private ResourceUtil resourceUtil;
+    @Mock
+    private II identifier;
 
     @BeforeEach
     public void setUp() {
@@ -115,6 +127,7 @@ public class EncounterMapperTest {
         when(patientRole.getProviderOrganization()).thenReturn(organization);
 
         mockClinicalDocument(clinicalDocument);
+        mockEncompassingEncounter();
         mockParticipant(clinicalDocument);
         mockLocation();
         mockPeriod(clinicalDocument);
@@ -125,10 +138,18 @@ public class EncounterMapperTest {
         mockEncounterTypeAndReason();
     }
 
+    private void mockEncompassingEncounter() {
+        when(component1.getEncompassingEncounter()).thenReturn(encompassingEncounter);
+        when(identifier.getRoot()).thenReturn(ID_ROOT);
+        when(identifier.getExtension()).thenReturn(ID_EXTENSION);
+        when(encompassingEncounter.getIdArray()).thenReturn(new II[] {identifier});
+    }
+
     private void mockClinicalDocument(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         POCDMT000002UK01RecordTarget mockRecordTarget = mock(POCDMT000002UK01RecordTarget.class);
         when(clinicalDocument.getRecordTargetArray(anyInt())).thenReturn(mockRecordTarget);
         when(mockRecordTarget.getPatientRole()).thenReturn(mock(POCDMT000002UK01PatientRole.class));
+        when(clinicalDocument.getComponentOf()).thenReturn(component1);
     }
 
     private void mockParticipant(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -201,7 +222,7 @@ public class EncounterMapperTest {
 
     @Test
     public void shouldMapEncounter() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
 
         verifyEncounter(encounter);
     }
@@ -216,20 +237,23 @@ public class EncounterMapperTest {
         assertThat(encounter.getLocationFirstRep()).isEqualTo(locationComponent);
         assertThat(encounter.getSubjectTarget()).isEqualTo(patient);
         assertThat(encounter.getText().getDiv().toString()).isEqualTo(encounterDivText);
+        assertThat(encounter.getIdentifierFirstRep().getValue()).isEqualTo(ID_EXTENSION);
+        assertThat(encounter.getIdentifierFirstRep().getSystem()).isEqualTo(ID_ROOT);
+        assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(TEXT_REPRESENTATION);
     }
 
     @Test
     public void mapEncounterTest() {
         mockParticipant(clinicalDocument);
 
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
         verifyEncounter(encounter);
     }
 
     @Test
     @SuppressWarnings("MagicNumber")
     public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
         verifyEncounter(encounter);
 
         assertThat(encounter.getParticipant().size()).isEqualTo(4);

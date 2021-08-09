@@ -1,6 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.substringAfter;
 
 import java.util.Date;
 
@@ -14,16 +15,15 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
+import uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent;
 import uk.nhs.adaptors.oneoneone.config.SoapProperties;
 
 @Component
 @RequiredArgsConstructor
 public class MessageHeaderService {
 
-    private static final String EVENT_SYSTEM = "https://fhir.nhs.uk/STU3/CodeSystem/ITK-MessageEvent-2";
-    private static final String EVENT_CODE = "ITK007C";
-    private static final String EVENT_DISPLAY_VALUE = "ITK GP Connect Send Document";
     private static final String MESSAGE_SOURCE_NAME = "NHS 111 Adaptor";
+    private static final String ITK_SPEC_PREFIX = "urn:nhs-itk:interaction:";
 
     private final SoapProperties soapProperties;
 
@@ -31,7 +31,7 @@ public class MessageHeaderService {
         MessageHeader header = new MessageHeader();
 
         header.setIdElement(new IdType(messageId));
-        header.setEvent(getEvent());
+        header.setEvent(getEvent(itkHeader.getSpecVal()));
         header.setSource(getSource());
         header.setTimestamp(new Date());
         header.setReason(new CodeableConcept().addCoding(
@@ -54,10 +54,13 @@ public class MessageHeaderService {
         return source;
     }
 
-    private Coding getEvent() {
-        return new Coding()
-            .setSystem(EVENT_SYSTEM)
-            .setCode(EVENT_CODE)
-            .setDisplay(EVENT_DISPLAY_VALUE);
+    private Coding getEvent(String itkSpec) {
+        String specValue = substringAfter(itkSpec, ITK_SPEC_PREFIX);
+        if (specValue.startsWith("primary")) {
+            return MessageHeaderEvent.REFERRAL.toCoding();
+        } else if (specValue.startsWith("copy")) {
+            return MessageHeaderEvent.DISCHARGE_DETAILS.toCoding();
+        }
+        return null;
     }
 }

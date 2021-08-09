@@ -5,16 +5,22 @@ import static java.util.Arrays.stream;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent.DISCHARGE_DETAILS;
+import static uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent.REFERRAL;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterLocationComponent;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
 import org.hl7.fhir.dstu3.model.Group;
+import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -66,18 +72,38 @@ public class EncounterMapper {
 
     private final ResourceUtil resourceUtil;
 
-    public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<PractitionerRole> practitionerRoles) {
+
+    public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<PractitionerRole> practitionerRoles,
+        Coding interaction) {
         Encounter encounter = new Encounter();
         encounter.setIdElement(resourceUtil.newRandomUuid());
         encounter.setStatus(FINISHED);
         encounter.setLocation(getLocationComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));
+        setType(encounter, interaction);
         setServiceProvider(encounter, clinicalDocument);
+        setIdentifiers(encounter, clinicalDocument);
         setSubject(encounter, clinicalDocument);
         encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument, practitionerRoles, encounter));
         setAppointment(encounter, clinicalDocument);
         setEncounterReasonAndType(encounter, clinicalDocument);
         return encounter;
+    }
+
+    private void setType(Encounter encounter, Coding interaction) {
+        if (REFERRAL.getCode().equals(interaction.getCode())) {
+            encounter.addType(new CodeableConcept().setText("111 Encounter Referral"));
+        } else if (DISCHARGE_DETAILS.getCode().equals(interaction.getCode())) {
+            encounter.addType(new CodeableConcept().setText("111 Encounter Copy for Information"));
+        }
+    }
+
+    private void setIdentifiers(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        stream(clinicalDocument.getComponentOf().getEncompassingEncounter().getIdArray())
+            .map(it -> new Identifier()
+                .setSystem(it.getRoot())
+                .setValue(it.getExtension()))
+            .forEach(encounter::addIdentifier);
     }
 
     private List<EncounterLocationComponent> getLocationComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {

@@ -14,9 +14,9 @@
         "resourceType": "MessageHeader",
         "id": "2B77B3F5-3016-4A6D-821F-152CE420E58D",
         "event": {
-          "system": "https://fhir.nhs.uk/STU3/CodeSystem/ITK-MessageEvent-2",
-          "code": "ITK007C",
-          "display": "ITK GP Connect Send Document"
+          "system": "https://fhir.nhs.uk/STU3/CodeSystem/EventType-1",
+          "code": "referral-1",
+          "display": "Referral"
         },
         "destination": [
           {
@@ -43,7 +43,26 @@
       "resource": {
         "resourceType": "Encounter",
         "id": "11f9229c-d312-4f01-8c1f-d332c58ab22f",
+        "identifier": [
+          {
+            "system": "2.16.840.1.113883.2.1.3.2.4.18.49",
+            "value": "LOC665"
+          },
+          {
+            "system": "2.16.840.1.113883.2.1.3.2.4.18.34",
+            "value": "CASEREF1234"
+          },
+          {
+            "system": "2.16.840.1.113883.2.1.3.2.4.18.35",
+            "value": "CASEID123"
+          }
+        ],
         "status": "finished",
+        "type": [
+          {
+            "text": "111 Encounter Referral"
+          }
+        ],
         "subject": {
           "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
         },
@@ -137,6 +156,7 @@
         ],
         "address": [
           {
+            "type": "physical",
             "line": [
               "Church Street Walk in Centre",
               "4 Church Street",
