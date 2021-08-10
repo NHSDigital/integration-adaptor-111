@@ -1,5 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
@@ -17,16 +19,20 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+
 @ExtendWith(MockitoExtension.class)
 public class HealthcareServiceMapperTest {
 
     private static final String HEALTHCARE_SERVICE_NAME = "Thames Medical Practice";
+    private static final String PRCP = "PRCP";
+
     @InjectMocks
     private HealthcareServiceMapper healthcareServiceMapper;
     @Mock
@@ -51,6 +57,10 @@ public class HealthcareServiceMapperTest {
     private Organization organization;
     @Mock
     private Location location;
+    @Mock
+    private List<Coding> codingList;
+    @Mock
+    private List<CodeableConcept> codeableConceptList;
 
     @BeforeEach
     public void setup() {
@@ -68,6 +78,10 @@ public class HealthcareServiceMapperTest {
         when(receivedOrganization.getNameArray(0)).thenReturn(name);
         when(name.getDomNode()).thenReturn(node);
         when(nodeUtil.getAllText(name.getDomNode())).thenReturn(HEALTHCARE_SERVICE_NAME);
+        //when(nodeUtil.getAllText(receivedOrganization.getDomNode())).thenReturn()
+        when(organization.getType()).thenReturn(codeableConceptList);
+        when(codeableConceptList.get(0)).thenReturn((CodeableConcept) codingList);
+        when(organization.getType().get(0).getCoding().get(0).getCode()).thenReturn(PRCP);
     }
 
     @Test
@@ -78,7 +92,9 @@ public class HealthcareServiceMapperTest {
         HealthcareService healthcareService = healthcareServiceList.get(0);
 
         assertThat(organization).isEqualTo(healthcareService.getProvidedByTarget());
+        assertThat(PRCP).isEqualTo(healthcareService.getProvidedByTarget().getType().get(0).getCoding().get(0).getCode());
         assertThat(HEALTHCARE_SERVICE_NAME).isEqualTo(healthcareService.getName());
         assertThat(true).isEqualTo(healthcareService.getActive());
+        //assertThat(PRCP).isEqualTo();
     }
 }

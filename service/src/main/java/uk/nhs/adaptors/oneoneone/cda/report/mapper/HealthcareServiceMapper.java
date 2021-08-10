@@ -73,13 +73,14 @@ public class HealthcareServiceMapper {
                 organization.setType(Collections.singletonList(new CodeableConcept(code)));
                 Coding display = new Coding().setDisplay(nodeUtil.getAllText(receivedOrganization.getDomNode()));
                 organization.setType(Collections.singletonList(new CodeableConcept(display)));
+            }
                 healthcareService.setProvidedBy(new Reference(organization));
                 healthcareService.setProvidedByTarget(organization);
                 if (receivedOrganization.sizeOfNameArray() > 0) {
                     ON name = receivedOrganization.getNameArray(0);
                     healthcareService.setName(nodeUtil.getAllText(name.getDomNode()));
                 }
-            }
+            //}
         }
 
         return healthcareService;
