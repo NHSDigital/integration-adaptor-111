@@ -27,7 +27,7 @@ import uk.nhs.connect.iucds.cda.ucr.TEL;
 @RequiredArgsConstructor
 public class HealthcareServiceMapper {
 
-    private static final String PRCP = "PRCP";
+    private static final String PRCP_TYPE_CODE = "PRCP";
     private final LocationMapper locationMapper;
     private final OrganizationMapper organizationMapper;
     private final ContactPointMapper contactPointMapper;
@@ -38,7 +38,9 @@ public class HealthcareServiceMapper {
         List<HealthcareService> healthcareServiceList = new ArrayList<>();
 
         for (POCDMT000002UK01InformationRecipient recipient : clinicalDocument.getInformationRecipientArray()) {
-            healthcareServiceList.add(mapSingleHealthcareService(recipient));
+            if(recipient.getTypeCode().toString() == PRCP_TYPE_CODE) {
+                healthcareServiceList.add(mapSingleHealthcareService(recipient));
+            }
         }
 
         return healthcareServiceList;
@@ -49,7 +51,6 @@ public class HealthcareServiceMapper {
 
         POCDMT000002UK01IntendedRecipient intendedRecipient =
             informationRecipient.getIntendedRecipient();
-        informationRecipient.getTypeCode();
 
         HealthcareService healthcareService = new HealthcareService()
             .setActive(true);
@@ -67,20 +68,14 @@ public class HealthcareServiceMapper {
 
         if (intendedRecipient.isSetReceivedOrganization()) {
             POCDMT000002UK01Organization receivedOrganization = intendedRecipient.getReceivedOrganization();
-            Organization organization = organizationMapper.mapOrganization(receivedOrganization);
-            Coding code = new Coding().setCode(String.valueOf(informationRecipient.getTypeCode()));
-            if (code.getCode() == PRCP) {
-                organization.setType(Collections.singletonList(new CodeableConcept(code)));
-                Coding display = new Coding().setDisplay(nodeUtil.getAllText(receivedOrganization.getDomNode()));
-                organization.setType(Collections.singletonList(new CodeableConcept(display)));
+            Organization organization = organizationMapper.mapOrganization(informationRecipient);
+
+            healthcareService.setProvidedBy(new Reference(organization));
+            healthcareService.setProvidedByTarget(organization);
+            if (receivedOrganization.sizeOfNameArray() > 0) {
+                ON name = receivedOrganization.getNameArray(0);
+                healthcareService.setName(nodeUtil.getAllText(name.getDomNode()));
             }
-                healthcareService.setProvidedBy(new Reference(organization));
-                healthcareService.setProvidedByTarget(organization);
-                if (receivedOrganization.sizeOfNameArray() > 0) {
-                    ON name = receivedOrganization.getNameArray(0);
-                    healthcareService.setName(nodeUtil.getAllText(name.getDomNode()));
-                }
-            //}
         }
 
         return healthcareService;
