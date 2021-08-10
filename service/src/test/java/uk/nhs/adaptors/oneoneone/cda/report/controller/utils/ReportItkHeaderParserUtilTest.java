@@ -1,6 +1,8 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHeaderParserUtil.ITK_ADDRESS_NODE;
@@ -22,6 +24,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
+import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
+
 @ExtendWith(MockitoExtension.class)
 public class ReportItkHeaderParserUtilTest {
     private static final String TRACKING_ID = "5ABE57EC-7BB0-465B-89BE-62D90962D31C";
@@ -32,7 +37,7 @@ public class ReportItkHeaderParserUtilTest {
     private static final String TYPE = "2.16.840.1.113883.2.1.3.2.4.18.44";
 
     @InjectMocks
-    private final ReportItkHeaderParserUtil reportItkHeaderParserUtil = new ReportItkHeaderParserUtil();
+    private ReportItkHeaderParserUtil reportItkHeaderParserUtil;
 
     @Mock
     private Element headerElement;
@@ -49,6 +54,9 @@ public class ReportItkHeaderParserUtilTest {
     @Mock
     private Attribute typeAttribute;
 
+    @Mock
+    private ItkValidator itkValidator;
+
     @BeforeEach
     private void setUp() {
         when(specificationElement.attributeValue(KEY_ATTRIBUTE)).thenReturn(SPEC_KEY);
@@ -58,7 +66,7 @@ public class ReportItkHeaderParserUtilTest {
     }
 
     @Test
-    public void getHeaderValuesWithOdsAndDosIdShouldReturnCorrectItkReportHeader() {
+    public void getHeaderValuesWithOdsAndDosIdShouldReturnCorrectItkReportHeader() throws SoapClientException {
         when(odsCodeElement.attributeValue(URI_ATTRIBUTE)).thenReturn(ODS_CODE);
         when(dosIdElement.attributeValue(URI_ATTRIBUTE)).thenReturn(DOS_ID);
         when(dosIdElement.attribute(TYPE_ATTRIBUTE)).thenReturn(typeAttribute);
@@ -75,7 +83,7 @@ public class ReportItkHeaderParserUtilTest {
     }
 
     @Test
-    public void getHeaderValuesWithOdsShouldReturnCorrectItkReportHeader() {
+    public void getHeaderValuesWithOdsShouldReturnCorrectItkReportHeader() throws SoapClientException {
         when(odsCodeElement.attributeValue(URI_ATTRIBUTE)).thenReturn(ODS_CODE);
         when(headerElement.selectNodes(ITK_ADDRESS_NODE)).thenReturn(List.of(odsCodeElement));
 
@@ -89,7 +97,7 @@ public class ReportItkHeaderParserUtilTest {
     }
 
     @Test
-    public void getHeaderValuesWithDosIdShouldReturnCorrectItkReportHeader() {
+    public void getHeaderValuesWithDosIdShouldReturnCorrectItkReportHeader() throws SoapClientException {
         when(dosIdElement.attributeValue(URI_ATTRIBUTE)).thenReturn(DOS_ID);
         when(dosIdElement.attribute(TYPE_ATTRIBUTE)).thenReturn(typeAttribute);
         when(dosIdElement.attributeValue(TYPE_ATTRIBUTE)).thenReturn(TYPE);
@@ -102,5 +110,21 @@ public class ReportItkHeaderParserUtilTest {
         assertThat(header.getSpecVal()).isEqualTo(SPEC_VALUE);
         assertThat(header.getAddressList().size()).isEqualTo(1);
         assertThat(header.getAddressList().get(0)).isEqualTo("DOSServiceID:" + DOS_ID);
+    }
+
+    @Test
+    public void getHeaderValuesWhenCheckItkOdsAndDosIdThrowsErrorShouldThrowError() throws SoapClientException {
+        doThrow(new SoapClientException("msg", "reason")).when(itkValidator).checkItkOdsAndDosId(any(), any());
+
+        boolean exceptionThrown = false;
+        try {
+            reportItkHeaderParserUtil.getHeaderValues(headerElement);
+        } catch (SoapClientException e) {
+            exceptionThrown = true;
+            assertThat(e.getReason()).isEqualTo("reason");
+            assertThat(e.getMessage()).isEqualTo("msg");
+        }
+
+        assertThat(exceptionThrown).isTrue();
     }
 }

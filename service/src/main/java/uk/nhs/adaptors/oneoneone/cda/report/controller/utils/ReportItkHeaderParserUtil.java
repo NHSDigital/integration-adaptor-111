@@ -11,7 +11,12 @@ import java.util.stream.Stream;
 import org.dom4j.Element;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
+import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
+
 @Component
+@RequiredArgsConstructor
 public class ReportItkHeaderParserUtil {
     public static final String SPECIFICATION_NODE = "//*[local-name()='spec']";
     public static final String ITK_ADDRESS_NODE = "//*[local-name()='addresslist']/*[local-name()='address']";
@@ -21,7 +26,9 @@ public class ReportItkHeaderParserUtil {
     public static final String VALUE_ATTRIBUTE = "value";
     public static final String TRACKING_ID_ATTRIBUTE = "trackingid";
 
-    public ItkReportHeader getHeaderValues(Element headerElement) {
+    private final ItkValidator itkValidator;
+
+    public ItkReportHeader getHeaderValues(Element headerElement) throws SoapClientException {
         ItkReportHeader header = new ItkReportHeader();
         header.setTrackingId(headerElement.attributeValue(TRACKING_ID_ATTRIBUTE));
         setSpecification(header, headerElement);
@@ -30,7 +37,7 @@ public class ReportItkHeaderParserUtil {
         return header;
     }
 
-    private void setAddressList(ItkReportHeader header, Element headerElement) {
+    private void setAddressList(ItkReportHeader header, Element headerElement) throws SoapClientException {
         List<Element> elements = getElements(headerElement, ITK_ADDRESS_NODE);
         Optional<String> dosServiceId = elements.stream()
             .filter(it -> it.attribute(TYPE_ATTRIBUTE) != null
@@ -45,6 +52,8 @@ public class ReportItkHeaderParserUtil {
             )
             .map(it -> it.attributeValue(URI_ATTRIBUTE))
             .findFirst();
+
+        itkValidator.checkItkOdsAndDosId(odsCode.orElse(null), dosServiceId.orElse(null));
 
         String address = Stream.of(odsCode, dosServiceId)
             .filter(Optional::isPresent)

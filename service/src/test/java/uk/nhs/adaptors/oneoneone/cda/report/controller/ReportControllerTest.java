@@ -4,6 +4,7 @@ import static java.nio.charset.Charset.defaultCharset;
 import static java.nio.file.Files.readAllBytes;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -22,7 +23,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
@@ -57,12 +57,13 @@ public class ReportControllerTest {
     @Mock
     private SoapValidator soapValidator;
 
-    @Spy
+    @Mock
     private ReportItkHeaderParserUtil headerParserUtil;
 
     @Test
-    public void postReportValidRequest() throws XmlException {
+    public void postReportValidRequest() throws XmlException, SoapClientException {
         when(itkResponseUtil.createSuccessResponseEntity(eq(MESSAGE_ID), anyString())).thenReturn(RESPONSE_XML);
+        when(headerParserUtil.getHeaderValues(any())).thenReturn(getItkReportHeader());
 
         String validRequest = getValidXmlReportRequest();
 
@@ -77,10 +78,7 @@ public class ReportControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(OK);
         assertThat(response.getBody()).isEqualTo(RESPONSE_XML);
         ItkReportHeader headerValue = captorHeader.getValue();
-        assertThat(headerValue.getTrackingId()).isEqualTo("7D6F23E0-AE1A-11DB-9808-B18E1E0994CD");
-        assertThat(headerValue.getSpecKey()).isEqualTo("urn:nhs-itk:ns:201005:interaction");
-        assertThat(headerValue.getSpecVal()).isEqualTo("urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0");
-        assertThat(headerValue.getAddressList().get(0)).isEqualTo("urn:nhs-uk:addressing:ods:EM396");
+        assertThat(headerValue.getTrackingId()).isEqualTo(TRACKING_ID);
     }
 
     private String getValidXmlReportRequest() {
@@ -108,5 +106,11 @@ public class ReportControllerTest {
 
         ResponseEntity<String> response = reportController.postReport(invalidRequest);
         assertThat(response.getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR);
+    }
+
+    private ItkReportHeader getItkReportHeader() {
+        ItkReportHeader header = new ItkReportHeader();
+        header.setTrackingId(TRACKING_ID);
+        return header;
     }
 }

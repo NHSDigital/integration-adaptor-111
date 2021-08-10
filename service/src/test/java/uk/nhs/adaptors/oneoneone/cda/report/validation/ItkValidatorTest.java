@@ -1,27 +1,37 @@
 package uk.nhs.adaptors.oneoneone.cda.report.validation;
 
-import org.dom4j.Attribute;
-import org.dom4j.Element;
-import org.dom4j.Node;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
-import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.DISTRIBUTION_ENVELOPE;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_HEADER;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_PAYLOADS;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.MESSAGE_ID;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_HEADER;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.dom4j.Attribute;
+import org.dom4j.Element;
+import org.dom4j.Node;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
+import uk.nhs.adaptors.oneoneone.config.ItkProperties;
+
+@ExtendWith(MockitoExtension.class)
 public class ItkValidatorTest {
     private static final String VALID_ACTION_SERVICE = "urn:nhs-itk:services:201005:SendNHS111Report-v2-0";
     private static final String SOAP_ACTION_XPATH = "//*[local-name()='Action']";
@@ -33,8 +43,16 @@ public class ItkValidatorTest {
     private static final String SOAP_VALIDATION_FAILED_MSG = "Soap validation failed";
     private static final String VALID_PROFILE_ID = "urn:nhs-en:profile:nhs111CDADocument-v2-0";
     private static final String VALID_AUDIT_IDENTITY = "urn:nhs-uk:identity:ods:5L399";
+    private static final String ODS_CODE = "RSHSO14A";
+    private static final String DOS_ID = "2000006423";
+    private static final String SUPPORTED_ODS_CODES = "ABC,CDE,123";
+    private static final String SUPPORTED_DOS_IDS = "1234,4321";
 
-    private ItkValidator itkValidator = new ItkValidator();
+    @Mock
+    private ItkProperties itkProperties;
+
+    @InjectMocks
+    private ItkValidator itkValidator;
 
     private Map<ReportElement, Element> reportMap;
 
@@ -68,51 +86,51 @@ public class ItkValidatorTest {
     private Element prepareItkPayloadsElement() {
         itkPayloads = mock(Element.class);
         itkPayloadsCount = mock(Attribute.class);
-        when(itkPayloadsCount.getValue()).thenReturn("1");
-        when(itkPayloads.attribute("count")).thenReturn(itkPayloadsCount);
+        lenient().when(itkPayloadsCount.getValue()).thenReturn("1");
+        lenient().when(itkPayloads.attribute("count")).thenReturn(itkPayloadsCount);
         itkPayload = mock(Element.class);
         itkPayloadId = mock(Attribute.class);
-        when(itkPayloadId.getValue()).thenReturn("ID");
-        when(itkPayload.attribute("id")).thenReturn(itkPayloadId);
-        when(itkPayloads.selectNodes(ITK_PAYLOAD_XPATH)).thenReturn(asList(itkPayload));
+        lenient().when(itkPayloadId.getValue()).thenReturn("ID");
+        lenient().when(itkPayload.attribute("id")).thenReturn(itkPayloadId);
+        lenient().when(itkPayloads.selectNodes(ITK_PAYLOAD_XPATH)).thenReturn(asList(itkPayload));
 
         return itkPayloads;
     }
 
     private Element preapreItkHeaderElement() {
         itkHeader = mock(Element.class);
-        when(itkHeader.attribute("trackingid")).thenReturn(mock(Attribute.class));
+        lenient().when(itkHeader.attribute("trackingid")).thenReturn(mock(Attribute.class));
         itkService = mock(Attribute.class);
-        when(itkService.getValue()).thenReturn(VALID_ACTION_SERVICE);
-        when(itkHeader.attribute("service")).thenReturn(itkService);
+        lenient().when(itkService.getValue()).thenReturn(VALID_ACTION_SERVICE);
+        lenient().when(itkHeader.attribute("service")).thenReturn(itkService);
         itkManifest = mock(Element.class);
         itkManifestCount = mock(Attribute.class);
-        when(itkManifestCount.getValue()).thenReturn("1");
-        when(itkManifest.attribute("count")).thenReturn(itkManifestCount);
+        lenient().when(itkManifestCount.getValue()).thenReturn("1");
+        lenient().when(itkManifest.attribute("count")).thenReturn(itkManifestCount);
         itkManifestItem = mock(Element.class);
         itkManifestItemId = mock(Attribute.class);
-        when(itkManifestItemId.getValue()).thenReturn("ID");
-        when(itkManifestItem.attribute("id")).thenReturn(itkManifestItemId);
+        lenient().when(itkManifestItemId.getValue()).thenReturn("ID");
+        lenient().when(itkManifestItem.attribute("id")).thenReturn(itkManifestItemId);
         itkManifestProfileId = mock(Attribute.class);
-        when(itkManifestProfileId.getValue()).thenReturn(VALID_PROFILE_ID);
-        when(itkManifestItem.attribute("profileid")).thenReturn(itkManifestProfileId);
-        when(itkManifest.selectNodes(ITK_MANIFEST_ITEM_XPATH)).thenReturn(asList(itkManifestItem));
-        when(itkHeader.selectSingleNode(ITK_MANIFEST_XPATH)).thenReturn(itkManifest);
+        lenient().when(itkManifestProfileId.getValue()).thenReturn(VALID_PROFILE_ID);
+        lenient().when(itkManifestItem.attribute("profileid")).thenReturn(itkManifestProfileId);
+        lenient().when(itkManifest.selectNodes(ITK_MANIFEST_ITEM_XPATH)).thenReturn(asList(itkManifestItem));
+        lenient().when(itkHeader.selectSingleNode(ITK_MANIFEST_XPATH)).thenReturn(itkManifest);
         auditIdentity = mock(Element.class);
         itkAuditIdentityId = mock(Element.class);
         itkAuditIdentityIdUri = mock(Attribute.class);
-        when(itkAuditIdentityIdUri.getValue()).thenReturn(VALID_AUDIT_IDENTITY);
-        when(itkAuditIdentityId.attribute("uri")).thenReturn(itkAuditIdentityIdUri);
-        when(auditIdentity.selectSingleNode(ITK_AUDIT_IDENTITY_ID_XPATH)).thenReturn(itkAuditIdentityId);
-        when(itkHeader.selectSingleNode(ITK_AUDIT_IDENTITY_XPATH)).thenReturn(auditIdentity);
+        lenient().when(itkAuditIdentityIdUri.getValue()).thenReturn(VALID_AUDIT_IDENTITY);
+        lenient().when(itkAuditIdentityId.attribute("uri")).thenReturn(itkAuditIdentityIdUri);
+        lenient().when(auditIdentity.selectSingleNode(ITK_AUDIT_IDENTITY_ID_XPATH)).thenReturn(itkAuditIdentityId);
+        lenient().when(itkHeader.selectSingleNode(ITK_AUDIT_IDENTITY_XPATH)).thenReturn(auditIdentity);
         return itkHeader;
     }
 
     private Element prepareSoapHeaderElement() {
         soapHeader = mock(Element.class);
         soapAction = mock(Node.class);
-        when(soapHeader.selectSingleNode(SOAP_ACTION_XPATH)).thenReturn(soapAction);
-        when(soapAction.getText()).thenReturn(VALID_ACTION_SERVICE);
+        lenient().when(soapHeader.selectSingleNode(SOAP_ACTION_XPATH)).thenReturn(soapAction);
+        lenient().when(soapAction.getText()).thenReturn(VALID_ACTION_SERVICE);
 
         return soapHeader;
     }
@@ -175,6 +193,49 @@ public class ItkValidatorTest {
         checkExceptionThrownAndErrorMessage("Invalid Audit Identity value: InvalidAuditIdentity");
     }
 
+    @Test
+    public void shouldFailWhenOdsAndDosIdAreNotSupported() {
+        String expectedMessage = String.format("Both ODS code (%s) and DOS ID (%s) are invalid", ODS_CODE, DOS_ID);
+        String expectedReason = "Message rejected";
+        when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES);
+        when(itkProperties.getDosIds()).thenReturn(SUPPORTED_DOS_IDS);
+
+        boolean exceptionThrown = false;
+        try {
+            itkValidator.checkItkOdsAndDosId("urn:nhs-uk:addressing:ods:" + ODS_CODE, "DOSServiceID:" + DOS_ID);
+        } catch (SoapClientException e) {
+            exceptionThrown = true;
+            assertThat(e.getReason()).isEqualTo(expectedReason);
+            assertThat(e.getMessage()).isEqualTo(expectedMessage);
+        }
+
+        assertThat(exceptionThrown).isTrue();
+    }
+
+    @Test
+    public void shouldNotFailWhenOdsIsSupported() {
+        when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES + "," + ODS_CODE);
+        when(itkProperties.getDosIds()).thenReturn(SUPPORTED_DOS_IDS);
+
+        checkExceptionNotThrown();
+    }
+
+    @Test
+    public void shouldNotFailWhenDosIdIsSupported() {
+        when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES);
+        when(itkProperties.getDosIds()).thenReturn(SUPPORTED_DOS_IDS + "," + DOS_ID);
+
+        checkExceptionNotThrown();
+    }
+
+    @Test
+    public void shouldNotFailWhenOdsAndDosIdAreSupported() {
+        when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES + "," + ODS_CODE);
+        when(itkProperties.getDosIds()).thenReturn(SUPPORTED_DOS_IDS + "," + DOS_ID);
+
+        checkExceptionNotThrown();
+    }
+
     private void checkExceptionThrownAndErrorMessage(String errorMessage) {
         boolean exceptionThrown = false;
         try {
@@ -186,5 +247,16 @@ public class ItkValidatorTest {
         }
 
         assertThat(exceptionThrown).isTrue();
+    }
+
+    private void checkExceptionNotThrown() {
+        boolean exceptionThrown = false;
+        try {
+            itkValidator.checkItkOdsAndDosId("urn:nhs-uk:addressing:ods:" + ODS_CODE, "DOSServiceID:" + DOS_ID);
+        } catch (SoapClientException e) {
+            exceptionThrown = true;
+        }
+
+        assertThat(exceptionThrown).isFalse();
     }
 }
