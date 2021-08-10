@@ -26,6 +26,8 @@ import uk.nhs.connect.iucds.cda.ucr.TEL;
 @Component
 @RequiredArgsConstructor
 public class HealthcareServiceMapper {
+
+    private static final String PRCP = "PRCP";
     private final LocationMapper locationMapper;
     private final OrganizationMapper organizationMapper;
     private final ContactPointMapper contactPointMapper;
@@ -64,19 +66,19 @@ public class HealthcareServiceMapper {
         }
 
         if (intendedRecipient.isSetReceivedOrganization()) {
-            POCDMT000002UK01Organization receivedOrganization =
-                intendedRecipient.getReceivedOrganization();
+            POCDMT000002UK01Organization receivedOrganization = intendedRecipient.getReceivedOrganization();
             Organization organization = organizationMapper.mapOrganization(receivedOrganization);
             Coding code = new Coding().setCode(String.valueOf(informationRecipient.getTypeCode()));
-            organization.setType(Collections.singletonList(new CodeableConcept(code)));
-            organization.setType(Collections.singletonList(new CodeableConcept(new Coding().setDisplay(nodeUtil.getAllText(receivedOrganization.getDomNode())))));
-            healthcareService.setProvidedBy(new Reference(organization));
-            healthcareService.setProvidedByTarget(organization);
-            if (receivedOrganization.sizeOfNameArray() > 0) {
-                ON name = receivedOrganization.getNameArray(0);
-                healthcareService.setName(nodeUtil.getAllText(name.getDomNode()));
-
-
+            if (code.getCode() == PRCP) {
+                organization.setType(Collections.singletonList(new CodeableConcept(code)));
+                Coding display = new Coding().setDisplay(nodeUtil.getAllText(receivedOrganization.getDomNode()));
+                organization.setType(Collections.singletonList(new CodeableConcept(display)));
+                healthcareService.setProvidedBy(new Reference(organization));
+                healthcareService.setProvidedByTarget(organization);
+                if (receivedOrganization.sizeOfNameArray() > 0) {
+                    ON name = receivedOrganization.getNameArray(0);
+                    healthcareService.setName(nodeUtil.getAllText(name.getDomNode()));
+                }
             }
         }
 
