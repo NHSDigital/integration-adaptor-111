@@ -3,11 +3,8 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
@@ -38,9 +35,9 @@ public class HealthcareServiceMapper {
         List<HealthcareService> healthcareServiceList = new ArrayList<>();
 
         for (POCDMT000002UK01InformationRecipient recipient : clinicalDocument.getInformationRecipientArray()) {
-            //if(recipient.getTypeCode().toString().equals(PRCP_TYPE_CODE)) {
+            if (recipient.getTypeCode().toString().equals(PRCP_TYPE_CODE)) {
                 healthcareServiceList.add(mapSingleHealthcareService(recipient));
-            //}
+            }
         }
 
         return healthcareServiceList;
@@ -68,7 +65,8 @@ public class HealthcareServiceMapper {
 
         if (intendedRecipient.isSetReceivedOrganization()) {
             POCDMT000002UK01Organization receivedOrganization = intendedRecipient.getReceivedOrganization();
-            Organization organization = organizationMapper.mapOrganization(informationRecipient);
+            Organization organization = organizationMapper
+                .mapOrganization(informationRecipient);
 
             healthcareService.setProvidedBy(new Reference(organization));
             healthcareService.setProvidedByTarget(organization);

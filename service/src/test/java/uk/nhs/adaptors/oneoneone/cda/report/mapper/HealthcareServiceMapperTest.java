@@ -1,24 +1,16 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.EnumOptions;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.quality.Strictness;
 import org.w3c.dom.Node;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.ON;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -26,13 +18,14 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.connect.iucds.cda.ucr.XInformationRecipientX.Enum.forString;
 
 @ExtendWith(MockitoExtension.class)
 public class HealthcareServiceMapperTest {
@@ -60,7 +53,7 @@ public class HealthcareServiceMapperTest {
     private Node node;
     @Mock
     private NodeUtil nodeUtil;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    @Mock
     private Organization organization;
     @Mock
     private Location location;
@@ -82,9 +75,7 @@ public class HealthcareServiceMapperTest {
         when(receivedOrganization.getNameArray(0)).thenReturn(name);
         when(name.getDomNode()).thenReturn(node);
         when(nodeUtil.getAllText(name.getDomNode())).thenReturn(HEALTHCARE_SERVICE_NAME);
-        when(organization.getType().get(0).getCoding().get(0).getCode()).thenReturn(PRCP_TYPE_CODE);
-
-
+        lenient().when(informationRecipient.getTypeCode()).thenReturn(forString(PRCP_TYPE_CODE));
     }
 
     @Test
@@ -94,8 +85,10 @@ public class HealthcareServiceMapperTest {
             .mapHealthcareService(clinicalDocument);
 
         HealthcareService healthcareService = healthcareServiceList.get(0);
+
         assertThat(organization).isEqualTo(healthcareService.getProvidedByTarget());
         assertThat(HEALTHCARE_SERVICE_NAME).isEqualTo(healthcareService.getName());
         assertThat(true).isEqualTo(healthcareService.getActive());
+        assertThat(healthcareServiceList).isNotEmpty();
     }
 }
