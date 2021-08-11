@@ -5,12 +5,19 @@ import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
+import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.EnumOptions;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.quality.Strictness;
 import org.w3c.dom.Node;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.ON;
@@ -31,7 +38,7 @@ import static org.mockito.Mockito.when;
 public class HealthcareServiceMapperTest {
 
     private static final String HEALTHCARE_SERVICE_NAME = "Thames Medical Practice";
-    private static final String PRCP = "PRCP";
+    private static final String PRCP_TYPE_CODE = "PRCP";
 
     @InjectMocks
     private HealthcareServiceMapper healthcareServiceMapper;
@@ -53,23 +60,20 @@ public class HealthcareServiceMapperTest {
     private Node node;
     @Mock
     private NodeUtil nodeUtil;
-    @Mock
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Organization organization;
     @Mock
     private Location location;
-    @Mock
-    private List<Coding> codingList;
-    @Mock
-    private List<CodeableConcept> codeableConceptList;
 
     @BeforeEach
     public void setup() {
         when(locationMapper.mapRecipientToLocation(intendedRecipient))
             .thenReturn(location);
-        when(organizationMapper.mapOrganization(any()))
+        when(organizationMapper.mapOrganization(any(POCDMT000002UK01InformationRecipient.class)))
             .thenReturn(organization);
         POCDMT000002UK01InformationRecipient[] informationRecipientArray = new POCDMT000002UK01InformationRecipient[1];
         informationRecipientArray[0] = informationRecipient;
+
         when(clinicalDocument.getInformationRecipientArray()).thenReturn(informationRecipientArray);
         when(informationRecipient.getIntendedRecipient()).thenReturn(intendedRecipient);
         when(intendedRecipient.isSetReceivedOrganization()).thenReturn(true);
@@ -78,23 +82,20 @@ public class HealthcareServiceMapperTest {
         when(receivedOrganization.getNameArray(0)).thenReturn(name);
         when(name.getDomNode()).thenReturn(node);
         when(nodeUtil.getAllText(name.getDomNode())).thenReturn(HEALTHCARE_SERVICE_NAME);
-        //when(nodeUtil.getAllText(receivedOrganization.getDomNode())).thenReturn()
-        when(organization.getType()).thenReturn(codeableConceptList);
-        when(codeableConceptList.get(0)).thenReturn((CodeableConcept) codingList);
-        when(organization.getType().get(0).getCoding().get(0).getCode()).thenReturn(PRCP);
+        when(organization.getType().get(0).getCoding().get(0).getCode()).thenReturn(PRCP_TYPE_CODE);
+
+
     }
 
     @Test
     public void shouldMapHealthcareService() {
+
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper
             .mapHealthcareService(clinicalDocument);
 
         HealthcareService healthcareService = healthcareServiceList.get(0);
-
         assertThat(organization).isEqualTo(healthcareService.getProvidedByTarget());
-        assertThat(PRCP).isEqualTo(healthcareService.getProvidedByTarget().getType().get(0).getCoding().get(0).getCode());
         assertThat(HEALTHCARE_SERVICE_NAME).isEqualTo(healthcareService.getName());
         assertThat(true).isEqualTo(healthcareService.getActive());
-        //assertThat(PRCP).isEqualTo();
     }
 }

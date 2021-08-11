@@ -188,7 +188,7 @@ public class PatientMapperTest {
         when(patientRole.isSetProviderOrganization()).thenReturn(true);
         POCDMT000002UK01Organization itkOrganization = mock(POCDMT000002UK01Organization.class);
         when(patientRole.getProviderOrganization()).thenReturn(itkOrganization);
-        when(organizationMapper.mapOrganization(any())).thenReturn(organization);
+        when(organizationMapper.mapOrganization(any(POCDMT000002UK01Organization.class))).thenReturn(organization);
     }
 
     private void mockLanguage(POCDMT000002UK01Patient itkPatient) {

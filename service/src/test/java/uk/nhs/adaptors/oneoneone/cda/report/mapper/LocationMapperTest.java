@@ -93,7 +93,7 @@ public class LocationMapperTest {
         POCDMT000002UK01OrganizationPartOf partOf = mock(POCDMT000002UK01OrganizationPartOf.class);
         IVLTS effectiveTime = mock(IVLTS.class);
 
-        when(organizationMapper.mapOrganization(any())).thenReturn(organization);
+        when(organizationMapper.mapOrganization((POCDMT000002UK01Organization) any())).thenReturn(organization);
         when(itkOrganization.isSetAsOrganizationPartOf()).thenReturn(true);
         when(itkOrganization.getAsOrganizationPartOf()).thenReturn(partOf);
         when(partOf.getEffectiveTime()).thenReturn(effectiveTime);
@@ -119,7 +119,7 @@ public class LocationMapperTest {
         when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[]{itkTelecom});
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
         when(itkIntendedRecipient.isSetReceivedOrganization()).thenReturn(true);
-        when(organizationMapper.mapOrganization(any())).thenReturn(organization);
+        when(organizationMapper.mapOrganization((POCDMT000002UK01Organization) any())).thenReturn(organization);
 
         Location referenceRecipientToLocation = locationMapper
                 .mapRecipientToLocation(itkIntendedRecipient);

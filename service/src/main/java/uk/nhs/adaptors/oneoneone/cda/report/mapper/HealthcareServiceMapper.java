@@ -38,9 +38,9 @@ public class HealthcareServiceMapper {
         List<HealthcareService> healthcareServiceList = new ArrayList<>();
 
         for (POCDMT000002UK01InformationRecipient recipient : clinicalDocument.getInformationRecipientArray()) {
-            if(recipient.getTypeCode().toString() == PRCP_TYPE_CODE) {
+            //if(recipient.getTypeCode().toString().equals(PRCP_TYPE_CODE)) {
                 healthcareServiceList.add(mapSingleHealthcareService(recipient));
-            }
+            //}
         }
 
         return healthcareServiceList;
