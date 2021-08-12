@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
 import org.hl7.fhir.dstu3.model.Reference;
@@ -17,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component1;
@@ -27,6 +29,7 @@ public class ProcedureRequestMapperTest {
     private static final String DISPLAY_NAME = "Go to the nearest Emergency Department within 4 hours.";
     private static final String CODE = "Dx009";
     private static final String CODESYSTEM = "2.16.840.1.113883.2.1.3.2.4.17.325";
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
 
     private List<Reference> reasonReferenceList = new ArrayList<>();
 
@@ -48,6 +51,8 @@ public class ProcedureRequestMapperTest {
     private Reference reasonReference;
     @Mock
     private Period occurence;
+    @Mock
+    private ResourceUtil resourceUtil;
 
     @BeforeEach
     public void setUp() {
@@ -66,6 +71,7 @@ public class ProcedureRequestMapperTest {
         when(ce.getCodeSystem()).thenReturn(CODESYSTEM);
         when(referralRequest.getOccurrence()).thenReturn(occurence);
         when(referralRequest.getReasonReference()).thenReturn(reasonReferenceList);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
     }
 
     @Test
@@ -83,5 +89,6 @@ public class ProcedureRequestMapperTest {
         assertThat(procedureRequest.getDoNotPerform()).isEqualTo(false);
         assertThat(procedureRequest.getOccurrence()).isEqualTo(occurence);
         assertThat(procedureRequest.getReasonReference()).isEqualTo(reasonReferenceList);
+        assertThat(procedureRequest.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
     }
 }

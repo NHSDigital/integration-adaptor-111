@@ -3,8 +3,10 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static java.util.Arrays.stream;
 
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
+
+import static uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent.DISCHARGE_DETAILS;
+import static uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent.REFERRAL;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterLocationComponent;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
@@ -28,6 +32,7 @@ import org.springframework.stereotype.Component;
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
@@ -65,12 +70,17 @@ public class EncounterMapper {
 
     private final NodeUtil nodeUtil;
 
-    public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<PractitionerRole> practitionerRoles) {
+    private final ResourceUtil resourceUtil;
+
+
+    public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<PractitionerRole> practitionerRoles,
+        Coding interaction) {
         Encounter encounter = new Encounter();
-        encounter.setIdElement(newRandomUuid());
+        encounter.setIdElement(resourceUtil.newRandomUuid());
         encounter.setStatus(FINISHED);
         encounter.setLocation(getLocationComponents(clinicalDocument));
         encounter.setPeriod(getPeriod(clinicalDocument));
+        setType(encounter, interaction);
         setServiceProvider(encounter, clinicalDocument);
         setIdentifiers(encounter, clinicalDocument);
         setSubject(encounter, clinicalDocument);
@@ -78,6 +88,14 @@ public class EncounterMapper {
         setAppointment(encounter, clinicalDocument);
         setEncounterReasonAndType(encounter, clinicalDocument);
         return encounter;
+    }
+
+    private void setType(Encounter encounter, Coding interaction) {
+        if (REFERRAL.getCode().equals(interaction.getCode())) {
+            encounter.addType(new CodeableConcept().setText("111 Encounter Referral"));
+        } else if (DISCHARGE_DETAILS.getCode().equals(interaction.getCode())) {
+            encounter.addType(new CodeableConcept().setText("111 Encounter Copy for Information"));
+        }
     }
 
     private void setIdentifiers(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {

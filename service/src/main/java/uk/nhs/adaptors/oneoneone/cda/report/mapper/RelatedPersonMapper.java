@@ -4,7 +4,6 @@ import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 
 import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.UNKNOWN;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.PN;
@@ -36,6 +36,7 @@ public class RelatedPersonMapper {
     private final ContactPointMapper contactPointMapper;
 
     private final AddressMapper addressMapper;
+    private final ResourceUtil resourceUtil;
 
     public RelatedPerson mapRelatedPerson(POCDMT000002UK01Informant12 informant, Encounter encounter) {
         if (!informant.isSetRelatedEntity()) {
@@ -44,7 +45,7 @@ public class RelatedPersonMapper {
         POCDMT000002UK01RelatedEntity relatedEntity = informant.getRelatedEntity();
         RelatedPerson relatedPerson = new RelatedPerson();
 
-        relatedPerson.setIdElement(newRandomUuid());
+        relatedPerson.setIdElement(resourceUtil.newRandomUuid());
         relatedPerson.setActive(true)
             .setPatient(encounter.getSubject())
             .setGender(UNKNOWN);

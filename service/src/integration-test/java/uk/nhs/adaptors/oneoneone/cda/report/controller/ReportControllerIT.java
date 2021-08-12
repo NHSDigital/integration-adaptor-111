@@ -84,6 +84,7 @@ public class ReportControllerIT {
         "entry[*].resource.episodeOfCare[*].reference",
         "entry[*].resource.evidence[*].detail[*].reference",
         "entry[*].resource.generalPractitioner[*].reference",
+        "entry[*].resource.id",
         "entry[*].resource.incomingReferral[*].reference",
         "entry[*].resource.location[*].location.reference",
         "entry[*].resource.location[*].reference",

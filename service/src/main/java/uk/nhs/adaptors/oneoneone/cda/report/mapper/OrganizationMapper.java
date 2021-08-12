@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
@@ -45,6 +46,8 @@ public class OrganizationMapper {
         }
         return null;
     }
+
+    private final ResourceUtil resourceUtil;
 
     public Organization mapOrganization(POCDMT000002UK01Organization itkOrganization) {
         Organization fhirOrganization = new Organization();

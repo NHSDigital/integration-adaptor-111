@@ -1,7 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -11,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedCustodian;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Custodian;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01CustodianOrganization;
@@ -24,13 +23,14 @@ public class ServiceProviderMapper {
     private final ContactPointMapper contactPointMapper;
 
     private final NodeUtil nodeUtil;
+    private final ResourceUtil resourceUtil;
 
     public Organization mapServiceProvider(POCDMT000002UK01Custodian custodian) {
         POCDMT000002UK01AssignedCustodian assignedCustodian = custodian.getAssignedCustodian();
         POCDMT000002UK01CustodianOrganization custodianOrganization = assignedCustodian.getRepresentedCustodianOrganization();
 
         Organization serviceProviderOrganization = new Organization();
-        serviceProviderOrganization.setIdElement(newRandomUuid());
+        serviceProviderOrganization.setIdElement(resourceUtil.newRandomUuid());
         serviceProviderOrganization.setActive(true);
 
         if (custodianOrganization.isSetAddr()) {

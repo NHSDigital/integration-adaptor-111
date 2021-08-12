@@ -22,6 +22,7 @@ import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -69,18 +70,20 @@ public class EncounterReportBundleService {
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
-            .setFullUrl(resource.getIdElement().getValue())
+            .setFullUrl(resource.getIdElement().getValue() == null ? null : "urn:uuid:" + resource.getIdElement().getValue())
             .setResource(resource);
     }
 
-    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header) throws XmlException {
+    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header, String messageId)
+        throws XmlException {
         Bundle bundle = createBundle(clinicalDocument);
 
+        MessageHeader messageHeader = messageHeaderService.createMessageHeader(header, messageId);
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
         List<PractitionerRole> authorPractitionerRoles = practitionerRoleMapper.mapAuthorRoles(clinicalDocument.getAuthorArray());
         List<PractitionerRole> practitionerRoles = new ArrayList<>(authorPractitionerRoles);
         practitionerRoleMapper.mapResponsibleParty(clinicalDocument).ifPresent(practitionerRoles::add);
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, practitionerRoles);
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, practitionerRoles, messageHeader.getEvent());
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
         List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
             encounter.getSubject(), new Reference(encounter));
@@ -92,7 +95,7 @@ public class EncounterReportBundleService {
             referralRequest, authorPractitionerRoles);
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
 
-        addEntry(bundle, messageHeaderService.createMessageHeader(header));
+        addEntry(bundle, messageHeaderService.createMessageHeader(header, messageId));
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);

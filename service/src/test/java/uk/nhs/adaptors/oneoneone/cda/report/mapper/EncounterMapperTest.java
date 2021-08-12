@@ -7,11 +7,14 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent.DISCHARGE_DETAILS;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
@@ -25,6 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.ED;
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -47,8 +51,11 @@ import uk.nhs.connect.iucds.cda.ucr.TS;
 @ExtendWith(MockitoExtension.class)
 public class EncounterMapperTest {
 
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
+
     private static final String ID_ROOT = "2.16.840.1.113883.2.1.3.2.4.18.34";
     private static final String ID_EXTENSION = "CASEREF1234";
+    private static final String TEXT_REPRESENTATION = "111 Encounter Copy for Information";
     @Mock
     private ParticipantMapper participantMapper;
     @Mock
@@ -101,6 +108,8 @@ public class EncounterMapperTest {
     private ED encounterTextED;
     @Mock
     private NodeUtil nodeUtil;
+    @Mock
+    private ResourceUtil resourceUtil;
     @Mock
     private II identifier;
 
@@ -207,19 +216,19 @@ public class EncounterMapperTest {
         when(encounter.isSetText()).thenReturn(true);
         when(encounter.getText()).thenReturn(encounterTextED);
         when(nodeUtil.getNodeValueString(any())).thenReturn(encounterText);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
     }
 
     @Test
     public void shouldMapEncounter() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
 
         verifyEncounter(encounter);
     }
 
     private void verifyEncounter(Encounter encounter) {
-        String uuidBeginning = "urn:uuid:";
         String encounterDivText = "<div xmlns=\"http://www.w3.org/1999/xhtml\">Encounter text</div>";
-        assertThat(encounter.getIdElement().getValue()).startsWith(uuidBeginning);
+        assertThat(encounter.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(encounter.getStatus()).isEqualTo(FINISHED);
         assertThat(encounter.getPeriod()).isEqualTo(period);
         assertThat(encounter.getParticipantFirstRep()).isEqualTo(encounterParticipantComponent);
@@ -229,20 +238,21 @@ public class EncounterMapperTest {
         assertThat(encounter.getText().getDiv().toString()).isEqualTo(encounterDivText);
         assertThat(encounter.getIdentifierFirstRep().getValue()).isEqualTo(ID_EXTENSION);
         assertThat(encounter.getIdentifierFirstRep().getSystem()).isEqualTo(ID_ROOT);
+        assertThat(encounter.getTypeFirstRep().getText()).isEqualTo(TEXT_REPRESENTATION);
     }
 
     @Test
     public void mapEncounterTest() {
         mockParticipant(clinicalDocument);
 
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
         verifyEncounter(encounter);
     }
 
     @Test
     @SuppressWarnings("MagicNumber")
     public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
         verifyEncounter(encounter);
 
         assertThat(encounter.getParticipant().size()).isEqualTo(4);

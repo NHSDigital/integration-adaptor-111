@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Calendar;
 
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.TriageLineDetails.TriageLine;
 
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
+
 @ExtendWith(MockitoExtension.class)
 public class QuestionnaireResponseMapperTest {
+
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
+
     @InjectMocks
     private QuestionnaireResponseMapper questionnaireResponseMapper;
     @Mock
@@ -41,6 +47,9 @@ public class QuestionnaireResponseMapperTest {
     @Mock
     private TriageLine.Question.Answers.Answer answer;
 
+    @Mock
+    private ResourceUtil resourceUtil;
+
     @Test
     public void shouldMapQuestionnaireResponseFromPathways() {
         TriageLine.Question.Answers.Answer[] answerArray = new TriageLine.Question.Answers.Answer[] {answer};
@@ -59,6 +68,7 @@ public class QuestionnaireResponseMapperTest {
         when(answers.getAnswerArray()).thenReturn(answerArray);
         when(answer.getSelected()).thenReturn(true);
         when(answer.getText()).thenReturn(answerText);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         QuestionnaireResponse questionnaireResponse = questionnaireResponseMapper.mapQuestionnaireResponse(pathwaysCase, patient,
             encounter, triageLine);

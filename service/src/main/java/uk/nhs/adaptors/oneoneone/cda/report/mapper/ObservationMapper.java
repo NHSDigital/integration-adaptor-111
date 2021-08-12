@@ -4,7 +4,6 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
 import static org.apache.logging.log4j.util.Strings.join;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.Observation.ObservationStatus.FINAL;
 
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component2;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
@@ -37,6 +37,7 @@ public class ObservationMapper {
     private static final String PRESENTING_COMPLAINT_CODE = "33962009";
     private static final String PATIENTS_CONDITION_REGEXP = "Patient.s Reported Condition";
     private final NodeUtil nodeUtil;
+    private final ResourceUtil resourceUtil;
 
     public List<Observation> mapObservations(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
         List<Observation> observations = new ArrayList<>();
@@ -66,7 +67,7 @@ public class ObservationMapper {
 
     private Observation createObservation(Encounter encounter, List<String> sectionText) {
         Observation observation = new Observation();
-        observation.setIdElement(newRandomUuid());
+        observation.setIdElement(resourceUtil.newRandomUuid());
         observation.setStatus(FINAL);
         Coding coding = new Coding()
             .setCode(PRESENTING_COMPLAINT_CODE)

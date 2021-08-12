@@ -2,13 +2,16 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.ON;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedCustodian;
@@ -26,6 +29,7 @@ public class ServiceProviderMapperTest {
 
     public static final String CODE = "GP1Z";
     public static final String PROVIDER_NAME = "CLOCKHOUSE_MEDICAL";
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
     @Mock
     private AddressMapper addressMapper;
 
@@ -53,6 +57,9 @@ public class ServiceProviderMapperTest {
     @Mock
     private NodeUtil nodeUtil;
 
+    @Mock
+    private ResourceUtil resourceUtil;
+
     @Test
     public void shouldMapServiceProvider() {
         POCDMT000002UK01Custodian custodian = mock(POCDMT000002UK01Custodian.class);
@@ -74,10 +81,11 @@ public class ServiceProviderMapperTest {
         when(addressMapper.mapAddress(any())).thenReturn(address);
         when(contactPointMapper.mapContactPoint(any())).thenReturn(telecom);
         when(nodeUtil.getNodeValueString(any())).thenReturn(PROVIDER_NAME);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         Organization organization = serviceProviderMapper.mapServiceProvider(custodian);
 
-        assertThat(organization.getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(organization.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(organization.getActive()).isEqualTo(true);
         assertThat(organization.getAddressFirstRep()).isEqualTo(address);
         assertThat(organization.getTelecomFirstRep()).isEqualTo(telecom);

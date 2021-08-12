@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.util.Calendar;
 
 import org.hl7.fhir.dstu3.model.Enumerations;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Questionnaire;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,8 +16,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.TriageLineDetails.TriageLine;
 
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
+
 @ExtendWith(MockitoExtension.class)
 public class QuestionnaireMapperTest {
+
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
+
     @InjectMocks
     private QuestionnaireMapper questionnaireMapper;
     @Mock
@@ -39,6 +45,8 @@ public class QuestionnaireMapperTest {
     private TriageLine.Question question;
     @Mock
     private TriageLine.Question.TriageLogicId triageLogicId;
+    @Mock
+    private ResourceUtil resourceUtil;
 
     @Test
     public void shouldMapQuestionnaireResponseFromPathways() {
@@ -58,6 +66,7 @@ public class QuestionnaireMapperTest {
         when(question.getTriageLogicId()).thenReturn(triageLogicId);
         when(triageLogicId.getPathwayOrderNo()).thenReturn(orderNumber);
         when(caseDetails.isSetCaseId()).thenReturn(true);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         Questionnaire questionnaire = questionnaireMapper.mapQuestionnaire(pathwaysCase, triageLine);
 
@@ -67,5 +76,6 @@ public class QuestionnaireMapperTest {
         assertThat(questionnaire.getStatus()).isEqualTo(Enumerations.PublicationStatus.ACTIVE);
         assertThat(questionnaire.getDate()).isEqualTo("2011-02-17T00:00:00+00:00");
         assertThat(questionnaire.getPublisher()).isEqualTo("N/A");
+        assertThat(questionnaire.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
     }
 }

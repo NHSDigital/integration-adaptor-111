@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Coding;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.PractitionerRole;
@@ -17,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedAuthor;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
@@ -50,9 +52,13 @@ public class PractitionerRoleMapperTest {
     @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
 
+    @Mock
+    private ResourceUtil resourceUtil;
+
     private static final String CODE = "T1";
     private static final String CODE_SYSTEM = "1.2.3.4.5.6.7";
     private static final String DISPLAY_NAME = "Nurse";
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
 
     @Test
     public void shouldMapAuthorRoles() {
@@ -76,6 +82,8 @@ public class PractitionerRoleMapperTest {
     public void shouldMapResponsibleParty() {
         mockResponsibleParty();
 
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+
         PractitionerRole role = practitionerRoleMapper.mapResponsibleParty(clinicalDocument).get();
 
         Coding codingFirstRep = role.getCodeFirstRep().getCodingFirstRep();
@@ -84,6 +92,7 @@ public class PractitionerRoleMapperTest {
         assertThat(codingFirstRep.getDisplay()).isEqualTo(DISPLAY_NAME);
         assertThat(role.getOrganizationTarget()).isEqualTo(organization);
         assertThat(role.getPractitionerTarget()).isEqualTo(practitioner);
+        assertThat(role.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
     }
 
     private void mockAuthors() {
