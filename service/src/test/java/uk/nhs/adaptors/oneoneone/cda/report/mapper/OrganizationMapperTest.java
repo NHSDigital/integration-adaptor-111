@@ -22,6 +22,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.II;
+import uk.nhs.connect.iucds.cda.ucr.ON;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
@@ -66,6 +67,8 @@ public class OrganizationMapperTest {
     @Mock
     private Node node;
 
+    @Mock
+    private ON on;
     @Test
     public void shouldMapOrganizationInformationRecipient() {
 
@@ -75,7 +78,8 @@ public class OrganizationMapperTest {
         when(intendedRecipient.getReceivedOrganization()).thenReturn(itkOrganization);
         when(intendedRecipient.isSetReceivedOrganization()).thenReturn(true);
         lenient().when(informationRecipient.getTypeCode()).thenReturn(forString(PRCP_TYPE_CODE));
-        when(intendedRecipient.getReceivedOrganization().getDomNode()).thenReturn(node);
+        when(itkOrganization.getNameArray(0)).thenReturn(on);
+        when(on.getDomNode()).thenReturn(node);
         when(nodeUtil.getAllText(node)).thenReturn(HEALTHCARE_SERVICE_NAME);
 
         Organization organization = organizationMapper.mapOrganization(informationRecipient);
@@ -87,6 +91,7 @@ public class OrganizationMapperTest {
     @Test
     public void shouldMapOrganization() {
         POCDMT000002UK01Organization itkOrganization = mockItkOrganization();
+        when(nodeUtil.getNodeValueString(itkOrganization.getNameArray(0))).thenReturn(ORGANIZATION_NAME);
 
         Organization organization = organizationMapper.mapOrganization(itkOrganization);
 
@@ -117,7 +122,7 @@ public class OrganizationMapperTest {
 
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
         when(addressMapper.mapAddress(any())).thenReturn(address);
-        when(nodeUtil.getNodeValueString(itkOrganization.getNameArray(0))).thenReturn(ORGANIZATION_NAME);
+
         return itkOrganization;
     }
 }

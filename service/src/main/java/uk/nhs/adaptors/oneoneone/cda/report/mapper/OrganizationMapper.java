@@ -36,9 +36,9 @@ public class OrganizationMapper {
         POCDMT000002UK01IntendedRecipient intendedRecipient = informationRecipient.getIntendedRecipient();
         if (intendedRecipient.isSetReceivedOrganization()) {
             Organization fhirOrganization = mapOrganization(intendedRecipient.getReceivedOrganization());
-            Coding code = new Coding();
-            code.setCode(String.valueOf(informationRecipient.getTypeCode()));
-            code.setDisplay(nodeUtil.getAllText(intendedRecipient.getReceivedOrganization().getDomNode()));
+            Coding code = new Coding()
+                .setCode(String.valueOf(informationRecipient.getTypeCode()))
+                .setDisplay(nodeUtil.getAllText(intendedRecipient.getReceivedOrganization().getNameArray(0).getDomNode()));
             CodeableConcept codeableConcept = new CodeableConcept(code);
             fhirOrganization.setType(Collections.singletonList(codeableConcept));
             return fhirOrganization;
