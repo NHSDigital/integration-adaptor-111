@@ -72,6 +72,7 @@ public class OrganizationMapperTest {
 
     @Mock
     private ON on;
+
     @Test
     public void shouldMapOrganizationInformationRecipient() {
 

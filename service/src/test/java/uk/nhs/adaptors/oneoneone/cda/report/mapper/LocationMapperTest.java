@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
@@ -108,7 +109,7 @@ public class LocationMapperTest {
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         Encounter.EncounterLocationComponent encounterLocationComponent = locationMapper
-                .mapOrganizationToLocationComponent(itkOrganization);
+            .mapOrganizationToLocationComponent(itkOrganization);
 
         assertThat(encounterLocationComponent.getLocationTarget().getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(encounterLocationComponent.getLocationTarget().getManagingOrganizationTarget()).isEqualTo(organization);
@@ -122,16 +123,16 @@ public class LocationMapperTest {
         AD itkAddress = mock(AD.class);
         TEL itkTelecom = mock(TEL.class);
 
-        when(itkIntendedRecipient.sizeOfAddrArray()).thenReturn(new AD[]{itkAddress}.length);
+        when(itkIntendedRecipient.sizeOfAddrArray()).thenReturn(new AD[] {itkAddress}.length);
         when(addressMapper.mapAddress(any())).thenReturn(address);
-        when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[]{itkTelecom});
+        when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[] {itkTelecom});
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
         when(itkIntendedRecipient.isSetReceivedOrganization()).thenReturn(true);
         when(organizationMapper.mapOrganization((POCDMT000002UK01Organization) any())).thenReturn(organization);
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         Location referenceRecipientToLocation = locationMapper
-                .mapRecipientToLocation(itkIntendedRecipient);
+            .mapRecipientToLocation(itkIntendedRecipient);
 
         assertThat(referenceRecipientToLocation.getId().startsWith("urn:uuid:"));
         assertThat(referenceRecipientToLocation.getAddress()).isEqualTo(address);

@@ -67,7 +67,6 @@ public class HealthcareServiceMapper {
             POCDMT000002UK01Organization receivedOrganization = intendedRecipient.getReceivedOrganization();
             Organization organization = organizationMapper
                 .mapOrganization(informationRecipient);
-
             healthcareService.setProvidedBy(new Reference(organization));
             healthcareService.setProvidedByTarget(organization);
             if (receivedOrganization.sizeOfNameArray() > 0) {
