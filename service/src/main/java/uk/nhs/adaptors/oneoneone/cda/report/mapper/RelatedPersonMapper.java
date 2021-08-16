@@ -5,10 +5,14 @@ import static java.util.Collections.emptyList;
 
 import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.UNKNOWN;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.Address;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HumanName;
@@ -72,6 +76,14 @@ public class RelatedPersonMapper {
         }
 
         relatedPerson.setPeriod(getPeriod(relatedEntity));
+
+        Optional<TEL> telecomUse = stream(relatedEntity.getTelecomArray())
+            .filter(it -> it.getUse() != null && it.getUse().get(0).toString().equals("EC"))
+            .findFirst();
+        if(telecomUse.isPresent()){
+                Coding coding = new Coding().setCode("C").setDisplay("Emergency Contact");
+                relatedPerson.setRelationship(new CodeableConcept().setCoding(Arrays.asList(coding)));
+            }
 
         return relatedPerson;
     }
