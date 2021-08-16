@@ -33,6 +33,7 @@ public class HealthcareServiceMapperTest {
 
     private static final String HEALTHCARE_SERVICE_NAME = "Thames Medical Practice";
     private static final String PRCP_TYPE_CODE = "PRCP";
+    private static final String TRC_TYPE_CODE = "TRC";
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
 
     @InjectMocks
@@ -64,13 +65,17 @@ public class HealthcareServiceMapperTest {
 
     @BeforeEach
     public void setup() {
+        POCDMT000002UK01InformationRecipient[] informationRecipientArray = new POCDMT000002UK01InformationRecipient[1];
+        when(clinicalDocument.getInformationRecipientArray()).thenReturn(informationRecipientArray);
+        informationRecipientArray[0] = informationRecipient;
+    }
+
+    @Test
+    public void shouldMapHealthcareService() {
         when(locationMapper.mapRecipientToLocation(intendedRecipient))
             .thenReturn(location);
         when(organizationMapper.mapOrganization(any(POCDMT000002UK01InformationRecipient.class)))
             .thenReturn(organization);
-        POCDMT000002UK01InformationRecipient[] informationRecipientArray = new POCDMT000002UK01InformationRecipient[1];
-        informationRecipientArray[0] = informationRecipient;
-        when(clinicalDocument.getInformationRecipientArray()).thenReturn(informationRecipientArray);
         when(informationRecipient.getIntendedRecipient()).thenReturn(intendedRecipient);
         when(intendedRecipient.isSetReceivedOrganization()).thenReturn(true);
         when(intendedRecipient.getReceivedOrganization()).thenReturn(receivedOrganization);
@@ -80,10 +85,6 @@ public class HealthcareServiceMapperTest {
         when(nodeUtil.getAllText(name.getDomNode())).thenReturn(HEALTHCARE_SERVICE_NAME);
         when(informationRecipient.getTypeCode()).thenReturn(forString(PRCP_TYPE_CODE));
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
-    }
-
-    @Test
-    public void shouldMapHealthcareService() {
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper
             .mapHealthcareService(clinicalDocument);
 
@@ -94,5 +95,15 @@ public class HealthcareServiceMapperTest {
         assertThat(true).isEqualTo(healthcareService.getActive());
         assertThat(healthcareServiceList).isNotEmpty();
         assertThat(healthcareService.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
+    }
+
+    @Test
+    public void shouldMapHealthcareService2() {
+        when(informationRecipient.getTypeCode()).thenReturn(forString(TRC_TYPE_CODE));
+
+        List<HealthcareService> healthcareServiceList = healthcareServiceMapper
+            .mapHealthcareService(clinicalDocument);
+
+        assertThat(healthcareServiceList).isEmpty();
     }
 }
