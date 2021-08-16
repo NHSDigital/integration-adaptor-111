@@ -1,6 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.Encounter;
@@ -12,9 +13,15 @@ import org.springframework.stereotype.Component;
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
+import uk.nhs.connect.iucds.cda.ucr.AD;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncompassingEncounter;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01HealthCareFacility;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Location;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Place;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
 
 @Component
@@ -96,5 +103,24 @@ public class LocationMapper {
 
         location.setIdElement(resourceUtil.newRandomUuid());
         return location;
+    }
+
+    public Location mapHealthcareFacilityToLocation(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        POCDMT000002UK01EncompassingEncounter encompassingEncounter = clinicalDocument.getComponentOf().getEncompassingEncounter();
+        AD address = Optional.ofNullable(encompassingEncounter)
+            .map(POCDMT000002UK01EncompassingEncounter::getLocation)
+            .map(POCDMT000002UK01Location::getHealthCareFacility)
+            .map(POCDMT000002UK01HealthCareFacility::getLocation)
+            .map(POCDMT000002UK01Place::getAddr)
+            .orElse(null);
+
+        if (address != null) {
+            Location location = new Location();
+            location.setIdElement(resourceUtil.newRandomUuid());
+            location.setAddress(addressMapper.mapAddress(address));
+
+            return location;
+        }
+        return null;
     }
 }

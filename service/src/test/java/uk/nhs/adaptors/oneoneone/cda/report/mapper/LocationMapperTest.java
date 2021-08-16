@@ -1,5 +1,15 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Encounter;
@@ -10,6 +20,7 @@ import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Period;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,21 +30,13 @@ import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.PN;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01OrganizationPartOf;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LocationMapperTest {
@@ -43,6 +46,8 @@ public class LocationMapperTest {
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
     @Mock
     private POCDMT000002UK01Organization pocdmt000002UK01Organization;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
     @Mock
     private AddressMapper addressMapper;
     @Mock
@@ -137,11 +142,24 @@ public class LocationMapperTest {
         Location referenceRecipientToLocation = locationMapper
             .mapRecipientToLocation(itkIntendedRecipient);
 
-        assertThat(referenceRecipientToLocation.getId().startsWith("urn:uuid:"));
+        assertThat(referenceRecipientToLocation.getId()).isEqualTo(RANDOM_UUID);
         assertThat(referenceRecipientToLocation.getAddress()).isEqualTo(address);
         assertThat(referenceRecipientToLocation.getTelecom()).isEqualTo(List.of(contactPoint));
         assertThat(referenceRecipientToLocation.getManagingOrganization()).isNotNull();
         assertThat(referenceRecipientToLocation.getManagingOrganizationTarget()).isEqualTo(organization);
         assertThat(referenceRecipientToLocation.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
+    }
+
+    @Test
+    public void shouldMapHealthcareFacilityToLocation() {
+        AD itkAddress = mock(AD.class);
+        when(clinicalDocument.getComponentOf().getEncompassingEncounter().getLocation().getHealthCareFacility().getLocation().getAddr())
+            .thenReturn(itkAddress);
+        when(addressMapper.mapAddress(eq(itkAddress))).thenReturn(address);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+
+        Location location = locationMapper.mapHealthcareFacilityToLocation(clinicalDocument);
+        assertThat(location.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
+        assertThat(location.getAddress()).isEqualTo(address);
     }
 }
