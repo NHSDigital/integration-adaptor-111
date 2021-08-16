@@ -1,7 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,13 +31,15 @@ public class OrganizationMapper {
 
     private final NodeUtil nodeUtil;
 
+    private final ResourceUtil resourceUtil;
+
     public Organization mapOrganization(POCDMT000002UK01InformationRecipient informationRecipient) {
         POCDMT000002UK01IntendedRecipient intendedRecipient = informationRecipient.getIntendedRecipient();
         if (intendedRecipient.isSetReceivedOrganization()) {
             Organization fhirOrganization = mapOrganization(intendedRecipient.getReceivedOrganization());
             Coding code = new Coding()
                 .setCode(String.valueOf(informationRecipient.getTypeCode()))
-                .setDisplay(nodeUtil.getAllText(intendedRecipient.getReceivedOrganization().getNameArray(0).getDomNode()));
+                .setDisplay(nodeUtil.getNodeValueString(intendedRecipient.getReceivedOrganization().getNameArray(0)));
             CodeableConcept codeableConcept = new CodeableConcept(code);
             fhirOrganization.setType(Collections.singletonList(codeableConcept));
             return fhirOrganization;
@@ -47,11 +47,9 @@ public class OrganizationMapper {
         return null;
     }
 
-    private final ResourceUtil resourceUtil;
-
     public Organization mapOrganization(POCDMT000002UK01Organization itkOrganization) {
         Organization fhirOrganization = new Organization();
-        fhirOrganization.setIdElement(newRandomUuid());
+        fhirOrganization.setIdElement(resourceUtil.newRandomUuid());
         fhirOrganization.setName(nodeUtil.getNodeValueString(itkOrganization.getNameArray(0)));
         fhirOrganization.setAddress(Arrays
             .stream(itkOrganization.getAddrArray())

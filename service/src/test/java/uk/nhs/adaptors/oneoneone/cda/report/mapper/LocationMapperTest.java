@@ -42,6 +42,8 @@ public class LocationMapperTest {
     private static final String NAME = "Mick Jones";
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
     @Mock
+    private POCDMT000002UK01Organization pocdmt000002UK01Organization;
+    @Mock
     private AddressMapper addressMapper;
     @Mock
     private HumanNameMapper humanNameMapper;
@@ -101,7 +103,7 @@ public class LocationMapperTest {
         POCDMT000002UK01OrganizationPartOf partOf = mock(POCDMT000002UK01OrganizationPartOf.class);
         IVLTS effectiveTime = mock(IVLTS.class);
 
-        when(organizationMapper.mapOrganization((POCDMT000002UK01Organization) any())).thenReturn(organization);
+        when(organizationMapper.mapOrganization(any(POCDMT000002UK01Organization.class))).thenReturn(organization);
         when(itkOrganization.isSetAsOrganizationPartOf()).thenReturn(true);
         when(itkOrganization.getAsOrganizationPartOf()).thenReturn(partOf);
         when(partOf.getEffectiveTime()).thenReturn(effectiveTime);
@@ -128,7 +130,8 @@ public class LocationMapperTest {
         when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[] {itkTelecom});
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
         when(itkIntendedRecipient.isSetReceivedOrganization()).thenReturn(true);
-        when(organizationMapper.mapOrganization((POCDMT000002UK01Organization) any())).thenReturn(organization);
+        when(itkIntendedRecipient.getReceivedOrganization()).thenReturn(pocdmt000002UK01Organization);
+        when(organizationMapper.mapOrganization(any(POCDMT000002UK01Organization.class))).thenReturn(organization);
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         Location referenceRecipientToLocation = locationMapper

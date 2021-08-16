@@ -73,6 +73,9 @@ public class OrganizationMapperTest {
     @Mock
     private ON on;
 
+    @Mock
+    private ResourceUtil resourceUtil;
+
     @Test
     public void shouldMapOrganizationInformationRecipient() {
 
@@ -83,17 +86,13 @@ public class OrganizationMapperTest {
         when(intendedRecipient.isSetReceivedOrganization()).thenReturn(true);
         lenient().when(informationRecipient.getTypeCode()).thenReturn(forString(PRCP_TYPE_CODE));
         when(itkOrganization.getNameArray(0)).thenReturn(on);
-        when(on.getDomNode()).thenReturn(node);
-        when(nodeUtil.getAllText(node)).thenReturn(HEALTHCARE_SERVICE_NAME);
+        when(nodeUtil.getNodeValueString(on)).thenReturn(HEALTHCARE_SERVICE_NAME);
 
         Organization organization = organizationMapper.mapOrganization(informationRecipient);
 
         assertThat(organization.getType().get(0).getCoding().get(0).getCode()).isEqualTo(PRCP_TYPE_CODE);
         assertThat(organization.getType().get(0).getCoding().get(0).getDisplay()).isEqualTo(HEALTHCARE_SERVICE_NAME);
     }
-
-    @Mock
-    private ResourceUtil resourceUtil;
 
     @Test
     public void shouldMapOrganization() {
