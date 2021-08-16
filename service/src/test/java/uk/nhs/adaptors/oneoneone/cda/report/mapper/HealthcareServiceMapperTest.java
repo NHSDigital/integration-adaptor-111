@@ -24,7 +24,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 import static uk.nhs.connect.iucds.cda.ucr.XInformationRecipientX.Enum.forString;
@@ -79,7 +78,7 @@ public class HealthcareServiceMapperTest {
         when(receivedOrganization.getNameArray(0)).thenReturn(name);
         when(name.getDomNode()).thenReturn(node);
         when(nodeUtil.getAllText(name.getDomNode())).thenReturn(HEALTHCARE_SERVICE_NAME);
-        lenient().when(informationRecipient.getTypeCode()).thenReturn(forString(PRCP_TYPE_CODE));
+        when(informationRecipient.getTypeCode()).thenReturn(forString(PRCP_TYPE_CODE));
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
     }
 

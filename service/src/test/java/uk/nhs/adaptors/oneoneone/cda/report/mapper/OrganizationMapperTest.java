@@ -2,13 +2,11 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import static uk.nhs.connect.iucds.cda.ucr.XInformationRecipientX.Enum.forString;
 
-import org.w3c.dom.Node;
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.IdType;
@@ -68,9 +66,6 @@ public class OrganizationMapperTest {
     private POCDMT000002UK01IntendedRecipient intendedRecipient;
 
     @Mock
-    private Node node;
-
-    @Mock
     private ON on;
 
     @Mock
@@ -84,14 +79,14 @@ public class OrganizationMapperTest {
         when(informationRecipient.getIntendedRecipient()).thenReturn(intendedRecipient);
         when(intendedRecipient.getReceivedOrganization()).thenReturn(itkOrganization);
         when(intendedRecipient.isSetReceivedOrganization()).thenReturn(true);
-        lenient().when(informationRecipient.getTypeCode()).thenReturn(forString(PRCP_TYPE_CODE));
+        when(informationRecipient.getTypeCode()).thenReturn(forString(PRCP_TYPE_CODE));
         when(itkOrganization.getNameArray(0)).thenReturn(on);
         when(nodeUtil.getNodeValueString(on)).thenReturn(HEALTHCARE_SERVICE_NAME);
 
         Organization organization = organizationMapper.mapOrganization(informationRecipient);
 
-        assertThat(organization.getType().get(0).getCoding().get(0).getCode()).isEqualTo(PRCP_TYPE_CODE);
-        assertThat(organization.getType().get(0).getCoding().get(0).getDisplay()).isEqualTo(HEALTHCARE_SERVICE_NAME);
+        assertThat(organization.getTypeFirstRep().getCodingFirstRep().getCode()).isEqualTo(PRCP_TYPE_CODE);
+        assertThat(organization.getTypeFirstRep().getCodingFirstRep().getDisplay()).isEqualTo(HEALTHCARE_SERVICE_NAME);
     }
 
     @Test
