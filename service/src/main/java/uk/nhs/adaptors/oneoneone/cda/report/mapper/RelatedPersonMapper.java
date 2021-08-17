@@ -40,6 +40,7 @@ public class RelatedPersonMapper {
 
     private static final String EMERGENCY_CONTACT_CODE = "C";
     private static final String EMERGENCY_CONTACT_DISPLAY = "Emergency Contact";
+    private static final String EMERGENCY_CONTACT_SYSTEM = "http://hl7.org/fhir/v2/0131";
     private static final String ITK_EMERGENCY_TELECOM_USE = "EC";
 
     private final HumanNameMapper humanNameMapper;
@@ -115,7 +116,8 @@ public class RelatedPersonMapper {
             .ifPresent(it -> {
                 Coding coding = new Coding()
                     .setCode(EMERGENCY_CONTACT_CODE)
-                    .setDisplay(EMERGENCY_CONTACT_DISPLAY);
+                    .setDisplay(EMERGENCY_CONTACT_DISPLAY)
+                    .setSystem(EMERGENCY_CONTACT_SYSTEM);
                 relatedPerson.setRelationship(new CodeableConcept().addCoding(coding));
             });
     }
