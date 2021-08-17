@@ -25,8 +25,8 @@ public class ItkAddressValidatorTest {
     private static final String SUPPORTED_DOS_ID = "1234";
     private static final String NOT_SUPPORTED_ODS_CODE = "RSHSO14A";
     private static final String NOT_SUPPORTED_DOS_ID = "2000006423";
-    private static final List<String> SUPPORTED_ODS_CODES = Arrays.asList("ABC","CDE","123");
-    private static final List<String> SUPPORTED_DOS_IDS = Arrays.asList("1234","4321");
+    private static final List<String> SUPPORTED_ODS_CODES = Arrays.asList("ABC", "CDE", "123");
+    private static final List<String> SUPPORTED_DOS_IDS = Arrays.asList("1234", "4321");
 
     private final Element itkHeader = mock(Element.class);
 
@@ -49,7 +49,8 @@ public class ItkAddressValidatorTest {
 
     @Test
     public void shouldFailWhenOdsAndDosIdAreNotSupported() {
-        String expectedMessage = String.format("Both ODS code (%s) and DOS ID (%s) are invalid", NOT_SUPPORTED_ODS_CODE, NOT_SUPPORTED_DOS_ID);
+        String expectedMessage = String.format("Both ODS code (%s) and DOS ID (%s) are invalid",
+            NOT_SUPPORTED_ODS_CODE, NOT_SUPPORTED_DOS_ID);
         String expectedReason = "Message rejected";
 
         boolean exceptionThrown = false;
