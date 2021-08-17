@@ -32,7 +32,7 @@ public class ReportItkHeaderParserUtilTest {
     private static final String TYPE = "2.16.840.1.113883.2.1.3.2.4.18.44";
 
     @InjectMocks
-    private ReportItkHeaderParserUtil reportItkHeaderParserUtil;
+    private final ReportItkHeaderParserUtil reportItkHeaderParserUtil = new ReportItkHeaderParserUtil();
 
     @Mock
     private Element headerElement;
