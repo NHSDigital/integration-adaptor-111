@@ -17,14 +17,10 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 import org.springframework.stereotype.Component;
 
-import lombok.RequiredArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
-import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHeaderParserUtil;
-import uk.nhs.adaptors.oneoneone.config.ItkProperties;
 
 @Component
-@RequiredArgsConstructor
 public class ItkValidator {
     private static final String SOAP_ACTION_XPATH = "//*[local-name()='Action']";
     private static final String ITK_MANIFEST_XPATH = "//*[local-name()='manifest']";
@@ -37,10 +33,6 @@ public class ItkValidator {
         "urn:nhs-en:profile:nhs111CDADocument-v3-1");
     private static final String AUDIT_IDENTITY_PREFIX = "urn:nhs-uk:identity:ods:";
     private static final String AUDIT_IDENTITY_ID_XPATH = "//*[local-name()='id']";
-    private static final String ODS_DOS_ID_VALIDATION_FAILED_MSG = "Message rejected";
-
-    private final ItkProperties itkProperties;
-    private final ReportItkHeaderParserUtil reportItkHeaderParserUtil;
 
     public void checkItkConformance(Map<ReportElement, Element> report) throws SoapClientException {
         checkMessageIdExists(report.get(MESSAGE_ID));
@@ -50,7 +42,6 @@ public class ItkValidator {
         checkSoapAndItkService(report.get(SOAP_HEADER), itkHeader);
         checkPayloadAndManifest(itkHeader, report.get(ITK_PAYLOADS));
         checkAuditIdentity(itkHeader);
-        checkItkOdsAndDosId(itkHeader);
     }
 
     private void checkAuditIdentity(Element itkHeader) throws SoapClientException {
@@ -148,23 +139,6 @@ public class ItkValidator {
     private void checkMessageIdExists(Element element) throws SoapClientException {
         if (element == null) {
             throw new SoapClientException(SOAP_VALIDATION_FAILED_MSG, "MessageId missing");
-        }
-    }
-
-    private void checkItkOdsAndDosId(Element itkHeader) throws SoapClientException {
-        String odsCode = reportItkHeaderParserUtil.getOdsCode(itkHeader);
-        String dosServiceId = reportItkHeaderParserUtil.getDosServiceId(itkHeader);
-
-        boolean isOdsCodeCorrect = odsCode == null
-            || itkProperties.getOdsCodes().stream().anyMatch(code -> code.equals(odsCode));
-        boolean isDosIdCorrect = dosServiceId == null
-            || itkProperties.getDosIds().stream().anyMatch(id -> id.equals(dosServiceId));
-
-        if (!isOdsCodeCorrect && !isDosIdCorrect) {
-            throw new SoapClientException(
-                String.format("Both ODS code (%s) and DOS ID (%s) are invalid", odsCode, dosServiceId),
-                ODS_DOS_ID_VALIDATION_FAILED_MSG
-            );
         }
     }
 }

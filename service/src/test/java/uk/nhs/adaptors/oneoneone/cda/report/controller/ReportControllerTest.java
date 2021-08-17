@@ -18,6 +18,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 
 import org.apache.xmlbeans.XmlException;
+import org.dom4j.Element;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -31,6 +32,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkResponseUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHeaderParserUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
+import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkAddressValidator;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.SoapValidator;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -60,8 +62,11 @@ public class ReportControllerTest {
     @Mock
     private ReportItkHeaderParserUtil headerParserUtil;
 
+    @Mock
+    private ItkAddressValidator itkAddressValidator;
+
     @Test
-    public void postReportValidRequest() throws XmlException, SoapClientException {
+    public void postReportValidRequest() throws XmlException {
         when(itkResponseUtil.createSuccessResponseEntity(eq(MESSAGE_ID), anyString())).thenReturn(RESPONSE_XML);
         when(headerParserUtil.getHeaderValues(any())).thenReturn(getItkReportHeader());
 
@@ -102,6 +107,16 @@ public class ReportControllerTest {
     public void postReportInvalidItkRequest() throws SoapClientException {
         doThrow(new SoapClientException("Soap validation failed", "ITK header missing"))
             .when(itkValidator).checkItkConformance(anyMap());
+        String invalidRequest = getValidXmlReportRequest();
+
+        ResponseEntity<String> response = reportController.postReport(invalidRequest);
+        assertThat(response.getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    public void postReportInvalidItkAddressRequest() throws SoapClientException {
+        doThrow(new SoapClientException("Soap validation failed", "Not supported ITK address"))
+            .when(itkAddressValidator).checkItkOdsAndDosId(any(Element.class));
         String invalidRequest = getValidXmlReportRequest();
 
         ResponseEntity<String> response = reportController.postReport(invalidRequest);
