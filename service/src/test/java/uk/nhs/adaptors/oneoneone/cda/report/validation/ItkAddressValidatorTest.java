@@ -1,6 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.util.Lists.newArrayList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -8,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.dom4j.Element;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,23 +39,24 @@ public class ItkAddressValidatorTest {
     @InjectMocks
     private ItkAddressValidator itkAddressValidator;
 
-    @BeforeEach
-    public void setUp() {
+    @Test
+    public void shouldFailWhenOdsAndDosIdAreNotSupported() {
         when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES);
         when(itkProperties.getDosIds()).thenReturn(SUPPORTED_DOS_IDS);
         when(reportItkHeaderParserUtil.getOdsCode(itkHeader)).thenReturn(NOT_SUPPORTED_ODS_CODE);
         when(reportItkHeaderParserUtil.getDosServiceId(itkHeader)).thenReturn(NOT_SUPPORTED_DOS_ID);
+
+        checkExceptionThrown(itkHeader);
     }
 
-    @Test
-    public void shouldFailWhenOdsAndDosIdAreNotSupported() {
+    private void checkExceptionThrown(Element header) {
         String expectedMessage = String.format("Both ODS code (%s) and DOS ID (%s) are invalid",
             NOT_SUPPORTED_ODS_CODE, NOT_SUPPORTED_DOS_ID);
         String expectedReason = "Message rejected";
 
         boolean exceptionThrown = false;
         try {
-            itkAddressValidator.checkItkOdsAndDosId(itkHeader);
+            itkAddressValidator.checkItkOdsAndDosId(header);
         } catch (SoapClientException e) {
             exceptionThrown = true;
             assertThat(e.getReason()).isEqualTo(expectedReason);
@@ -67,13 +68,37 @@ public class ItkAddressValidatorTest {
 
     @Test
     public void shouldNotFailWhenOdsIsSupported() {
+        when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES);
+        when(itkProperties.getDosIds()).thenReturn(SUPPORTED_DOS_IDS);
         when(reportItkHeaderParserUtil.getOdsCode(itkHeader)).thenReturn(SUPPORTED_ODS_CODE);
+        when(reportItkHeaderParserUtil.getDosServiceId(itkHeader)).thenReturn(NOT_SUPPORTED_DOS_ID);
+
+        checkExceptionNotThrown();
+    }
+
+    @Test
+    public void shouldFailWhenOdsNotSupportedAndDosIdEmpty() {
+        when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES);
+        when(itkProperties.getDosIds()).thenReturn(newArrayList());
+        when(reportItkHeaderParserUtil.getOdsCode(itkHeader)).thenReturn(NOT_SUPPORTED_ODS_CODE);
+        when(reportItkHeaderParserUtil.getDosServiceId(itkHeader)).thenReturn(NOT_SUPPORTED_DOS_ID);
+
+        checkExceptionThrown(itkHeader);
+    }
+
+    @Test
+    public void shouldNotFailWhenBothOdsAndDosListNotDefined() {
+        when(itkProperties.getOdsCodes()).thenReturn(newArrayList());
+        when(itkProperties.getDosIds()).thenReturn(newArrayList());
 
         checkExceptionNotThrown();
     }
 
     @Test
     public void shouldNotFailWhenDosIdIsSupported() {
+        when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES);
+        when(itkProperties.getDosIds()).thenReturn(SUPPORTED_DOS_IDS);
+        when(reportItkHeaderParserUtil.getOdsCode(itkHeader)).thenReturn(NOT_SUPPORTED_ODS_CODE);
         when(reportItkHeaderParserUtil.getDosServiceId(itkHeader)).thenReturn(SUPPORTED_DOS_ID);
 
         checkExceptionNotThrown();
@@ -81,6 +106,8 @@ public class ItkAddressValidatorTest {
 
     @Test
     public void shouldNotFailWhenOdsAndDosIdAreSupported() {
+        when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES);
+        when(itkProperties.getDosIds()).thenReturn(SUPPORTED_DOS_IDS);
         when(reportItkHeaderParserUtil.getOdsCode(itkHeader)).thenReturn(SUPPORTED_ODS_CODE);
         when(reportItkHeaderParserUtil.getDosServiceId(itkHeader)).thenReturn(SUPPORTED_DOS_ID);
 
