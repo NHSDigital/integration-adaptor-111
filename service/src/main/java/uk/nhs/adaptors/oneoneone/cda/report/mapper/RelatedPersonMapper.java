@@ -7,6 +7,7 @@ import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.UNKNOWN
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.Address;
@@ -25,8 +26,11 @@ import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.PN;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Person;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RecordTarget;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RelatedEntity;
 import uk.nhs.connect.iucds.cda.ucr.TEL;
 
@@ -85,18 +89,43 @@ public class RelatedPersonMapper {
         return relatedPerson;
     }
 
+    public RelatedPerson createEmergencyContactRelatedPerson(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
+        RelatedPerson relatedPerson = new RelatedPerson();
+
+        TEL[] telecomArray = Optional.ofNullable(clinicalDocument)
+            .map(document -> document.getRecordTargetArray(0))
+            .map(POCDMT000002UK01RecordTarget::getPatientRole)
+            .map(POCDMT000002UK01PatientRole::getTelecomArray)
+            .orElse(null);
+
+        if (getEmergencyTelecom(telecomArray).isPresent()) {
+            relatedPerson.setIdElement(resourceUtil.newRandomUuid());
+            relatedPerson.setPatient(encounter.getSubject());
+            relatedPerson.setTelecom(getTelecomFromITK(new TEL[] {getEmergencyTelecom(telecomArray).get()}));
+            markEmergencyContact(telecomArray, relatedPerson);
+
+            return relatedPerson;
+        }
+
+
+        return null;
+    }
+
     private void markEmergencyContact(TEL[] telecomArray, RelatedPerson relatedPerson) {
-        stream(telecomArray)
-            .filter(it -> !isEmpty(it.getUse()))
-            .map(it -> it.getUse())
-            .filter(it -> it.toString().equals(ITK_EMERGENCY_TELECOM_USE))
-            .findFirst()
+        getEmergencyTelecom(telecomArray)
             .ifPresent( it -> {
                 Coding coding = new Coding()
                     .setCode(EMERGENCY_CONTACT_CODE)
                     .setDisplay(EMERGENCY_CONTACT_DISPLAY);
                 relatedPerson.setRelationship(new CodeableConcept().addCoding(coding));
             });
+    }
+
+    private Optional<TEL> getEmergencyTelecom(TEL[] telecomArray) {
+        return stream(telecomArray)
+            .filter(it -> !isEmpty(it.getUse()))
+            .filter(it -> it.getUse().toString().equals(ITK_EMERGENCY_TELECOM_USE))
+            .findFirst();
     }
 
     private List<HumanName> getHumanNameFromITK(POCDMT000002UK01Person associatedPerson) {

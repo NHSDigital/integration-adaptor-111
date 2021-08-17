@@ -32,6 +32,7 @@ import org.hl7.fhir.dstu3.model.Questionnaire;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.hl7.fhir.dstu3.model.RelatedPerson;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 
@@ -47,6 +48,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.RelatedPersonMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -67,6 +69,7 @@ public class EncounterReportBundleService {
     private final ReferralRequestMapper referralRequestMapper;
     private final ObservationMapper observationMapper;
     private final PractitionerRoleMapper practitionerRoleMapper;
+    private final RelatedPersonMapper relatedPersonMapper;
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
@@ -94,6 +97,7 @@ public class EncounterReportBundleService {
         Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans, questionnaireResponseList,
             referralRequest, authorPractitionerRoles);
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
+        RelatedPerson relatedPerson = relatedPersonMapper.createEmergencyContactRelatedPerson(clinicalDocument, encounter);
 
         addEntry(bundle, messageHeaderService.createMessageHeader(header, messageId));
         addEncounter(bundle, encounter);
@@ -111,6 +115,9 @@ public class EncounterReportBundleService {
         addQuestionnaireResponses(bundle, questionnaireResponseList);
         addObservations(bundle, observations);
         addPractitionerRoles(bundle, practitionerRoles);
+        if (relatedPerson != null) {
+            addEntry(bundle, relatedPerson);
+        }
 
         ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
         addEntry(bundle, listResource);
