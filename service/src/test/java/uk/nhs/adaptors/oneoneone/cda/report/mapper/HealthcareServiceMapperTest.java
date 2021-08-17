@@ -98,7 +98,7 @@ public class HealthcareServiceMapperTest {
     }
 
     @Test
-    public void shouldMapHealthcareServiceWrongCode() {
+    public void shouldMapHealthcareServiceWrongTypeCode() {
         when(informationRecipient.getTypeCode()).thenReturn(forString(TRC_TYPE_CODE));
 
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper
