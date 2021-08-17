@@ -5,7 +5,6 @@ import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem.OTHER;
 import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem.PHONE;
 import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse.HOME;
 import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse.MOBILE;
-import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse.TEMP;
 import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse.WORK;
 
 import java.util.HashMap;

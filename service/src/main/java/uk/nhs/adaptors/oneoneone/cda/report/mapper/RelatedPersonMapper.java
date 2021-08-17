@@ -107,13 +107,12 @@ public class RelatedPersonMapper {
             return relatedPerson;
         }
 
-
         return null;
     }
 
     private void markEmergencyContact(TEL[] telecomArray, RelatedPerson relatedPerson) {
         getEmergencyTelecom(telecomArray)
-            .ifPresent( it -> {
+            .ifPresent(it -> {
                 Coding coding = new Coding()
                     .setCode(EMERGENCY_CONTACT_CODE)
                     .setDisplay(EMERGENCY_CONTACT_DISPLAY);
@@ -124,7 +123,7 @@ public class RelatedPersonMapper {
     private Optional<TEL> getEmergencyTelecom(TEL[] telecomArray) {
         return stream(telecomArray)
             .filter(it -> !isEmpty(it.getUse()))
-            .filter(it -> it.getUse().toString().equals(ITK_EMERGENCY_TELECOM_USE))
+            .filter(it -> it.getUse().contains(ITK_EMERGENCY_TELECOM_USE))
             .findFirst();
     }
 
