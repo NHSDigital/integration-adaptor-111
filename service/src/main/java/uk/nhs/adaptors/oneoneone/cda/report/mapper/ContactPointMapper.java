@@ -32,7 +32,6 @@ public class ContactPointMapper {
         CONTACT_POINT_USE_MAP.put("H", HOME);
         CONTACT_POINT_USE_MAP.put("HV", HOME);
         CONTACT_POINT_USE_MAP.put("MC", MOBILE);
-        CONTACT_POINT_USE_MAP.put("EC", TEMP);
         CONTACT_POINT_USE_MAP.put("WP", WORK);
 
         CONTACT_POINT_SYSTEM_MAP.put(PHONE_SYSTEM_PREFIX, PHONE);

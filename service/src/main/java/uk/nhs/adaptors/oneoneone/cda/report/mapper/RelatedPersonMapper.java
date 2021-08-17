@@ -4,10 +4,9 @@ import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 
 import static org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender.UNKNOWN;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.Address;
@@ -34,6 +33,10 @@ import uk.nhs.connect.iucds.cda.ucr.TEL;
 @Component
 @AllArgsConstructor
 public class RelatedPersonMapper {
+
+    private static final String EMERGENCY_CONTACT_CODE = "C";
+    private static final String EMERGENCY_CONTACT_DISPLAY = "Emergency Contact";
+    private static final String ITK_EMERGENCY_TELECOM_USE = "EC";
 
     private final HumanNameMapper humanNameMapper;
 
@@ -77,15 +80,23 @@ public class RelatedPersonMapper {
 
         relatedPerson.setPeriod(getPeriod(relatedEntity));
 
-        Optional<TEL> telecomUse = stream(relatedEntity.getTelecomArray())
-            .filter(it -> it.getUse() != null && it.getUse().get(0).toString().equals("EC"))
-            .findFirst();
-        if(telecomUse.isPresent()){
-                Coding coding = new Coding().setCode("C").setDisplay("Emergency Contact");
-                relatedPerson.setRelationship(new CodeableConcept().setCoding(Arrays.asList(coding)));
-            }
+        markEmergencyContact(relatedEntity.getTelecomArray(), relatedPerson);
 
         return relatedPerson;
+    }
+
+    private void markEmergencyContact(TEL[] telecomArray, RelatedPerson relatedPerson) {
+        stream(telecomArray)
+            .filter(it -> !isEmpty(it.getUse()))
+            .map(it -> it.getUse())
+            .filter(it -> it.toString().equals(ITK_EMERGENCY_TELECOM_USE))
+            .findFirst()
+            .ifPresent( it -> {
+                Coding coding = new Coding()
+                    .setCode(EMERGENCY_CONTACT_CODE)
+                    .setDisplay(EMERGENCY_CONTACT_DISPLAY);
+                relatedPerson.setRelationship(new CodeableConcept().addCoding(coding));
+            });
     }
 
     private List<HumanName> getHumanNameFromITK(POCDMT000002UK01Person associatedPerson) {
