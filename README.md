@@ -33,6 +33,13 @@ You need to configure the following environment variables to enable this:
 Incoming SOAP ITK message is validated. One of the requirements is to check SOAP To field - it's the URL of /report endpoint. You can set the expected value using the following env variable:
 * PEM111_SOAP_SEND_TO
 
+### ITK HEADER
+ODS code and DOS Service ID from ITK `addresslist.address` are validated against list of supported values.
+Supported ODS codes and DOS Service ID's should be separated with comma, for example `PEM111_ITK_ODS_CODE_LIST=RSHSO14A,20000729`
+Values should be set in the following env variables:
+* PEM111_ITK_ODS_CODE_LIST
+* PEM111_ITK_DOS_ID_LIST
+
 ### TLS Mutual Authentication
 Nginx proxy is used to handle TLS MA. In order to configure it you need to set the following env variables:
 * NGINX_PUBLIC_CERT - Server public certificate

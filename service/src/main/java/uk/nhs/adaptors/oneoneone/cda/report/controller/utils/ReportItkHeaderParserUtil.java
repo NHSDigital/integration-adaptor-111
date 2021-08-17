@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -30,25 +31,41 @@ public class ReportItkHeaderParserUtil {
         return header;
     }
 
-    private void setAddressList(ItkReportHeader header, Element headerElement) {
+    public String getDosServiceId(Element headerElement) {
         List<Element> elements = getElements(headerElement, ITK_ADDRESS_NODE);
-        Optional<String> dosServiceId = elements.stream()
+        return elements.stream()
             .filter(it -> it.attribute(TYPE_ATTRIBUTE) != null
                 && it.attributeValue(TYPE_ATTRIBUTE).equals("2.16.840.1.113883.2.1.3.2.4.18.44")
             )
-            .map(it -> "DOSServiceID:".concat(it.attributeValue(URI_ATTRIBUTE)))
-            .findFirst();
+            .map(it -> it.attributeValue(URI_ATTRIBUTE))
+            .findFirst()
+            .orElse(null);
+    }
 
-        Optional<String> odsCode = elements.stream()
+    public String getOdsCode(Element headerElement) {
+        List<Element> elements = getElements(headerElement, ITK_ADDRESS_NODE);
+        return elements.stream()
             .filter(it -> it.attribute(TYPE_ATTRIBUTE) == null
                 && it.attributeValue(URI_ATTRIBUTE).startsWith("urn:nhs-uk:addressing:ods:")
             )
-            .map(it -> it.attributeValue(URI_ATTRIBUTE))
-            .findFirst();
+            .map(it -> it.attributeValue(URI_ATTRIBUTE).replace("urn:nhs-uk:addressing:ods:", ""))
+            .findFirst()
+            .orElse(null);
+    }
+
+    private void setAddressList(ItkReportHeader header, Element headerElement) {
+        String dosServiceId = Optional
+            .ofNullable(getDosServiceId(headerElement))
+            .map("DOSServiceID:"::concat)
+            .orElse(null);
+
+        String odsCode = Optional
+            .ofNullable(getOdsCode(headerElement))
+            .map("urn:nhs-uk:addressing:ods:"::concat)
+            .orElse(null);
 
         String address = Stream.of(odsCode, dosServiceId)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+            .filter(Objects::nonNull)
             .collect(joining(":"));
 
         header.setAddressList(Collections.singletonList(address));

@@ -1,26 +1,29 @@
 package uk.nhs.adaptors.oneoneone.cda.report.validation;
 
-import org.dom4j.Attribute;
-import org.dom4j.Element;
-import org.dom4j.Node;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
-import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.DISTRIBUTION_ENVELOPE;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_HEADER;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_PAYLOADS;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.MESSAGE_ID;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_HEADER;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.dom4j.Attribute;
+import org.dom4j.Element;
+import org.dom4j.Node;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
 
 public class ItkValidatorTest {
     private static final String VALID_ACTION_SERVICE = "urn:nhs-itk:services:201005:SendNHS111Report-v2-0";
@@ -60,7 +63,7 @@ public class ItkValidatorTest {
         reportMap = new HashMap<>();
         reportMap.put(MESSAGE_ID, mock(Element.class));
         reportMap.put(DISTRIBUTION_ENVELOPE, mock(Element.class));
-        reportMap.put(ITK_HEADER, preapreItkHeaderElement());
+        reportMap.put(ITK_HEADER, prepareItkHeaderElement());
         reportMap.put(SOAP_HEADER, prepareSoapHeaderElement());
         reportMap.put(ITK_PAYLOADS, prepareItkPayloadsElement());
     }
@@ -79,7 +82,7 @@ public class ItkValidatorTest {
         return itkPayloads;
     }
 
-    private Element preapreItkHeaderElement() {
+    private Element prepareItkHeaderElement() {
         itkHeader = mock(Element.class);
         when(itkHeader.attribute("trackingid")).thenReturn(mock(Attribute.class));
         itkService = mock(Attribute.class);

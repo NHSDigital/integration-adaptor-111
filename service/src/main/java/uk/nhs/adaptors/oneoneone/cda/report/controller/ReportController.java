@@ -39,6 +39,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHeaderParserUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportParserUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
+import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkAddressValidator;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.SoapValidator;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -61,6 +62,7 @@ public class ReportController {
     private final ItkValidator itkValidator;
     private final SoapValidator soapValidator;
     private final ReportItkHeaderParserUtil headerParserUtil;
+    private final ItkAddressValidator itkAddressValidator;
 
     @PostMapping(value = "/report",
         consumes = {APPLICATION_XML_VALUE, TEXT_XML_VALUE},
@@ -74,6 +76,7 @@ public class ReportController {
             Map<ReportElement, Element> reportElementsMap = ReportParserUtil.parseReportXml(reportXml);
             itkValidator.checkItkConformance(reportElementsMap);
             soapValidator.checkSoapItkConformance(reportElementsMap.get(SOAP_HEADER));
+            itkAddressValidator.checkItkOdsAndDosId(reportElementsMap.get(ITK_HEADER));
             ItkReportHeader headerValues = headerParserUtil.getHeaderValues(reportElementsMap.get(ITK_HEADER));
             messageId = reportElementsMap.get(MESSAGE_ID).getText();
             toAddress = getValueOrDefaultAddress(reportElementsMap.get(SOAP_ADDRESS));
