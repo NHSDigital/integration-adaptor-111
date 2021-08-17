@@ -8,7 +8,6 @@ import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElemen
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.MESSAGE_ID;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_HEADER;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHeaderParserUtil;
 import uk.nhs.adaptors.oneoneone.config.ItkProperties;
 
 @Component
@@ -40,6 +40,7 @@ public class ItkValidator {
     private static final String ODS_DOS_ID_VALIDATION_FAILED_MSG = "Message rejected";
 
     private final ItkProperties itkProperties;
+    private final ReportItkHeaderParserUtil reportItkHeaderParserUtil;
 
     public void checkItkConformance(Map<ReportElement, Element> report) throws SoapClientException {
         checkMessageIdExists(report.get(MESSAGE_ID));
@@ -49,27 +50,7 @@ public class ItkValidator {
         checkSoapAndItkService(report.get(SOAP_HEADER), itkHeader);
         checkPayloadAndManifest(itkHeader, report.get(ITK_PAYLOADS));
         checkAuditIdentity(itkHeader);
-    }
-
-    public void checkItkOdsAndDosId(String odsCode, String dosServiceId) throws SoapClientException {
-        List<String> supportedOdsCodes = createListFromString(itkProperties.getOdsCodes());
-        List<String> supportedDosIds = createListFromString(itkProperties.getDosIds());
-        String dosServiceIdValue = dosServiceId == null ? null
-            : dosServiceId.replace("DOSServiceID:", "");
-        String odsCodeValue = odsCode == null ? null
-            : odsCode.replace("urn:nhs-uk:addressing:ods:", "");
-
-        boolean isOdsCodeCorrect = odsCode == null
-            || supportedOdsCodes.stream().anyMatch(code -> code.equals(odsCodeValue));
-        boolean isDosIdCorrect = dosServiceId == null
-            || supportedDosIds.stream().anyMatch(id -> id.equals(dosServiceIdValue));
-
-        if (!isOdsCodeCorrect && !isDosIdCorrect) {
-            throw new SoapClientException(
-                String.format("Both ODS code (%s) and DOS ID (%s) are invalid", odsCodeValue, dosServiceIdValue),
-                ODS_DOS_ID_VALIDATION_FAILED_MSG
-            );
-        }
+        checkItkOdsAndDosId(itkHeader);
     }
 
     private void checkAuditIdentity(Element itkHeader) throws SoapClientException {
@@ -170,7 +151,20 @@ public class ItkValidator {
         }
     }
 
-    private List<String> createListFromString(String toSplit) {
-        return Arrays.asList(toSplit.split(","));
+    private void checkItkOdsAndDosId(Element itkHeader) throws SoapClientException {
+        String odsCode = reportItkHeaderParserUtil.getOdsCode(itkHeader);
+        String dosServiceId = reportItkHeaderParserUtil.getDosServiceId(itkHeader);
+
+        boolean isOdsCodeCorrect = odsCode == null
+            || itkProperties.getOdsCodes().stream().anyMatch(code -> code.equals(odsCode));
+        boolean isDosIdCorrect = dosServiceId == null
+            || itkProperties.getDosIds().stream().anyMatch(id -> id.equals(dosServiceId));
+
+        if (!isOdsCodeCorrect && !isDosIdCorrect) {
+            throw new SoapClientException(
+                String.format("Both ODS code (%s) and DOS ID (%s) are invalid", odsCode, dosServiceId),
+                ODS_DOS_ID_VALIDATION_FAILED_MSG
+            );
+        }
     }
 }
