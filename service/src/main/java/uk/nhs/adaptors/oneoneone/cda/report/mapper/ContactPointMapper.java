@@ -5,7 +5,6 @@ import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem.OTHER;
 import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem.PHONE;
 import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse.HOME;
 import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse.MOBILE;
-import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse.TEMP;
 import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse.WORK;
 
 import java.util.HashMap;
@@ -32,7 +31,6 @@ public class ContactPointMapper {
         CONTACT_POINT_USE_MAP.put("H", HOME);
         CONTACT_POINT_USE_MAP.put("HV", HOME);
         CONTACT_POINT_USE_MAP.put("MC", MOBILE);
-        CONTACT_POINT_USE_MAP.put("EC", TEMP);
         CONTACT_POINT_USE_MAP.put("WP", WORK);
 
         CONTACT_POINT_SYSTEM_MAP.put(PHONE_SYSTEM_PREFIX, PHONE);
