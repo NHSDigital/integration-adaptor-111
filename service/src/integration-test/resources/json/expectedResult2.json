@@ -1,0 +1,3772 @@
+{
+  "resourceType": "Bundle",
+  "identifier": {
+    "type": {
+      "text": "ClinicalDocument VersionNumber"
+    },
+    "value": "2"
+  },
+  "type": "message",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:2B77B3F5-3016-4A6D-821F-152CE420E58D",
+      "resource": {
+        "resourceType": "MessageHeader",
+        "id": "2B77B3F5-3016-4A6D-821F-152CE420E58D",
+        "event": {
+          "system": "https://fhir.nhs.uk/STU3/CodeSystem/EventType-1",
+          "code": "referral-1",
+          "display": "Referral"
+        },
+        "destination": [
+          {
+            "endpoint": "urn:nhs-uk:addressing:ods:EM396:DOSServiceID:26428"
+          }
+        ],
+        "timestamp": "2021-08-09T08:30:15.470+00:00",
+        "source": {
+          "name": "NHS 111 Adaptor",
+          "endpoint": "http://localhost:8080/report"
+        },
+        "reason": {
+          "coding": [
+            {
+              "system": "urn:nhs-itk:ns:201005:interaction",
+              "code": "urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:11f9229c-d312-4f01-8c1f-d332c58ab22f",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "11f9229c-d312-4f01-8c1f-d332c58ab22f",
+        "identifier": [
+          {
+            "system": "2.16.840.1.113883.2.1.3.2.4.18.49",
+            "value": "LOC665"
+          },
+          {
+            "system": "2.16.840.1.113883.2.1.3.2.4.18.34",
+            "value": "CASEREF1234"
+          },
+          {
+            "system": "2.16.840.1.113883.2.1.3.2.4.18.35",
+            "value": "CASEID123"
+          }
+        ],
+        "status": "finished",
+        "type": [
+          {
+            "text": "111 Encounter Referral"
+          }
+        ],
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "participant": [
+          {
+            "type": [
+              {
+                "text": "REFT"
+              }
+            ],
+            "individual": {
+              "reference": "Practitioner/f427b992-039d-48e4-a6be-de4a6f08a989"
+            }
+          },
+          {
+            "type": [
+              {
+                "text": "CALLBCK"
+              }
+            ],
+            "individual": {
+              "reference": "Practitioner/3217fb50-f595-464a-8740-8e55e64c0d5a"
+            }
+          },
+          {
+            "individual": {
+              "reference": "Practitioner/00aede7d-8893-4dfb-9229-c20eaa11e5de"
+            }
+          },
+          {
+            "individual": {
+              "reference": "Practitioner/c8b5e238-3b59-49ad-978b-fb0b187ada0b"
+            }
+          },
+          {
+            "type": [
+              {
+                "text": "INF"
+              }
+            ],
+            "individual": {
+              "reference": "RelatedPerson/6a150c4f-5ff3-446f-9d72-1bd891b2f66e"
+            }
+          }
+        ],
+        "appointment": {
+          "reference": "Appointment/b0d51522-8ce3-4b65-a9ee-6e55049566c3"
+        },
+        "period": {
+          "start": "2017-01-01T20:00:00+00:00"
+        },
+        "location": [
+          {
+            "location": {
+              "reference": "Location/aede18eb-9539-4a32-8cc4-82cc1177b841"
+            },
+            "status": "active"
+          }
+        ],
+        "serviceProvider": {
+          "reference": "Organization/1cb87721-f9d5-481e-846b-18a4e80d6ef8"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:1cb87721-f9d5-481e-846b-18a4e80d6ef8",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "1cb87721-f9d5-481e-846b-18a4e80d6ef8",
+        "active": true,
+        "type": [
+          {
+            "text": "CST"
+          }
+        ],
+        "name": "Medway NHS Foundation Trust"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:f427b992-039d-48e4-a6be-de4a6f08a989",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "f427b992-039d-48e4-a6be-de4a6f08a989",
+        "active": true,
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "tel:0123456789",
+            "use": "temp"
+          }
+        ],
+        "address": [
+          {
+            "type": "physical",
+            "line": [
+              "Church Street Walk in Centre",
+              "4 Church Street",
+              "Medway"
+            ],
+            "postalCode": "ME8 7TT"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:3217fb50-f595-464a-8740-8e55e64c0d5a",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "3217fb50-f595-464a-8740-8e55e64c0d5a",
+        "active": true,
+        "name": [
+          {
+            "text": "Call Centre Manager"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "tel:08001111111"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00aede7d-8893-4dfb-9229-c20eaa11e5de",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "00aede7d-8893-4dfb-9229-c20eaa11e5de",
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "family": "Jones",
+            "given": [
+              "Mary"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c8b5e238-3b59-49ad-978b-fb0b187ada0b",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "c8b5e238-3b59-49ad-978b-fb0b187ada0b",
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "family": "Cornwell",
+            "given": [
+              "Dave"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:6a150c4f-5ff3-446f-9d72-1bd891b2f66e",
+      "resource": {
+        "resourceType": "RelatedPerson",
+        "id": "6a150c4f-5ff3-446f-9d72-1bd891b2f66e",
+        "active": true,
+        "patient": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "name": [
+          {
+            "use": "official",
+            "family": "Bloggs",
+            "given": [
+              "Helga"
+            ]
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "tel:07886554123",
+            "use": "mobile"
+          },
+          {
+            "system": "phone",
+            "value": "tel:01783678321"
+          }
+        ],
+        "gender": "unknown",
+        "address": [
+          {
+            "use": "home",
+            "line": [
+              "43 Summers Avenue",
+              "Somerset Street"
+            ],
+            "city": "Medway",
+            "postalCode": "ME5 7TY"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:aede18eb-9539-4a32-8cc4-82cc1177b841",
+      "resource": {
+        "resourceType": "Location",
+        "id": "aede18eb-9539-4a32-8cc4-82cc1177b841",
+        "managingOrganization": {
+          "reference": "Organization/b53fcca9-aa22-4f8b-b089-1c35034339e1"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b53fcca9-aa22-4f8b-b089-1c35034339e1",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "b53fcca9-aa22-4f8b-b089-1c35034339e1",
+        "identifier": [
+          {
+            "value": "V396F"
+          }
+        ],
+        "type": [
+          {
+            "text": "GP Practice"
+          }
+        ],
+        "name": "Medway Medical Practice",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "tel:01634111222",
+            "use": "work"
+          }
+        ],
+        "address": [
+          {
+            "use": "work",
+            "line": [
+              "Springer Street"
+            ],
+            "city": "Medway",
+            "postalCode": "ME5 5TY"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cda75e37-c648-422d-930d-aeb829a975b2",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "cda75e37-c648-422d-930d-aeb829a975b2",
+        "language": "en",
+        "identifier": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-NHSNumberVerificationStatus-1",
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "system": "https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-NHSNumberVerificationStatus-1",
+                      "code": "02"
+                    }
+                  ]
+                }
+              }
+            ],
+            "system": "https://fhir.nhs.uk/Id/nhs-number",
+            "value": "993254128"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "family": "Joe",
+            "given": [
+              "Blogg"
+            ],
+            "prefix": [
+              "Mr"
+            ]
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "tel:01634775667",
+            "use": "home"
+          },
+          {
+            "system": "phone",
+            "value": "tel:01634451628",
+            "use": "home"
+          },
+          {
+            "system": "email",
+            "value": "mailto:Joe.Blogg@emailfree.co.uk",
+            "use": "home"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1989-01-01",
+        "address": [
+          {
+            "use": "home",
+            "line": [
+              "17, County Avenue",
+              "Woodtown"
+            ],
+            "city": "Medway",
+            "postalCode": "ME5 FS3"
+          }
+        ],
+        "generalPractitioner": [
+          {
+            "reference": "Organization/72749139-1732-46d3-9d2a-04fef2416de5"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:72749139-1732-46d3-9d2a-04fef2416de5",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "72749139-1732-46d3-9d2a-04fef2416de5",
+        "identifier": [
+          {
+            "value": "V396F"
+          }
+        ],
+        "type": [
+          {
+            "text": "GP Practice"
+          }
+        ],
+        "name": "Medway Medical Practice",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "tel:01634111222",
+            "use": "work"
+          }
+        ],
+        "address": [
+          {
+            "use": "work",
+            "line": [
+              "Springer Street"
+            ],
+            "city": "Medway",
+            "postalCode": "ME5 5TY"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:2c4e79d5-4813-49b2-be56-bacb7dd3e5a7",
+      "resource": {
+        "resourceType": "HealthcareService",
+        "id": "2c4e79d5-4813-49b2-be56-bacb7dd3e5a7",
+        "active": true,
+        "providedBy": {
+          "reference": "Organization/417f0179-af32-4e93-be18-51c07e49c07c"
+        },
+        "location": [
+          {
+            "reference": "Location/e7b9c555-81e1-4be2-b038-0d576ede55f4"
+          }
+        ],
+        "name": "Thames Medical Practice",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "tel:0123476895",
+            "use": "work"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e7b9c555-81e1-4be2-b038-0d576ede55f4",
+      "resource": {
+        "resourceType": "Location",
+        "id": "e7b9c555-81e1-4be2-b038-0d576ede55f4",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "tel:0123476895",
+            "use": "work"
+          }
+        ],
+        "address": {
+          "use": "work",
+          "line": [
+            "Thames Medical Practice",
+            "Hill Street Branch Surgery",
+            "Medway",
+            "Essex"
+          ],
+          "postalCode": "ME4 5TT"
+        },
+        "managingOrganization": {
+          "reference": "Organization/4f73c650-9772-4fbe-a61f-75cf49069355"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:417f0179-af32-4e93-be18-51c07e49c07c",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "417f0179-af32-4e93-be18-51c07e49c07c",
+        "identifier": [
+          {
+            "value": "PRA123"
+          }
+        ],
+        "name": "Thames Medical Practice"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:a5d984fa-de8b-4a89-83fc-da461bf7b987",
+      "resource": {
+        "resourceType": "HealthcareService",
+        "id": "a5d984fa-de8b-4a89-83fc-da461bf7b987",
+        "active": true,
+        "providedBy": {
+          "reference": "Organization/5f4f4fbc-2965-42e7-9cc5-cbf1ee4f4b91"
+        },
+        "location": [
+          {
+            "reference": "Location/19e0e6f4-1f91-4f2c-b1e0-fc865f0d3937"
+          }
+        ],
+        "name": "Medway Kent Out of Hours Clinic"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:19e0e6f4-1f91-4f2c-b1e0-fc865f0d3937",
+      "resource": {
+        "resourceType": "Location",
+        "id": "19e0e6f4-1f91-4f2c-b1e0-fc865f0d3937",
+        "managingOrganization": {
+          "reference": "Organization/32e56e63-e205-4b53-a565-4b2d824dcb0e"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:5f4f4fbc-2965-42e7-9cc5-cbf1ee4f4b91",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "5f4f4fbc-2965-42e7-9cc5-cbf1ee4f4b91",
+        "identifier": [
+          {
+            "value": "EM396"
+          }
+        ],
+        "name": "Medway Kent Out of Hours Clinic"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:513815ca-1361-411c-8874-2be687582b32",
+      "resource": {
+        "resourceType": "ReferralRequest",
+        "id": "513815ca-1361-411c-8874-2be687582b32",
+        "status": "active",
+        "intent": "plan",
+        "priority": "routine",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "occurrencePeriod": {
+          "start": "2021-08-09T08:30:15+00:00",
+          "end": "2021-08-09T09:30:15+00:00"
+        },
+        "authoredOn": "2021-08-09T08:30:15+00:00",
+        "requester": {
+          "agent": {
+            "reference": "Device/1"
+          },
+          "onBehalfOf": {
+            "reference": "Organization/1cb87721-f9d5-481e-846b-18a4e80d6ef8"
+          }
+        },
+        "recipient": [
+          {
+            "reference": "HealthcareService/2c4e79d5-4813-49b2-be56-bacb7dd3e5a7"
+          },
+          {
+            "reference": "HealthcareService/a5d984fa-de8b-4a89-83fc-da461bf7b987"
+          }
+        ],
+        "reasonReference": [
+          {
+            "reference": "Condition/7285ec46-4bd3-4658-b4ee-33d2a313a3d6"
+          }
+        ],
+        "supportingInfo": [
+          {
+            "reference": "ProcedureRequest/7de79a96-51ff-49ad-bb0e-6f99b1540667"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7de79a96-51ff-49ad-bb0e-6f99b1540667",
+      "resource": {
+        "resourceType": "ProcedureRequest",
+        "id": "7de79a96-51ff-49ad-bb0e-6f99b1540667",
+        "status": "active",
+        "intent": "plan",
+        "priority": "routine",
+        "doNotPerform": false,
+        "code": {
+          "coding": [
+            {
+              "system": "2.16.840.1.113883.2.1.3.2.4.17.325",
+              "code": "Dx001",
+              "display": "Passed onto clinical hub"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "occurrencePeriod": {
+          "start": "2021-08-09T08:30:15+00:00",
+          "end": "2021-08-09T09:30:15+00:00"
+        },
+        "reasonReference": [
+          {
+            "reference": "Condition/7285ec46-4bd3-4658-b4ee-33d2a313a3d6"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:10e3c384-9bc3-4885-b171-d307231bfdfd",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "10e3c384-9bc3-4885-b171-d307231bfdfd",
+        "identifier": {
+          "use": "usual",
+          "value": "411910CF-1A76-4330-98FE-C345DDEE5553"
+        },
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "371531000",
+              "display": "Report of clinical encounter (record artifact)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "encounter": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "date": "2021-08-09T08:30:15+00:00",
+        "author": [
+          {
+            "reference": "Practitioner/00aede7d-8893-4dfb-9229-c20eaa11e5de"
+          }
+        ],
+        "title": "111 Report",
+        "confidentiality": "V",
+        "section": [
+          {
+            "section": [
+              {
+                "title": "Permission to View",
+                "text": {
+                  "status": "generated",
+                  "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    &lt;table xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                        &lt;tbody&gt;\n                                                            &lt;tr&gt;\n                                                                &lt;th&gt;Permission to view outcome&lt;/th&gt;\n                                                                &lt;td&gt;Permission to view obtained&lt;/td&gt;\n                                                            &lt;/tr&gt;\n                                                            &lt;tr&gt;\n                                                                &lt;th&gt;Date obtained&lt;/th&gt;\n                                                                &lt;td&gt;01-Jan-2017, 20:00&lt;/td&gt;\n                                                            &lt;/tr&gt;\n                                                            &lt;tr&gt;\n                                                                &lt;th&gt;Date expires&lt;/th&gt;\n                                                                &lt;td&gt;15-Jan-2017, 20:00&lt;/td&gt;\n                                                            &lt;/tr&gt;\n                                                        &lt;/tbody&gt;\n                                                    &lt;/table&gt;\n                                                </div>"
+                }
+              },
+              {
+                "title": "Primary Reason for Call",
+                "text": {
+                  "status": "generated",
+                  "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    &lt;content xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;Patient feels dizzy.&lt;/content&gt;\n                                                </div>"
+                },
+                "section": [
+                  {
+                    "title": "SUBSUB2",
+                    "text": {
+                      "status": "generated",
+                      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                            &lt;content xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;SUBSUB2&lt;/content&gt;\n                                                        </div>"
+                    },
+                    "section": [
+                      {
+                        "title": "SUBSUB3",
+                        "text": {
+                          "status": "generated",
+                          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                                    &lt;content xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;SUBSUB3&lt;/content&gt;\n                                                                </div>"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "title": "Clinical Summary",
+                "text": {
+                  "status": "generated",
+                  "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    &lt;content xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                        Patient fels nausea and dizzy after waking up. Lasted 30\n                                                        minutes.\n                                                    &lt;/content&gt;\n                                                </div>"
+                }
+              },
+              {
+                "title": "Additional Patient Notes",
+                "text": {
+                  "status": "generated",
+                  "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                    Additional Patient Notes\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    Additional Patient Notes abc 01-Feb-2017, 12:00\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+                },
+                "section": [
+                  {
+                    "text": {
+                      "status": "generated",
+                      "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;These are more notes, nested under the top one.&lt;/xml-fragment&gt;</div>"
+                    }
+                  }
+                ]
+              },
+              {
+                "title": "Disposition Details",
+                "text": {
+                  "status": "generated",
+                  "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    &lt;content xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;Lie down.&lt;/content&gt;\n                                                </div>"
+                }
+              },
+              {
+                "title": "Information and advice given",
+                "text": {
+                  "status": "generated",
+                  "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    &lt;content xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;Do not perform any strenuous activities.&lt;/content&gt;\n                                                </div>"
+                }
+              },
+              {
+                "title": "Recorded Allergies",
+                "text": {
+                  "status": "generated",
+                  "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    &lt;content xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;No known allergies or adverse reaction.&lt;/content&gt;\n                                                </div>"
+                }
+              },
+              {
+                "title": "Triage Report",
+                "text": {
+                  "status": "generated",
+                  "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    &lt;content xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;An injury or other health problem was described.\n                                                        &lt;br/&gt;The individual was described as breathing and conscious.\n                                                        &lt;br/&gt;Loss of at least a mugful of blood in the last 30 minutes\n                                                        was not described.\n                                                        &lt;br/&gt;An illness or other health problem was described. -\n                                                        Dizziness\n                                                        &lt;br/&gt;Fighting for breath was not described.\n                                                        &lt;br/&gt;A heart attack, chest/upper back pain, recent probable\n                                                        stroke, recent fit/seizure or suicide attempt was not described\n                                                        as the main call reason.\n                                                        &lt;br/&gt;Dizziness and nausea was described.\n                                                        &lt;br/&gt;\n                                                    &lt;/content&gt;\n                                                </div>"
+                }
+              },
+              {
+                "title": "Prescribed Items",
+                "text": {
+                  "status": "generated",
+                  "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    &lt;content xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                        Medications\n                                                    &lt;/content&gt;\n                                                </div>"
+                }
+              },
+              {
+                "title": "Appointment Reference",
+                "text": {
+                  "status": "generated",
+                  "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    &lt;content xmlns=&quot;urn:hl7-org:v3&quot; xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                        Date/Time: 01 June 2017 14:00\n                                                        Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST\n                                                        Psychiatric Community Care Service\n                                                    &lt;/content&gt;\n                                                </div>"
+                }
+              }
+            ]
+          },
+          {
+            "title": "CarePlan",
+            "entry": [
+              {
+                "reference": "CarePlan/46dec888-1f5e-41c4-aae8-476d90e82a51"
+              }
+            ]
+          },
+          {
+            "title": "ReferralRequest",
+            "entry": [
+              {
+                "reference": "ReferralRequest/513815ca-1361-411c-8874-2be687582b32"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/18b12467-49f8-4883-bef1-84c3d3f91d7a"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/5d78029c-7600-489a-8ea6-a1f94948acf3"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/de2138bd-dce8-4db1-a723-59f910c489c8"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/fe4f34ea-b85c-4a1c-bb84-1126b49b7cff"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/38c1b34c-a022-481c-87b0-f7971a8c47a7"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/285874d9-988e-422b-a409-feffb0bdd044"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/3436aad1-1034-4781-899a-2b90fc9e9004"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/15be3eb0-27b8-45d3-a14f-e24a1c2763ae"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/7f0d43f2-56b7-4695-8ad9-570176bb9aa2"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/f128387a-4132-4976-8105-4ebeb2c7d1ff"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/e6cdd309-9b72-4e5c-9522-7b71ac60add8"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/7c035be4-c80b-4ddc-a3cd-d2763f8e1317"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/39a5a123-fc0d-4762-898a-42bde2cd62ca"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/dfb76c04-29ad-40b9-9d27-7ec5b49b4f08"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/c55a89d1-0afe-4c7b-9ebc-f6d2b37d6800"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/7e95d450-97a1-422d-9944-15562ba95741"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/f07b828a-1dfd-4139-8a86-818847c1a49e"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/f3463967-ed0e-49fe-91e2-ac0d657f6c69"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/b98d05d4-4106-442e-b8e1-2485ad9063be"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/64d3a6a6-eb3e-4e3e-9e49-a8d5a1425787"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/00379b2e-7f61-44a9-98ee-e5d7afecd302"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/5bbe58e1-3757-463a-908e-47270828c681"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/02f78640-6855-4dd9-beab-ec521b5faa83"
+              }
+            ]
+          },
+          {
+            "title": "QuestionnaireResponse",
+            "entry": [
+              {
+                "reference": "QuestionnaireResponse/828fc402-6529-403b-84a9-2a838d0e5310"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:46dec888-1f5e-41c4-aae8-476d90e82a51",
+      "resource": {
+        "resourceType": "CarePlan",
+        "id": "46dec888-1f5e-41c4-aae8-476d90e82a51",
+        "status": "completed",
+        "intent": "plan",
+        "title": "Information and advice given",
+        "description": "Do not perform any strenuous activities.",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "period": {
+          "start": "2017-01-01T20:00:00+00:00"
+        },
+        "author": [
+          {
+            "reference": "Organization/b53fcca9-aa22-4f8b-b089-1c35034339e1"
+          }
+        ],
+        "addresses": [
+          {
+            "reference": "Condition/7285ec46-4bd3-4658-b4ee-33d2a313a3d6"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:627d47db-0303-4217-959b-dcf896f50384",
+      "resource": {
+        "resourceType": "Consent",
+        "id": "627d47db-0303-4217-959b-dcf896f50384",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n                                                    <table>\n                                                        <tbody>\n                                                            <tr>\n                                                                <th>Permission to view outcome</th>\n                                                                <td>Permission to view obtained</td>\n                                                            </tr>\n                                                            <tr>\n                                                                <th>Date obtained</th>\n                                                                <td>01-Jan-2017, 20:00</td>\n                                                            </tr>\n                                                            <tr>\n                                                                <th>Date expires</th>\n                                                                <td>15-Jan-2017, 20:00</td>\n                                                            </tr>\n                                                        </tbody>\n                                                    </table>\n                                                </div>"
+        },
+        "identifier": {
+          "use": "usual",
+          "value": "411910CF-1A76-4330-98FE-C345DDEE5553"
+        },
+        "status": "active",
+        "patient": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "period": {
+          "start": "2017-01-01T20:00:00+00:00"
+        },
+        "consentingParty": [
+          {
+            "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+          }
+        ],
+        "action": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "425691002",
+                "display": "Consent given for electronic record sharing"
+              }
+            ],
+            "text": "Consent given for electronic record sharing"
+          }
+        ],
+        "organization": [
+          {
+            "reference": "Organization/1cb87721-f9d5-481e-846b-18a4e80d6ef8"
+          }
+        ],
+        "sourceIdentifier": {
+          "value": "41D9F90F-6DB7-4939-BEF5-F8D75D79ECDD"
+        },
+        "policyRule": "http://hl7.org/fhir/ConsentPolicy/opt-out",
+        "dataPeriod": {
+          "start": "2011-05-19T20:00:00+00:00",
+          "end": "2011-05-26T20:00:00+00:00"
+        },
+        "data": [
+          {
+            "meaning": "related",
+            "reference": {
+              "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7285ec46-4bd3-4658-b4ee-33d2a313a3d6",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "7285ec46-4bd3-4658-b4ee-33d2a313a3d6",
+        "clinicalStatus": "active",
+        "verificationStatus": "unknown",
+        "code": {
+          "coding": [
+            {
+              "system": "22298006",
+              "code": "2.16.840.1.113883.2.1.3.2.4.15",
+              "display": "Myocardial infarction"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "assertedDate": "2017-06-01T14:00:00+00:00",
+        "evidence": [
+          {
+            "detail": [
+              {
+                "reference": "18b12467-49f8-4883-bef1-84c3d3f91d7a"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "5d78029c-7600-489a-8ea6-a1f94948acf3"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "de2138bd-dce8-4db1-a723-59f910c489c8"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "fe4f34ea-b85c-4a1c-bb84-1126b49b7cff"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "38c1b34c-a022-481c-87b0-f7971a8c47a7"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "285874d9-988e-422b-a409-feffb0bdd044"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "3436aad1-1034-4781-899a-2b90fc9e9004"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "15be3eb0-27b8-45d3-a14f-e24a1c2763ae"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "7f0d43f2-56b7-4695-8ad9-570176bb9aa2"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "f128387a-4132-4976-8105-4ebeb2c7d1ff"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "e6cdd309-9b72-4e5c-9522-7b71ac60add8"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "7c035be4-c80b-4ddc-a3cd-d2763f8e1317"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "39a5a123-fc0d-4762-898a-42bde2cd62ca"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "dfb76c04-29ad-40b9-9d27-7ec5b49b4f08"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "c55a89d1-0afe-4c7b-9ebc-f6d2b37d6800"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "7e95d450-97a1-422d-9944-15562ba95741"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "f07b828a-1dfd-4139-8a86-818847c1a49e"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "f3463967-ed0e-49fe-91e2-ac0d657f6c69"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "b98d05d4-4106-442e-b8e1-2485ad9063be"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "64d3a6a6-eb3e-4e3e-9e49-a8d5a1425787"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "00379b2e-7f61-44a9-98ee-e5d7afecd302"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "5bbe58e1-3757-463a-908e-47270828c681"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "02f78640-6855-4dd9-beab-ec521b5faa83"
+              }
+            ]
+          },
+          {
+            "detail": [
+              {
+                "reference": "828fc402-6529-403b-84a9-2a838d0e5310"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:18b12467-49f8-4883-bef1-84c3d3f91d7a",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "18b12467-49f8-4883-bef1-84c3d3f91d7a",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/e6986b52-3dd1-4388-8500-8ecf1abaef8e"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "N/A"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e6986b52-3dd1-4388-8500-8ecf1abaef8e",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "e6986b52-3dd1-4388-8500-8ecf1abaef8e",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "0",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": ", Selected: false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:5d78029c-7600-489a-8ea6-a1f94948acf3",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "5d78029c-7600-489a-8ea6-a1f94948acf3",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/e6f0bbab-8298-4181-b9e8-f5a330f609ad"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "N/A"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e6f0bbab-8298-4181-b9e8-f5a330f609ad",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "e6f0bbab-8298-4181-b9e8-f5a330f609ad",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "0",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": ", Selected: false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:de2138bd-dce8-4db1-a723-59f910c489c8",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "de2138bd-dce8-4db1-a723-59f910c489c8",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/af2702ea-826f-4767-8187-ab29d728edd3"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx220109",
+            "text": "What is the reason for the call?",
+            "answer": [
+              {
+                "valueString": "an injury or other health problem"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:af2702ea-826f-4767-8187-ab29d728edd3",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "af2702ea-826f-4767-8187-ab29d728edd3",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "5",
+            "text": "What is the reason for the call?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "an injury or other health problem, Selected: true"
+              },
+              {
+                "valueString": "a need to access another healthcare provider, Selected: false"
+              },
+              {
+                "valueString": "a healthcare professional requesting contact with another clinician, Selected: false"
+              },
+              {
+                "valueString": "a report of results or tests, Selected: false"
+              },
+              {
+                "valueString": "more, Selected: false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:fe4f34ea-b85c-4a1c-bb84-1126b49b7cff",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "fe4f34ea-b85c-4a1c-bb84-1126b49b7cff",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/0066d7d5-47f2-473c-98df-b64991b18140"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx140118",
+            "text": "Has the baby just been born?",
+            "answer": [
+              {
+                "valueString": "no"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:0066d7d5-47f2-473c-98df-b64991b18140",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "0066d7d5-47f2-473c-98df-b64991b18140",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "35",
+            "text": "Has the baby just been born?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "yes, Selected: false"
+              },
+              {
+                "valueString": "not sure, Selected: false"
+              },
+              {
+                "valueString": "no, Selected: true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:38c1b34c-a022-481c-87b0-f7971a8c47a7",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "38c1b34c-a022-481c-87b0-f7971a8c47a7",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/c0a3fd69-ba8d-44ed-b1ad-16a956c2c45f"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx220110",
+            "text": "Is he breathing and conscious?",
+            "answer": [
+              {
+                "valueString": "breathing AND conscious"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c0a3fd69-ba8d-44ed-b1ad-16a956c2c45f",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "c0a3fd69-ba8d-44ed-b1ad-16a956c2c45f",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "40",
+            "text": "Is he breathing and conscious?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "breathing AND conscious, Selected: true"
+              },
+              {
+                "valueString": "breathing but NOT conscious (includes current fitting), Selected: false"
+              },
+              {
+                "valueString": "NOT breathing, Selected: false"
+              },
+              {
+                "valueString": "choking now, Selected: false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:285874d9-988e-422b-a409-feffb0bdd044",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "285874d9-988e-422b-a409-feffb0bdd044",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/fff200bd-693d-434c-8924-fe946b51b65a"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx220285",
+            "text": "Has he been bleeding very heavily IN THE LAST HOUR?",
+            "answer": [
+              {
+                "valueString": "no"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:fff200bd-693d-434c-8924-fe946b51b65a",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "fff200bd-693d-434c-8924-fe946b51b65a",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "60",
+            "text": "Has he been bleeding very heavily IN THE LAST HOUR?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "blood spurting from a wound, Selected: false"
+              },
+              {
+                "valueString": "an egg cupful or more of red blood from a body opening, Selected: false"
+              },
+              {
+                "valueString": "an egg cupful or more from a wound, Selected: false"
+              },
+              {
+                "valueString": "not sure, Selected: false"
+              },
+              {
+                "valueString": "no, Selected: true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:3436aad1-1034-4781-899a-2b90fc9e9004",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "3436aad1-1034-4781-899a-2b90fc9e9004",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/d526a047-e76b-4dcf-adec-ca1021b1f56f"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "N/A",
+            "text": "SocialConcernsExcluded",
+            "answer": [
+              {
+                "valueString": "*"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:d526a047-e76b-4dcf-adec-ca1021b1f56f",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "d526a047-e76b-4dcf-adec-ca1021b1f56f",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "2050",
+            "text": "SocialConcernsExcluded",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "==\"present\", Selected: false"
+              },
+              {
+                "valueString": "*, Selected: true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:15be3eb0-27b8-45d3-a14f-e24a1c2763ae",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "15be3eb0-27b8-45d3-a14f-e24a1c2763ae",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/aa47cf2c-c51a-408b-b394-c965ea50d676"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx140159",
+            "text": "What is the reason for ending the assessment?",
+            "answer": [
+              {
+                "valueString": "transfer to a clinician"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:aa47cf2c-c51a-408b-b394-c965ea50d676",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "aa47cf2c-c51a-408b-b394-c965ea50d676",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "0",
+            "text": "What is the reason for ending the assessment?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "the phone line went dead, Selected: false"
+              },
+              {
+                "valueString": "the caller terminated the call (specify), Selected: false"
+              },
+              {
+                "valueString": "I terminated the call (specify), Selected: false"
+              },
+              {
+                "valueString": "triage not possible, Selected: false"
+              },
+              {
+                "valueString": "transfer to a clinician, Selected: true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7f0d43f2-56b7-4695-8ad9-570176bb9aa2",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "7f0d43f2-56b7-4695-8ad9-570176bb9aa2",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/17263fb1-707f-4eb7-9942-705c6f61bf7f"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx220408",
+            "text": "WHAT IS THE REASON FOR TRANSFER TO A CLINICIAN?",
+            "answer": [
+              {
+                "valueString": "other complex call (specify)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:17263fb1-707f-4eb7-9942-705c6f61bf7f",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "17263fb1-707f-4eb7-9942-705c6f61bf7f",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "50",
+            "text": "WHAT IS THE REASON FOR TRANSFER TO A CLINICIAN?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "caller refuses disposition, Selected: false"
+              },
+              {
+                "valueString": "multiple unrelated symptoms, Selected: false"
+              },
+              {
+                "valueString": "difficulty obtaining adequate information, Selected: false"
+              },
+              {
+                "valueString": "medication or medical procedure enquiry, Selected: false"
+              },
+              {
+                "valueString": "declared medical history (details not required), Selected: false"
+              },
+              {
+                "valueString": "other complex call (specify), Selected: true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:f128387a-4132-4976-8105-4ebeb2c7d1ff",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "f128387a-4132-4976-8105-4ebeb2c7d1ff",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/4a8ecdeb-8680-48ec-9238-5b0538089e26"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "N/A",
+            "text": "Speak to Clinician from our Service immediately"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:4a8ecdeb-8680-48ec-9238-5b0538089e26",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "4a8ecdeb-8680-48ec-9238-5b0538089e26",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "0",
+            "text": "Speak to Clinician from our Service immediately",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": ", Selected: false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e6cdd309-9b72-4e5c-9522-7b71ac60add8",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "e6cdd309-9b72-4e5c-9522-7b71ac60add8",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/d1f6f996-65f7-40eb-8f7d-d69f6a3c6987"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "N/A"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:d1f6f996-65f7-40eb-8f7d-d69f6a3c6987",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "d1f6f996-65f7-40eb-8f7d-d69f6a3c6987",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "0",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": ", Selected: false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7c035be4-c80b-4ddc-a3cd-d2763f8e1317",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "7c035be4-c80b-4ddc-a3cd-d2763f8e1317",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/7dcba8ae-292f-44ee-a420-0fa86f5403ec"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "N/A"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7dcba8ae-292f-44ee-a420-0fa86f5403ec",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "7dcba8ae-292f-44ee-a420-0fa86f5403ec",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "0",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": ", Selected: false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:39a5a123-fc0d-4762-898a-42bde2cd62ca",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "39a5a123-fc0d-4762-898a-42bde2cd62ca",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/95e061e6-897c-4e7c-9296-53beda3c96ed"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx220109",
+            "text": "What is the reason for the call?",
+            "answer": [
+              {
+                "valueString": "an injury or other health problem"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:95e061e6-897c-4e7c-9296-53beda3c96ed",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "95e061e6-897c-4e7c-9296-53beda3c96ed",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "5",
+            "text": "What is the reason for the call?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "an injury or other health problem, Selected: true"
+              },
+              {
+                "valueString": "a need to access another healthcare provider, Selected: false"
+              },
+              {
+                "valueString": "a healthcare professional requesting contact with another clinician, Selected: false"
+              },
+              {
+                "valueString": "a report of results or tests, Selected: false"
+              },
+              {
+                "valueString": "more, Selected: false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:dfb76c04-29ad-40b9-9d27-7ec5b49b4f08",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "dfb76c04-29ad-40b9-9d27-7ec5b49b4f08",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/2df2d24d-4f52-4cf5-bfae-8daebd872597"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx140118",
+            "text": "Has the baby just been born?",
+            "answer": [
+              {
+                "valueString": "no"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:2df2d24d-4f52-4cf5-bfae-8daebd872597",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "2df2d24d-4f52-4cf5-bfae-8daebd872597",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "35",
+            "text": "Has the baby just been born?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "yes, Selected: false"
+              },
+              {
+                "valueString": "not sure, Selected: false"
+              },
+              {
+                "valueString": "no, Selected: true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c55a89d1-0afe-4c7b-9ebc-f6d2b37d6800",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "c55a89d1-0afe-4c7b-9ebc-f6d2b37d6800",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/61c9b2fd-da1d-4846-bfa2-06d1cd0313c2"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx220110",
+            "text": "Is he breathing and conscious?",
+            "answer": [
+              {
+                "valueString": "breathing AND conscious"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:61c9b2fd-da1d-4846-bfa2-06d1cd0313c2",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "61c9b2fd-da1d-4846-bfa2-06d1cd0313c2",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "40",
+            "text": "Is he breathing and conscious?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "breathing AND conscious, Selected: true"
+              },
+              {
+                "valueString": "breathing but NOT conscious (includes current fitting), Selected: false"
+              },
+              {
+                "valueString": "NOT breathing, Selected: false"
+              },
+              {
+                "valueString": "choking now, Selected: false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7e95d450-97a1-422d-9944-15562ba95741",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "7e95d450-97a1-422d-9944-15562ba95741",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/3c03d094-4909-4511-93e5-2d7af45d2e0b"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx220285",
+            "text": "Has he been bleeding very heavily IN THE LAST HOUR?",
+            "answer": [
+              {
+                "valueString": "an egg cupful or more from a wound"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:3c03d094-4909-4511-93e5-2d7af45d2e0b",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "3c03d094-4909-4511-93e5-2d7af45d2e0b",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "60",
+            "text": "Has he been bleeding very heavily IN THE LAST HOUR?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "blood spurting from a wound, Selected: false"
+              },
+              {
+                "valueString": "an egg cupful or more of red blood from a body opening, Selected: false"
+              },
+              {
+                "valueString": "an egg cupful or more from a wound, Selected: true"
+              },
+              {
+                "valueString": "not sure, Selected: false"
+              },
+              {
+                "valueString": "no, Selected: false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:f07b828a-1dfd-4139-8a86-818847c1a49e",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "f07b828a-1dfd-4139-8a86-818847c1a49e",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/44659c66-b237-4229-8d51-cc2e0363d0e9"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx140109",
+            "text": "Is he fighting desperately for every breath?",
+            "answer": [
+              {
+                "valueString": "no"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:44659c66-b237-4229-8d51-cc2e0363d0e9",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "44659c66-b237-4229-8d51-cc2e0363d0e9",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "20000",
+            "text": "Is he fighting desperately for every breath?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "yes, Selected: false"
+              },
+              {
+                "valueString": "not sure, Selected: false"
+              },
+              {
+                "valueString": "no, Selected: true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:f3463967-ed0e-49fe-91e2-ac0d657f6c69",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "f3463967-ed0e-49fe-91e2-ac0d657f6c69",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/50f053bb-acb1-41ad-97a5-584cf7c185a0"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx220563",
+            "text": "Is he limp, floppy and/or unresponsive?",
+            "answer": [
+              {
+                "valueString": "no"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:50f053bb-acb1-41ad-97a5-584cf7c185a0",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "50f053bb-acb1-41ad-97a5-584cf7c185a0",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "20400",
+            "text": "Is he limp, floppy and/or unresponsive?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "yes, Selected: false"
+              },
+              {
+                "valueString": "not sure, Selected: false"
+              },
+              {
+                "valueString": "no, Selected: true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b98d05d4-4106-442e-b8e1-2485ad9063be",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "b98d05d4-4106-442e-b8e1-2485ad9063be",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/b5ffc0ec-da8b-48b9-8667-178d7c7de1ed"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx220561",
+            "text": "Is he warm to touch?",
+            "answer": [
+              {
+                "valueString": "yes"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b5ffc0ec-da8b-48b9-8667-178d7c7de1ed",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "b5ffc0ec-da8b-48b9-8667-178d7c7de1ed",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "20450",
+            "text": "Is he warm to touch?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "yes, Selected: true"
+              },
+              {
+                "valueString": "not sure, Selected: false"
+              },
+              {
+                "valueString": "no, Selected: false"
+              },
+              {
+                "valueString": "not safe to touch, Selected: false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:64d3a6a6-eb3e-4e3e-9e49-a8d5a1425787",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "64d3a6a6-eb3e-4e3e-9e49-a8d5a1425787",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/b3e26fd0-6af5-4c62-bb8e-b07a9bb2a9ed"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx120019",
+            "text": "Was the injury caused by any of the following?",
+            "answer": [
+              {
+                "valueString": "no"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b3e26fd0-6af5-4c62-bb8e-b07a9bb2a9ed",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "b3e26fd0-6af5-4c62-bb8e-b07a9bb2a9ed",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "20800",
+            "text": "Was the injury caused by any of the following?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "a gunshot, Selected: false"
+              },
+              {
+                "valueString": "a stabbing, Selected: false"
+              },
+              {
+                "valueString": "being ejected from a vehicle, Selected: false"
+              },
+              {
+                "valueString": "not sure, Selected: false"
+              },
+              {
+                "valueString": "no, Selected: true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00379b2e-7f61-44a9-98ee-e5d7afecd302",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "00379b2e-7f61-44a9-98ee-e5d7afecd302",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/30ad37e2-f756-421f-a14a-f21ba6a91270"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx220286",
+            "text": "DID THE INJURY INVOLVE ANY OF THE FOLLOWING?",
+            "answer": [
+              {
+                "valueString": "no"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:30ad37e2-f756-421f-a14a-f21ba6a91270",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "30ad37e2-f756-421f-a14a-f21ba6a91270",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "23100",
+            "text": "DID THE INJURY INVOLVE ANY OF THE FOLLOWING?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "a fall of 5 metres or more (specify), Selected: false"
+              },
+              {
+                "valueString": "multiple major injuries (specify), Selected: false"
+              },
+              {
+                "valueString": "major wound or amputation - not just involving a single finger or toe (specify), Selected: false"
+              },
+              {
+                "valueString": "being knocked over by a blast (specify), Selected: false"
+              },
+              {
+                "valueString": "not sure, Selected: false"
+              },
+              {
+                "valueString": "no, Selected: true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:5bbe58e1-3757-463a-908e-47270828c681",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "5bbe58e1-3757-463a-908e-47270828c681",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/58070d7e-f346-4e0c-865e-a076064e1c20"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx140159",
+            "text": "What is the reason for ending the assessment?",
+            "answer": [
+              {
+                "valueString": "transfer to a clinician"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:58070d7e-f346-4e0c-865e-a076064e1c20",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "58070d7e-f346-4e0c-865e-a076064e1c20",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "0",
+            "text": "What is the reason for ending the assessment?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "the phone line went dead, Selected: false"
+              },
+              {
+                "valueString": "the caller terminated the call (specify), Selected: false"
+              },
+              {
+                "valueString": "I terminated the call (specify), Selected: false"
+              },
+              {
+                "valueString": "triage not possible, Selected: false"
+              },
+              {
+                "valueString": "transfer to a clinician, Selected: true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:02f78640-6855-4dd9-beab-ec521b5faa83",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "02f78640-6855-4dd9-beab-ec521b5faa83",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/e479ca2c-4ef2-4ac7-a316-fd0566ee21df"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "Tx220286",
+            "text": "DID THE INJURY INVOLVE ANY OF THE FOLLOWING?",
+            "answer": [
+              {
+                "valueString": "no"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e479ca2c-4ef2-4ac7-a316-fd0566ee21df",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "e479ca2c-4ef2-4ac7-a316-fd0566ee21df",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "23100",
+            "text": "DID THE INJURY INVOLVE ANY OF THE FOLLOWING?",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": "a fall of 5 metres or more (specify), Selected: false"
+              },
+              {
+                "valueString": "multiple major injuries (specify), Selected: false"
+              },
+              {
+                "valueString": "major wound or amputation - not just involving a single finger or toe (specify), Selected: false"
+              },
+              {
+                "valueString": "being knocked over by a blast (specify), Selected: false"
+              },
+              {
+                "valueString": "not sure, Selected: false"
+              },
+              {
+                "valueString": "no, Selected: true"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:828fc402-6529-403b-84a9-2a838d0e5310",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "828fc402-6529-403b-84a9-2a838d0e5310",
+        "identifier": {
+          "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+        },
+        "questionnaire": {
+          "reference": "Questionnaire/57c80efb-c143-4a09-b5d4-9f392fdd9500"
+        },
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "context": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "authored": "2011-02-17T00:00:00+00:00",
+        "item": [
+          {
+            "linkId": "N/A",
+            "text": "Dispatch 19 minute ambulance"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:57c80efb-c143-4a09-b5d4-9f392fdd9500",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "57c80efb-c143-4a09-b5d4-9f392fdd9500",
+        "identifier": [
+          {
+            "value": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b"
+          }
+        ],
+        "version": "Thu Feb 17 00:00:00 UTC 2011",
+        "status": "active",
+        "experimental": false,
+        "date": "2011-02-17T00:00:00+00:00",
+        "publisher": "User ID: '3137' User name: 'redacted' User skill set: 'T1'",
+        "lastReviewDate": "2011-02-17",
+        "jurisdiction": [
+          {
+            "text": "England"
+          }
+        ],
+        "contact": [
+          {
+            "telecom": [
+              {
+                "value": "redacted"
+              }
+            ]
+          }
+        ],
+        "subjectType": [
+          "Patient"
+        ],
+        "item": [
+          {
+            "linkId": "8067b9b2-e604-4414-b56f-8e3cc4de4b1b",
+            "prefix": "24100",
+            "text": "Dispatch 19 minute ambulance",
+            "type": "choice",
+            "required": true,
+            "repeats": false,
+            "option": [
+              {
+                "valueString": ", Selected: false"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:1022e08f-afb4-46c6-8c56-df7b585d0891",
+      "resource": {
+        "resourceType": "PractitionerRole",
+        "id": "1022e08f-afb4-46c6-8c56-df7b585d0891",
+        "practitioner": {
+          "reference": "Practitioner/00aede7d-8893-4dfb-9229-c20eaa11e5de"
+        },
+        "organization": {
+          "reference": "Organization/d14fa85b-096f-4bd4-89e0-9ecedb4af746"
+        },
+        "code": [
+          {
+            "coding": [
+              {
+                "system": "2.16.840.1.113883.2.1.3.2.4.17.196",
+                "code": "T1",
+                "display": "Nurse Triage Practitioner"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:d14fa85b-096f-4bd4-89e0-9ecedb4af746",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "d14fa85b-096f-4bd4-89e0-9ecedb4af746",
+        "identifier": [
+          {
+            "value": "5L399"
+          }
+        ],
+        "name": "Medway NHS Foundation Trust"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:0343befe-0e31-4b09-a17f-c79a90bfa3c4",
+      "resource": {
+        "resourceType": "PractitionerRole",
+        "id": "0343befe-0e31-4b09-a17f-c79a90bfa3c4",
+        "practitioner": {
+          "reference": "Practitioner/c8b5e238-3b59-49ad-978b-fb0b187ada0b"
+        },
+        "organization": {
+          "reference": "Organization/620c5fb4-e0f8-4f40-9144-c51a776a55f4"
+        },
+        "code": [
+          {
+            "coding": [
+              {
+                "system": "2.16.840.1.113883.2.1.3.2.4.17.196",
+                "code": "R0010",
+                "display": "Medical Director"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:620c5fb4-e0f8-4f40-9144-c51a776a55f4",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "620c5fb4-e0f8-4f40-9144-c51a776a55f4",
+        "identifier": [
+          {
+            "value": "VDE232323"
+          }
+        ],
+        "name": "Medway South Out of Hours Centre"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:761ee205-8014-4d1b-aa33-ebb4495e7d85",
+      "resource": {
+        "resourceType": "List",
+        "id": "761ee205-8014-4d1b-aa33-ebb4495e7d85",
+        "status": "current",
+        "mode": "working",
+        "title": "111 Report List",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "225390008",
+              "display": "Triage"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/cda75e37-c648-422d-930d-aeb829a975b2"
+        },
+        "encounter": {
+          "reference": "Encounter/11f9229c-d312-4f01-8c1f-d332c58ab22f"
+        },
+        "date": "2021-08-09T08:30:15+00:00",
+        "source": {
+          "reference": "Device/1"
+        },
+        "orderedBy": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/list-order",
+              "code": "event-date",
+              "display": "Sorted by Event Date"
+            }
+          ]
+        },
+        "entry": [
+          {
+            "item": {
+              "reference": "c8b5e238-3b59-49ad-978b-fb0b187ada0b"
+            }
+          },
+          {
+            "item": {
+              "reference": "00aede7d-8893-4dfb-9229-c20eaa11e5de"
+            }
+          },
+          {
+            "item": {
+              "reference": "d14fa85b-096f-4bd4-89e0-9ecedb4af746"
+            }
+          },
+          {
+            "item": {
+              "reference": "1cb87721-f9d5-481e-846b-18a4e80d6ef8"
+            }
+          },
+          {
+            "item": {
+              "reference": "f427b992-039d-48e4-a6be-de4a6f08a989"
+            }
+          },
+          {
+            "item": {
+              "reference": "b53fcca9-aa22-4f8b-b089-1c35034339e1"
+            }
+          },
+          {
+            "item": {
+              "reference": "6a150c4f-5ff3-446f-9d72-1bd891b2f66e"
+            }
+          },
+          {
+            "item": {
+              "reference": "3217fb50-f595-464a-8740-8e55e64c0d5a"
+            }
+          },
+          {
+            "item": {
+              "reference": "620c5fb4-e0f8-4f40-9144-c51a776a55f4"
+            }
+          },
+          {
+            "item": {
+              "reference": "72749139-1732-46d3-9d2a-04fef2416de5"
+            }
+          },
+          {
+            "item": {
+              "reference": "5f4f4fbc-2965-42e7-9cc5-cbf1ee4f4b91"
+            }
+          },
+          {
+            "item": {
+              "reference": "417f0179-af32-4e93-be18-51c07e49c07c"
+            }
+          },
+          {
+            "item": {
+              "reference": "513815ca-1361-411c-8874-2be687582b32"
+            }
+          },
+          {
+            "item": {
+              "reference": "7285ec46-4bd3-4658-b4ee-33d2a313a3d6"
+            }
+          },
+          {
+            "item": {
+              "reference": "e479ca2c-4ef2-4ac7-a316-fd0566ee21df"
+            }
+          },
+          {
+            "item": {
+              "reference": "285874d9-988e-422b-a409-feffb0bdd044"
+            }
+          },
+          {
+            "item": {
+              "reference": "d526a047-e76b-4dcf-adec-ca1021b1f56f"
+            }
+          },
+          {
+            "item": {
+              "reference": "b98d05d4-4106-442e-b8e1-2485ad9063be"
+            }
+          },
+          {
+            "item": {
+              "reference": "c55a89d1-0afe-4c7b-9ebc-f6d2b37d6800"
+            }
+          },
+          {
+            "item": {
+              "reference": "58070d7e-f346-4e0c-865e-a076064e1c20"
+            }
+          },
+          {
+            "item": {
+              "reference": "17263fb1-707f-4eb7-9942-705c6f61bf7f"
+            }
+          },
+          {
+            "item": {
+              "reference": "dfb76c04-29ad-40b9-9d27-7ec5b49b4f08"
+            }
+          },
+          {
+            "item": {
+              "reference": "4a8ecdeb-8680-48ec-9238-5b0538089e26"
+            }
+          },
+          {
+            "item": {
+              "reference": "0066d7d5-47f2-473c-98df-b64991b18140"
+            }
+          },
+          {
+            "item": {
+              "reference": "15be3eb0-27b8-45d3-a14f-e24a1c2763ae"
+            }
+          },
+          {
+            "item": {
+              "reference": "af2702ea-826f-4767-8187-ab29d728edd3"
+            }
+          },
+          {
+            "item": {
+              "reference": "7f0d43f2-56b7-4695-8ad9-570176bb9aa2"
+            }
+          },
+          {
+            "item": {
+              "reference": "828fc402-6529-403b-84a9-2a838d0e5310"
+            }
+          },
+          {
+            "item": {
+              "reference": "61c9b2fd-da1d-4846-bfa2-06d1cd0313c2"
+            }
+          },
+          {
+            "item": {
+              "reference": "57c80efb-c143-4a09-b5d4-9f392fdd9500"
+            }
+          },
+          {
+            "item": {
+              "reference": "7c035be4-c80b-4ddc-a3cd-d2763f8e1317"
+            }
+          },
+          {
+            "item": {
+              "reference": "b5ffc0ec-da8b-48b9-8667-178d7c7de1ed"
+            }
+          },
+          {
+            "item": {
+              "reference": "38c1b34c-a022-481c-87b0-f7971a8c47a7"
+            }
+          },
+          {
+            "item": {
+              "reference": "b3e26fd0-6af5-4c62-bb8e-b07a9bb2a9ed"
+            }
+          },
+          {
+            "item": {
+              "reference": "e6986b52-3dd1-4388-8500-8ecf1abaef8e"
+            }
+          },
+          {
+            "item": {
+              "reference": "f07b828a-1dfd-4139-8a86-818847c1a49e"
+            }
+          },
+          {
+            "item": {
+              "reference": "95e061e6-897c-4e7c-9296-53beda3c96ed"
+            }
+          },
+          {
+            "item": {
+              "reference": "00379b2e-7f61-44a9-98ee-e5d7afecd302"
+            }
+          },
+          {
+            "item": {
+              "reference": "2df2d24d-4f52-4cf5-bfae-8daebd872597"
+            }
+          },
+          {
+            "item": {
+              "reference": "e6f0bbab-8298-4181-b9e8-f5a330f609ad"
+            }
+          },
+          {
+            "item": {
+              "reference": "5d78029c-7600-489a-8ea6-a1f94948acf3"
+            }
+          },
+          {
+            "item": {
+              "reference": "7dcba8ae-292f-44ee-a420-0fa86f5403ec"
+            }
+          },
+          {
+            "item": {
+              "reference": "aa47cf2c-c51a-408b-b394-c965ea50d676"
+            }
+          },
+          {
+            "item": {
+              "reference": "7e95d450-97a1-422d-9944-15562ba95741"
+            }
+          },
+          {
+            "item": {
+              "reference": "fe4f34ea-b85c-4a1c-bb84-1126b49b7cff"
+            }
+          },
+          {
+            "item": {
+              "reference": "f3463967-ed0e-49fe-91e2-ac0d657f6c69"
+            }
+          },
+          {
+            "item": {
+              "reference": "3c03d094-4909-4511-93e5-2d7af45d2e0b"
+            }
+          },
+          {
+            "item": {
+              "reference": "30ad37e2-f756-421f-a14a-f21ba6a91270"
+            }
+          },
+          {
+            "item": {
+              "reference": "18b12467-49f8-4883-bef1-84c3d3f91d7a"
+            }
+          },
+          {
+            "item": {
+              "reference": "02f78640-6855-4dd9-beab-ec521b5faa83"
+            }
+          },
+          {
+            "item": {
+              "reference": "f128387a-4132-4976-8105-4ebeb2c7d1ff"
+            }
+          },
+          {
+            "item": {
+              "reference": "50f053bb-acb1-41ad-97a5-584cf7c185a0"
+            }
+          },
+          {
+            "item": {
+              "reference": "5bbe58e1-3757-463a-908e-47270828c681"
+            }
+          },
+          {
+            "item": {
+              "reference": "39a5a123-fc0d-4762-898a-42bde2cd62ca"
+            }
+          },
+          {
+            "item": {
+              "reference": "3436aad1-1034-4781-899a-2b90fc9e9004"
+            }
+          },
+          {
+            "item": {
+              "reference": "de2138bd-dce8-4db1-a723-59f910c489c8"
+            }
+          },
+          {
+            "item": {
+              "reference": "44659c66-b237-4229-8d51-cc2e0363d0e9"
+            }
+          },
+          {
+            "item": {
+              "reference": "c0a3fd69-ba8d-44ed-b1ad-16a956c2c45f"
+            }
+          },
+          {
+            "item": {
+              "reference": "64d3a6a6-eb3e-4e3e-9e49-a8d5a1425787"
+            }
+          },
+          {
+            "item": {
+              "reference": "e6cdd309-9b72-4e5c-9522-7b71ac60add8"
+            }
+          },
+          {
+            "item": {
+              "reference": "d1f6f996-65f7-40eb-8f7d-d69f6a3c6987"
+            }
+          },
+          {
+            "item": {
+              "reference": "fff200bd-693d-434c-8924-fe946b51b65a"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
