@@ -15,10 +15,10 @@ import java.util.Optional;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.IdType;
+import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -113,7 +113,6 @@ public class EncounterMapperTest {
     @Mock
     private II identifier;
 
-    @BeforeEach
     public void setUp() {
         POCDMT000002UK01RecordTarget recordTarget = mock(POCDMT000002UK01RecordTarget.class);
         POCDMT000002UK01PatientRole patientRole = mock(POCDMT000002UK01PatientRole.class);
@@ -221,6 +220,7 @@ public class EncounterMapperTest {
 
     @Test
     public void shouldMapEncounter() {
+        setUp();
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
 
         verifyEncounter(encounter);
@@ -243,6 +243,7 @@ public class EncounterMapperTest {
 
     @Test
     public void mapEncounterTest() {
+        setUp();
         mockParticipant(clinicalDocument);
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
@@ -252,6 +253,7 @@ public class EncounterMapperTest {
     @Test
     @SuppressWarnings("MagicNumber")
     public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
+        setUp();
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
         verifyEncounter(encounter);
 
@@ -259,5 +261,18 @@ public class EncounterMapperTest {
         for (Encounter.EncounterParticipantComponent component : encounter.getParticipant()) {
             assertThat(component).isEqualTo(encounterParticipantComponent);
         }
+    }
+
+    @Test
+    public void addEncounterLocationShouldAddLocation() {
+        Encounter encounter = new Encounter();
+        Location location = new Location();
+        location.setId(RANDOM_UUID);
+
+        encounterMapper.addEncounterLocation(location, encounter);
+
+        assertThat(encounter.getLocation().size()).isEqualTo(1);
+        assertThat(encounter.getLocation().get(0).getStatus()).isEqualTo(Encounter.EncounterLocationStatus.COMPLETED);
+        assertThat(encounter.getLocation().get(0).getLocationTarget().getId()).isEqualTo(RANDOM_UUID);
     }
 }

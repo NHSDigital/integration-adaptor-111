@@ -276,15 +276,7 @@ public class EncounterReportBundleService {
     private void addHealthcareFacilityLocation(Bundle bundle, Location location, Encounter encounter) {
         if (location != null) {
             addEntry(bundle, location);
-
-            Encounter.EncounterLocationComponent encounterLocationComponent = new Encounter.EncounterLocationComponent();
-            encounterLocationComponent.setStatus(Encounter.EncounterLocationStatus.COMPLETED);
-            encounterLocationComponent.setLocation(new Reference(location));
-            encounterLocationComponent.setLocationTarget(location);
-
-            List<Encounter.EncounterLocationComponent> componentsList = new ArrayList<>(List.copyOf(encounter.getLocation()));
-            componentsList.add(encounterLocationComponent);
-            encounter.setLocation(componentsList);
+            encounterMapper.addEncounterLocation(location, encounter);
         }
     }
 }
