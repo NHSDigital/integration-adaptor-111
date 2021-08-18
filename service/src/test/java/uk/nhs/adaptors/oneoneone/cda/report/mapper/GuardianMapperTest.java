@@ -81,6 +81,6 @@ public class GuardianMapperTest {
         when(guardian.isSetGuardianOrganization()).thenReturn(true);
         POCDMT000002UK01Organization itkOrganization = mock(POCDMT000002UK01Organization.class);
         when(guardian.getGuardianOrganization()).thenReturn(itkOrganization);
-        when(organizationMapper.mapOrganization(any())).thenReturn(managingOrganization);
+        when(organizationMapper.mapOrganization(any(POCDMT000002UK01Organization.class))).thenReturn(managingOrganization);
     }
 }

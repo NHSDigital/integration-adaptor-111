@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
@@ -40,6 +41,8 @@ public class LocationMapperTest {
     private static final String DESCRIPTION = "description";
     private static final String NAME = "Mick Jones";
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
+    @Mock
+    private POCDMT000002UK01Organization pocdmt000002UK01Organization;
     @Mock
     private AddressMapper addressMapper;
     @Mock
@@ -100,7 +103,7 @@ public class LocationMapperTest {
         POCDMT000002UK01OrganizationPartOf partOf = mock(POCDMT000002UK01OrganizationPartOf.class);
         IVLTS effectiveTime = mock(IVLTS.class);
 
-        when(organizationMapper.mapOrganization(any())).thenReturn(organization);
+        when(organizationMapper.mapOrganization(any(POCDMT000002UK01Organization.class))).thenReturn(organization);
         when(itkOrganization.isSetAsOrganizationPartOf()).thenReturn(true);
         when(itkOrganization.getAsOrganizationPartOf()).thenReturn(partOf);
         when(partOf.getEffectiveTime()).thenReturn(effectiveTime);
@@ -108,7 +111,7 @@ public class LocationMapperTest {
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         Encounter.EncounterLocationComponent encounterLocationComponent = locationMapper
-                .mapOrganizationToLocationComponent(itkOrganization);
+            .mapOrganizationToLocationComponent(itkOrganization);
 
         assertThat(encounterLocationComponent.getLocationTarget().getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(encounterLocationComponent.getLocationTarget().getManagingOrganizationTarget()).isEqualTo(organization);
@@ -122,16 +125,17 @@ public class LocationMapperTest {
         AD itkAddress = mock(AD.class);
         TEL itkTelecom = mock(TEL.class);
 
-        when(itkIntendedRecipient.sizeOfAddrArray()).thenReturn(new AD[]{itkAddress}.length);
+        when(itkIntendedRecipient.sizeOfAddrArray()).thenReturn(new AD[] {itkAddress}.length);
         when(addressMapper.mapAddress(any())).thenReturn(address);
-        when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[]{itkTelecom});
+        when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[] {itkTelecom});
         when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
         when(itkIntendedRecipient.isSetReceivedOrganization()).thenReturn(true);
-        when(organizationMapper.mapOrganization(any())).thenReturn(organization);
+        when(itkIntendedRecipient.getReceivedOrganization()).thenReturn(pocdmt000002UK01Organization);
+        when(organizationMapper.mapOrganization(any(POCDMT000002UK01Organization.class))).thenReturn(organization);
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         Location referenceRecipientToLocation = locationMapper
-                .mapRecipientToLocation(itkIntendedRecipient);
+            .mapRecipientToLocation(itkIntendedRecipient);
 
         assertThat(referenceRecipientToLocation.getId().startsWith("urn:uuid:"));
         assertThat(referenceRecipientToLocation.getAddress()).isEqualTo(address);

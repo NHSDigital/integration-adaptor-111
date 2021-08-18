@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.w3c.dom.Node;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.ON;
@@ -25,10 +26,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.connect.iucds.cda.ucr.XInformationRecipientX.Enum.forString;
+
 @ExtendWith(MockitoExtension.class)
 public class HealthcareServiceMapperTest {
 
     private static final String HEALTHCARE_SERVICE_NAME = "Thames Medical Practice";
+    private static final String PRCP_TYPE_CODE = "PRCP";
+    private static final String TRC_TYPE_CODE = "TRC";
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
 
     @InjectMocks
@@ -60,13 +65,17 @@ public class HealthcareServiceMapperTest {
 
     @BeforeEach
     public void setup() {
+        POCDMT000002UK01InformationRecipient[] informationRecipientArray = new POCDMT000002UK01InformationRecipient[1];
+        when(clinicalDocument.getInformationRecipientArray()).thenReturn(informationRecipientArray);
+        informationRecipientArray[0] = informationRecipient;
+    }
+
+    @Test
+    public void shouldMapHealthcareService() {
         when(locationMapper.mapRecipientToLocation(intendedRecipient))
             .thenReturn(location);
-        when(organizationMapper.mapOrganization(any()))
+        when(organizationMapper.mapOrganization(any(POCDMT000002UK01InformationRecipient.class)))
             .thenReturn(organization);
-        POCDMT000002UK01InformationRecipient[] informationRecipientArray = new POCDMT000002UK01InformationRecipient[1];
-        informationRecipientArray[0] = informationRecipient;
-        when(clinicalDocument.getInformationRecipientArray()).thenReturn(informationRecipientArray);
         when(informationRecipient.getIntendedRecipient()).thenReturn(intendedRecipient);
         when(intendedRecipient.isSetReceivedOrganization()).thenReturn(true);
         when(intendedRecipient.getReceivedOrganization()).thenReturn(receivedOrganization);
@@ -74,11 +83,8 @@ public class HealthcareServiceMapperTest {
         when(receivedOrganization.getNameArray(0)).thenReturn(name);
         when(name.getDomNode()).thenReturn(node);
         when(nodeUtil.getAllText(name.getDomNode())).thenReturn(HEALTHCARE_SERVICE_NAME);
+        when(informationRecipient.getTypeCode()).thenReturn(forString(PRCP_TYPE_CODE));
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
-    }
-
-    @Test
-    public void shouldMapHealthcareService() {
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper
             .mapHealthcareService(clinicalDocument);
 
@@ -87,6 +93,17 @@ public class HealthcareServiceMapperTest {
         assertThat(organization).isEqualTo(healthcareService.getProvidedByTarget());
         assertThat(HEALTHCARE_SERVICE_NAME).isEqualTo(healthcareService.getName());
         assertThat(true).isEqualTo(healthcareService.getActive());
+        assertThat(healthcareServiceList).isNotEmpty();
         assertThat(healthcareService.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
+    }
+
+    @Test
+    public void shouldMapHealthcareServiceWrongTypeCode() {
+        when(informationRecipient.getTypeCode()).thenReturn(forString(TRC_TYPE_CODE));
+
+        List<HealthcareService> healthcareServiceList = healthcareServiceMapper
+            .mapHealthcareService(clinicalDocument);
+
+        assertThat(healthcareServiceList).isEmpty();
     }
 }

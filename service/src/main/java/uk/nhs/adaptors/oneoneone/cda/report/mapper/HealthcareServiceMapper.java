@@ -22,6 +22,8 @@ import uk.nhs.connect.iucds.cda.ucr.TEL;
 @Component
 @RequiredArgsConstructor
 public class HealthcareServiceMapper {
+
+    private static final String PRCP_TYPE_CODE = "PRCP";
     private final LocationMapper locationMapper;
     private final OrganizationMapper organizationMapper;
     private final ContactPointMapper contactPointMapper;
@@ -33,7 +35,9 @@ public class HealthcareServiceMapper {
         List<HealthcareService> healthcareServiceList = new ArrayList<>();
 
         for (POCDMT000002UK01InformationRecipient recipient : clinicalDocument.getInformationRecipientArray()) {
-            healthcareServiceList.add(mapSingleHealthcareService(recipient));
+            if (recipient.getTypeCode().toString().equals(PRCP_TYPE_CODE)) {
+                healthcareServiceList.add(mapSingleHealthcareService(recipient));
+            }
         }
 
         return healthcareServiceList;
@@ -60,9 +64,9 @@ public class HealthcareServiceMapper {
         }
 
         if (intendedRecipient.isSetReceivedOrganization()) {
-            POCDMT000002UK01Organization receivedOrganization =
-                intendedRecipient.getReceivedOrganization();
-            Organization organization = organizationMapper.mapOrganization(receivedOrganization);
+            POCDMT000002UK01Organization receivedOrganization = intendedRecipient.getReceivedOrganization();
+            Organization organization = organizationMapper
+                .mapOrganization(informationRecipient);
             healthcareService.setProvidedBy(new Reference(organization));
             healthcareService.setProvidedByTarget(organization);
             if (receivedOrganization.sizeOfNameArray() > 0) {
