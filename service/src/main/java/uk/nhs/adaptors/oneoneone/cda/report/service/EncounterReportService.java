@@ -1,5 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
+import java.text.ParseException;
+
 import javax.jms.TextMessage;
 
 import org.apache.xmlbeans.XmlException;
@@ -30,7 +32,7 @@ public class EncounterReportService {
     private final AmqpProperties amqpProperties;
 
     public void transformAndPopulateToGP(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument,
-        String messageId, ItkReportHeader header) throws XmlException {
+        String messageId, ItkReportHeader header) throws XmlException, ParseException {
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(clinicalDocumentDocument, header, messageId);
 
         jmsTemplate.send(amqpProperties.getQueueName(), session -> {

@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toSet;
 
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -78,10 +79,11 @@ public class EncounterReportBundleService {
     }
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header, String messageId)
-        throws XmlException {
+        throws XmlException, ParseException {
         Bundle bundle = createBundle(clinicalDocument);
+        String effectiveTime = clinicalDocument.getEffectiveTime().getValue();
 
-        MessageHeader messageHeader = messageHeaderService.createMessageHeader(header, messageId);
+        MessageHeader messageHeader = messageHeaderService.createMessageHeader(header, messageId, effectiveTime);
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
         List<PractitionerRole> authorPractitionerRoles = practitionerRoleMapper.mapAuthorRoles(clinicalDocument.getAuthorArray());
         List<PractitionerRole> practitionerRoles = new ArrayList<>(authorPractitionerRoles);
@@ -99,7 +101,7 @@ public class EncounterReportBundleService {
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
         RelatedPerson relatedPerson = relatedPersonMapper.createEmergencyContactRelatedPerson(clinicalDocument, encounter);
 
-        addEntry(bundle, messageHeaderService.createMessageHeader(header, messageId));
+        addEntry(bundle, messageHeaderService.createMessageHeader(header, messageId, effectiveTime));
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);

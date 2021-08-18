@@ -1,9 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
 import static java.util.stream.Collectors.toList;
+
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 
-import java.util.Date;
+import java.text.ParseException;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent;
+import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.config.SoapProperties;
 
 @Component
@@ -27,13 +29,13 @@ public class MessageHeaderService {
 
     private final SoapProperties soapProperties;
 
-    public MessageHeader createMessageHeader(ItkReportHeader itkHeader, String messageId) {
+    public MessageHeader createMessageHeader(ItkReportHeader itkHeader, String messageId, String effectiveTime) throws ParseException {
         MessageHeader header = new MessageHeader();
 
         header.setIdElement(new IdType(messageId));
         header.setEvent(getEvent(itkHeader.getSpecVal()));
         header.setSource(getSource());
-        header.setTimestamp(new Date());
+        header.setTimestamp(DateUtil.parseISODateTime(effectiveTime));
         header.setReason(new CodeableConcept().addCoding(
             new Coding()
                 .setCode(itkHeader.getSpecVal())

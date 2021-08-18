@@ -29,6 +29,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.text.ParseException;
+
 @ExtendWith(MockitoExtension.class)
 public class EncounterReportServiceTest {
 
@@ -63,7 +65,7 @@ public class EncounterReportServiceTest {
     }
 
     @Test
-    public void shouldTransformAndPopulateToGP() throws JMSException, XmlException {
+    public void shouldTransformAndPopulateToGP() throws JMSException, XmlException, ParseException {
         ItkReportHeader header = new ItkReportHeader();
         header.setTrackingId(TRACKING_ID);
         header.setSpecKey(SPECIFICATION_KEY);

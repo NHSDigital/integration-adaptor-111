@@ -82,7 +82,6 @@ public class ReportControllerIT {
         "entry[*].resource.custodian.reference",
         "entry[*].resource.data[*].reference.reference",
         "entry[*].resource.date",
-        "entry[*].resource.dateTime",
         "entry[*].resource.encounter.reference",
         "entry[*].resource.entry[*].item.reference",
         "entry[*].resource.episodeOfCare[*].reference",
