@@ -158,8 +158,9 @@ public class LocationMapperTest {
         when(addressMapper.mapAddress(eq(itkAddress))).thenReturn(address);
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
-        Location location = locationMapper.mapHealthcareFacilityToLocation(clinicalDocument);
-        assertThat(location.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
-        assertThat(location.getAddress()).isEqualTo(address);
+        Encounter.EncounterLocationComponent locationComponent = locationMapper.mapHealthcareFacilityToLocationComponent(clinicalDocument);
+        assertThat(locationComponent.getLocationTarget().getIdElement().getValue()).isEqualTo(RANDOM_UUID);
+        assertThat(locationComponent.getLocationTarget().getAddress()).isEqualTo(address);
+        assertThat(locationComponent.getStatus()).isEqualTo(Encounter.EncounterLocationStatus.COMPLETED);
     }
 }

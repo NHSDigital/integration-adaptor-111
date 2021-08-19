@@ -105,7 +105,8 @@ public class LocationMapper {
         return location;
     }
 
-    public Location mapHealthcareFacilityToLocation(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+    public Encounter.EncounterLocationComponent mapHealthcareFacilityToLocationComponent(
+        POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         POCDMT000002UK01EncompassingEncounter encompassingEncounter = clinicalDocument.getComponentOf().getEncompassingEncounter();
         AD address = Optional.ofNullable(encompassingEncounter)
             .map(POCDMT000002UK01EncompassingEncounter::getLocation)
@@ -119,7 +120,11 @@ public class LocationMapper {
             location.setIdElement(resourceUtil.newRandomUuid());
             location.setAddress(addressMapper.mapAddress(address));
 
-            return location;
+            Encounter.EncounterLocationComponent encounterLocationComponent = new Encounter.EncounterLocationComponent();
+            encounterLocationComponent.setStatus(Encounter.EncounterLocationStatus.COMPLETED);
+            encounterLocationComponent.setLocation(new Reference(location));
+            encounterLocationComponent.setLocationTarget(location);
+            return encounterLocationComponent;
         }
         return null;
     }

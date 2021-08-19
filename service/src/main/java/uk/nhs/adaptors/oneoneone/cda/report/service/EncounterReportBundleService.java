@@ -45,7 +45,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.LocationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
@@ -71,7 +70,6 @@ public class EncounterReportBundleService {
     private final ObservationMapper observationMapper;
     private final PractitionerRoleMapper practitionerRoleMapper;
     private final RelatedPersonMapper relatedPersonMapper;
-    private final LocationMapper locationMapper;
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
@@ -100,7 +98,6 @@ public class EncounterReportBundleService {
             referralRequest, authorPractitionerRoles);
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
         RelatedPerson relatedPerson = relatedPersonMapper.createEmergencyContactRelatedPerson(clinicalDocument, encounter);
-        Location healthcareFacilityLocation = locationMapper.mapHealthcareFacilityToLocation(clinicalDocument);
 
         addEntry(bundle, messageHeaderService.createMessageHeader(header, messageId));
         addEncounter(bundle, encounter);
@@ -119,7 +116,6 @@ public class EncounterReportBundleService {
         addObservations(bundle, observations);
         addPractitionerRoles(bundle, practitionerRoles);
         addRelatedPerson(bundle, relatedPerson);
-        addHealthcareFacilityLocation(bundle, healthcareFacilityLocation, encounter);
 
         ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
         addEntry(bundle, listResource);
@@ -270,13 +266,6 @@ public class EncounterReportBundleService {
     private void addRelatedPerson(Bundle bundle, RelatedPerson relatedPerson) {
         if (relatedPerson != null) {
             addEntry(bundle, relatedPerson);
-        }
-    }
-
-    private void addHealthcareFacilityLocation(Bundle bundle, Location location, Encounter encounter) {
-        if (location != null) {
-            addEntry(bundle, location);
-            encounterMapper.addEncounterLocation(location, encounter);
         }
     }
 }

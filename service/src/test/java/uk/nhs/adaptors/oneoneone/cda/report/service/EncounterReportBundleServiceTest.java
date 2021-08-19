@@ -59,7 +59,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.LocationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
@@ -120,8 +119,6 @@ public class EncounterReportBundleServiceTest {
     private static final String MESSAGEID = getRandomUUID().toString();
     private static final RelatedPerson RELATED_PERSON;
     private static final IdType RELATED_PERSON_ID = getRandomUUID();
-    private static final Location HEALTHCARE_FACILITY_LOCATION;
-    private static final IdType HEALTHCARE_FACILITY_LOCATION_ID = getRandomUUID();
 
     private static IdType getRandomUUID() {
         return new IdType(UUID.randomUUID().toString());
@@ -209,9 +206,6 @@ public class EncounterReportBundleServiceTest {
 
         RELATED_PERSON = new RelatedPerson();
         RELATED_PERSON.setIdElement(RELATED_PERSON_ID);
-
-        HEALTHCARE_FACILITY_LOCATION = new Location();
-        HEALTHCARE_FACILITY_LOCATION.setIdElement(HEALTHCARE_FACILITY_LOCATION_ID);
     }
 
     @InjectMocks
@@ -246,8 +240,6 @@ public class EncounterReportBundleServiceTest {
     private ResourceUtil resourceUtil;
     @Mock
     private RelatedPersonMapper relatedPersonMapper;
-    @Mock
-    private LocationMapper locationMapper;
 
     @BeforeEach
     public void setUp() throws XmlException {
@@ -270,7 +262,6 @@ public class EncounterReportBundleServiceTest {
         when(practitionerRoleMapper.mapAuthorRoles(any())).thenReturn(singletonList(AUTHOR_ROLE));
         when(practitionerRoleMapper.mapResponsibleParty(any())).thenReturn(Optional.of(PRACTITIONER_ROLE));
         when(relatedPersonMapper.createEmergencyContactRelatedPerson(eq(document), eq(ENCOUNTER))).thenReturn(RELATED_PERSON);
-        when(locationMapper.mapHealthcareFacilityToLocation(eq(document))).thenReturn(HEALTHCARE_FACILITY_LOCATION);
         Encounter.DiagnosisComponent diagnosisComponent = new Encounter.DiagnosisComponent();
         diagnosisComponent.setCondition(new Reference());
         diagnosisComponent.setRole(new CodeableConcept());
@@ -289,7 +280,7 @@ public class EncounterReportBundleServiceTest {
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader, MESSAGEID);
         assertThat(encounterBundle.getType()).isEqualTo(MESSAGE);
         assertThat(encounterBundle.getIdentifier().getValue()).isEqualTo(TWO.toString());
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(22);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(21);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), MESSAGE_HEADER_ID.getValue(), ResourceType.MessageHeader);
         verifyEntry(entries.get(1), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
@@ -311,8 +302,7 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(17), PRACTITIONER_ROLE_ID.getValue(), ResourceType.PractitionerRole);
         verifyEntry(entries.get(18), PRACTITIONER_ORG_ID.getValue(), ResourceType.Organization);
         verifyEntry(entries.get(19), RELATED_PERSON_ID.getValue(), ResourceType.RelatedPerson);
-        verifyEntry(entries.get(20), HEALTHCARE_FACILITY_LOCATION_ID.getValue(), ResourceType.Location);
-        verifyEntry(entries.get(21), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+        verifyEntry(entries.get(20), LIST_RESOURCE_ID.getValue(), ResourceType.List);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {
