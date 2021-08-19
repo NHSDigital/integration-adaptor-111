@@ -29,25 +29,29 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ResponsibleParty;
 @Component
 @AllArgsConstructor
 public class PractitionerRoleMapper {
+    private static final String AUTHOR_TYPE_CODE = "AUT";
+
     private final OrganizationMapper organizationMapper;
     private final PractitionerMapper practitionerMapper;
     private final ResourceUtil resourceUtil;
 
     public List<PractitionerRole> mapAuthorRoles(POCDMT000002UK01Author[] authors) {
         List<PractitionerRole> roles = new ArrayList<>();
-        stream(authors).map(author -> {
-            PractitionerRole role = new PractitionerRole();
-            role.setIdElement(resourceUtil.newRandomUuid());
-            POCDMT000002UK01AssignedAuthor assignedAuthor = author.getAssignedAuthor();
-            role.setCode(asList(getCode(assignedAuthor.getCode())));
-            Organization organization = organizationMapper.mapOrganization(assignedAuthor.getRepresentedOrganization());
-            role.setOrganization(new Reference(organization));
-            role.setOrganizationTarget(organization);
-            Practitioner practitioner = practitionerMapper.mapPractitioner(assignedAuthor);
-            role.setPractitioner(new Reference(practitioner));
-            role.setPractitionerTarget(practitioner);
-            return role;
-        })
+        stream(authors)
+            .filter(it -> it.getTypeCode().equals(AUTHOR_TYPE_CODE))
+            .map(author -> {
+                PractitionerRole role = new PractitionerRole();
+                role.setIdElement(resourceUtil.newRandomUuid());
+                POCDMT000002UK01AssignedAuthor assignedAuthor = author.getAssignedAuthor();
+                role.setCode(asList(getCode(assignedAuthor.getCode())));
+                Organization organization = organizationMapper.mapOrganization(assignedAuthor.getRepresentedOrganization());
+                role.setOrganization(new Reference(organization));
+                role.setOrganizationTarget(organization);
+                Practitioner practitioner = practitionerMapper.mapPractitioner(assignedAuthor);
+                role.setPractitioner(new Reference(practitioner));
+                role.setPractitionerTarget(practitioner);
+                return role;
+            })
             .forEach(roles::add);
 
         return roles;

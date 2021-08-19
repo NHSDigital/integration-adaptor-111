@@ -88,13 +88,19 @@
             }
           },
           {
+            "type": [
+              {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/ValueSet/encounter-participant-type",
+                    "code": "PPRF",
+                    "display": "Author"
+                  }
+                ]
+              }
+            ],
             "individual": {
               "reference": "Practitioner/a7d90105-06de-4155-a6ec-09889bdd5edd"
-            }
-          },
-          {
-            "individual": {
-              "reference": "Practitioner/8c3cbad6-38f3-432f-84fe-b1e08952cbb5"
             }
           },
           {
@@ -105,6 +111,22 @@
             ],
             "individual": {
               "reference": "RelatedPerson/58c0f502-e660-40c6-a409-182286189341"
+            }
+          },
+          {
+            "type": [
+              {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/ValueSet/encounter-participant-type",
+                    "code": "ATND",
+                    "display": "Responsible Party"
+                  }
+                ]
+              }
+            ],
+            "individual": {
+              "reference": "Practitioner/8c3cbad6-38f3-432f-84fe-b1e08952cbb5"
             }
           }
         ],
@@ -209,23 +231,6 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:8c3cbad6-38f3-432f-84fe-b1e08952cbb5",
-      "resource": {
-        "resourceType": "Practitioner",
-        "id": "8c3cbad6-38f3-432f-84fe-b1e08952cbb5",
-        "active": true,
-        "name": [
-          {
-            "use": "official",
-            "family": "Cornwell",
-            "given": [
-              "Dave"
-            ]
-          }
-        ]
-      }
-    },
-    {
       "fullUrl": "urn:uuid:58c0f502-e660-40c6-a409-182286189341",
       "resource": {
         "resourceType": "RelatedPerson",
@@ -264,6 +269,23 @@
             ],
             "city": "Medway",
             "postalCode": "ME5 7TY"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:8c3cbad6-38f3-432f-84fe-b1e08952cbb5",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "8c3cbad6-38f3-432f-84fe-b1e08952cbb5",
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "family": "Cornwell",
+            "given": [
+              "Dave"
+            ]
           }
         ]
       }
