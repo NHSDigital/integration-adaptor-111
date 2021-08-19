@@ -21,7 +21,6 @@ import org.hl7.fhir.dstu3.model.Encounter.EncounterLocationComponent;
 import org.hl7.fhir.dstu3.model.Encounter.EncounterParticipantComponent;
 import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.Identifier;
-import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -89,17 +88,6 @@ public class EncounterMapper {
         setAppointment(encounter, clinicalDocument);
         setEncounterReasonAndType(encounter, clinicalDocument);
         return encounter;
-    }
-
-    public void addEncounterLocation(Location location, Encounter encounter) {
-        Encounter.EncounterLocationComponent encounterLocationComponent = new Encounter.EncounterLocationComponent();
-        encounterLocationComponent.setStatus(Encounter.EncounterLocationStatus.COMPLETED);
-        encounterLocationComponent.setLocation(new Reference(location));
-        encounterLocationComponent.setLocationTarget(location);
-
-        List<Encounter.EncounterLocationComponent> componentsList = new ArrayList<>(List.copyOf(encounter.getLocation()));
-        componentsList.add(encounterLocationComponent);
-        encounter.setLocation(componentsList);
     }
 
     private void setType(Encounter encounter, Coding interaction) {
