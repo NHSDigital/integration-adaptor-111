@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toSet;
 
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -79,7 +78,7 @@ public class EncounterReportBundleService {
     }
 
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header, String messageId)
-        throws XmlException, ParseException {
+        throws XmlException {
         Bundle bundle = createBundle(clinicalDocument);
         String effectiveTime = clinicalDocument.getEffectiveTime().getValue();
 
@@ -101,7 +100,7 @@ public class EncounterReportBundleService {
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
         RelatedPerson relatedPerson = relatedPersonMapper.createEmergencyContactRelatedPerson(clinicalDocument, encounter);
 
-        addEntry(bundle, messageHeaderService.createMessageHeader(header, messageId, effectiveTime));
+        addEntry(bundle, messageHeader);
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);

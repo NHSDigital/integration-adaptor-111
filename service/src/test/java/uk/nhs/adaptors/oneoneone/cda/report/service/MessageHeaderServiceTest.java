@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 
 import static uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent.DISCHARGE_DETAILS;
 
-import java.text.ParseException;
 import java.util.Arrays;
 
 import org.hl7.fhir.dstu3.model.Coding;
@@ -47,7 +46,7 @@ public class MessageHeaderServiceTest {
     }
 
     @Test
-    public void shouldCreateMessageHeader() throws ParseException {
+    public void shouldCreateMessageHeader() {
         ItkReportHeader itkReportHeader = new ItkReportHeader();
         itkReportHeader.setSpecKey(SPECIFICATION_KEY);
         itkReportHeader.setSpecVal(SPECIFICATION_VALUE);

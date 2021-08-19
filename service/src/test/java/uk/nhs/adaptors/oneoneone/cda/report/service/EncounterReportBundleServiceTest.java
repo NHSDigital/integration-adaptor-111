@@ -247,7 +247,7 @@ public class EncounterReportBundleServiceTest {
     private TS ts;
 
     @BeforeEach
-    public void setUp() throws XmlException, ParseException {
+    public void setUp() throws XmlException {
         INT versionNumber = mock(INT.class);
         when(versionNumber.getValue()).thenReturn(VERSION);
         when(document.getVersionNumber()).thenReturn(versionNumber);

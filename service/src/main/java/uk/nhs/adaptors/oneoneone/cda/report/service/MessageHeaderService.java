@@ -4,8 +4,6 @@ import static java.util.stream.Collectors.toList;
 
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 
-import java.text.ParseException;
-
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.IdType;
@@ -29,7 +27,7 @@ public class MessageHeaderService {
 
     private final SoapProperties soapProperties;
 
-    public MessageHeader createMessageHeader(ItkReportHeader itkHeader, String messageId, String effectiveTime) throws ParseException {
+    public MessageHeader createMessageHeader(ItkReportHeader itkHeader, String messageId, String effectiveTime)  {
         MessageHeader header = new MessageHeader();
 
         header.setIdElement(new IdType(messageId));
