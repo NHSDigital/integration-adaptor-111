@@ -193,15 +193,15 @@ public class EncounterMapper {
         return encounterParticipantComponents;
     }
 
-    private EncounterParticipantComponent buildParticipantComponent(PractitionerRole it, String code, String display) {
+    private EncounterParticipantComponent buildParticipantComponent(PractitionerRole practitionerRole, String code, String display) {
         return new EncounterParticipantComponent()
             .addType(new CodeableConcept()
                 .addCoding(new Coding()
                     .setCode(code)
                     .setSystem(PARTICIPANT_SYSTEM)
                     .setDisplay(display)))
-            .setIndividual(it.getPractitioner())
-            .setIndividualTarget(it.getPractitionerTarget());
+            .setIndividual(practitionerRole.getPractitioner())
+            .setIndividualTarget(practitionerRole.getPractitionerTarget());
     }
 
     private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
