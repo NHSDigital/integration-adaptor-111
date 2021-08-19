@@ -3,6 +3,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static java.util.Optional.empty;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.util.Lists.emptyList;
 import static org.assertj.core.util.Lists.newArrayList;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.mockito.ArgumentMatchers.any;
@@ -254,7 +255,7 @@ public class EncounterMapperTest {
     public void mapEncounterTest() {
         mockParticipant(clinicalDocument);
 
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), empty(), DISCHARGE_DETAILS.toCoding());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, emptyList(), empty(), DISCHARGE_DETAILS.toCoding());
         verifyEncounter(encounter);
         assertThat(encounter.getLocation().size()).isEqualTo(1);
     }
@@ -291,7 +292,7 @@ public class EncounterMapperTest {
     public void mapEncounterWhenHealthcareLocationIsNotNull() {
         when(locationMapper.mapHealthcareFacilityToLocationComponent(clinicalDocument)).thenReturn(locationComponent);
 
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, emptyList(), empty(), DISCHARGE_DETAILS.toCoding());
 
         verifyEncounter(encounter);
         assertThat(encounter.getLocation().size()).isEqualTo(2);
