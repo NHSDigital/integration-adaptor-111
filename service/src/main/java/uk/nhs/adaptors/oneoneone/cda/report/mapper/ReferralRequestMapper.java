@@ -7,6 +7,8 @@ import static org.hl7.fhir.dstu3.model.ReferralRequest.ReferralRequestStatus.ACT
 import java.util.Date;
 import java.util.List;
 
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Period;
@@ -51,12 +53,11 @@ public class ReferralRequestMapper {
                 .setOnBehalfOf(encounter.getServiceProvider()))
             .addReasonReference(condition)
             .addSupportingInfo(new Reference(procedureRequestMapper.mapProcedureRequest(clinicalDocument, encounter.getSubject(),
-                referralRequest)));
-
+                referralRequest)))
+            .addReasonCode(new CodeableConcept().addCoding(new Coding().setCode(clinicalDocument.getParticipantArray(0).getTypeCode())));
         for (HealthcareService healthcareService : healthcareServiceList) {
             referralRequest.addRecipient(new Reference(healthcareService));
         }
-
         return referralRequest;
     }
 }
