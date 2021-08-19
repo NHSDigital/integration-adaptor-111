@@ -109,8 +109,7 @@ public class ReportControllerIT {
         "entry[*].resource.subject.reference",
         "entry[*].resource.supportingInfo[*].reference",
         "entry[*].resource.practitioner.reference",
-        "entry[*].resource.organization.reference",
-        "entry[*].resource.timestamp");
+        "entry[*].resource.organization.reference");
 
     @Autowired
     private FhirJsonValidator validator;

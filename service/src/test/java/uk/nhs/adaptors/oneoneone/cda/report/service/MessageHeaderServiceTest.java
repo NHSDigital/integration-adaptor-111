@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent;
+import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.config.SoapProperties;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,6 +31,7 @@ public class MessageHeaderServiceTest {
     private static final String SPECIFICATION_VALUE = "urn:nhs-itk:interaction:copyRecipientNHS111CDADocument-v2-0";
     private static final String ADDRESS = "the_address";
     private static final String MESSAGEID = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
+    private static final String EFFECTIVE_TIME = "20210406123335+01";
 
     @Mock
     private SoapProperties soapProperties;
@@ -48,7 +50,7 @@ public class MessageHeaderServiceTest {
         itkReportHeader.setSpecKey(SPECIFICATION_KEY);
         itkReportHeader.setSpecVal(SPECIFICATION_VALUE);
         itkReportHeader.setAddressList(Arrays.asList(ADDRESS));
-        MessageHeader messageHeader = messageHeaderService.createMessageHeader(itkReportHeader, MESSAGEID);
+        MessageHeader messageHeader = messageHeaderService.createMessageHeader(itkReportHeader, MESSAGEID, EFFECTIVE_TIME);
 
         assertThat(messageHeader.getId()).isEqualTo(MESSAGEID);
         Coding event = messageHeader.getEvent();
@@ -61,5 +63,6 @@ public class MessageHeaderServiceTest {
         assertThat(messageHeader.getReason().getCodingFirstRep().getSystem()).isEqualTo(SPECIFICATION_KEY);
         assertThat(messageHeader.getReason().getCodingFirstRep().getCode()).isEqualTo(SPECIFICATION_VALUE);
         assertThat(messageHeader.getDestinationFirstRep().getEndpoint()).isEqualTo(ADDRESS);
+        assertThat(messageHeader.getTimestamp()).isEqualTo(DateUtil.parseISODateTime(EFFECTIVE_TIME));
     }
 }

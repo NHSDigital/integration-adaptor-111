@@ -67,6 +67,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.INT;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.TS;
 
 @ExtendWith(MockitoExtension.class)
 public class EncounterReportBundleServiceTest {
@@ -119,6 +120,7 @@ public class EncounterReportBundleServiceTest {
     private static final String MESSAGEID = getRandomUUID().toString();
     private static final RelatedPerson RELATED_PERSON;
     private static final IdType RELATED_PERSON_ID = getRandomUUID();
+    private static final String EFFECTIVE_TIME = "20210406123335+01";
 
     private static IdType getRandomUUID() {
         return new IdType(UUID.randomUUID().toString());
@@ -240,12 +242,16 @@ public class EncounterReportBundleServiceTest {
     private ResourceUtil resourceUtil;
     @Mock
     private RelatedPersonMapper relatedPersonMapper;
+    @Mock
+    private TS ts;
 
     @BeforeEach
     public void setUp() throws XmlException {
         INT versionNumber = mock(INT.class);
         when(versionNumber.getValue()).thenReturn(VERSION);
         when(document.getVersionNumber()).thenReturn(versionNumber);
+        when(document.getEffectiveTime()).thenReturn(ts);
+        when(ts.getValue()).thenReturn(EFFECTIVE_TIME);
         List<QuestionnaireResponse> questionnaireResponseList = new ArrayList<>();
         questionnaireResponseList.add(QUESTIONNAIRE_RESPONSE);
         when(encounterMapper.mapEncounter(any(), any(), any(), any())).thenReturn(ENCOUNTER);
@@ -256,7 +262,7 @@ public class EncounterReportBundleServiceTest {
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
         when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
-        when(messageHeaderService.createMessageHeader(any(), any())).thenReturn(MESSAGE_HEADER);
+        when(messageHeaderService.createMessageHeader(any(), any(), eq(EFFECTIVE_TIME))).thenReturn(MESSAGE_HEADER);
         when(referralRequestMapper.mapReferralRequest(any(), any(), any(), any())).thenReturn(REFERRAL_REQUEST);
         when(observationMapper.mapObservations(any(), eq(ENCOUNTER))).thenReturn(Arrays.asList(OBSERVATION));
         when(practitionerRoleMapper.mapAuthorRoles(any())).thenReturn(singletonList(AUTHOR_ROLE));
