@@ -247,6 +247,7 @@ public class EncounterMapperTest {
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
         verifyEncounter(encounter);
+        assertThat(encounter.getLocation().size()).isEqualTo(1);
     }
 
     @Test
@@ -259,5 +260,15 @@ public class EncounterMapperTest {
         for (Encounter.EncounterParticipantComponent component : encounter.getParticipant()) {
             assertThat(component).isEqualTo(encounterParticipantComponent);
         }
+    }
+
+    @Test
+    public void mapEncounterWhenHealthcareLocationIsNotNull() {
+        when(locationMapper.mapHealthcareFacilityToLocationComponent(clinicalDocument)).thenReturn(locationComponent);
+
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
+
+        verifyEncounter(encounter);
+        assertThat(encounter.getLocation().size()).isEqualTo(2);
     }
 }

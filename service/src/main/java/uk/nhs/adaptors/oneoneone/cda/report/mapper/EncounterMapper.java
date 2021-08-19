@@ -115,6 +115,12 @@ public class EncounterMapper {
                 .map(locationMapper::mapOrganizationToLocationComponent)
                 .collect(Collectors.toList());
         }
+
+        EncounterLocationComponent healthcareFacility = locationMapper.mapHealthcareFacilityToLocationComponent(clinicalDocument1);
+        if (healthcareFacility != null) {
+            locations.add(healthcareFacility);
+        }
+
         return locations;
     }
 
