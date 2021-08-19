@@ -108,17 +108,21 @@ public class LocationMapper {
     public Encounter.EncounterLocationComponent mapHealthcareFacilityToLocationComponent(
         POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         POCDMT000002UK01EncompassingEncounter encompassingEncounter = clinicalDocument.getComponentOf().getEncompassingEncounter();
-        AD address = Optional.ofNullable(encompassingEncounter)
+        POCDMT000002UK01Place place = Optional.ofNullable(encompassingEncounter)
             .map(POCDMT000002UK01EncompassingEncounter::getLocation)
             .map(POCDMT000002UK01Location::getHealthCareFacility)
             .map(POCDMT000002UK01HealthCareFacility::getLocation)
-            .map(POCDMT000002UK01Place::getAddr)
             .orElse(null);
 
-        if (address != null) {
+        if (place != null) {
             Location location = new Location();
             location.setIdElement(resourceUtil.newRandomUuid());
-            location.setAddress(addressMapper.mapAddress(address));
+            location.setName(nodeUtil.getAllText(place.getName().getDomNode()));
+
+            AD address = place.getAddr();
+            if (address != null) {
+                location.setAddress(addressMapper.mapAddress(address));
+            }
 
             Encounter.EncounterLocationComponent encounterLocationComponent = new Encounter.EncounterLocationComponent();
             encounterLocationComponent.setStatus(Encounter.EncounterLocationStatus.COMPLETED);
