@@ -42,7 +42,6 @@ public class MessageHeaderServiceTest {
     @BeforeEach
     public void setUp() {
         when(soapProperties.getSendTo()).thenReturn(ENDPOINT);
-
     }
 
     @Test
