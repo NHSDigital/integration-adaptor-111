@@ -81,7 +81,8 @@ public class EncounterReportBundleService {
         throws XmlException {
         Bundle bundle = createBundle(clinicalDocument);
 
-        MessageHeader messageHeader = messageHeaderService.createMessageHeader(header, messageId);
+        MessageHeader messageHeader = messageHeaderService
+            .createMessageHeader(header, messageId, clinicalDocument.getEffectiveTime().getValue());
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
         List<PractitionerRole> authorPractitionerRoles = practitionerRoleMapper.mapAuthorRoles(clinicalDocument.getAuthorArray());
         Optional<PractitionerRole> responsibleParty = practitionerRoleMapper.mapResponsibleParty(clinicalDocument);
@@ -99,7 +100,7 @@ public class EncounterReportBundleService {
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
         RelatedPerson relatedPerson = relatedPersonMapper.createEmergencyContactRelatedPerson(clinicalDocument, encounter);
 
-        addEntry(bundle, messageHeaderService.createMessageHeader(header, messageId));
+        addEntry(bundle, messageHeader);
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
