@@ -115,9 +115,7 @@ public class EncounterReportBundleService {
         addQuestionnaireResponses(bundle, questionnaireResponseList);
         addObservations(bundle, observations);
         addPractitionerRoles(bundle, authorPractitionerRoles, responsibleParty);
-        if (relatedPerson != null) {
-            addEntry(bundle, relatedPerson);
-        }
+        addRelatedPerson(bundle, relatedPerson);
 
         ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
         addEntry(bundle, listResource);
@@ -268,5 +266,11 @@ public class EncounterReportBundleService {
 
     private void addObservations(Bundle bundle, List<Observation> observations) {
         observations.forEach(observation -> addEntry(bundle, observation));
+    }
+
+    private void addRelatedPerson(Bundle bundle, RelatedPerson relatedPerson) {
+        if (relatedPerson != null) {
+            addEntry(bundle, relatedPerson);
+        }
     }
 }
