@@ -1,6 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static java.util.Optional.empty;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.util.Lists.emptyList;
+import static org.assertj.core.util.Lists.newArrayList;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -13,11 +17,13 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.Appointment;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,10 +58,14 @@ import uk.nhs.connect.iucds.cda.ucr.TS;
 public class EncounterMapperTest {
 
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
-
+    private static final Coding AUTHOR_CODING = new Coding("http://hl7.org/fhir/ValueSet/encounter-participant-type", "PPRF",
+        "Author");
+    private static final Coding RESPONSIBLE_PARTY_CODING = new Coding("http://hl7.org/fhir/ValueSet/encounter-participant-type", "ATND",
+        "Responsible Party");
     private static final String ID_ROOT = "2.16.840.1.113883.2.1.3.2.4.18.34";
     private static final String ID_EXTENSION = "CASEREF1234";
     private static final String TEXT_REPRESENTATION = "111 Encounter Copy for Information";
+    private static final int OTHER_PARTICIPANTS_SIZE = 4;
     @Mock
     private ParticipantMapper participantMapper;
     @Mock
@@ -221,7 +231,7 @@ public class EncounterMapperTest {
 
     @Test
     public void shouldMapEncounter() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), empty(), DISCHARGE_DETAILS.toCoding());
 
         verifyEncounter(encounter);
     }
@@ -245,19 +255,46 @@ public class EncounterMapperTest {
     public void mapEncounterTest() {
         mockParticipant(clinicalDocument);
 
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, emptyList(), empty(), DISCHARGE_DETAILS.toCoding());
         verifyEncounter(encounter);
+        assertThat(encounter.getLocation().size()).isEqualTo(1);
     }
 
     @Test
-    @SuppressWarnings("MagicNumber")
-    public void mapEncounterWhenAuthorInformantAndDataEntererArePresent() {
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, new ArrayList<>(), DISCHARGE_DETAILS.toCoding());
+    public void mapEncounterWithMultipleParticipantTypes() {
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, newArrayList(new PractitionerRole()),
+            Optional.of(new PractitionerRole()), DISCHARGE_DETAILS.toCoding());
         verifyEncounter(encounter);
+        verifyParticipants(encounter);
+    }
 
-        assertThat(encounter.getParticipant().size()).isEqualTo(4);
-        for (Encounter.EncounterParticipantComponent component : encounter.getParticipant()) {
-            assertThat(component).isEqualTo(encounterParticipantComponent);
-        }
+    private void verifyParticipants(Encounter encounter) {
+        long authorsCount = getParticipantsCountByCoding(encounter, AUTHOR_CODING);
+        assertThat(authorsCount).isEqualTo(1);
+
+        long responsiblePartyCount = getParticipantsCountByCoding(encounter, RESPONSIBLE_PARTY_CODING);
+        assertThat(responsiblePartyCount).isEqualTo(1);
+
+        long otherParticipantsCount = encounter.getParticipant().stream()
+            .filter(it -> it.equals(encounterParticipantComponent))
+            .count();
+        assertThat(otherParticipantsCount).isEqualTo(OTHER_PARTICIPANTS_SIZE);
+    }
+
+    private long getParticipantsCountByCoding(Encounter encounter, Coding coding) {
+        return encounter.getParticipant().stream()
+            .filter(it -> it.getTypeFirstRep() != null)
+            .filter(it -> it.getTypeFirstRep().getCodingFirstRep().equalsDeep(coding))
+            .count();
+    }
+
+    @Test
+    public void mapEncounterWhenHealthcareLocationIsNotNull() {
+        when(locationMapper.mapHealthcareFacilityToLocationComponent(clinicalDocument)).thenReturn(locationComponent);
+
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, emptyList(), empty(), DISCHARGE_DETAILS.toCoding());
+
+        verifyEncounter(encounter);
+        assertThat(encounter.getLocation().size()).isEqualTo(2);
     }
 }

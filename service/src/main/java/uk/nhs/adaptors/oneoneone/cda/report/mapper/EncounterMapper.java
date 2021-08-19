@@ -50,6 +50,12 @@ public class EncounterMapper {
 
     private static final String DIV_END = "</div>";
 
+    private static final String AUTHOR_PARTICIPANT_DISPLAY = "Author";
+    private static final String AUTHOR_PARTICIPANT_CODE = "PPRF";
+    private static final String RESPONSIBLE_PARTY_PARTICIPANT_DISPLAY = "Responsible Party";
+    private static final String RESPONSIBLE_PARTY_PARTICIPANT_CODE = "ATND";
+    private static final String PARTICIPANT_SYSTEM = "http://hl7.org/fhir/ValueSet/encounter-participant-type";
+
     private final PeriodMapper periodMapper;
 
     private final ParticipantMapper participantMapper;
@@ -72,9 +78,8 @@ public class EncounterMapper {
 
     private final ResourceUtil resourceUtil;
 
-
-    public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<PractitionerRole> practitionerRoles,
-        Coding interaction) {
+    public Encounter mapEncounter(POCDMT000002UK01ClinicalDocument1 clinicalDocument, List<PractitionerRole> authorPractitionerRoles,
+        Optional<PractitionerRole> responsibleParty, Coding interaction) {
         Encounter encounter = new Encounter();
         encounter.setIdElement(resourceUtil.newRandomUuid());
         encounter.setStatus(FINISHED);
@@ -84,7 +89,7 @@ public class EncounterMapper {
         setServiceProvider(encounter, clinicalDocument);
         setIdentifiers(encounter, clinicalDocument);
         setSubject(encounter, clinicalDocument);
-        encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument, practitionerRoles, encounter));
+        encounter.setParticipant(getEncounterParticipantComponents(clinicalDocument, authorPractitionerRoles, responsibleParty, encounter));
         setAppointment(encounter, clinicalDocument);
         setEncounterReasonAndType(encounter, clinicalDocument);
         return encounter;
@@ -115,6 +120,12 @@ public class EncounterMapper {
                 .map(locationMapper::mapOrganizationToLocationComponent)
                 .collect(Collectors.toList());
         }
+
+        EncounterLocationComponent healthcareFacility = locationMapper.mapHealthcareFacilityToLocationComponent(clinicalDocument1);
+        if (healthcareFacility != null) {
+            locations.add(healthcareFacility);
+        }
+
         return locations;
     }
 
@@ -146,16 +157,14 @@ public class EncounterMapper {
     }
 
     private List<EncounterParticipantComponent> getEncounterParticipantComponents(POCDMT000002UK01ClinicalDocument1 clinicalDocument,
-        List<PractitionerRole> practitionerRoles, Encounter encounter) {
+        List<PractitionerRole> authorPractitionerRoles, Optional<PractitionerRole> responsibleParty, Encounter encounter) {
         List<EncounterParticipantComponent> encounterParticipantComponents = stream(clinicalDocument
             .getParticipantArray())
             .map(participantMapper::mapEncounterParticipant)
             .collect(Collectors.toList());
-        if (practitionerRoles.size() > 0) {
-            practitionerRoles.stream()
-                .map(it -> new EncounterParticipantComponent()
-                    .setIndividual(it.getPractitioner())
-                    .setIndividualTarget(it.getPractitionerTarget()))
+        if (authorPractitionerRoles.size() > 0) {
+            authorPractitionerRoles.stream()
+                .map(it -> buildParticipantComponent(it, AUTHOR_PARTICIPANT_CODE, AUTHOR_PARTICIPANT_DISPLAY))
                 .forEach(encounterParticipantComponents::add);
         }
         if (clinicalDocument.sizeOfInformantArray() > 0) {
@@ -175,7 +184,24 @@ public class EncounterMapper {
             encounterParticipantComponents.add(dataEntererMapper
                 .mapDataEntererIntoParticipantComponent(clinicalDocument.getDataEnterer()));
         }
+
+        responsibleParty.ifPresent(it ->
+            encounterParticipantComponents.add(buildParticipantComponent(it, RESPONSIBLE_PARTY_PARTICIPANT_CODE,
+                RESPONSIBLE_PARTY_PARTICIPANT_DISPLAY))
+        );
+
         return encounterParticipantComponents;
+    }
+
+    private EncounterParticipantComponent buildParticipantComponent(PractitionerRole practitionerRole, String code, String display) {
+        return new EncounterParticipantComponent()
+            .addType(new CodeableConcept()
+                .addCoding(new Coding()
+                    .setCode(code)
+                    .setSystem(PARTICIPANT_SYSTEM)
+                    .setDisplay(display)))
+            .setIndividual(practitionerRole.getPractitioner())
+            .setIndividualTarget(practitionerRole.getPractitionerTarget());
     }
 
     private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {

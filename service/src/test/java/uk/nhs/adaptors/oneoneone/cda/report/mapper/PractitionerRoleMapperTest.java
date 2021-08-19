@@ -31,6 +31,9 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ResponsibleParty;
 
 @ExtendWith(MockitoExtension.class)
 public class PractitionerRoleMapperTest {
+
+    private static final String AUTHOR_TYPE_CODE = "AUT";
+
     @Mock
     private OrganizationMapper organizationMapper;
 
@@ -96,6 +99,7 @@ public class PractitionerRoleMapperTest {
     }
 
     private void mockAuthors() {
+        when(author.getTypeCode()).thenReturn(AUTHOR_TYPE_CODE);
         POCDMT000002UK01AssignedAuthor assignedAuthor = mock(POCDMT000002UK01AssignedAuthor.class);
         when(author.getAssignedAuthor()).thenReturn(assignedAuthor);
         CE ce = mockCode();

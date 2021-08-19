@@ -88,13 +88,19 @@
                         }
                     },
                     {
+                        "type": [
+                            {
+                                "coding": [
+                                    {
+                                        "system": "http://hl7.org/fhir/ValueSet/encounter-participant-type",
+                                        "code": "PPRF",
+                                        "display": "Author"
+                                    }
+                                ]
+                            }
+                        ],
                         "individual": {
                             "reference": "Practitioner/a7d90105-06de-4155-a6ec-09889bdd5edd"
-                        }
-                    },
-                    {
-                        "individual": {
-                            "reference": "Practitioner/8c3cbad6-38f3-432f-84fe-b1e08952cbb5"
                         }
                     },
                     {
@@ -105,6 +111,22 @@
                         ],
                         "individual": {
                             "reference": "RelatedPerson/58c0f502-e660-40c6-a409-182286189341"
+                        }
+                    },
+                    {
+                        "type": [
+                            {
+                                "coding": [
+                                    {
+                                        "system": "http://hl7.org/fhir/ValueSet/encounter-participant-type",
+                                        "code": "ATND",
+                                        "display": "Responsible Party"
+                                    }
+                                ]
+                            }
+                        ],
+                        "individual": {
+                            "reference": "Practitioner/8c3cbad6-38f3-432f-84fe-b1e08952cbb5"
                         }
                     }
                 ],
@@ -120,6 +142,12 @@
                             "reference": "Location/2eb396c5-09e3-4fae-82b8-d969f52b7a33"
                         },
                         "status": "active"
+                    },
+                    {
+                        "location": {
+                            "reference": "Location/167e3144-c986-4a0d-8bab-823129d65b59"
+                        },
+                        "status": "completed"
                     }
                 ],
                 "serviceProvider": {
@@ -203,23 +231,6 @@
             }
         },
         {
-            "fullUrl": "urn:uuid:8c3cbad6-38f3-432f-84fe-b1e08952cbb5",
-            "resource": {
-                "resourceType": "Practitioner",
-                "id": "8c3cbad6-38f3-432f-84fe-b1e08952cbb5",
-                "active": true,
-                "name": [
-                    {
-                        "use": "official",
-                        "family": "Cornwell",
-                        "given": [
-                            "Dave"
-                        ]
-                    }
-                ]
-            }
-        },
-        {
             "fullUrl": "urn:uuid:58c0f502-e660-40c6-a409-182286189341",
             "resource": {
                 "resourceType": "RelatedPerson",
@@ -258,6 +269,23 @@
                         ],
                         "city": "Medway",
                         "postalCode": "ME5 7TY"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:8c3cbad6-38f3-432f-84fe-b1e08952cbb5",
+            "resource": {
+                "resourceType": "Practitioner",
+                "id": "8c3cbad6-38f3-432f-84fe-b1e08952cbb5",
+                "active": true,
+                "name": [
+                    {
+                        "use": "official",
+                        "family": "Cornwell",
+                        "given": [
+                            "Dave"
+                        ]
                     }
                 ]
             }
@@ -305,6 +333,21 @@
                         "postalCode": "ME5 5TY"
                     }
                 ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:167e3144-c986-4a0d-8bab-823129d65b59",
+            "resource": {
+                "resourceType": "Location",
+                "id": "167e3144-c986-4a0d-8bab-823129d65b59",
+                "address": {
+                    "type": "physical",
+                    "text": "Follow the high street and turn left by Boots",
+                    "line": [ "2, Brancaster Road" ],
+                    "city": "Medway",
+                    "postalCode": "ME5 4LS",
+                    "country": "GB"
+                }
             }
         },
         {
