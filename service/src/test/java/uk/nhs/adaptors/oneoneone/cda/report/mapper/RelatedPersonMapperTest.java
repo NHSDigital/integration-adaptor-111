@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
+import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
@@ -35,6 +36,7 @@ public class RelatedPersonMapperTest {
 
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
     private static final String TELECOM_VALUE = "123456789";
+    private static final String CODE_DISPLAY_NAME = "Relative";
 
     @InjectMocks
     private RelatedPersonMapper relatedPersonMapper;
@@ -68,6 +70,7 @@ public class RelatedPersonMapperTest {
         relatedEntity.setRelatedPerson(createPerson());
         relatedEntity.setTelecomArray(createTelecomArray());
         relatedEntity.setAddrArray(createAddrArray());
+        relatedEntity.setCode(createCode());
         informant12 = POCDMT000002UK01Informant12.Factory.newInstance();
         informant12.setRelatedEntity(relatedEntity);
 
@@ -93,6 +96,13 @@ public class RelatedPersonMapperTest {
     private AD[] createAddrArray() {
         AD ad = AD.Factory.newInstance();
         return new AD[] {ad};
+    }
+
+    private CE createCode() {
+        CE code = CE.Factory.newInstance();
+        code.setDisplayName(CODE_DISPLAY_NAME);
+
+        return code;
     }
 
     @Test

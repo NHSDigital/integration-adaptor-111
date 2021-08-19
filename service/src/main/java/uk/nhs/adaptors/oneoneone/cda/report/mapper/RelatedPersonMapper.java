@@ -18,6 +18,7 @@ import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.RelatedPerson;
+import org.hl7.fhir.dstu3.model.codesystems.V3RoleCode;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -48,6 +49,7 @@ public class RelatedPersonMapper {
     private final ContactPointMapper contactPointMapper;
 
     private final AddressMapper addressMapper;
+
     private final ResourceUtil resourceUtil;
 
     public RelatedPerson mapRelatedPerson(POCDMT000002UK01Informant12 informant, Encounter encounter) {
@@ -84,7 +86,7 @@ public class RelatedPersonMapper {
         }
 
         relatedPerson.setPeriod(getPeriod(relatedEntity));
-
+        setRelationship(relatedEntity, relatedPerson);
         markEmergencyContact(relatedEntity.getTelecomArray(), relatedPerson);
 
         return relatedPerson;
@@ -111,6 +113,22 @@ public class RelatedPersonMapper {
         return null;
     }
 
+    private void setRelationship(POCDMT000002UK01RelatedEntity relatedEntity, RelatedPerson relatedPerson) {
+        if (relatedEntity.isSetCode()) {
+            String codeDisplayName = relatedEntity.getCode().getDisplayName();
+            stream(V3RoleCode.values())
+                .filter(roleCode -> roleCode.getDisplay().equalsIgnoreCase(codeDisplayName))
+                .findFirst()
+                .ifPresent(roleCode -> {
+                    Coding coding = new Coding()
+                        .setCode(roleCode.name())
+                        .setDisplay(roleCode.getDisplay())
+                        .setSystem(roleCode.getSystem());
+                    relatedPerson.setRelationship(new CodeableConcept().addCoding(coding));
+                });
+        }
+    }
+
     private void markEmergencyContact(TEL[] telecomArray, RelatedPerson relatedPerson) {
         getEmergencyTelecom(telecomArray)
             .ifPresent(it -> {
@@ -118,7 +136,11 @@ public class RelatedPersonMapper {
                     .setCode(EMERGENCY_CONTACT_CODE)
                     .setDisplay(EMERGENCY_CONTACT_DISPLAY)
                     .setSystem(EMERGENCY_CONTACT_SYSTEM);
-                relatedPerson.setRelationship(new CodeableConcept().addCoding(coding));
+                if (relatedPerson.hasRelationship()) {
+                    relatedPerson.getRelationship().addCoding(coding);
+                } else {
+                    relatedPerson.setRelationship(new CodeableConcept().addCoding(coding));
+                }
             });
     }
 
