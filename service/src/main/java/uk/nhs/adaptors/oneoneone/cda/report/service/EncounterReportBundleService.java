@@ -80,9 +80,9 @@ public class EncounterReportBundleService {
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header, String messageId)
         throws XmlException {
         Bundle bundle = createBundle(clinicalDocument);
-        String effectiveTime = clinicalDocument.getEffectiveTime().getValue();
 
-        MessageHeader messageHeader = messageHeaderService.createMessageHeader(header, messageId, effectiveTime);
+        MessageHeader messageHeader = messageHeaderService
+            .createMessageHeader(header, messageId, clinicalDocument.getEffectiveTime().getValue());
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
         List<PractitionerRole> authorPractitionerRoles = practitionerRoleMapper.mapAuthorRoles(clinicalDocument.getAuthorArray());
         List<PractitionerRole> practitionerRoles = new ArrayList<>(authorPractitionerRoles);

@@ -83,7 +83,6 @@ public class ReportControllerIT {
         "entry[*].resource.data[*].reference.reference",
         "entry[*].resource.date",
         "entry[*].resource.dateTime",
-        "entry[*].resource.destination[0].endpoint",
         "entry[*].resource.encounter.reference",
         "entry[*].resource.entry[*].item.reference",
         "entry[*].resource.episodeOfCare[*].reference",

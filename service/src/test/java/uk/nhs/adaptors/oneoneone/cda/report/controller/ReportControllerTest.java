@@ -16,7 +16,6 @@ import static org.springframework.http.HttpStatus.OK;
 
 import java.net.URL;
 import java.nio.file.Paths;
-import java.text.ParseException;
 
 import org.apache.xmlbeans.XmlException;
 import org.dom4j.Element;
@@ -67,7 +66,7 @@ public class ReportControllerTest {
     private ItkAddressValidator itkAddressValidator;
 
     @Test
-    public void postReportValidRequest() throws XmlException, ParseException {
+    public void postReportValidRequest() throws XmlException {
         when(itkResponseUtil.createSuccessResponseEntity(eq(MESSAGE_ID), anyString())).thenReturn(RESPONSE_XML);
         when(headerParserUtil.getHeaderValues(any())).thenReturn(getItkReportHeader());
 

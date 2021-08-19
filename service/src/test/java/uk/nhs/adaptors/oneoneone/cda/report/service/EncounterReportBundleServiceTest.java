@@ -12,7 +12,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.math.BigInteger;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -279,7 +278,7 @@ public class EncounterReportBundleServiceTest {
 
     @Test
     @SuppressWarnings("MagicNumber")
-    public void shouldCreateEncounterBundle() throws XmlException, ParseException {
+    public void shouldCreateEncounterBundle() throws XmlException {
         ItkReportHeader itkReportHeader = new ItkReportHeader();
         itkReportHeader.setSpecKey(SPECIFICATION_KEY);
         itkReportHeader.setSpecVal(SPECIFICATION_VALUE);
