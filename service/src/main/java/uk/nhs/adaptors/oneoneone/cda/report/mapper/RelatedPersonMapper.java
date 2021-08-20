@@ -119,7 +119,7 @@ public class RelatedPersonMapper {
             Coding coding = new Coding()
                 .setCode(code.getCode())
                 .setDisplay(code.getDisplayName())
-                .setSystem(code.getCodeSystemName());
+                .setSystem(code.getCodeSystem());
             relatedPerson.setRelationship(new CodeableConcept(coding));
         }
     }

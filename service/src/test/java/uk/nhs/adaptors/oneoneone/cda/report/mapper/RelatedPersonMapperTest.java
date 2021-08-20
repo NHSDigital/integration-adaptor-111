@@ -104,7 +104,7 @@ public class RelatedPersonMapperTest {
         CE code = CE.Factory.newInstance();
         code.setDisplayName(CODE_DISPLAY_NAME);
         code.setCode(CODE);
-        code.setCodeSystemName(CODE_SYSTEM);
+        code.setCodeSystem(CODE_SYSTEM);
 
         return code;
     }

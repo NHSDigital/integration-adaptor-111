@@ -34,7 +34,7 @@ public class InformantMapperTest {
         POCDMT000002UK01Informant12 informant = mock(POCDMT000002UK01Informant12.class);
         POCDMT000002UK01AssignedEntity assignedEntity = mock(POCDMT000002UK01AssignedEntity.class);
 
-        when(informant.getTypeCode()).thenReturn("INF");
+        when(informant.getTypeCode()).thenReturn("CON");
         when(informant.isSetAssignedEntity()).thenReturn(true);
         when(informant.getAssignedEntity()).thenReturn(assignedEntity);
         when(practitionerMapper.mapPractitioner(isA(POCDMT000002UK01AssignedEntity.class)))
@@ -45,6 +45,6 @@ public class InformantMapperTest {
 
         assertThat(participantComponent.isPresent()).isTrue();
         assertThat(participantComponent.get().getIndividualTarget()).isEqualTo(practitioner);
-        assertThat(participantComponent.get().getType().get(0).getText()).isEqualTo("Informant");
+        assertThat(participantComponent.get().getType().get(0).getText()).isEqualTo("CON");
     }
 }
