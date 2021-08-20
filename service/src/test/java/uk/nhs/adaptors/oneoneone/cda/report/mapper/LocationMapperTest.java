@@ -152,7 +152,9 @@ public class LocationMapperTest {
 
     @Test
     public void shouldMapHealthcareFacilityToLocation() {
+        String locationName = "Moving castle";
         AD itkAddress = mock(AD.class);
+        when(nodeUtil.getAllText(any())).thenReturn(locationName);
         when(clinicalDocument.getComponentOf().getEncompassingEncounter().getLocation().getHealthCareFacility().getLocation().getAddr())
             .thenReturn(itkAddress);
         when(addressMapper.mapAddress(eq(itkAddress))).thenReturn(address);
@@ -161,6 +163,7 @@ public class LocationMapperTest {
         Encounter.EncounterLocationComponent locationComponent = locationMapper.mapHealthcareFacilityToLocationComponent(clinicalDocument);
         assertThat(locationComponent.getLocationTarget().getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(locationComponent.getLocationTarget().getAddress()).isEqualTo(address);
+        assertThat(locationComponent.getLocationTarget().getName()).isEqualTo(locationName);
         assertThat(locationComponent.getStatus()).isEqualTo(Encounter.EncounterLocationStatus.COMPLETED);
     }
 }
