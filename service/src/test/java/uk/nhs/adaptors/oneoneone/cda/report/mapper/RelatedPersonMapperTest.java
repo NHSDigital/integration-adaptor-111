@@ -37,6 +37,8 @@ public class RelatedPersonMapperTest {
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
     private static final String TELECOM_VALUE = "123456789";
     private static final String CODE_DISPLAY_NAME = "Relative";
+    private static final String CODE = "16";
+    private static final String CODE_SYSTEM = "2.16.840.1.113883.2.1.3.2.4.16.45";
 
     @InjectMocks
     private RelatedPersonMapper relatedPersonMapper;
@@ -101,6 +103,8 @@ public class RelatedPersonMapperTest {
     private CE createCode() {
         CE code = CE.Factory.newInstance();
         code.setDisplayName(CODE_DISPLAY_NAME);
+        code.setCode(CODE);
+        code.setCodeSystemName(CODE_SYSTEM);
 
         return code;
     }
@@ -115,7 +119,25 @@ public class RelatedPersonMapperTest {
         assertThat(relatedPerson.getTelecomFirstRep()).isEqualTo(contactPoint);
         assertThat(relatedPerson.getAddressFirstRep()).isEqualTo(address);
         assertThat(relatedPerson.getGender()).isEqualTo(UNKNOWN);
-        assertThat(relatedPerson.getRelationship().isEmpty()).isTrue();
+        assertThat(relatedPerson.hasRelationship()).isTrue();
+        assertThat(relatedPerson.getRelationship().getCoding().size()).isEqualTo(1);
+        assertThat(relatedPerson.getRelationship().getCodingFirstRep().getCode()).isEqualTo(CODE);
+        assertThat(relatedPerson.getRelationship().getCodingFirstRep().getDisplay()).isEqualTo(CODE_DISPLAY_NAME);
+        assertThat(relatedPerson.getRelationship().getCodingFirstRep().getSystem()).isEqualTo(CODE_SYSTEM);
+    }
+
+    @Test
+    public void shouldMapRelatedPersonWithTwoCodingsInRelationship() {
+        setup();
+        TEL[] telecomArray = createTelecomArray();
+        telecomArray[0].setUse(Collections.singletonList("EC"));
+        relatedEntity.setTelecomArray(telecomArray);
+        informant12.setRelatedEntity(relatedEntity);
+
+        RelatedPerson relatedPerson = relatedPersonMapper.mapRelatedPerson(informant12, encounter);
+
+        assertThat(relatedPerson.hasRelationship()).isTrue();
+        assertThat(relatedPerson.getRelationship().getCoding().size()).isEqualTo(2);
     }
 
     @Test
@@ -131,6 +153,7 @@ public class RelatedPersonMapperTest {
         RelatedPerson relatedPerson = relatedPersonMapper.createEmergencyContactRelatedPerson(clinicalDocumentDocument, encounter);
 
         assertThat(relatedPerson.hasRelationship()).isTrue();
+        assertThat(relatedPerson.getRelationship().getCoding().size()).isEqualTo(1);
         assertThat(relatedPerson.getRelationship().getCodingFirstRep().getCode()).isEqualTo("C");
         assertThat(relatedPerson.getRelationship().getCodingFirstRep().getDisplay()).isEqualTo("Emergency Contact");
         assertThat(relatedPerson.getTelecom().get(0).getValue()).isEqualTo(TELECOM_VALUE);

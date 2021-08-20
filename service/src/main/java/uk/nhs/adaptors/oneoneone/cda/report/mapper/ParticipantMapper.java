@@ -49,8 +49,7 @@ public class ParticipantMapper {
 
     private List<CodeableConcept> retrieveTypeFromITK(POCDMT000002UK01Participant1 encounterParticipant) {
         String typeCode = encounterParticipant.getTypeCode();
-        return Collections.singletonList(new CodeableConcept()
-            .setText(PARTICIPANT_TYPE_CODE_MAP.getOrDefault(typeCode, typeCode)));
+        return Collections.singletonList(new CodeableConcept().setText(PARTICIPANT_TYPE_CODE_MAP.get(typeCode)));
     }
 
     public Encounter.EncounterParticipantComponent mapEncounterRelatedPerson(POCDMT000002UK01Informant12 informant, Encounter encounter) {

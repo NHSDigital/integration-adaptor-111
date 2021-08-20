@@ -18,13 +18,13 @@ import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.RelatedPerson;
-import org.hl7.fhir.dstu3.model.codesystems.V3RoleCode;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
+import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -115,17 +115,12 @@ public class RelatedPersonMapper {
 
     private void setRelationship(POCDMT000002UK01RelatedEntity relatedEntity, RelatedPerson relatedPerson) {
         if (relatedEntity.isSetCode()) {
-            String codeDisplayName = relatedEntity.getCode().getDisplayName();
-            stream(V3RoleCode.values())
-                .filter(roleCode -> roleCode.getDisplay().equalsIgnoreCase(codeDisplayName))
-                .findFirst()
-                .ifPresent(roleCode -> {
-                    Coding coding = new Coding()
-                        .setCode(roleCode.name())
-                        .setDisplay(roleCode.getDisplay())
-                        .setSystem(roleCode.getSystem());
-                    relatedPerson.setRelationship(new CodeableConcept().addCoding(coding));
-                });
+            CE code = relatedEntity.getCode();
+            Coding coding = new Coding()
+                .setCode(code.getCode())
+                .setDisplay(code.getDisplayName())
+                .setSystem(code.getCodeSystemName());
+            relatedPerson.setRelationship(new CodeableConcept(coding));
         }
     }
 
@@ -139,7 +134,7 @@ public class RelatedPersonMapper {
                 if (relatedPerson.hasRelationship()) {
                     relatedPerson.getRelationship().addCoding(coding);
                 } else {
-                    relatedPerson.setRelationship(new CodeableConcept().addCoding(coding));
+                    relatedPerson.setRelationship(new CodeableConcept(coding));
                 }
             });
     }
