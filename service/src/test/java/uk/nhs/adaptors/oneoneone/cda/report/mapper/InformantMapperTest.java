@@ -43,7 +43,7 @@ public class InformantMapperTest {
         Optional<Encounter.EncounterParticipantComponent> participantComponent = informantMapper
             .mapInformantIntoParticipantComponent(informant);
 
-        assertThat(participantComponent.isPresent());
+        assertThat(participantComponent.isPresent()).isTrue();
         assertThat(participantComponent.get().getIndividualTarget()).isEqualTo(practitioner);
         assertThat(participantComponent.get().getType().get(0).getText()).isEqualTo("CON");
     }

@@ -1,7 +1,9 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
@@ -17,6 +19,11 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 @Component
 @AllArgsConstructor
 public class ParticipantMapper {
+    private static final Map<String, String> PARTICIPANT_TYPE_CODE_MAP = new HashMap<>();
+
+    static {
+        PARTICIPANT_TYPE_CODE_MAP.put("INF", "Informant");
+    }
 
     private final PeriodMapper periodMapper;
 
@@ -50,7 +57,7 @@ public class ParticipantMapper {
             .mapRelatedPerson(informant, encounter);
 
         Encounter.EncounterParticipantComponent encounterParticipantComponent = new Encounter.EncounterParticipantComponent()
-            .setType(Collections.singletonList(new CodeableConcept().setText(informant.getTypeCode())))
+            .setType(Collections.singletonList(new CodeableConcept().setText(PARTICIPANT_TYPE_CODE_MAP.get(informant.getTypeCode()))))
             .setIndividual(new Reference(relatedPerson))
             .setIndividualTarget(relatedPerson);
 
