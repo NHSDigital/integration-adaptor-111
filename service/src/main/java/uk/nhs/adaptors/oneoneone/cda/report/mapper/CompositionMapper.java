@@ -58,7 +58,7 @@ public class CompositionMapper {
             .setTitle(COMPOSITION_TITLE)
             .setType(createCodeableConcept())
             .setStatus(FINAL)
-            .setEncounter(new Reference(encounter))
+            .setEncounter(new Reference(encounter.getIdElement()))
             .setSubject(encounter.getSubject())
             .setDate(new Date())
             .setIdentifier(docIdentifier);

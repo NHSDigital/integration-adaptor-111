@@ -1,18 +1,30 @@
 package uk.nhs.adaptors.oneoneone.cda.report.util;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import static java.util.Locale.ENGLISH;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import static uk.nhs.adaptors.oneoneone.cda.report.util.IsoDateTimeFormatter.toIsoDateTimeString;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
-import java.util.Locale;
+import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.runner.RunWith;
 
+import junitparams.JUnitParamsRunner;
+
+@RunWith(JUnitParamsRunner.class)
 public class DateUtilTest {
-    private final SimpleDateFormat isoDateformatter = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
+    private final SimpleDateFormat isoDateformatter = new SimpleDateFormat("yyyyMMdd", ENGLISH);
 
     @Test
     public void shouldParseForCorrectDateFormat() {
@@ -23,13 +35,13 @@ public class DateUtilTest {
     @Test
     public void shouldThrowExceptionForEmptyString() {
         String dateAsString = "";
-        Assertions.assertThrows(IllegalStateException.class, () -> DateUtil.parse(dateAsString));
+        assertThrows(IllegalStateException.class, () -> DateUtil.parse(dateAsString));
     }
 
     @Test
     public void shouldThrowExceptionForIncorrectDateFormat() {
         String dateAsString = "202019891898.00";
-        Assertions.assertThrows(IllegalStateException.class, () -> DateUtil.parse(dateAsString));
+        assertThrows(IllegalStateException.class, () -> DateUtil.parse(dateAsString));
     }
 
     @Test
@@ -47,24 +59,46 @@ public class DateUtilTest {
     @Test
     public void shouldThrowExceptionForWrongISODateFormat() {
         String dateAsString = "30/01/2020";
-        Assertions.assertThrows(IllegalStateException.class, () -> DateUtil.parseISODate(dateAsString));
+        assertThrows(IllegalStateException.class, () -> DateUtil.parseISODate(dateAsString));
     }
 
     @Test
     public void shouldThrowExceptionForWrongISODateTimeFormat() {
         String dateAsString = "30/02/19891898.00";
-        Assertions.assertThrows(IllegalStateException.class, () -> DateUtil.parseISODateTime(dateAsString));
+        assertThrows(IllegalStateException.class, () -> DateUtil.parseISODateTime(dateAsString));
     }
 
-    @Test
-    public void shouldParsePathwaysDateFormatCorrectly() {
-        String dateAsString = "2011-02-17T17:31:14.313Z";
-        assertThat(DateUtil.parsePathwaysDate(dateAsString)).isEqualTo("2011-02-17T00:00:00+00:00");
+    @ParameterizedTest(name = "parsePathwaysDate")
+    @MethodSource("pathwaysDates")
+    public void shouldParsePathwaysDateFormatCorrectly(String inputString, String parsedDate) {
+        Date pathwaysDate = DateUtil.parsePathwaysDate(inputString);
+        assertThat(toIsoDateTimeString(pathwaysDate)).isEqualTo(parsedDate);
+    }
+
+    private static Stream<Arguments> pathwaysDates() {
+        return Stream.of(
+            Arguments.of(
+                "2011-02-17T17:31:14.313+01:00",
+                "2011-02-17T16:31:14.313Z"
+            ),
+            Arguments.of(
+                "2015-06-11T16:22:44.959Z",
+                "2015-06-11T16:22:44.959Z"
+            ),
+            Arguments.of(
+                "2017-01-22T03:21:33.443+00:00",
+                "2017-01-22T03:21:33.443Z"
+            ),
+            Arguments.of(
+                "2018-07-24T18:51:41.854-07:00",
+                "2018-07-25T01:51:41.854Z"
+            )
+        );
     }
 
     @Test
     public void shouldThrowExceptionForWrongPathwaysDateFormat() {
         String dateAsString = "30/01/2020";
-        Assertions.assertThrows(IllegalStateException.class, () -> DateUtil.parsePathwaysDate(dateAsString));
+        assertThrows(DateTimeParseException.class, () -> DateUtil.parsePathwaysDate(dateAsString));
     }
 }
