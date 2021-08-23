@@ -3,6 +3,8 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import static uk.nhs.adaptors.oneoneone.cda.report.util.IsoDateTimeFormatter.toIsoDateTimeString;
+
 import java.util.Calendar;
 
 import org.hl7.fhir.dstu3.model.IdType;
@@ -76,7 +78,7 @@ public class QuestionnaireResponseMapperTest {
         assertThat(questionnaireResponse.getSubject()).isEqualTo(patient);
         assertThat(questionnaireResponse.getContext()).isEqualTo(encounter);
         assertThat(questionnaireResponse.getIdentifier().getValue()).isEqualTo(caseId);
-        assertThat(questionnaireResponse.getAuthored()).isEqualTo("2011-02-17T00:00:00+00:00");
+        assertThat(toIsoDateTimeString(questionnaireResponse.getAuthored())).isEqualTo("2011-02-17T17:31:14.313Z");
         assertThat(questionnaireResponse.getItemFirstRep().getText()).isEqualTo(questionText);
         assertThat(questionnaireResponse.getItemFirstRep().getAnswer().get(0).getValue().toString()).isEqualTo(answerText);
     }
