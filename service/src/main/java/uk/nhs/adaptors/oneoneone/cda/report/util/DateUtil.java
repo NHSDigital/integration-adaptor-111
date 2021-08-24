@@ -24,22 +24,23 @@ public class DateUtil {
     private static final int DAY_PRECISION = 8;
     private static final int HOUR_PRECISION = 10;
     private static final int MINUTE_PRECISION = 12;
-    private static final int FULL_TIMEZONE_MINUTES_PRECISION = 12;
-    private static final int FULL_TIMEZONE_HOURS_PRECISION = 10;
-    private static final int TIMEZONE_HOURS_PRECISION = 10;
-    private static final int TIMEZONE_MINUTES_PRECISION = 12;
-    private static final String HL7_DATETIME_TIMEZONE_SECONDS_FORMAT = "yyyyMMddHHmmssX";
-    private static final String HL7_DATETIME_TIMEZONE_MINUTES_FORMAT = "yyyyMMddHHmmX";
-    private static final String HL7_DATETIME_TIMEZONE_HOURS_FORMAT = "yyyyMMddHHX";
-    private static final String HL7_DATETIME_TIMEZONE_FULL_FORMAT = "yyyyMMddHHmmssZ";
-    private static final String HL7_DATETIME_TIMEZONE_FULL_MINUTES_FORMAT = "yyyyMMddHHmmZ";
-    private static final String HL7_DATETIME_TIMEZONE_FULL_HOURS_FORMAT = "yyyyMMddHHZ";
-    private static final String HL7_DATETIME_SECONDS_FORMAT = "yyyyMMddHHmmss";
-    private static final String HL7_DATETIME_MINUTES_FORMAT = "yyyyMMddHHmm";
-    private static final String HL7_DATETIME_HOURS_FORMAT = "yyyyMMddHH";
-    private static final String HL7_DATE_FORMAT = "yyyyMMdd";
-    private static final String HL7_DATE_MONTH_FORMAT = "yyyyMM";
-    private static final String HL7_DATE_YEAR_FORMAT = "yyyy";
+    private static final int MILLISECOND_PRECISION = 18;
+    private static final String DATETIME_TIMEZONE_MILLISECONDS_FORMAT = "yyyyMMddHHmmss.SSSX";
+    private static final String DATETIME_TIMEZONE_SECONDS_FORMAT = "yyyyMMddHHmmssX";
+    private static final String DATETIME_TIMEZONE_MINUTES_FORMAT = "yyyyMMddHHmmX";
+    private static final String DATETIME_TIMEZONE_HOURS_FORMAT = "yyyyMMddHHX";
+    private static final String DATETIME_TIMEZONE_FULL_MILLISECONDS_FORMAT = "yyyyMMddHHmmss.SSSZ";
+    private static final String DATETIME_TIMEZONE_FULL_FORMAT = "yyyyMMddHHmmssZ";
+    private static final String DATETIME_TIMEZONE_FULL_MINUTES_FORMAT = "yyyyMMddHHmmZ";
+    private static final String DATETIME_TIMEZONE_FULL_HOURS_FORMAT = "yyyyMMddHHZ";
+    private static final String DATETIME_MILLISECONDS_FORMAT = "yyyyMMddHHmmss.SSS";
+    private static final String DATETIME_SECONDS_FORMAT = "yyyyMMddHHmmss";
+    private static final String DATETIME_MINUTES_FORMAT = "yyyyMMddHHmm";
+    private static final String DATETIME_HOURS_FORMAT = "yyyyMMddHH";
+    private static final String DATE_FORMAT = "yyyyMMdd";
+    private static final String DATE_MONTH_FORMAT = "yyyyMM";
+    private static final String DATE_YEAR_FORMAT = "yyyy";
+    private static final String ERROR_MESSAGE = "Unable to parse date %s to Fhir date format";
 
     public static DateTimeType parse(String dateToParse) {
         DateFormat format = getFormat(dateToParse);
@@ -49,7 +50,7 @@ public class DateUtil {
             Date date = formatter.parse(dateToParse);
             return new DateTimeType(date, format.getPrecision(), TimeZone.getTimeZone(ZoneOffset.UTC));
         } catch (ParseException e) {
-            throw new IllegalStateException("Unable to parse date " + dateToParse + " to Fhir date format", e);
+            throw new IllegalStateException(String.format(ERROR_MESSAGE, dateToParse), e);
         }
     }
 
@@ -61,7 +62,7 @@ public class DateUtil {
             Date date = formatter.parse(dateToParse);
             return new InstantType(date, format.getPrecision(), TimeZone.getTimeZone(ZoneOffset.UTC));
         } catch (ParseException e) {
-            throw new IllegalStateException("Unable to parse date " + dateToParse + " to Fhir date format", e);
+            throw new IllegalStateException(String.format(ERROR_MESSAGE, dateToParse), e);
         }
     }
 
@@ -72,9 +73,8 @@ public class DateUtil {
     private DateFormat getFormat(String date) {
         if (containsOffset(date)) {
             return getFormatWithTimezone(date);
-        } else {
-            return getFormatWithoutTimezone(date);
         }
+        return getFormatWithoutTimezone(date);
     }
 
     private boolean containsOffset(String date) {
@@ -92,36 +92,42 @@ public class DateUtil {
 
         if (offsetPart.length() == 2) {
             return switch (datePart.length()) {
-                case TIMEZONE_HOURS_PRECISION -> new DateFormat(HL7_DATETIME_TIMEZONE_HOURS_FORMAT,
-                    TemporalPrecisionEnum.SECOND);
-                case TIMEZONE_MINUTES_PRECISION -> new DateFormat(HL7_DATETIME_TIMEZONE_MINUTES_FORMAT,
-                    TemporalPrecisionEnum.SECOND);
-                default -> new DateFormat(HL7_DATETIME_TIMEZONE_SECONDS_FORMAT, TemporalPrecisionEnum.SECOND);
-            };
-        } else {
-            return switch (datePart.length()) {
-                case FULL_TIMEZONE_HOURS_PRECISION -> new DateFormat(HL7_DATETIME_TIMEZONE_FULL_HOURS_FORMAT,
-                    TemporalPrecisionEnum.SECOND);
-                case FULL_TIMEZONE_MINUTES_PRECISION -> new DateFormat(HL7_DATETIME_TIMEZONE_FULL_MINUTES_FORMAT,
-                    TemporalPrecisionEnum.SECOND);
-                default -> new DateFormat(HL7_DATETIME_TIMEZONE_FULL_FORMAT, TemporalPrecisionEnum.SECOND);
+                case HOUR_PRECISION -> new DateFormat(DATETIME_TIMEZONE_HOURS_FORMAT, TemporalPrecisionEnum.SECOND);
+                case MINUTE_PRECISION -> new DateFormat(DATETIME_TIMEZONE_MINUTES_FORMAT, TemporalPrecisionEnum.SECOND);
+                case MILLISECOND_PRECISION -> new DateFormat(DATETIME_TIMEZONE_MILLISECONDS_FORMAT, TemporalPrecisionEnum.MILLI);
+                default -> new DateFormat(DATETIME_TIMEZONE_SECONDS_FORMAT, TemporalPrecisionEnum.SECOND);
             };
         }
+        return switch (datePart.length()) {
+            case HOUR_PRECISION -> new DateFormat(DATETIME_TIMEZONE_FULL_HOURS_FORMAT, TemporalPrecisionEnum.SECOND);
+            case MINUTE_PRECISION -> new DateFormat(DATETIME_TIMEZONE_FULL_MINUTES_FORMAT, TemporalPrecisionEnum.SECOND);
+            case MILLISECOND_PRECISION -> new DateFormat(DATETIME_TIMEZONE_FULL_MILLISECONDS_FORMAT, TemporalPrecisionEnum.MILLI);
+            default -> new DateFormat(DATETIME_TIMEZONE_FULL_FORMAT, TemporalPrecisionEnum.SECOND);
+        };
     }
 
     private DateFormat getFormatWithoutTimezone(String date) {
         return switch (date.length()) {
-            case YEAR_PRECISION -> new DateFormat(HL7_DATE_YEAR_FORMAT, TemporalPrecisionEnum.YEAR);
-            case MONTH_PRECISION -> new DateFormat(HL7_DATE_MONTH_FORMAT, TemporalPrecisionEnum.MONTH);
-            case DAY_PRECISION -> new DateFormat(HL7_DATE_FORMAT, TemporalPrecisionEnum.DAY);
-            case HOUR_PRECISION -> new DateFormat(HL7_DATETIME_HOURS_FORMAT, TemporalPrecisionEnum.SECOND);
-            case MINUTE_PRECISION -> new DateFormat(HL7_DATETIME_MINUTES_FORMAT, TemporalPrecisionEnum.SECOND);
-            default -> new DateFormat(HL7_DATETIME_SECONDS_FORMAT, TemporalPrecisionEnum.SECOND);
+            case YEAR_PRECISION -> new DateFormat(DATE_YEAR_FORMAT, TemporalPrecisionEnum.YEAR);
+            case MONTH_PRECISION -> new DateFormat(DATE_MONTH_FORMAT, TemporalPrecisionEnum.MONTH);
+            case DAY_PRECISION -> new DateFormat(DATE_FORMAT, TemporalPrecisionEnum.DAY);
+            case HOUR_PRECISION -> new DateFormat(DATETIME_HOURS_FORMAT, TemporalPrecisionEnum.SECOND);
+            case MINUTE_PRECISION -> new DateFormat(DATETIME_MINUTES_FORMAT, TemporalPrecisionEnum.SECOND);
+            case MILLISECOND_PRECISION -> new DateFormat(DATETIME_MILLISECONDS_FORMAT, TemporalPrecisionEnum.MILLI);
+            default -> new DateFormat(DATETIME_SECONDS_FORMAT, TemporalPrecisionEnum.SECOND);
         };
     }
 
     private SimpleDateFormat getFormatter(DateFormat format) {
-        SimpleDateFormat formatter = new SimpleDateFormat(format.getDateFormat(), Locale.ENGLISH);
+        String dateFormat = format.getDateFormat();
+        if (dateFormat.equals(DATE_FORMAT) || dateFormat.equals(DATE_MONTH_FORMAT)) {
+            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+            formatter.setTimeZone(TimeZone.getTimeZone(ZoneOffset.UTC));
+
+            return formatter;
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
         formatter.setTimeZone(TimeZone.getTimeZone(UK_ZONE_ID));
 
         return formatter;

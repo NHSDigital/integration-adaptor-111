@@ -63,6 +63,6 @@ public class MessageHeaderServiceTest {
         assertThat(messageHeader.getReason().getCodingFirstRep().getSystem()).isEqualTo(SPECIFICATION_KEY);
         assertThat(messageHeader.getReason().getCodingFirstRep().getCode()).isEqualTo(SPECIFICATION_VALUE);
         assertThat(messageHeader.getDestinationFirstRep().getEndpoint()).isEqualTo(ADDRESS);
-//        assertThat(messageHeader.getTimestamp()).isEqualTo(DateUtil.parseISODateTime(EFFECTIVE_TIME));
+        assertThat(messageHeader.getTimestampElement()).isEqualToComparingFieldByField(DateUtil.parseToInstantType(EFFECTIVE_TIME));
     }
 }
