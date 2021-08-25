@@ -26,6 +26,7 @@ import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
 import org.hl7.fhir.dstu3.model.Questionnaire;
@@ -46,6 +47,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.RelatedPersonMapper;
@@ -70,6 +72,7 @@ public class EncounterReportBundleService {
     private final ObservationMapper observationMapper;
     private final PractitionerRoleMapper practitionerRoleMapper;
     private final RelatedPersonMapper relatedPersonMapper;
+    private final PractitionerMapper practitionerMapper;
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
@@ -233,6 +236,12 @@ public class EncounterReportBundleService {
 
         if (referralRequest.hasSupportingInfo()) {
             addEntry(bundle, (ProcedureRequest) referralRequest.getSupportingInfoFirstRep().getResource());
+        }
+
+        if(referralRequest.hasRecipient()){
+            referralRequest.getRecipient().stream()
+                .filter(recipient -> recipient.getResource() instanceof Practitioner)
+                .forEach(recipient -> addEntry( bundle, (Resource) recipient.getResource()));
         }
     }
 
