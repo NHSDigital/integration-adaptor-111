@@ -60,7 +60,7 @@ public class DateUtil {
 
         try {
             Date date = formatter.parse(dateToParse);
-            return new InstantType(date, format.getPrecision(), TimeZone.getTimeZone(ZoneOffset.UTC));
+            return new InstantType(date, TemporalPrecisionEnum.MILLI, TimeZone.getTimeZone(ZoneOffset.UTC));
         } catch (ParseException e) {
             throw new IllegalStateException(String.format(ERROR_MESSAGE, dateToParse), e);
         }
