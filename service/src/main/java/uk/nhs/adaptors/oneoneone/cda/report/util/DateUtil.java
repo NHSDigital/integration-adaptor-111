@@ -91,31 +91,46 @@ public class DateUtil {
         String offsetPart = dateAndOffset[1];
 
         if (offsetPart.length() == 2) {
-            return switch (datePart.length()) {
-                case HOUR_PRECISION -> new DateFormat(DATETIME_TIMEZONE_HOURS_FORMAT, TemporalPrecisionEnum.SECOND);
-                case MINUTE_PRECISION -> new DateFormat(DATETIME_TIMEZONE_MINUTES_FORMAT, TemporalPrecisionEnum.SECOND);
-                case MILLISECOND_PRECISION -> new DateFormat(DATETIME_TIMEZONE_MILLISECONDS_FORMAT, TemporalPrecisionEnum.MILLI);
-                default -> new DateFormat(DATETIME_TIMEZONE_SECONDS_FORMAT, TemporalPrecisionEnum.SECOND);
-            };
+            switch (datePart.length()) {
+                case HOUR_PRECISION:
+                    return new DateFormat(DATETIME_TIMEZONE_HOURS_FORMAT, TemporalPrecisionEnum.SECOND);
+                case MINUTE_PRECISION:
+                    return new DateFormat(DATETIME_TIMEZONE_MINUTES_FORMAT, TemporalPrecisionEnum.SECOND);
+                case MILLISECOND_PRECISION:
+                    return new DateFormat(DATETIME_TIMEZONE_MILLISECONDS_FORMAT, TemporalPrecisionEnum.MILLI);
+                default:
+                    return new DateFormat(DATETIME_TIMEZONE_SECONDS_FORMAT, TemporalPrecisionEnum.SECOND);
+            }
         }
-        return switch (datePart.length()) {
-            case HOUR_PRECISION -> new DateFormat(DATETIME_TIMEZONE_FULL_HOURS_FORMAT, TemporalPrecisionEnum.SECOND);
-            case MINUTE_PRECISION -> new DateFormat(DATETIME_TIMEZONE_FULL_MINUTES_FORMAT, TemporalPrecisionEnum.SECOND);
-            case MILLISECOND_PRECISION -> new DateFormat(DATETIME_TIMEZONE_FULL_MILLISECONDS_FORMAT, TemporalPrecisionEnum.MILLI);
-            default -> new DateFormat(DATETIME_TIMEZONE_FULL_FORMAT, TemporalPrecisionEnum.SECOND);
-        };
+        switch (datePart.length()) {
+            case HOUR_PRECISION:
+                return new DateFormat(DATETIME_TIMEZONE_FULL_HOURS_FORMAT, TemporalPrecisionEnum.SECOND);
+            case MINUTE_PRECISION:
+                return new DateFormat(DATETIME_TIMEZONE_FULL_MINUTES_FORMAT, TemporalPrecisionEnum.SECOND);
+            case MILLISECOND_PRECISION:
+                return new DateFormat(DATETIME_TIMEZONE_FULL_MILLISECONDS_FORMAT, TemporalPrecisionEnum.MILLI);
+            default:
+                return new DateFormat(DATETIME_TIMEZONE_FULL_FORMAT, TemporalPrecisionEnum.SECOND);
+        }
     }
 
     private DateFormat getFormatWithoutTimezone(String date) {
-        return switch (date.length()) {
-            case YEAR_PRECISION -> new DateFormat(DATE_YEAR_FORMAT, TemporalPrecisionEnum.YEAR);
-            case MONTH_PRECISION -> new DateFormat(DATE_MONTH_FORMAT, TemporalPrecisionEnum.MONTH);
-            case DAY_PRECISION -> new DateFormat(DATE_FORMAT, TemporalPrecisionEnum.DAY);
-            case HOUR_PRECISION -> new DateFormat(DATETIME_HOURS_FORMAT, TemporalPrecisionEnum.SECOND);
-            case MINUTE_PRECISION -> new DateFormat(DATETIME_MINUTES_FORMAT, TemporalPrecisionEnum.SECOND);
-            case MILLISECOND_PRECISION -> new DateFormat(DATETIME_MILLISECONDS_FORMAT, TemporalPrecisionEnum.MILLI);
-            default -> new DateFormat(DATETIME_SECONDS_FORMAT, TemporalPrecisionEnum.SECOND);
-        };
+        switch (date.length()) {
+            case YEAR_PRECISION:
+                return new DateFormat(DATE_YEAR_FORMAT, TemporalPrecisionEnum.YEAR);
+            case MONTH_PRECISION:
+                return new DateFormat(DATE_MONTH_FORMAT, TemporalPrecisionEnum.MONTH);
+            case DAY_PRECISION:
+                return new DateFormat(DATE_FORMAT, TemporalPrecisionEnum.DAY);
+            case HOUR_PRECISION:
+                return new DateFormat(DATETIME_HOURS_FORMAT, TemporalPrecisionEnum.SECOND);
+            case MINUTE_PRECISION:
+                return new DateFormat(DATETIME_MINUTES_FORMAT, TemporalPrecisionEnum.SECOND);
+            case MILLISECOND_PRECISION:
+                return new DateFormat(DATETIME_MILLISECONDS_FORMAT, TemporalPrecisionEnum.MILLI);
+            default:
+                return new DateFormat(DATETIME_SECONDS_FORMAT, TemporalPrecisionEnum.SECOND);
+        }
     }
 
     private SimpleDateFormat getFormatter(DateFormat format) {
