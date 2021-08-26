@@ -30,8 +30,9 @@ You need to configure the following environment variables to enable this:
 * PEM111_AMQP_PASSWORD
 
 ### SOAP ITK
-Incoming SOAP ITK message is validated. One of the requirements is to check SOAP To field - it's the URL of /report endpoint. You can set the expected value using the following env variable:
-* PEM111_SOAP_SEND_TO
+
+* PEM111_SOAP_VALIDATION_ENABLED - Incoming SOAP ITK message can be validated. You can decide whether you want it enabled. Supported values are `true` and `false`
+* PEM111_SOAP_SEND_TO - if the validation is on then one of the checked fields is SOAP To - it's the URL of /report endpoint. You can set the expected value using this variable.
 
 ### ITK HEADER
 ODS code and DOS Service ID from ITK `addresslist.address` are validated against list of supported values.

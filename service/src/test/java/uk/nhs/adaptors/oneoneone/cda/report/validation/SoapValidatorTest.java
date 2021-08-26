@@ -1,5 +1,12 @@
 package uk.nhs.adaptors.oneoneone.cda.report.validation;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
+
 import org.dom4j.Element;
 import org.dom4j.Node;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,13 +15,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
 import uk.nhs.adaptors.oneoneone.config.SoapProperties;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class SoapValidatorTest {
@@ -51,6 +54,7 @@ public class SoapValidatorTest {
 
     @BeforeEach
     public void setUp() {
+        when(soapProperties.isValidationEnabled()).thenReturn(true);
         lenient().when(soapHeader.selectSingleNode(SEND_TO_XPATH)).thenReturn(to);
         lenient().when(soapProperties.getSendTo()).thenReturn(VALID_SOAP_TO);
         lenient().when(to.getText()).thenReturn(VALID_SOAP_TO);
@@ -106,6 +110,14 @@ public class SoapValidatorTest {
         when(replyToAddress.getText()).thenReturn(invalidReplyTo);
 
         checkExceptionThrownAndErrorMessage("Invalid ReplyTo: InvalidReplyTo");
+    }
+
+    @Test
+    public void shouldNotFailWhenValidationDisabled() {
+        reset(soapHeader);
+        when(soapProperties.isValidationEnabled()).thenReturn(false);
+
+        assertDoesNotThrow(() -> soapValidator.checkSoapItkConformance(soapHeader));
     }
 
     private void checkExceptionThrownAndErrorMessage(String errorMessage) {

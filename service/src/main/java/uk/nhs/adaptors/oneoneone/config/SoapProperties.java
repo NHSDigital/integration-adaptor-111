@@ -11,5 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SoapProperties {
+    private boolean validationEnabled;
     private String sendTo;
 }
