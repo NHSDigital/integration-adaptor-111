@@ -69,7 +69,7 @@ public class ListMapper {
 
         resourcesCreated.stream()
             .sorted(resourceDateComparator)
-            .filter(it -> TRIAGE_RESOURCES.contains(it.getResourceType()))
+            .filter(it -> TRIAGE_RESOURCES.contains(it.getResourceType()) && it.hasId())
             .map(resourceUtil::createReference)
             .map(ListResource.ListEntryComponent::new)
             .forEach(listResource::addEntry);
