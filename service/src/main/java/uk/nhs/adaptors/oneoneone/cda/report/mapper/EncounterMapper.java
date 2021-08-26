@@ -46,9 +46,8 @@ import uk.nhs.connect.iucds.cda.ucr.TS;
 @AllArgsConstructor
 public class EncounterMapper {
 
-    private static final String REFT = "REFT";
+    private static final String PARTCIPANT_TYPE_CODE_REFT = "REFT";
     private static final String DIV_START = "<div>";
-
     private static final String DIV_END = "</div>";
 
     private static final String AUTHOR_PARTICIPANT_DISPLAY = "Author";
@@ -161,7 +160,7 @@ public class EncounterMapper {
         List<PractitionerRole> authorPractitionerRoles, Optional<PractitionerRole> responsibleParty, Encounter encounter) {
         List<EncounterParticipantComponent> encounterParticipantComponents = stream(clinicalDocument
             .getParticipantArray())
-            .filter(it -> !REFT.equals(it.getTypeCode()))
+            .filter(it -> !PARTCIPANT_TYPE_CODE_REFT.equals(it.getTypeCode()))
             .map(participantMapper::mapEncounterParticipant)
             .collect(Collectors.toList());
         if (authorPractitionerRoles.size() > 0) {

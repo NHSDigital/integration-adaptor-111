@@ -73,7 +73,6 @@ public class EncounterReportBundleService {
     private final ObservationMapper observationMapper;
     private final PractitionerRoleMapper practitionerRoleMapper;
     private final RelatedPersonMapper relatedPersonMapper;
-    private final PractitionerMapper practitionerMapper;
     private final ResourceUtil resourceUtil;
 
     private static void addEntry(Bundle bundle, Resource resource) {
@@ -240,10 +239,10 @@ public class EncounterReportBundleService {
             addEntry(bundle, (ProcedureRequest) referralRequest.getSupportingInfoFirstRep().getResource());
         }
 
-        if(referralRequest.hasRecipient()){
+        if (referralRequest.hasRecipient()) {
             referralRequest.getRecipient().stream()
                 .filter(recipient -> recipient.getResource() instanceof Practitioner)
-                .forEach(recipient -> addEntry( bundle, (Resource) recipient.getResource()));
+                .forEach(recipient -> addEntry(bundle, (Resource) recipient.getResource()));
         }
     }
 

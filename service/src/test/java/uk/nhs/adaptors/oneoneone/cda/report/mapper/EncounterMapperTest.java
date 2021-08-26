@@ -17,11 +17,9 @@ import static org.mockito.Mockito.when;
 import static uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent.DISCHARGE_DETAILS;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.Appointment;
-import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.IdType;
@@ -128,9 +126,9 @@ public class EncounterMapperTest {
     @Mock
     private II identifier;
     @Mock
-    POCDMT000002UK01Participant1 participant2;
+    private POCDMT000002UK01Participant1 participantREFT;
     @Mock
-    POCDMT000002UK01Participant1 participant;
+    private POCDMT000002UK01Participant1 participantCALLBCK;
 
     @BeforeEach
     public void setUp() {
@@ -171,9 +169,9 @@ public class EncounterMapperTest {
     }
 
     private void mockParticipant(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        when(clinicalDocument.getParticipantArray()).thenReturn(new POCDMT000002UK01Participant1[] {participant, participant2});
-        when(participant.getTypeCode()).thenReturn("CALLBCK");
-        when(participant2.getTypeCode()).thenReturn("REFT");
+        when(clinicalDocument.getParticipantArray()).thenReturn(new POCDMT000002UK01Participant1[] {participantCALLBCK, participantREFT});
+        when(participantCALLBCK.getTypeCode()).thenReturn("CALLBCK");
+        when(participantREFT.getTypeCode()).thenReturn("REFT");
         when(participantMapper.mapEncounterParticipant(any())).thenReturn(encounterParticipantComponent);
     }
 
@@ -270,12 +268,13 @@ public class EncounterMapperTest {
     }
 
     @Test
-    public void mapEncounterTest1() {
+    @SuppressWarnings("MagicNumber")
+    public void mapEncounterParticipantTest() {
         mockParticipant(clinicalDocument);
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, emptyList(), empty(), DISCHARGE_DETAILS.toCoding());
         assertThat(encounter.getParticipant().size()).isEqualTo(4);
-        verify(participantMapper, times(1)).mapEncounterParticipant(participant);
+        verify(participantMapper, times(1)).mapEncounterParticipant(participantCALLBCK);
         verifyNoMoreInteractions(participantMapper);
     }
 

@@ -64,7 +64,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.RelatedPersonMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
-import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.INT;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.TS;
@@ -239,11 +238,11 @@ public class EncounterReportBundleServiceTest {
     @Mock
     private POCDMT000002UK01ClinicalDocument1 document;
     @Mock
-    private ResourceUtil resourceUtil;
-    @Mock
     private RelatedPersonMapper relatedPersonMapper;
     @Mock
     private TS ts;
+    @Mock
+    private Reference reference;
 
     @BeforeEach
     public void setUp() throws XmlException {
@@ -309,6 +308,21 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(18), PRACTITIONER_ORG_ID.getValue(), ResourceType.Organization);
         verifyEntry(entries.get(19), RELATED_PERSON_ID.getValue(), ResourceType.RelatedPerson);
         verifyEntry(entries.get(20), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+    }
+
+    @Test
+    @SuppressWarnings("MagicNumber")
+    public void shouldMapIncomigReferral() throws XmlException {
+        ItkReportHeader itkReportHeader = new ItkReportHeader();
+        List<Reference> theRecipients = new ArrayList<>();
+
+        when(reference.getResource()).thenReturn(PRACTITIONER);
+        theRecipients.add(reference);
+        REFERRAL_REQUEST.setRecipient(theRecipients);
+
+        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader, MESSAGEID);
+        List<BundleEntryComponent> entries = encounterBundle.getEntry();
+        verifyEntry(entries.get(7), REFERRAL_REQUEST_ID.getValue(), ResourceType.ReferralRequest);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {
