@@ -135,6 +135,8 @@ public class CarePlanMapperTest {
         when(location.hasManagingOrganization()).thenReturn(true);
         when(location.getManagingOrganization()).thenReturn(organization);
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+        when(resourceUtil.createReference(encounter)).thenReturn(new Reference(encounter));
+        when(resourceUtil.createReference(condition)).thenReturn(new Reference(condition));
     }
 
     @Test

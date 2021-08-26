@@ -10,7 +10,6 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Organization;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -67,7 +66,7 @@ public class OrganizationMapper {
         if (itkOrganization.isSetAsOrganizationPartOf()) {
             if (itkOrganization.getAsOrganizationPartOf().getWholeOrganization() != null) {
                 Organization partOf = mapOrganization(itkOrganization.getAsOrganizationPartOf().getWholeOrganization());
-                fhirOrganization.setPartOf(new Reference(partOf));
+                fhirOrganization.setPartOf(resourceUtil.createReference(partOf));
                 fhirOrganization.setPartOfTarget(partOf);
             }
         }

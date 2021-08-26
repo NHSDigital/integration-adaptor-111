@@ -1,21 +1,24 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Practitioner;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01DataEnterer;
 import uk.nhs.connect.iucds.cda.ucr.TS;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class DataEntererMapperTest {
@@ -26,14 +29,17 @@ public class DataEntererMapperTest {
     @Mock
     private PeriodMapper periodMapper;
 
-    @InjectMocks
-    private DataEntererMapper dataEntererMapper;
-
     @Mock
     private Practitioner practitioner;
 
     @Mock
     private Period period;
+
+    @Mock
+    private ResourceUtil resourceUtil;
+
+    @InjectMocks
+    private DataEntererMapper dataEntererMapper;
 
     @Test
     public void shouldMapDataEntererToParticipantComponent() {
@@ -48,6 +54,7 @@ public class DataEntererMapperTest {
         when(practitionerMapper.mapPractitioner(isA(POCDMT000002UK01AssignedEntity.class)))
             .thenReturn(practitioner);
         when(periodMapper.mapPeriod(isA(TS.class))).thenReturn(period);
+        when(resourceUtil.createReference(practitioner)).thenReturn(new Reference(practitioner));
 
         Encounter.EncounterParticipantComponent participantComponent = dataEntererMapper
             .mapDataEntererIntoParticipantComponent(dataEnterer);

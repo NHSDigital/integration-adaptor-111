@@ -169,7 +169,7 @@ public class PatientMapper {
         Reference reference = null;
         if (patientRole.isSetProviderOrganization()) {
             Organization organization = orgMapper.mapOrganization(patientRole.getProviderOrganization());
-            reference = new Reference(organization);
+            reference = resourceUtil.createReference(organization);
         }
         return reference;
     }

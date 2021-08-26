@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -64,10 +63,10 @@ public class LocationMapper {
         Location location = new Location();
         location.setIdElement(resourceUtil.newRandomUuid());
         Organization managingOrganization = organizationMapper.mapOrganization(organization);
-        location.setManagingOrganization(new Reference(managingOrganization));
+        location.setManagingOrganization(resourceUtil.createReference(managingOrganization));
         location.setManagingOrganizationTarget(managingOrganization);
 
-        encounterLocationComponent.setLocation(new Reference(location));
+        encounterLocationComponent.setLocation(resourceUtil.createReference(location));
         encounterLocationComponent.setLocationTarget(location);
 
         if (organization.isSetAsOrganizationPartOf()) {
@@ -93,7 +92,7 @@ public class LocationMapper {
 
         if (intendedRecipient.isSetReceivedOrganization()) {
             Organization managingOrganization = organizationMapper.mapOrganization(intendedRecipient.getReceivedOrganization());
-            location.setManagingOrganization(new Reference(managingOrganization));
+            location.setManagingOrganization(resourceUtil.createReference(managingOrganization));
             location.setManagingOrganizationTarget(managingOrganization);
         }
 
@@ -126,7 +125,7 @@ public class LocationMapper {
 
             Encounter.EncounterLocationComponent encounterLocationComponent = new Encounter.EncounterLocationComponent();
             encounterLocationComponent.setStatus(Encounter.EncounterLocationStatus.COMPLETED);
-            encounterLocationComponent.setLocation(new Reference(location));
+            encounterLocationComponent.setLocation(resourceUtil.createReference(location));
             encounterLocationComponent.setLocationTarget(location);
             return encounterLocationComponent;
         }

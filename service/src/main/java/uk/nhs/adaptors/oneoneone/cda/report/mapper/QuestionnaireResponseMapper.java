@@ -34,7 +34,7 @@ public class QuestionnaireResponseMapper {
         questionnaireResponse.setIdElement(resourceUtil.newRandomUuid());
 
         questionnaireResponse
-            .setQuestionnaire(new Reference(questionnaire))
+            .setQuestionnaire(resourceUtil.createReference(questionnaire))
             .setQuestionnaireTarget(questionnaire)
             .setStatus(QuestionnaireResponse.QuestionnaireResponseStatus.COMPLETED)
             .setSubject(patient)

@@ -41,7 +41,7 @@ public class ReferralRequestMapper {
             .setSubjectTarget(encounter.getSubjectTarget())
             .setSubject(encounter.getSubject())
             .setContextTarget(encounter)
-            .setContext(new Reference(encounter))
+            .setContext(resourceUtil.createReference(encounter))
             .setOccurrence(new Period()
                 .setStart(now)
                 .setEnd(Date.from(now.toInstant().plusSeconds(SECONDS_IN_HOUR))))
@@ -50,11 +50,12 @@ public class ReferralRequestMapper {
                 .setAgent(transformerDevice)
                 .setOnBehalfOf(encounter.getServiceProvider()))
             .addReasonReference(condition)
-            .addSupportingInfo(new Reference(procedureRequestMapper.mapProcedureRequest(clinicalDocument, encounter.getSubject(),
+            .addSupportingInfo(resourceUtil.createReference(procedureRequestMapper.mapProcedureRequest(clinicalDocument,
+                encounter.getSubject(),
                 referralRequest)));
 
         for (HealthcareService healthcareService : healthcareServiceList) {
-            referralRequest.addRecipient(new Reference(healthcareService));
+            referralRequest.addRecipient(resourceUtil.createReference(healthcareService));
         }
 
         return referralRequest;

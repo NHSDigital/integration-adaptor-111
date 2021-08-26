@@ -65,6 +65,8 @@ public class ReferralRequestMapperTest {
     public void shouldMapReferralRequest() {
         when(procedureRequestMapper.mapProcedureRequest(any(), any(), any())).thenReturn(procedureRequest);
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+        when(resourceUtil.createReference(encounter)).thenReturn(new Reference(encounter));
+        when(resourceUtil.createReference(procedureRequest)).thenReturn(new Reference(procedureRequest));
 
         ReferralRequest referralRequest = referralRequestMapper
             .mapReferralRequest(clinicalDocument, encounter, healthcareServiceList, condition);

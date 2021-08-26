@@ -82,7 +82,7 @@ public class AppointmentMapper {
             Location location = locationMapper.mapRoleToLocation(role);
 
             AppointmentParticipantComponent appointmentParticipantComponent = new AppointmentParticipantComponent();
-            appointmentParticipantComponent.setActor(new Reference(location));
+            appointmentParticipantComponent.setActor(resourceUtil.createReference(location));
             appointmentParticipantComponent.setActorTarget(location);
             appointmentParticipantComponent.setRequired(REQUIRED);
             appointmentParticipantComponent.setStatus(ACCEPTED);

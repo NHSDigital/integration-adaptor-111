@@ -13,7 +13,6 @@ import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.PractitionerRole;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -45,10 +44,10 @@ public class PractitionerRoleMapper {
                 POCDMT000002UK01AssignedAuthor assignedAuthor = author.getAssignedAuthor();
                 role.setCode(asList(getCode(assignedAuthor.getCode())));
                 Organization organization = organizationMapper.mapOrganization(assignedAuthor.getRepresentedOrganization());
-                role.setOrganization(new Reference(organization));
+                role.setOrganization(resourceUtil.createReference(organization));
                 role.setOrganizationTarget(organization);
                 Practitioner practitioner = practitionerMapper.mapPractitioner(assignedAuthor);
-                role.setPractitioner(new Reference(practitioner));
+                role.setPractitioner(resourceUtil.createReference(practitioner));
                 role.setPractitionerTarget(practitioner);
                 return role;
             })
@@ -68,11 +67,11 @@ public class PractitionerRoleMapper {
                 role.setCode(asList(getCode(assignedEntity.getCode())));
                 if (assignedEntity.isSetRepresentedOrganization()) {
                     Organization organization = organizationMapper.mapOrganization(assignedEntity.getRepresentedOrganization());
-                    role.setOrganization(new Reference(organization));
+                    role.setOrganization(resourceUtil.createReference(organization));
                     role.setOrganizationTarget(organization);
                 }
                 Practitioner practitioner = practitionerMapper.mapPractitioner(assignedEntity);
-                role.setPractitioner(new Reference(practitioner));
+                role.setPractitioner(resourceUtil.createReference(practitioner));
                 role.setPractitionerTarget(practitioner);
                 return Optional.of(role);
             }

@@ -70,7 +70,7 @@ public class ConsentMapper {
             .addOrganization(encounter.getServiceProvider())
             .setData(List.of(new ConsentDataComponent()
                 .setMeaning(ConsentDataMeaning.RELATED)
-                .setReference(new Reference(encounter))))
+                .setReference(resourceUtil.createReference(encounter))))
             .setPolicyRule(OPT_OUT_URI);
 
         extractAuthCodesFromDoc(consent, clinicalDocument);

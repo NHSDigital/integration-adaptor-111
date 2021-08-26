@@ -13,7 +13,6 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Observation;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.StringType;
 import org.springframework.stereotype.Component;
 
@@ -75,7 +74,7 @@ public class ObservationMapper {
             .setSystem(SNOMED_SYSTEM);
         observation.setCode(new CodeableConcept(coding));
         observation.setValue(new StringType(join(sectionText, '\n')));
-        observation.setContext(new Reference(encounter));
+        observation.setContext(resourceUtil.createReference(encounter));
         observation.setSubject(encounter.getSubject());
         return observation;
     }
