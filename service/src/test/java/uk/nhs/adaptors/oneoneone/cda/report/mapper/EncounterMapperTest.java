@@ -9,14 +9,19 @@ import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import static uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent.DISCHARGE_DETAILS;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.Appointment;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.IdType;
@@ -122,6 +127,10 @@ public class EncounterMapperTest {
     private ResourceUtil resourceUtil;
     @Mock
     private II identifier;
+    @Mock
+    POCDMT000002UK01Participant1 participant2;
+    @Mock
+    POCDMT000002UK01Participant1 participant;
 
     @BeforeEach
     public void setUp() {
@@ -162,9 +171,9 @@ public class EncounterMapperTest {
     }
 
     private void mockParticipant(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        POCDMT000002UK01Participant1 participant = mock(POCDMT000002UK01Participant1.class);
-
-        when(clinicalDocument.getParticipantArray()).thenReturn(new POCDMT000002UK01Participant1[] {participant});
+        when(clinicalDocument.getParticipantArray()).thenReturn(new POCDMT000002UK01Participant1[] {participant, participant2});
+        when(participant.getTypeCode()).thenReturn("CALLBCK");
+        when(participant2.getTypeCode()).thenReturn("REFT");
         when(participantMapper.mapEncounterParticipant(any())).thenReturn(encounterParticipantComponent);
     }
 
@@ -258,6 +267,16 @@ public class EncounterMapperTest {
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, emptyList(), empty(), DISCHARGE_DETAILS.toCoding());
         verifyEncounter(encounter);
         assertThat(encounter.getLocation().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void mapEncounterTest1() {
+        mockParticipant(clinicalDocument);
+
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, emptyList(), empty(), DISCHARGE_DETAILS.toCoding());
+        assertThat(encounter.getParticipant().size()).isEqualTo(4);
+        verify(participantMapper, times(1)).mapEncounterParticipant(participant);
+        verifyNoMoreInteractions(participantMapper);
     }
 
     @Test
