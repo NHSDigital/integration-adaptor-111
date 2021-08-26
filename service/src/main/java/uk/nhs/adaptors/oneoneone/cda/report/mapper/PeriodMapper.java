@@ -1,7 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import java.util.Date;
-
+import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.Period;
 import org.springframework.stereotype.Component;
 
@@ -13,16 +12,16 @@ import uk.nhs.connect.iucds.cda.ucr.TS;
 public class PeriodMapper {
 
     public Period mapPeriod(IVLTS ivlts) {
-        Date high = DateUtil.parse(ivlts.getHigh().getValue());
-        Date low = DateUtil.parse(ivlts.getLow().getValue());
+        DateTimeType high = DateUtil.parse(ivlts.getHigh().getValue());
+        DateTimeType low = DateUtil.parse(ivlts.getLow().getValue());
 
         return new Period()
-            .setStart(low)
-            .setEnd(high);
+            .setStartElement(low)
+            .setEndElement(high);
     }
 
     public Period mapPeriod(TS ts) {
-        Date time = DateUtil.parse(ts.getValue());
-        return new Period().setStart(time);
+        DateTimeType time = DateUtil.parse(ts.getValue());
+        return new Period().setStartElement(time);
     }
 }

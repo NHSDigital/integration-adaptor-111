@@ -33,7 +33,7 @@ public class MessageHeaderService {
         header.setIdElement(new IdType(messageId));
         header.setEvent(getEvent(itkHeader.getSpecVal()));
         header.setSource(getSource());
-        header.setTimestamp(DateUtil.parseISODateTime(effectiveTime));
+        header.setTimestampElement(DateUtil.parseToInstantType(effectiveTime));
         header.setReason(new CodeableConcept().addCoding(
             new Coding()
                 .setCode(itkHeader.getSpecVal())

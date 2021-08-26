@@ -120,10 +120,10 @@ public class ConsentMapper {
         Period dataPeriod = new Period();
         IVLTS effectiveTime = observation.getEffectiveTime();
         if (effectiveTime.isSetLow()) {
-            dataPeriod.setStart(DateUtil.parse(effectiveTime.getLow().getValue()));
+            dataPeriod.setStartElement(DateUtil.parse(effectiveTime.getLow().getValue()));
         }
         if (effectiveTime.isSetHigh()) {
-            dataPeriod.setEnd(DateUtil.parse(effectiveTime.getHigh().getValue()));
+            dataPeriod.setEndElement(DateUtil.parse(effectiveTime.getHigh().getValue()));
         }
         return dataPeriod;
     }
