@@ -77,10 +77,10 @@ public class RelatedPersonMapper {
         if (relatedEntity.isSetEffectiveTime()) {
             Period period = new Period();
             if (relatedEntity.getEffectiveTime().isSetLow()) {
-                period.setStart(DateUtil.parse(relatedEntity.getEffectiveTime().getLow().getValue()));
+                period.setStartElement(DateUtil.parse(relatedEntity.getEffectiveTime().getLow().getValue()));
             }
             if (relatedEntity.getEffectiveTime().isSetHigh()) {
-                period.setEnd(DateUtil.parse(relatedEntity.getEffectiveTime().getHigh().getValue()));
+                period.setEndElement(DateUtil.parse(relatedEntity.getEffectiveTime().getHigh().getValue()));
             }
             relatedPerson.setPeriod(period);
         }
@@ -176,10 +176,10 @@ public class RelatedPersonMapper {
         Period period = new Period();
         IVLTS effectiveTime = relatedEntity.getEffectiveTime();
         if (effectiveTime.isSetLow()) {
-            period.setStart(DateUtil.parse(effectiveTime.getLow().getValue()));
+            period.setStartElement(DateUtil.parse(effectiveTime.getLow().getValue()));
         }
         if (effectiveTime.isSetHigh()) {
-            period.setEnd(DateUtil.parse(effectiveTime.getHigh().getValue()));
+            period.setEndElement(DateUtil.parse(effectiveTime.getHigh().getValue()));
         }
         return period;
     }

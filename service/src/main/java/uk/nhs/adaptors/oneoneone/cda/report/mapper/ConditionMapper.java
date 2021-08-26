@@ -63,12 +63,10 @@ public class ConditionMapper {
                     if (entry.isSetEncounter()) {
                         POCDMT000002UK01Encounter itkEncounter = entry.getEncounter();
                         if (itkEncounter.isSetEffectiveTime()) {
-                            condition
-                                .setAssertedDate(DateUtil.parse(itkEncounter.getEffectiveTime().getValue()));
+                            condition.setAssertedDateElement(DateUtil.parse(itkEncounter.getEffectiveTime().getValue()));
                         }
                         if (itkEncounter.isSetText()) {
-                            condition
-                                .addCategory(new CodeableConcept().setText(
+                            condition.addCategory(new CodeableConcept().setText(
                                     nodeUtil.getAllText(itkEncounter.getText().getDomNode())));
                         }
                     }
