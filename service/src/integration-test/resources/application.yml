@@ -6,6 +6,7 @@ amqp:
   password: ${PEM111_AMQP_PASSWORD:}
 
 soap:
+  validationEnabled: ${PEM111_SOAP_VALIDATION_ENABLED:true}
   sendTo: ${PEM111_SOAP_SEND_TO:http://localhost:8080/report}
 
 itk:
