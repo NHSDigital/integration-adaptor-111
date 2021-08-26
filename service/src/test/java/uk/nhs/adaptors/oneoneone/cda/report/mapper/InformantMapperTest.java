@@ -2,11 +2,14 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Practitioner;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
 
@@ -23,11 +26,14 @@ public class InformantMapperTest {
     @Mock
     private PractitionerMapper practitionerMapper;
 
-    @InjectMocks
-    private InformantMapper informantMapper;
-
     @Mock
     private Practitioner practitioner;
+
+    @Mock
+    private ResourceUtil resourceUtil;
+
+    @InjectMocks
+    private InformantMapper informantMapper;
 
     @Test
     public void shouldMapInformantToParticipantComponent() {
@@ -39,6 +45,7 @@ public class InformantMapperTest {
         when(informant.getAssignedEntity()).thenReturn(assignedEntity);
         when(practitionerMapper.mapPractitioner(isA(POCDMT000002UK01AssignedEntity.class)))
             .thenReturn(practitioner);
+        when(resourceUtil.createReference(practitioner)).thenReturn(new Reference(practitioner));
 
         Optional<Encounter.EncounterParticipantComponent> participantComponent = informantMapper
             .mapInformantIntoParticipantComponent(informant);

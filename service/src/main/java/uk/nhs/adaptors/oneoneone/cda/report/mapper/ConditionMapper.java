@@ -9,7 +9,6 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +47,7 @@ public class ConditionMapper {
             .setClinicalStatus(Condition.ConditionClinicalStatus.ACTIVE)
             .setVerificationStatus(Condition.ConditionVerificationStatus.UNKNOWN)
             .setSubject(encounter.getSubject())
-            .setContext(new Reference(encounter));
+            .setContext(resourceUtil.createReference(encounter));
 
         if (questionnaireResponseList != null) {
             condition.setEvidence(evidenceOf(questionnaireResponseList));
@@ -89,8 +88,7 @@ public class ConditionMapper {
     private List<Condition.ConditionEvidenceComponent> evidenceOf(List<QuestionnaireResponse> questionnaireResponseList) {
         return questionnaireResponseList.stream()
             .filter(Resource::hasId)
-            .map(Resource::getId)
-            .map(Reference::new)
+            .map(resourceUtil::createReference)
             .map(reference -> new Condition.ConditionEvidenceComponent().addDetail(reference))
             .collect(Collectors.toList());
     }

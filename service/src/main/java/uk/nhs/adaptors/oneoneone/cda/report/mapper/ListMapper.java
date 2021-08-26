@@ -61,7 +61,7 @@ public class ListMapper {
             .setCode(createCodeConcept())
             .setSubject(encounter.getSubject())
             .setSourceTarget(encounter.getSubjectTarget())
-            .setEncounter(new Reference(encounter))
+            .setEncounter(resourceUtil.createReference(encounter))
             .setEncounterTarget(encounter)
             .setDate(new Date())
             .setSource(TRANSFORMER_DEVICE)
@@ -69,9 +69,8 @@ public class ListMapper {
 
         resourcesCreated.stream()
             .sorted(resourceDateComparator)
-            .filter(it -> TRIAGE_RESOURCES.contains(it.getResourceType()))
-            .map(Resource::getIdElement)
-            .map(Reference::new)
+            .filter(it -> TRIAGE_RESOURCES.contains(it.getResourceType()) && it.hasId())
+            .map(resourceUtil::createReference)
             .map(ListResource.ListEntryComponent::new)
             .forEach(listResource::addEntry);
 

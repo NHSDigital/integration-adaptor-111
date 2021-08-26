@@ -20,7 +20,6 @@ import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.springframework.stereotype.Component;
@@ -58,7 +57,7 @@ public class CompositionMapper {
             .setTitle(COMPOSITION_TITLE)
             .setType(createCodeableConcept())
             .setStatus(FINAL)
-            .setEncounter(new Reference(encounter))
+            .setEncounter(resourceUtil.createReference(encounter))
             .setSubject(encounter.getSubject())
             .setDate(new Date())
             .setIdentifier(docIdentifier);
@@ -140,14 +139,14 @@ public class CompositionMapper {
     private SectionComponent buildSectionComponentFromResource(DomainResource resource) {
         return new SectionComponent()
             .setTitle(resource.fhirType())
-            .addEntry(new Reference(resource));
+            .addEntry(resourceUtil.createReference(resource));
     }
 
     private void addPathwaysToSection(Composition composition, List<QuestionnaireResponse> questionnaireResponseList) {
         String questionnaireResponseTitle = "QuestionnaireResponse";
         for (QuestionnaireResponse questionnaireResponse : questionnaireResponseList) {
             SectionComponent sectionComponent = new SectionComponent();
-            sectionComponent.addEntry(new Reference(questionnaireResponse));
+            sectionComponent.addEntry(resourceUtil.createReference(questionnaireResponse));
             sectionComponent.setTitle(questionnaireResponseTitle);
             composition.addSection(sectionComponent);
         }

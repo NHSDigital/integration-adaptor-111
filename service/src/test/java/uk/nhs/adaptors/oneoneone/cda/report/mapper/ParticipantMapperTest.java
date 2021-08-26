@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Practitioner;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.RelatedPerson;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssociatedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
@@ -40,6 +42,9 @@ public class ParticipantMapperTest {
     @Mock
     private RelatedPersonMapper relatedPersonMapper;
 
+    @Mock
+    private ResourceUtil resourceUtil;
+
     @InjectMocks
     private ParticipantMapper participantMapper;
 
@@ -57,6 +62,7 @@ public class ParticipantMapperTest {
             .thenReturn(period);
         when(practitionerMapper.mapPractitioner(ArgumentMatchers.isA(POCDMT000002UK01AssociatedEntity.class)))
             .thenReturn(practitioner);
+        when(resourceUtil.createReference(practitioner)).thenReturn(new Reference(practitioner));
 
         Encounter.EncounterParticipantComponent participantComponent = participantMapper.mapEncounterParticipant(encounterParticipant);
 
@@ -78,6 +84,7 @@ public class ParticipantMapperTest {
         relatedPerson.setId(RELATED_PERSON_ID);
         when(relatedPersonMapper.mapRelatedPerson(informant, encounter)).thenReturn(relatedPerson);
         when(periodMapper.mapPeriod(ArgumentMatchers.isA(IVLTS.class))).thenReturn(period);
+        when(resourceUtil.createReference(relatedPerson)).thenReturn(new Reference(relatedPerson));
 
         Encounter.EncounterParticipantComponent participantComponent = participantMapper.mapEncounterRelatedPerson(informant, encounter);
 

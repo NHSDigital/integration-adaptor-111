@@ -8,11 +8,11 @@ import java.util.Map;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Practitioner;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.RelatedPerson;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 
@@ -31,13 +31,15 @@ public class ParticipantMapper {
 
     private final RelatedPersonMapper relatedPersonMapper;
 
+    private final ResourceUtil resourceUtil;
+
     public Encounter.EncounterParticipantComponent mapEncounterParticipant(POCDMT000002UK01Participant1 encounterParticipant) {
         Practitioner practitioner = practitionerMapper
             .mapPractitioner(encounterParticipant.getAssociatedEntity());
 
         Encounter.EncounterParticipantComponent encounterParticipantComponent = new Encounter.EncounterParticipantComponent()
             .setType(retrieveTypeFromITK(encounterParticipant))
-            .setIndividual(new Reference(practitioner))
+            .setIndividual(resourceUtil.createReference(practitioner))
             .setIndividualTarget(practitioner);
 
         if (encounterParticipant.isSetTime()) {
@@ -58,7 +60,7 @@ public class ParticipantMapper {
 
         Encounter.EncounterParticipantComponent encounterParticipantComponent = new Encounter.EncounterParticipantComponent()
             .setType(Collections.singletonList(new CodeableConcept().setText(PARTICIPANT_TYPE_CODE_MAP.get(informant.getTypeCode()))))
-            .setIndividual(new Reference(relatedPerson))
+            .setIndividual(resourceUtil.createReference(relatedPerson))
             .setIndividualTarget(relatedPerson);
 
         if (informant.isSetRelatedEntity()) {
