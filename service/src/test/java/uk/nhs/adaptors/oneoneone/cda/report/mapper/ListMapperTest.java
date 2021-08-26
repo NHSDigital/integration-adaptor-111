@@ -50,10 +50,15 @@ public class ListMapperTest {
     @Mock
     private ResourceUtil resourceUtil;
 
-    private List<Resource> resourcesCreated = asList(new HealthcareService(), new QuestionnaireResponse());
+    private List<Resource> resourcesCreated;
 
     @BeforeEach
     public void setUp() {
+        HealthcareService healthcareService = new HealthcareService();
+        healthcareService.setId("123456");
+        QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse();
+        questionnaireResponse.setId("654321");
+        resourcesCreated = asList(healthcareService, questionnaireResponse);
         when(clinicalDocument.getSetId()).thenReturn(ii);
         when(ii.getRoot()).thenReturn("411910CF-1A76-4330-98FE-C345DDEE5553");
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));

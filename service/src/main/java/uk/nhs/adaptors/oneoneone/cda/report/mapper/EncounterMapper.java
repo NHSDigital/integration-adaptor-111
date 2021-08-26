@@ -138,7 +138,7 @@ public class EncounterMapper {
 
     private void setServiceProvider(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument1) {
         Organization serviceProviderOrganization = serviceProviderMapper.mapServiceProvider(clinicalDocument1.getCustodian());
-        Reference serviceProvider = new Reference(serviceProviderOrganization);
+        Reference serviceProvider = resourceUtil.createReference(serviceProviderOrganization);
         encounter.setServiceProvider(serviceProvider);
         encounter.setServiceProviderTarget(serviceProviderOrganization);
     }
@@ -147,11 +147,11 @@ public class EncounterMapper {
         Optional<Patient> patient = getPatient(clinicalDocument1);
         if (patient.isPresent()) {
             if (clinicalDocument1.sizeOfRecordTargetArray() == 1) {
-                encounter.setSubject(new Reference(patient.get()));
+                encounter.setSubject(resourceUtil.createReference(patient.get()));
                 encounter.setSubjectTarget(patient.get());
             } else if (clinicalDocument1.sizeOfRecordTargetArray() > 1) {
                 Group group = groupMapper.mapGroup(clinicalDocument1.getRecordTargetArray());
-                encounter.setSubject(new Reference(group));
+                encounter.setSubject(resourceUtil.createReference(group));
                 encounter.setSubjectTarget(group);
             }
         }
@@ -209,7 +209,7 @@ public class EncounterMapper {
     private void setAppointment(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Reference patient = encounter.getSubject();
         appointmentService.retrieveAppointment(patient, clinicalDocument)
-            .map(Reference::new).ifPresent(encounter::setAppointment);
+            .ifPresent(it -> encounter.setAppointment(resourceUtil.createReference(it)));
     }
 
     private void setEncounterReasonAndType(Encounter encounter, POCDMT000002UK01ClinicalDocument1 clinicalDocument) {

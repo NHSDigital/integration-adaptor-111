@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -64,10 +63,10 @@ public class LocationMapper {
         Location location = new Location();
         location.setIdElement(resourceUtil.newRandomUuid());
         Organization managingOrganization = organizationMapper.mapOrganization(organization);
-        location.setManagingOrganization(new Reference(managingOrganization));
+        location.setManagingOrganization(resourceUtil.createReference(managingOrganization));
         location.setManagingOrganizationTarget(managingOrganization);
 
-        encounterLocationComponent.setLocation(new Reference(location));
+        encounterLocationComponent.setLocation(resourceUtil.createReference(location));
         encounterLocationComponent.setLocationTarget(location);
 
         if (organization.isSetAsOrganizationPartOf()) {
@@ -93,7 +92,7 @@ public class LocationMapper {
 
         if (intendedRecipient.isSetReceivedOrganization()) {
             Organization managingOrganization = organizationMapper.mapOrganization(intendedRecipient.getReceivedOrganization());
-            location.setManagingOrganization(new Reference(managingOrganization));
+            location.setManagingOrganization(resourceUtil.createReference(managingOrganization));
             location.setManagingOrganizationTarget(managingOrganization);
         }
 
@@ -108,21 +107,25 @@ public class LocationMapper {
     public Encounter.EncounterLocationComponent mapHealthcareFacilityToLocationComponent(
         POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         POCDMT000002UK01EncompassingEncounter encompassingEncounter = clinicalDocument.getComponentOf().getEncompassingEncounter();
-        AD address = Optional.ofNullable(encompassingEncounter)
+        POCDMT000002UK01Place place = Optional.ofNullable(encompassingEncounter)
             .map(POCDMT000002UK01EncompassingEncounter::getLocation)
             .map(POCDMT000002UK01Location::getHealthCareFacility)
             .map(POCDMT000002UK01HealthCareFacility::getLocation)
-            .map(POCDMT000002UK01Place::getAddr)
             .orElse(null);
 
-        if (address != null) {
+        if (place != null) {
             Location location = new Location();
             location.setIdElement(resourceUtil.newRandomUuid());
-            location.setAddress(addressMapper.mapAddress(address));
+            location.setName(nodeUtil.getAllText(place.getName().getDomNode()));
+
+            AD address = place.getAddr();
+            if (address != null) {
+                location.setAddress(addressMapper.mapAddress(address));
+            }
 
             Encounter.EncounterLocationComponent encounterLocationComponent = new Encounter.EncounterLocationComponent();
             encounterLocationComponent.setStatus(Encounter.EncounterLocationStatus.COMPLETED);
-            encounterLocationComponent.setLocation(new Reference(location));
+            encounterLocationComponent.setLocation(resourceUtil.createReference(location));
             encounterLocationComponent.setLocationTarget(location);
             return encounterLocationComponent;
         }

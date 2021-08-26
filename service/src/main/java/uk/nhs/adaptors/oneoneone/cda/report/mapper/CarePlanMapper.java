@@ -62,9 +62,9 @@ public class CarePlanMapper {
             .setSubjectTarget(encounter.getSubjectTarget())
             .setStatus(COMPLETED)
             .setContextTarget(encounter)
-            .setContext(new Reference(encounter))
+            .setContext(resourceUtil.createReference(encounter))
             .setPeriod(encounter.getPeriod())
-            .addAddresses(new Reference(condition));
+            .addAddresses(resourceUtil.createReference(condition));
 
         if (cpSection.isSetLanguageCode()) {
             carePlan.setLanguage(nodeUtil.getNodeValueString(cpSection.getLanguageCode()));

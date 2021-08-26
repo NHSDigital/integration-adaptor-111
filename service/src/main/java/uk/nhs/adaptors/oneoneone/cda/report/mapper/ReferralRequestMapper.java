@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Period;
@@ -19,6 +20,7 @@ import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
@@ -29,6 +31,7 @@ public class ReferralRequestMapper {
 
     private static final String REFT = "REFT";
     private static final int SECONDS_IN_HOUR = 60 * 60;
+    private static final String AUTHOR_TYPE_CODE = "AUT";
     private final Reference transformerDevice = new Reference("Device/1");
     private final ProcedureRequestMapper procedureRequestMapper;
     private final ResourceUtil resourceUtil;
@@ -48,22 +51,23 @@ public class ReferralRequestMapper {
             .setSubjectTarget(encounter.getSubjectTarget())
             .setSubject(encounter.getSubject())
             .setContextTarget(encounter)
-            .setContext(new Reference(encounter))
+            .setContext(resourceUtil.createReference(encounter))
             .setOccurrence(new Period()
                 .setStart(now)
                 .setEnd(Date.from(now.toInstant().plusSeconds(SECONDS_IN_HOUR))))
-            .setAuthoredOn(now)
+            .setAuthoredOnElement(getAuthoredOn(clinicalDocument))
             .setRequester(new ReferralRequest.ReferralRequestRequesterComponent()
                 .setAgent(transformerDevice)
                 .setOnBehalfOf(encounter.getServiceProvider()))
             .addReasonReference(condition)
-            .addSupportingInfo(new Reference(procedureRequestMapper.mapProcedureRequest(clinicalDocument, encounter.getSubject(),
+            .addSupportingInfo(resourceUtil.createReference(procedureRequestMapper.mapProcedureRequest(clinicalDocument,
+                encounter.getSubject(),
                 referralRequest)));
         getRecipients(clinicalDocument).stream()
             .forEach(practitioner -> referralRequest.addRecipient(new Reference(practitioner)));
 
         for (HealthcareService healthcareService : healthcareServiceList) {
-            referralRequest.addRecipient(new Reference(healthcareService));
+            referralRequest.addRecipient(resourceUtil.createReference(healthcareService));
         }
 
         return referralRequest;
@@ -75,5 +79,13 @@ public class ReferralRequestMapper {
             .map(POCDMT000002UK01Participant1::getAssociatedEntity)
             .map(practitionerMapper::mapPractitioner)
             .collect(Collectors.toList());
+    }
+
+    private DateTimeType getAuthoredOn(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        return stream(clinicalDocument.getAuthorArray())
+            .filter(it -> it.getTypeCode().equals(AUTHOR_TYPE_CODE))
+            .map(it -> DateUtil.parse(it.getTime().getValue()))
+            .findFirst()
+            .orElseGet(DateTimeType::now);
     }
 }

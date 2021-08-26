@@ -28,11 +28,13 @@ public class SoapValidator {
     private final SoapProperties soapProperties;
 
     public void checkSoapItkConformance(Element soapHeader) throws SoapClientException, SoapMustUnderstandException {
-        checkSendTo(soapHeader);
-        checkTimestamp(soapHeader);
-        checkUsername(soapHeader);
-        checkReplyTo(soapHeader);
-        checkForeingHeader(soapHeader);
+        if (soapProperties.isValidationEnabled()) {
+            checkSendTo(soapHeader);
+            checkTimestamp(soapHeader);
+            checkUsername(soapHeader);
+            checkReplyTo(soapHeader);
+            checkForeingHeader(soapHeader);
+        }
     }
 
     private void checkForeingHeader(Element soapHeader) throws SoapMustUnderstandException {

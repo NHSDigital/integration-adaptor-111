@@ -112,6 +112,8 @@ public class ConditionMapperTest {
         when(ed.getDomNode()).thenReturn(node);
         when(nodeUtil.getAllText(node)).thenReturn(CONIDITION_TEXT);
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+        when(resourceUtil.createReference(encounter)).thenReturn(new Reference(encounter));
+        when(resourceUtil.createReference(questionnaireResponse)).thenReturn(new Reference(QUESTIONNAIRE_RESPONSE_ID));
 
         when(section.getComponentArray()).thenReturn(component5Array);
         when(component5.getSection()).thenReturn(section);
@@ -121,7 +123,6 @@ public class ConditionMapperTest {
         when(cs.getCode()).thenReturn(LANGUAGE_CODE);
 
         when(questionnaireResponse.hasId()).thenReturn(true);
-        when(questionnaireResponse.getId()).thenReturn(QUESTIONNAIRE_RESPONSE_ID);
     }
 
     @Test
@@ -130,7 +131,7 @@ public class ConditionMapperTest {
 
         assertThat(condition.getClinicalStatus()).isEqualTo(ACTIVE);
         assertThat(condition.getVerificationStatus()).isEqualTo(UNKNOWN);
-        assertThat(condition.getAssertedDate()).isEqualTo(DateUtil.parse(EFFECTIVE_TIME_STRING));
+        assertThat(condition.getAssertedDateElement()).isEqualToComparingFieldByField(DateUtil.parse(EFFECTIVE_TIME_STRING));
         assertThat(condition.getCategoryFirstRep().getText()).isEqualTo(CONIDITION_TEXT);
         assertThat(condition.getLanguage()).isEqualTo(LANGUAGE_CODE);
         assertThat(condition.getEvidence().get(0).getDetail().get(0).getReference()).isEqualTo(QUESTIONNAIRE_RESPONSE_ID);

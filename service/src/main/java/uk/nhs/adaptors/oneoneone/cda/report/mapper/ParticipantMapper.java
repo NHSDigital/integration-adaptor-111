@@ -1,22 +1,29 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Practitioner;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.RelatedPerson;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 
 @Component
 @AllArgsConstructor
 public class ParticipantMapper {
+    private static final Map<String, String> PARTICIPANT_TYPE_CODE_MAP = new HashMap<>();
+
+    static {
+        PARTICIPANT_TYPE_CODE_MAP.put("INF", "Informant");
+    }
 
     private final PeriodMapper periodMapper;
 
@@ -24,13 +31,15 @@ public class ParticipantMapper {
 
     private final RelatedPersonMapper relatedPersonMapper;
 
+    private final ResourceUtil resourceUtil;
+
     public Encounter.EncounterParticipantComponent mapEncounterParticipant(POCDMT000002UK01Participant1 encounterParticipant) {
         Practitioner practitioner = practitionerMapper
             .mapPractitioner(encounterParticipant.getAssociatedEntity());
 
         Encounter.EncounterParticipantComponent encounterParticipantComponent = new Encounter.EncounterParticipantComponent()
             .setType(retrieveTypeFromITK(encounterParticipant))
-            .setIndividual(new Reference(practitioner))
+            .setIndividual(resourceUtil.createReference(practitioner))
             .setIndividualTarget(practitioner);
 
         if (encounterParticipant.isSetTime()) {
@@ -50,8 +59,8 @@ public class ParticipantMapper {
             .mapRelatedPerson(informant, encounter);
 
         Encounter.EncounterParticipantComponent encounterParticipantComponent = new Encounter.EncounterParticipantComponent()
-            .setType(Collections.singletonList(new CodeableConcept().setText(informant.getTypeCode())))
-            .setIndividual(new Reference(relatedPerson))
+            .setType(Collections.singletonList(new CodeableConcept().setText(PARTICIPANT_TYPE_CODE_MAP.get(informant.getTypeCode()))))
+            .setIndividual(resourceUtil.createReference(relatedPerson))
             .setIndividualTarget(relatedPerson);
 
         if (informant.isSetRelatedEntity()) {

@@ -17,6 +17,7 @@ import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,6 +84,10 @@ public class CompositionMapperTest {
         when(ii.isSetRoot()).thenReturn(true);
         when(referralRequest.fhirType()).thenReturn("ReferralRequest");
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+        when(resourceUtil.createReference(encounter)).thenReturn(new Reference(encounter));
+        when(resourceUtil.createReference(questionnaireResponse)).thenReturn(new Reference(questionnaireResponse));
+        when(resourceUtil.createReference(carePlan)).thenReturn(new Reference(carePlan));
+        when(resourceUtil.createReference(referralRequest)).thenReturn(new Reference(referralRequest));
     }
 
     @Test

@@ -52,6 +52,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.RelatedPersonMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Component
@@ -73,6 +74,7 @@ public class EncounterReportBundleService {
     private final PractitionerRoleMapper practitionerRoleMapper;
     private final RelatedPersonMapper relatedPersonMapper;
     private final PractitionerMapper practitionerMapper;
+    private final ResourceUtil resourceUtil;
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
@@ -93,11 +95,11 @@ public class EncounterReportBundleService {
             messageHeader.getEvent());
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
         List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
-            encounter.getSubject(), new Reference(encounter));
+            encounter.getSubject(), resourceUtil.createReference(encounter));
         Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter, questionnaireResponseList);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, condition);
         ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument,
-            encounter, healthcareServiceList, new Reference(condition));
+            encounter, healthcareServiceList, resourceUtil.createReference(condition));
         Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans, questionnaireResponseList,
             referralRequest, authorPractitionerRoles);
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);

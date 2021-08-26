@@ -2,7 +2,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -27,7 +26,7 @@ public class GroupMapper {
             Group.GroupMemberComponent groupMemberComponent = new Group.GroupMemberComponent();
             if (recordTarget.getPatientRole() != null) {
                 Patient fhirPatient = patientMapper.mapPatient(recordTarget.getPatientRole());
-                groupMemberComponent.setEntity(new Reference(fhirPatient));
+                groupMemberComponent.setEntity(resourceUtil.createReference(fhirPatient));
                 groupMemberComponent.setEntityTarget(fhirPatient);
                 group.addMember(groupMemberComponent);
             }

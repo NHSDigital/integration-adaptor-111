@@ -75,7 +75,6 @@ public class ReportControllerIT {
         "entry[*].resource.addresses[*].reference",
         "entry[*].resource.appointment.reference",
         "entry[*].resource.author[*].reference",
-        "entry[*].resource.authoredOn",
         "entry[*].resource.careManager.reference",
         "entry[*].resource.consentingParty[*].reference",
         "entry[*].resource.context.reference",

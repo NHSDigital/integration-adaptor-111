@@ -7,10 +7,10 @@ import java.util.Optional;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Practitioner;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
 
 @Component
@@ -18,6 +18,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
 public class InformantMapper {
 
     private final PractitionerMapper practitionerMapper;
+    private final ResourceUtil resourceUtil;
 
     public Optional<Encounter.EncounterParticipantComponent> mapInformantIntoParticipantComponent(POCDMT000002UK01Informant12 informant) {
         if (informant.isSetAssignedEntity()) {
@@ -25,7 +26,7 @@ public class InformantMapper {
             component.setType(retrieveTypeFromITK(informant));
             Practitioner practitioner = practitionerMapper.mapPractitioner(informant.getAssignedEntity());
             component.setIndividualTarget(practitioner);
-            component.setIndividual(new Reference(practitioner));
+            component.setIndividual(resourceUtil.createReference(practitioner));
             return Optional.of(component);
         } else {
             return Optional.empty();

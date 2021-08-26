@@ -20,7 +20,6 @@ import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.Period;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -70,7 +69,7 @@ public class ConsentMapper {
             .addOrganization(encounter.getServiceProvider())
             .setData(List.of(new ConsentDataComponent()
                 .setMeaning(ConsentDataMeaning.RELATED)
-                .setReference(new Reference(encounter))))
+                .setReference(resourceUtil.createReference(encounter))))
             .setPolicyRule(OPT_OUT_URI);
 
         extractAuthCodesFromDoc(consent, clinicalDocument);
@@ -120,10 +119,10 @@ public class ConsentMapper {
         Period dataPeriod = new Period();
         IVLTS effectiveTime = observation.getEffectiveTime();
         if (effectiveTime.isSetLow()) {
-            dataPeriod.setStart(DateUtil.parse(effectiveTime.getLow().getValue()));
+            dataPeriod.setStartElement(DateUtil.parse(effectiveTime.getLow().getValue()));
         }
         if (effectiveTime.isSetHigh()) {
-            dataPeriod.setEnd(DateUtil.parse(effectiveTime.getHigh().getValue()));
+            dataPeriod.setEndElement(DateUtil.parse(effectiveTime.getHigh().getValue()));
         }
         return dataPeriod;
     }

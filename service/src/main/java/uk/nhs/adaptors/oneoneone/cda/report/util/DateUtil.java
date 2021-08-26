@@ -2,68 +2,149 @@ package uk.nhs.adaptors.oneoneone.cda.report.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
+import org.hl7.fhir.dstu3.model.DateTimeType;
+import org.hl7.fhir.dstu3.model.InstantType;
 
+import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import lombok.experimental.UtilityClass;
+import uk.nhs.adaptors.oneoneone.cda.report.enums.DateFormat;
 
 @UtilityClass
 public class DateUtil {
+    private static final ZoneId UK_ZONE_ID = ZoneId.of("Europe/London");
+    private static final int YEAR_PRECISION = 4;
+    private static final int MONTH_PRECISION = 6;
+    private static final int DAY_PRECISION = 8;
+    private static final int HOUR_PRECISION = 10;
+    private static final int MINUTE_PRECISION = 12;
+    private static final int MILLISECOND_PRECISION = 18;
+    private static final String DATETIME_TIMEZONE_MILLISECONDS_FORMAT = "yyyyMMddHHmmss.SSSX";
+    private static final String DATETIME_TIMEZONE_SECONDS_FORMAT = "yyyyMMddHHmmssX";
+    private static final String DATETIME_TIMEZONE_MINUTES_FORMAT = "yyyyMMddHHmmX";
+    private static final String DATETIME_TIMEZONE_HOURS_FORMAT = "yyyyMMddHHX";
+    private static final String DATETIME_TIMEZONE_FULL_MILLISECONDS_FORMAT = "yyyyMMddHHmmss.SSSZ";
+    private static final String DATETIME_TIMEZONE_FULL_FORMAT = "yyyyMMddHHmmssZ";
+    private static final String DATETIME_TIMEZONE_FULL_MINUTES_FORMAT = "yyyyMMddHHmmZ";
+    private static final String DATETIME_TIMEZONE_FULL_HOURS_FORMAT = "yyyyMMddHHZ";
+    private static final String DATETIME_MILLISECONDS_FORMAT = "yyyyMMddHHmmss.SSS";
+    private static final String DATETIME_SECONDS_FORMAT = "yyyyMMddHHmmss";
+    private static final String DATETIME_MINUTES_FORMAT = "yyyyMMddHHmm";
+    private static final String DATETIME_HOURS_FORMAT = "yyyyMMddHH";
+    private static final String DATE_FORMAT = "yyyyMMdd";
+    private static final String DATE_MONTH_FORMAT = "yyyyMM";
+    private static final String DATE_YEAR_FORMAT = "yyyy";
+    private static final String ERROR_MESSAGE = "Unable to parse date %s to Fhir date format";
 
-    static final String ISO_DATETIME_FORMAT = "yyyyMMddHHmmX";
-    static final String ISO_DATE_FORMAT = "yyyyMMdd";
+    public static DateTimeType parse(String dateToParse) {
+        DateFormat format = getFormat(dateToParse);
+        SimpleDateFormat formatter = getFormatter(format);
 
-    private static final String[] FORMATS = {
-        "yyyyMMddHHmmX",
-        "yyyyMMddHHmmZ",
-        "yyyyMMdd",
-    };
-
-    public static Date parseISODate(String date) {
-        return parseDate(date, ISO_DATE_FORMAT);
-    }
-
-    private Date parseDate(String date, String format) {
         try {
-            return DateUtils.parseDate(date, format);
+            Date date = formatter.parse(dateToParse);
+            return new DateTimeType(date, format.getPrecision(), TimeZone.getTimeZone(ZoneOffset.UTC));
         } catch (ParseException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException(String.format(ERROR_MESSAGE, dateToParse), e);
         }
     }
 
-    public static Date parseISODateTime(String date) {
-        return parseDate(date, ISO_DATETIME_FORMAT);
-    }
+    public static InstantType parseToInstantType(String dateToParse) {
+        DateFormat format = getFormat(dateToParse);
+        SimpleDateFormat formatter = getFormatter(format);
 
-    public static Date parse(String date) {
         try {
-            return DateUtils.parseDate(date, FORMATS);
+            Date date = formatter.parse(dateToParse);
+            return new InstantType(date, TemporalPrecisionEnum.MILLI, TimeZone.getTimeZone(ZoneOffset.UTC));
         } catch (ParseException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException(String.format(ERROR_MESSAGE, dateToParse), e);
         }
     }
-
-    private static final String INPUT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.sss'Z'";
-    private static final String OUTPUT_PATTERN = "yyyyMMdd";
 
     public static Date parsePathwaysDate(String dateStr) {
-        Date finalDate = null;
-        if (StringUtils.isNotBlank(dateStr)) {
-            SimpleDateFormat sdfInput = new SimpleDateFormat(INPUT_PATTERN);
-            SimpleDateFormat sdfOutput = new SimpleDateFormat(OUTPUT_PATTERN);
-            sdfOutput.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return Date.from(Instant.parse(dateStr));
+    }
 
-            try {
-                Date date = sdfInput.parse(dateStr);
-                String value = sdfOutput.format(date);
-                finalDate = sdfOutput.parse(value);
-            } catch (ParseException e) {
-                throw new IllegalStateException(e);
+    private DateFormat getFormat(String date) {
+        if (containsOffset(date)) {
+            return getFormatWithTimezone(date);
+        }
+        return getFormatWithoutTimezone(date);
+    }
+
+    private boolean containsOffset(String date) {
+        return date.contains("+") || date.contains("-");
+    }
+
+    private String[] splitDateFromOffset(String date) {
+        return date.contains("+") ? date.split("\\+") : date.split("-");
+    }
+
+    private DateFormat getFormatWithTimezone(String date) {
+        String[] dateAndOffset = splitDateFromOffset(date);
+        String datePart = dateAndOffset[0];
+        String offsetPart = dateAndOffset[1];
+
+        if (offsetPart.length() == 2) {
+            switch (datePart.length()) {
+                case HOUR_PRECISION:
+                    return new DateFormat(DATETIME_TIMEZONE_HOURS_FORMAT, TemporalPrecisionEnum.SECOND);
+                case MINUTE_PRECISION:
+                    return new DateFormat(DATETIME_TIMEZONE_MINUTES_FORMAT, TemporalPrecisionEnum.SECOND);
+                case MILLISECOND_PRECISION:
+                    return new DateFormat(DATETIME_TIMEZONE_MILLISECONDS_FORMAT, TemporalPrecisionEnum.MILLI);
+                default:
+                    return new DateFormat(DATETIME_TIMEZONE_SECONDS_FORMAT, TemporalPrecisionEnum.SECOND);
             }
         }
-        return finalDate;
+        switch (datePart.length()) {
+            case HOUR_PRECISION:
+                return new DateFormat(DATETIME_TIMEZONE_FULL_HOURS_FORMAT, TemporalPrecisionEnum.SECOND);
+            case MINUTE_PRECISION:
+                return new DateFormat(DATETIME_TIMEZONE_FULL_MINUTES_FORMAT, TemporalPrecisionEnum.SECOND);
+            case MILLISECOND_PRECISION:
+                return new DateFormat(DATETIME_TIMEZONE_FULL_MILLISECONDS_FORMAT, TemporalPrecisionEnum.MILLI);
+            default:
+                return new DateFormat(DATETIME_TIMEZONE_FULL_FORMAT, TemporalPrecisionEnum.SECOND);
+        }
+    }
+
+    private DateFormat getFormatWithoutTimezone(String date) {
+        switch (date.length()) {
+            case YEAR_PRECISION:
+                return new DateFormat(DATE_YEAR_FORMAT, TemporalPrecisionEnum.YEAR);
+            case MONTH_PRECISION:
+                return new DateFormat(DATE_MONTH_FORMAT, TemporalPrecisionEnum.MONTH);
+            case DAY_PRECISION:
+                return new DateFormat(DATE_FORMAT, TemporalPrecisionEnum.DAY);
+            case HOUR_PRECISION:
+                return new DateFormat(DATETIME_HOURS_FORMAT, TemporalPrecisionEnum.SECOND);
+            case MINUTE_PRECISION:
+                return new DateFormat(DATETIME_MINUTES_FORMAT, TemporalPrecisionEnum.SECOND);
+            case MILLISECOND_PRECISION:
+                return new DateFormat(DATETIME_MILLISECONDS_FORMAT, TemporalPrecisionEnum.MILLI);
+            default:
+                return new DateFormat(DATETIME_SECONDS_FORMAT, TemporalPrecisionEnum.SECOND);
+        }
+    }
+
+    private SimpleDateFormat getFormatter(DateFormat format) {
+        String dateFormat = format.getDateFormat();
+        if (dateFormat.equals(DATE_FORMAT) || dateFormat.equals(DATE_MONTH_FORMAT)) {
+            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+            formatter.setTimeZone(TimeZone.getTimeZone(ZoneOffset.UTC));
+
+            return formatter;
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+        formatter.setTimeZone(TimeZone.getTimeZone(UK_ZONE_ID));
+
+        return formatter;
     }
 }

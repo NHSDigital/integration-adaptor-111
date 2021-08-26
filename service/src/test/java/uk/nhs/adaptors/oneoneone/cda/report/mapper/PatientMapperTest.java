@@ -18,6 +18,7 @@ import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Type;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -107,6 +108,7 @@ public class PatientMapperTest {
         when(patientRole.isSetPatient()).thenReturn(true);
         when(patientRole.getPatient()).thenReturn(itkPatient);
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+        when(resourceUtil.createReference(organization)).thenReturn(new Reference(organization));
 
         mockNames(itkPatient);
         mockAddress(patientRole);

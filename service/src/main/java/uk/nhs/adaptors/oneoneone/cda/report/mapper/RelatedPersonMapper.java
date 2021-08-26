@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
+import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.PN;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -48,6 +49,7 @@ public class RelatedPersonMapper {
     private final ContactPointMapper contactPointMapper;
 
     private final AddressMapper addressMapper;
+
     private final ResourceUtil resourceUtil;
 
     public RelatedPerson mapRelatedPerson(POCDMT000002UK01Informant12 informant, Encounter encounter) {
@@ -75,16 +77,16 @@ public class RelatedPersonMapper {
         if (relatedEntity.isSetEffectiveTime()) {
             Period period = new Period();
             if (relatedEntity.getEffectiveTime().isSetLow()) {
-                period.setStart(DateUtil.parse(relatedEntity.getEffectiveTime().getLow().getValue()));
+                period.setStartElement(DateUtil.parse(relatedEntity.getEffectiveTime().getLow().getValue()));
             }
             if (relatedEntity.getEffectiveTime().isSetHigh()) {
-                period.setEnd(DateUtil.parse(relatedEntity.getEffectiveTime().getHigh().getValue()));
+                period.setEndElement(DateUtil.parse(relatedEntity.getEffectiveTime().getHigh().getValue()));
             }
             relatedPerson.setPeriod(period);
         }
 
         relatedPerson.setPeriod(getPeriod(relatedEntity));
-
+        setRelationship(relatedEntity, relatedPerson);
         markEmergencyContact(relatedEntity.getTelecomArray(), relatedPerson);
 
         return relatedPerson;
@@ -111,6 +113,17 @@ public class RelatedPersonMapper {
         return null;
     }
 
+    private void setRelationship(POCDMT000002UK01RelatedEntity relatedEntity, RelatedPerson relatedPerson) {
+        if (relatedEntity.isSetCode()) {
+            CE code = relatedEntity.getCode();
+            Coding coding = new Coding()
+                .setCode(code.getCode())
+                .setDisplay(code.getDisplayName())
+                .setSystem(code.getCodeSystem());
+            relatedPerson.setRelationship(new CodeableConcept(coding));
+        }
+    }
+
     private void markEmergencyContact(TEL[] telecomArray, RelatedPerson relatedPerson) {
         getEmergencyTelecom(telecomArray)
             .ifPresent(it -> {
@@ -118,7 +131,11 @@ public class RelatedPersonMapper {
                     .setCode(EMERGENCY_CONTACT_CODE)
                     .setDisplay(EMERGENCY_CONTACT_DISPLAY)
                     .setSystem(EMERGENCY_CONTACT_SYSTEM);
-                relatedPerson.setRelationship(new CodeableConcept().addCoding(coding));
+                if (relatedPerson.hasRelationship()) {
+                    relatedPerson.getRelationship().addCoding(coding);
+                } else {
+                    relatedPerson.setRelationship(new CodeableConcept(coding));
+                }
             });
     }
 
@@ -159,10 +176,10 @@ public class RelatedPersonMapper {
         Period period = new Period();
         IVLTS effectiveTime = relatedEntity.getEffectiveTime();
         if (effectiveTime.isSetLow()) {
-            period.setStart(DateUtil.parse(effectiveTime.getLow().getValue()));
+            period.setStartElement(DateUtil.parse(effectiveTime.getLow().getValue()));
         }
         if (effectiveTime.isSetHigh()) {
-            period.setEnd(DateUtil.parse(effectiveTime.getHigh().getValue()));
+            period.setEndElement(DateUtil.parse(effectiveTime.getHigh().getValue()));
         }
         return period;
     }
