@@ -31,7 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Including `typeCode` when mapping `informationRecipient`to `Organization`
 - Mapping `informationRecipient` only when `typeCode=PRCP`
 - Mapping `ClinicalDocument.participant` with `typeCode=REFT` to `ReferralRequest.recipient` instead of `Encounter.participant`
-    
+- Possibility to reject incorrectly addressed messages by configuring list of supported ODS codes and DOS IDs
+
 ## [0.7.0] - 2021-08-11
 - DOS Service ID suffixed to ODS Code and mapped to FHIR MessageHeader/destination/endpoint according to pattern:
   ODS_code_value:DOSServiceID:DOS_Service_ID_value, where:
