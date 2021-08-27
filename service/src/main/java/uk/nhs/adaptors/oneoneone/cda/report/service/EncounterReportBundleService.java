@@ -47,7 +47,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.RelatedPersonMapper;

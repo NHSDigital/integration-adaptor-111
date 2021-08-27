@@ -94,6 +94,7 @@ public class ReferralRequestMapperTest {
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
         when(resourceUtil.createReference(encounter)).thenReturn(new Reference(encounter));
         when(resourceUtil.createReference(procedureRequest)).thenReturn(new Reference(procedureRequest));
+        when(resourceUtil.createReference(practitioner)).thenReturn(new Reference(practitioner));
         when(author.getTime()).thenReturn(ts);
         when(author.getTypeCode()).thenReturn("AUT");
         when(clinicalDocument.getAuthorArray()).thenReturn(authorArray);

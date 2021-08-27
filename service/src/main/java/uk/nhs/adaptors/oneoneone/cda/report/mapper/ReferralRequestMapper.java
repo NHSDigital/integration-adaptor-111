@@ -29,7 +29,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 @RequiredArgsConstructor
 public class ReferralRequestMapper {
 
-    private static final String REFT = "REFT";
+    private static final String REFT_TYPE_CODE = "REFT";
     private static final int SECONDS_IN_HOUR = 60 * 60;
     private static final String AUTHOR_TYPE_CODE = "AUT";
     private final Reference transformerDevice = new Reference("Device/1");
@@ -63,8 +63,9 @@ public class ReferralRequestMapper {
             .addSupportingInfo(resourceUtil.createReference(procedureRequestMapper.mapProcedureRequest(clinicalDocument,
                 encounter.getSubject(),
                 referralRequest)));
-        getRecipients(clinicalDocument).stream()
-            .forEach(practitioner -> referralRequest.addRecipient(new Reference(practitioner)));
+
+        getRecipients(clinicalDocument)
+            .forEach(practitioner -> referralRequest.addRecipient(resourceUtil.createReference(practitioner)));
 
         for (HealthcareService healthcareService : healthcareServiceList) {
             referralRequest.addRecipient(resourceUtil.createReference(healthcareService));
@@ -75,7 +76,7 @@ public class ReferralRequestMapper {
 
     private List<Practitioner> getRecipients(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         return stream(clinicalDocument.getParticipantArray())
-            .filter(it -> REFT.equals(it.getTypeCode()))
+            .filter(it -> REFT_TYPE_CODE.equals(it.getTypeCode()))
             .map(POCDMT000002UK01Participant1::getAssociatedEntity)
             .map(practitionerMapper::mapPractitioner)
             .collect(Collectors.toList());

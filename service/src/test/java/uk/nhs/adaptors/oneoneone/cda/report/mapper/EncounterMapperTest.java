@@ -263,17 +263,9 @@ public class EncounterMapperTest {
         mockParticipant(clinicalDocument);
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, emptyList(), empty(), DISCHARGE_DETAILS.toCoding());
+
         verifyEncounter(encounter);
         assertThat(encounter.getLocation().size()).isEqualTo(1);
-    }
-
-    @Test
-    @SuppressWarnings("MagicNumber")
-    public void mapEncounterParticipantTest() {
-        mockParticipant(clinicalDocument);
-
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, emptyList(), empty(), DISCHARGE_DETAILS.toCoding());
-        assertThat(encounter.getParticipant().size()).isEqualTo(4);
         verify(participantMapper, times(1)).mapEncounterParticipant(participantCALLBCK);
         verifyNoMoreInteractions(participantMapper);
     }
