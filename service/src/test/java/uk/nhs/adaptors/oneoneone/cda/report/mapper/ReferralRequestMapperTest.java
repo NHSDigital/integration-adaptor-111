@@ -2,6 +2,9 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -10,6 +13,7 @@ import java.util.List;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.IdType;
+import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
@@ -22,15 +26,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssociatedEntity;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Author;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
 @ExtendWith(MockitoExtension.class)
 public class ReferralRequestMapperTest {
 
+    private static final String PARTICIPATNT_TYPE_CODE_REFT = "REFT";
+    private static final String PARTICIPATNT_TYPE_CODE_CALLBCK = "CALLBCK";
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
     private static final String AUTHOR_TIME = "20210304";
+
     private final Reference patientRef = new Reference();
     private final Reference deviceRef = new Reference("Device/1");
     private final Reference serviceProviderRef = new Reference("HealthcareService/1");
@@ -53,6 +62,16 @@ public class ReferralRequestMapperTest {
     private ResourceUtil resourceUtil;
     @Mock
     private POCDMT000002UK01Author author;
+    @Mock
+    private POCDMT000002UK01Participant1 participantREFT;
+    @Mock
+    private POCDMT000002UK01Participant1 participantCALLBCK;
+    @Mock
+    private PractitionerMapper practitionerMapper;
+    @Mock
+    private Practitioner practitioner;
+    @Mock
+    private POCDMT000002UK01AssociatedEntity associatedEntity;
 
     @BeforeEach
     public void setup() {
@@ -75,9 +94,15 @@ public class ReferralRequestMapperTest {
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
         when(resourceUtil.createReference(encounter)).thenReturn(new Reference(encounter));
         when(resourceUtil.createReference(procedureRequest)).thenReturn(new Reference(procedureRequest));
+        when(resourceUtil.createReference(practitioner)).thenReturn(new Reference(practitioner));
         when(author.getTime()).thenReturn(ts);
         when(author.getTypeCode()).thenReturn("AUT");
         when(clinicalDocument.getAuthorArray()).thenReturn(authorArray);
+        when(clinicalDocument.getParticipantArray()).thenReturn(new POCDMT000002UK01Participant1[] {participantREFT, participantCALLBCK});
+        when(participantREFT.getTypeCode()).thenReturn(PARTICIPATNT_TYPE_CODE_REFT);
+        when(participantCALLBCK.getTypeCode()).thenReturn(PARTICIPATNT_TYPE_CODE_CALLBCK);
+        when(participantREFT.getAssociatedEntity()).thenReturn(associatedEntity);
+        when(practitionerMapper.mapPractitioner(associatedEntity)).thenReturn(practitioner);
     }
 
     @Test
@@ -96,5 +121,8 @@ public class ReferralRequestMapperTest {
         assertThat(patientRef.getReference()).isEqualTo(referralRequest.getSubject().getReference());
         assertThat(referralRequest.getSupportingInfo().get(0).getResource()).isEqualTo(procedureRequest);
         assertThat(referralRequest.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
+        assertThat(referralRequest.getRecipient().get(0).getResource()).isInstanceOf(Practitioner.class);
+        verify(practitionerMapper, times(1)).mapPractitioner(associatedEntity);
+        verifyNoMoreInteractions(practitionerMapper);
     }
 }

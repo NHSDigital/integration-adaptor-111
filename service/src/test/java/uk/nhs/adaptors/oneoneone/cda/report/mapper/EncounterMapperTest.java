@@ -9,6 +9,9 @@ import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import static uk.nhs.adaptors.oneoneone.cda.report.enums.MessageHeaderEvent.DISCHARGE_DETAILS;
@@ -122,6 +125,10 @@ public class EncounterMapperTest {
     private ResourceUtil resourceUtil;
     @Mock
     private II identifier;
+    @Mock
+    private POCDMT000002UK01Participant1 participantREFT;
+    @Mock
+    private POCDMT000002UK01Participant1 participantCALLBCK;
 
     @BeforeEach
     public void setUp() {
@@ -162,9 +169,9 @@ public class EncounterMapperTest {
     }
 
     private void mockParticipant(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        POCDMT000002UK01Participant1 participant = mock(POCDMT000002UK01Participant1.class);
-
-        when(clinicalDocument.getParticipantArray()).thenReturn(new POCDMT000002UK01Participant1[] {participant});
+        when(clinicalDocument.getParticipantArray()).thenReturn(new POCDMT000002UK01Participant1[] {participantCALLBCK, participantREFT});
+        when(participantCALLBCK.getTypeCode()).thenReturn("CALLBCK");
+        when(participantREFT.getTypeCode()).thenReturn("REFT");
         when(participantMapper.mapEncounterParticipant(any())).thenReturn(encounterParticipantComponent);
     }
 
@@ -256,8 +263,11 @@ public class EncounterMapperTest {
         mockParticipant(clinicalDocument);
 
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, emptyList(), empty(), DISCHARGE_DETAILS.toCoding());
+
         verifyEncounter(encounter);
         assertThat(encounter.getLocation().size()).isEqualTo(1);
+        verify(participantMapper, times(1)).mapEncounterParticipant(participantCALLBCK);
+        verifyNoMoreInteractions(participantMapper);
     }
 
     @Test

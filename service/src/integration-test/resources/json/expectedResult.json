@@ -70,16 +70,6 @@
           {
             "type": [
               {
-                "text": "REFT"
-              }
-            ],
-            "individual": {
-              "reference": "urn:uuid:4f537672-bc16-4aed-90f6-13e62e92f9e3"
-            }
-          },
-          {
-            "type": [
-              {
                 "text": "CALLBCK"
               }
             ],
@@ -167,31 +157,6 @@
           }
         ],
         "name": "Medway NHS Foundation Trust"
-      }
-    },
-    {
-      "fullUrl": "urn:uuid:4f537672-bc16-4aed-90f6-13e62e92f9e3",
-      "resource": {
-        "resourceType": "Practitioner",
-        "id": "4f537672-bc16-4aed-90f6-13e62e92f9e3",
-        "active": true,
-        "telecom": [
-          {
-            "system": "phone",
-            "value": "tel:0123456789"
-          }
-        ],
-        "address": [
-          {
-            "type": "physical",
-            "line": [
-              "Church Street Walk in Centre",
-              "4 Church Street",
-              "Medway"
-            ],
-            "postalCode": "ME8 7TT"
-          }
-        ]
       }
     },
     {
@@ -625,6 +590,9 @@
         },
         "recipient": [
           {
+            "reference": "urn:uuid:4f537672-bc16-4aed-90f6-13e62e92f9e3"
+          },
+          {
             "reference": "urn:uuid:ae0869c3-8aab-4ca5-9680-a669fae9cd7e"
           },
           {
@@ -671,6 +639,31 @@
         "reasonReference": [
           {
             "reference": "urn:uuid:53c98166-67c2-48b3-9ee9-47c3dd9d472d"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:4f537672-bc16-4aed-90f6-13e62e92f9e3",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "4f537672-bc16-4aed-90f6-13e62e92f9e3",
+        "active": true,
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "tel:0123456789"
+          }
+        ],
+        "address": [
+          {
+            "type": "physical",
+            "line": [
+              "Church Street Walk in Centre",
+              "4 Church Street",
+              "Medway"
+            ],
+            "postalCode": "ME8 7TT"
           }
         ]
       }

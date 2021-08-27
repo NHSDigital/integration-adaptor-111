@@ -244,6 +244,8 @@ public class EncounterReportBundleServiceTest {
     private RelatedPersonMapper relatedPersonMapper;
     @Mock
     private TS ts;
+    @Mock
+    private Reference reference;
 
     @BeforeEach
     public void setUp() throws XmlException {
@@ -309,6 +311,22 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(18), PRACTITIONER_ORG_ID.getValue(), ResourceType.Organization);
         verifyEntry(entries.get(19), RELATED_PERSON_ID.getValue(), ResourceType.RelatedPerson);
         verifyEntry(entries.get(20), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+    }
+
+    @Test
+    @SuppressWarnings("MagicNumber")
+    public void shouldMapIncomingReferralWithPractitioners() throws XmlException {
+        ItkReportHeader itkReportHeader = new ItkReportHeader();
+        List<Reference> recipients = new ArrayList<>();
+
+        when(reference.getResource()).thenReturn(PRACTITIONER);
+        recipients.add(reference);
+        REFERRAL_REQUEST.setRecipient(recipients);
+
+        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader, MESSAGEID);
+        List<BundleEntryComponent> entries = encounterBundle.getEntry();
+        verifyEntry(entries.get(7), REFERRAL_REQUEST_ID.getValue(), ResourceType.ReferralRequest);
+        verifyEntry(entries.get(8), PRACTITIONER_ID.getValue(), ResourceType.Practitioner);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {

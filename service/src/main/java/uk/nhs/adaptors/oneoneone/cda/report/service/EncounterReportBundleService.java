@@ -26,6 +26,7 @@ import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
 import org.hl7.fhir.dstu3.model.Questionnaire;
@@ -235,6 +236,12 @@ public class EncounterReportBundleService {
 
         if (referralRequest.hasSupportingInfo()) {
             addEntry(bundle, (ProcedureRequest) referralRequest.getSupportingInfoFirstRep().getResource());
+        }
+
+        if (referralRequest.hasRecipient()) {
+            referralRequest.getRecipient().stream()
+                .filter(recipient -> recipient.getResource() instanceof Practitioner)
+                .forEach(recipient -> addEntry(bundle, (Resource) recipient.getResource()));
         }
     }
 
