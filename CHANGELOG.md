@@ -3,6 +3,35 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.8.0] - 2021-08-27
+- possibility to switch off SOAP Header validation using env var - `PEM111_SOAP_VALIDATION_ENABLED`
+- Fixed issues with Date/Time parsing
+- Mapping `ClinicalDocument.effectiveTime` [ITK] to `MessageHeader.timestamp` [FHIR]
+- When mapping `EncompassingEncounter.ResponsibleParty` to `Encounter.Participant` then `type` is populated with:
+    FHIR | value
+    ---- | ---
+    Type.Coding.Code | ATND
+    Type.Coding.Display | Responsible Party
+    Type.Coding.System | http://hl7.org/fhir/ValueSet/encounter-participant-type
+- When mapping `ClinicalDocument.Author` to `Encounter.Participant` then `type` is populated with:
+    FHIR | value
+    ---- | ---
+    Type.Coding.Code | PPRF
+    Type.Coding.Display | Author
+    Type.Coding.System | http://hl7.org/fhir/ValueSet/encounter-participant-type
+- Mapping `ITK ClinicalDocument.Informant.RelatedEntity.Code` to `RelatedPerson.Relationship`:
+    ITK | FHIR
+    ---- | ---
+    codeSystem | relationship.coding.system
+    code | relationship.coding.code
+    displayName | relationship.coding.display
+- Creating `RelatedPerson` resource where `relationship` is coded as emergency contact when mapping an entity with Telecom emergency use.    
+- Mapping `EncompassingEncounter.Location.HealthCareFacility.Location` [ITK] to `Encounter.location` [FHIR]
+- Including `typeCode` when mapping `informationRecipient`to `Organization`
+- Mapping `informationRecipient` only when `typeCode=PRCP`
+- Mapping `ClinicalDocument.participant` with `typeCode=REFT` to `ReferralRequest.recipient` instead of `Encounter.participant`
+    
 ## [0.7.0] - 2021-08-11
 - DOS Service ID suffixed to ODS Code and mapped to FHIR MessageHeader/destination/endpoint according to pattern:
   ODS_code_value:DOSServiceID:DOS_Service_ID_value, where:
