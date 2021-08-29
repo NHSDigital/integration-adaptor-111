@@ -17,7 +17,6 @@ import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportReques
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils.extractDistributionEnvelope;
 import static uk.nhs.adaptors.oneoneone.xml.XmlValidator.validate;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -27,8 +26,6 @@ import java.util.Map;
 import org.apache.xmlbeans.XmlException;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.Period;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,14 +42,12 @@ import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkResponseUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHeaderParserUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportParserUtil;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.PeriodMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkAddressValidator;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.SoapValidator;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-import uk.nhs.connect.iucds.cda.ucr.TS;
 import uk.nhs.itk.envelope.DistributionEnvelopeDocument;
 
 @RestController
@@ -98,22 +93,11 @@ public class ReportController {
             DistributionEnvelopeDocument distributionEnvelope = extractDistributionEnvelope(reportElementsMap
                 .get(DISTRIBUTION_ENVELOPE));
             validate(distributionEnvelope);
+
             List<POCDMT000002UK01ClinicalDocument1> clinicalDocuments = extractClinicalDocument(distributionEnvelope);
-            List<Period> periods = new ArrayList<>();
-            List<Date> dates = new ArrayList<>();
-            for(int i=0; i<clinicalDocuments.size();i++){
-                periods.add(periodMapper.mapPeriod(clinicalDocuments.get(i).getEffectiveTime()));
-                dates.add(periods.get(i).getStart());
-            }
-            Date maxDate = Collections.max(dates, Comparator.comparing(c -> c.getTime()));
-            int index = dates.indexOf(maxDate);
 
-
-                validate(clinicalDocuments.get(index));
-                encounterReportService.transformAndPopulateToGP(clinicalDocuments.get(index), messageId, headerValues);
-
-
-
+            validate(getDocumentWithMaxEffectiveDate(clinicalDocuments));
+            encounterReportService.transformAndPopulateToGP(getDocumentWithMaxEffectiveDate(clinicalDocuments), messageId, headerValues);
 
             return new ResponseEntity<>(itkResponseUtil.createSuccessResponseEntity(messageId, randomUUID().toString().toUpperCase()), OK);
         } catch (DocumentException e) {
@@ -144,6 +128,14 @@ public class ReportController {
                 toAddress, INTERNAL_PROCESSING_ERROR_CODE, FAULT_CODE_CLIENT, INTERNAL_USER_ERROR_MESSAGE, INTERNAL_ERROR_MESSAGE),
                 INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private POCDMT000002UK01ClinicalDocument1 getDocumentWithMaxEffectiveDate(List<POCDMT000002UK01ClinicalDocument1> clinicalDocuments) {
+        return Collections.max(clinicalDocuments, Comparator.comparing(doc -> extractEffectiveDateFromClinicalDocument(doc)));
+    }
+
+    private Date extractEffectiveDateFromClinicalDocument(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        return periodMapper.mapPeriod(clinicalDocument.getEffectiveTime()).getStart();
     }
 
     public static String getValueOrDefaultAddress(Element value) {
