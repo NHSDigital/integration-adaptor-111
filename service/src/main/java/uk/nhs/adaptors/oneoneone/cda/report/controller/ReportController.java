@@ -87,7 +87,6 @@ public class ReportController {
             DistributionEnvelopeDocument distributionEnvelope = extractDistributionEnvelope(reportElementsMap
                 .get(DISTRIBUTION_ENVELOPE));
             validate(distributionEnvelope);
-
             POCDMT000002UK01ClinicalDocument1 clinicalDocument = extractClinicalDocument(distributionEnvelope);
 
             validate(clinicalDocument);
