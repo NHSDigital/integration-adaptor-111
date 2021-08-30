@@ -4,8 +4,6 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,10 +13,10 @@ import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.PractitionerRole;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedAuthor;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01AssignedEntity;
@@ -30,24 +28,29 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ResponsibleParty;
 @Component
 @AllArgsConstructor
 public class PractitionerRoleMapper {
+    private static final String AUTHOR_TYPE_CODE = "AUT";
+
     private final OrganizationMapper organizationMapper;
     private final PractitionerMapper practitionerMapper;
+    private final ResourceUtil resourceUtil;
 
     public List<PractitionerRole> mapAuthorRoles(POCDMT000002UK01Author[] authors) {
         List<PractitionerRole> roles = new ArrayList<>();
-        stream(authors).map(author -> {
-            PractitionerRole role = new PractitionerRole();
-            role.setIdElement(newRandomUuid());
-            POCDMT000002UK01AssignedAuthor assignedAuthor = author.getAssignedAuthor();
-            role.setCode(asList(getCode(assignedAuthor.getCode())));
-            Organization organization = organizationMapper.mapOrganization(assignedAuthor.getRepresentedOrganization());
-            role.setOrganization(new Reference(organization));
-            role.setOrganizationTarget(organization);
-            Practitioner practitioner = practitionerMapper.mapPractitioner(assignedAuthor);
-            role.setPractitioner(new Reference(practitioner));
-            role.setPractitionerTarget(practitioner);
-            return role;
-        })
+        stream(authors)
+            .filter(it -> it.getTypeCode().equals(AUTHOR_TYPE_CODE))
+            .map(author -> {
+                PractitionerRole role = new PractitionerRole();
+                role.setIdElement(resourceUtil.newRandomUuid());
+                POCDMT000002UK01AssignedAuthor assignedAuthor = author.getAssignedAuthor();
+                role.setCode(asList(getCode(assignedAuthor.getCode())));
+                Organization organization = organizationMapper.mapOrganization(assignedAuthor.getRepresentedOrganization());
+                role.setOrganization(resourceUtil.createReference(organization));
+                role.setOrganizationTarget(organization);
+                Practitioner practitioner = practitionerMapper.mapPractitioner(assignedAuthor);
+                role.setPractitioner(resourceUtil.createReference(practitioner));
+                role.setPractitionerTarget(practitioner);
+                return role;
+            })
             .forEach(roles::add);
 
         return roles;
@@ -58,17 +61,17 @@ public class PractitionerRoleMapper {
             POCDMT000002UK01Component1 componentOf = clinicalDocument.getComponentOf();
             if (componentOf.getEncompassingEncounter().isSetResponsibleParty()) {
                 PractitionerRole role = new PractitionerRole();
-                role.setIdElement(newRandomUuid());
+                role.setIdElement(resourceUtil.newRandomUuid());
                 POCDMT000002UK01ResponsibleParty responsibleParty = componentOf.getEncompassingEncounter().getResponsibleParty();
                 POCDMT000002UK01AssignedEntity assignedEntity = responsibleParty.getAssignedEntity();
                 role.setCode(asList(getCode(assignedEntity.getCode())));
                 if (assignedEntity.isSetRepresentedOrganization()) {
                     Organization organization = organizationMapper.mapOrganization(assignedEntity.getRepresentedOrganization());
-                    role.setOrganization(new Reference(organization));
+                    role.setOrganization(resourceUtil.createReference(organization));
                     role.setOrganizationTarget(organization);
                 }
                 Practitioner practitioner = practitionerMapper.mapPractitioner(assignedEntity);
-                role.setPractitioner(new Reference(practitioner));
+                role.setPractitioner(resourceUtil.createReference(practitioner));
                 role.setPractitionerTarget(practitioner);
                 return Optional.of(role);
             }

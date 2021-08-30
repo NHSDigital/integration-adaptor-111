@@ -1,6 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
 import static org.hl7.fhir.dstu3.model.ListResource.ListMode.WORKING;
 import static org.hl7.fhir.dstu3.model.ListResource.ListStatus.CURRENT;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.comparator.ResourceDateComparator;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Component
@@ -42,11 +42,13 @@ public class ListMapper {
 
     private final ResourceDateComparator resourceDateComparator;
 
+    private final ResourceUtil resourceUtil;
+
     public ListResource mapList(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
         Collection<Resource> resourcesCreated) {
         ListResource listResource = new ListResource();
 
-        listResource.setIdElement(newRandomUuid());
+        listResource.setIdElement(resourceUtil.newRandomUuid());
 
         Identifier docIdentifier = new Identifier();
         docIdentifier.setUse(USUAL);
@@ -59,7 +61,7 @@ public class ListMapper {
             .setCode(createCodeConcept())
             .setSubject(encounter.getSubject())
             .setSourceTarget(encounter.getSubjectTarget())
-            .setEncounter(new Reference(encounter))
+            .setEncounter(resourceUtil.createReference(encounter))
             .setEncounterTarget(encounter)
             .setDate(new Date())
             .setSource(TRANSFORMER_DEVICE)
@@ -67,9 +69,8 @@ public class ListMapper {
 
         resourcesCreated.stream()
             .sorted(resourceDateComparator)
-            .filter(it -> TRIAGE_RESOURCES.contains(it.getResourceType()))
-            .map(Resource::getIdElement)
-            .map(Reference::new)
+            .filter(it -> TRIAGE_RESOURCES.contains(it.getResourceType()) && it.hasId())
+            .map(resourceUtil::createReference)
             .map(ListResource.ListEntryComponent::new)
             .forEach(listResource::addEntry);
 

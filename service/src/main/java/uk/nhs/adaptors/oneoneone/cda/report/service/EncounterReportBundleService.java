@@ -4,9 +4,9 @@ import static java.util.stream.Collectors.toSet;
 
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Appointment;
@@ -22,15 +22,18 @@ import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Location;
+import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.ProcedureRequest;
 import org.hl7.fhir.dstu3.model.Questionnaire;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.hl7.fhir.dstu3.model.RelatedPerson;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +49,9 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.RelatedPersonMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Component
@@ -66,33 +71,39 @@ public class EncounterReportBundleService {
     private final ReferralRequestMapper referralRequestMapper;
     private final ObservationMapper observationMapper;
     private final PractitionerRoleMapper practitionerRoleMapper;
+    private final RelatedPersonMapper relatedPersonMapper;
+    private final ResourceUtil resourceUtil;
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
-            .setFullUrl(resource.getIdElement().getValue())
+            .setFullUrl(resource.getIdElement().getValue() == null ? null : "urn:uuid:" + resource.getIdElement().getValue())
             .setResource(resource);
     }
 
-    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header) throws XmlException {
+    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header, String messageId)
+        throws XmlException {
         Bundle bundle = createBundle(clinicalDocument);
 
+        MessageHeader messageHeader = messageHeaderService
+            .createMessageHeader(header, messageId, clinicalDocument.getEffectiveTime().getValue());
         List<HealthcareService> healthcareServiceList = healthcareServiceMapper.mapHealthcareService(clinicalDocument);
         List<PractitionerRole> authorPractitionerRoles = practitionerRoleMapper.mapAuthorRoles(clinicalDocument.getAuthorArray());
-        List<PractitionerRole> practitionerRoles = new ArrayList<>(authorPractitionerRoles);
-        practitionerRoleMapper.mapResponsibleParty(clinicalDocument).ifPresent(practitionerRoles::add);
-        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, practitionerRoles);
+        Optional<PractitionerRole> responsibleParty = practitionerRoleMapper.mapResponsibleParty(clinicalDocument);
+        Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, authorPractitionerRoles, responsibleParty,
+            messageHeader.getEvent());
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
         List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
-            encounter.getSubject(), new Reference(encounter));
+            encounter.getSubject(), resourceUtil.createReference(encounter));
         Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter, questionnaireResponseList);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, condition);
         ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument,
-            encounter, healthcareServiceList, new Reference(condition));
+            encounter, healthcareServiceList, resourceUtil.createReference(condition));
         Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans, questionnaireResponseList,
             referralRequest, authorPractitionerRoles);
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
+        RelatedPerson relatedPerson = relatedPersonMapper.createEmergencyContactRelatedPerson(clinicalDocument, encounter);
 
-        addEntry(bundle, messageHeaderService.createMessageHeader(header));
+        addEntry(bundle, messageHeader);
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
@@ -107,7 +118,8 @@ public class EncounterReportBundleService {
         addEntry(bundle, condition);
         addQuestionnaireResponses(bundle, questionnaireResponseList);
         addObservations(bundle, observations);
-        addPractitionerRoles(bundle, practitionerRoles);
+        addPractitionerRoles(bundle, authorPractitionerRoles, responsibleParty);
+        addRelatedPerson(bundle, relatedPerson);
 
         ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
         addEntry(bundle, listResource);
@@ -124,12 +136,17 @@ public class EncounterReportBundleService {
         return bundle;
     }
 
-    private void addPractitionerRoles(Bundle bundle, List<PractitionerRole> authorPractitionerRoles) {
+    private void addPractitionerRoles(Bundle bundle, List<PractitionerRole> authorPractitionerRoles,
+        Optional<PractitionerRole> responsibleParty) {
         authorPractitionerRoles.stream()
             .forEach(it -> {
                 addEntry(bundle, it);
                 addEntry(bundle, it.getOrganizationTarget());
             });
+        responsibleParty.ifPresent(it -> {
+            addEntry(bundle, it);
+            addEntry(bundle, it.getOrganizationTarget());
+        });
     }
 
     private ListResource getReferenceFromBundle(Bundle bundle, POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
@@ -220,6 +237,12 @@ public class EncounterReportBundleService {
         if (referralRequest.hasSupportingInfo()) {
             addEntry(bundle, (ProcedureRequest) referralRequest.getSupportingInfoFirstRep().getResource());
         }
+
+        if (referralRequest.hasRecipient()) {
+            referralRequest.getRecipient().stream()
+                .filter(recipient -> recipient.getResource() instanceof Practitioner)
+                .forEach(recipient -> addEntry(bundle, (Resource) recipient.getResource()));
+        }
     }
 
     private void addCarePlan(Bundle bundle, List<CarePlan> carePlans) {
@@ -253,5 +276,11 @@ public class EncounterReportBundleService {
 
     private void addObservations(Bundle bundle, List<Observation> observations) {
         observations.forEach(observation -> addEntry(bundle, observation));
+    }
+
+    private void addRelatedPerson(Bundle bundle, RelatedPerson relatedPerson) {
+        if (relatedPerson != null) {
+            addEntry(bundle, relatedPerson);
+        }
     }
 }

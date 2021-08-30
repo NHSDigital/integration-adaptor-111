@@ -2,7 +2,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.hl7.fhir.dstu3.model.Composition.CompositionStatus.FINAL;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 import static org.hl7.fhir.utilities.xhtml.NodeType.Document;
@@ -21,13 +20,13 @@ import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component5;
@@ -42,12 +41,13 @@ public class CompositionMapper {
     private static final String SNOMED_CODE_DISPLAY = "Report of clinical encounter (record artifact)";
     private static final String COMPOSITION_TITLE = "111 Report";
     private final NodeUtil nodeUtil;
+    private final ResourceUtil resourceUtil;
 
     public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, List<CarePlan> carePlans,
         List<QuestionnaireResponse> questionnaireResponseList, ReferralRequest referralRequest, List<PractitionerRole> practitionerRoles) {
 
         Composition composition = new Composition();
-        composition.setIdElement(newRandomUuid());
+        composition.setIdElement(resourceUtil.newRandomUuid());
 
         Identifier docIdentifier = new Identifier();
         docIdentifier.setUse(USUAL);
@@ -57,7 +57,7 @@ public class CompositionMapper {
             .setTitle(COMPOSITION_TITLE)
             .setType(createCodeableConcept())
             .setStatus(FINAL)
-            .setEncounter(new Reference(encounter))
+            .setEncounter(resourceUtil.createReference(encounter))
             .setSubject(encounter.getSubject())
             .setDate(new Date())
             .setIdentifier(docIdentifier);
@@ -139,14 +139,14 @@ public class CompositionMapper {
     private SectionComponent buildSectionComponentFromResource(DomainResource resource) {
         return new SectionComponent()
             .setTitle(resource.fhirType())
-            .addEntry(new Reference(resource));
+            .addEntry(resourceUtil.createReference(resource));
     }
 
     private void addPathwaysToSection(Composition composition, List<QuestionnaireResponse> questionnaireResponseList) {
         String questionnaireResponseTitle = "QuestionnaireResponse";
         for (QuestionnaireResponse questionnaireResponse : questionnaireResponseList) {
             SectionComponent sectionComponent = new SectionComponent();
-            sectionComponent.addEntry(new Reference(questionnaireResponse));
+            sectionComponent.addEntry(resourceUtil.createReference(questionnaireResponse));
             sectionComponent.setTitle(questionnaireResponseTitle);
             composition.addSection(sectionComponent);
         }

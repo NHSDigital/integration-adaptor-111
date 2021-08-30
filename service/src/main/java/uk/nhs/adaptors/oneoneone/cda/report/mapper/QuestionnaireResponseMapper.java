@@ -1,7 +1,5 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Questionnaire;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 
 @Component
 @AllArgsConstructor
@@ -25,16 +24,17 @@ public class QuestionnaireResponseMapper {
 
     private static final String NOT_APPLICABLE = "N/A";
     private final QuestionnaireMapper questionnaireMapper;
+    private final ResourceUtil resourceUtil;
 
     public QuestionnaireResponse mapQuestionnaireResponse(PathwaysCase pathwaysCase, Reference patient, Reference encounter,
         TriageLine triageLine) {
         QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse();
         Questionnaire questionnaire = questionnaireMapper.mapQuestionnaire(pathwaysCase, triageLine);
 
-        questionnaireResponse.setIdElement(newRandomUuid());
+        questionnaireResponse.setIdElement(resourceUtil.newRandomUuid());
 
         questionnaireResponse
-            .setQuestionnaire(new Reference(questionnaire))
+            .setQuestionnaire(resourceUtil.createReference(questionnaire))
             .setQuestionnaireTarget(questionnaire)
             .setStatus(QuestionnaireResponse.QuestionnaireResponseStatus.COMPLETED)
             .setSubject(patient)

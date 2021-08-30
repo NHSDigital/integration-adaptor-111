@@ -6,4 +6,9 @@ amqp:
   password: ${PEM111_AMQP_PASSWORD:}
 
 soap:
+  validationEnabled: ${PEM111_SOAP_VALIDATION_ENABLED:true}
   sendTo: ${PEM111_SOAP_SEND_TO:http://localhost:8080/report}
+
+itk:
+  odsCodes: ${PEM111_ITK_ODS_CODE_LIST:EM396}
+  dosIds: ${PEM111_ITK_DOS_ID_LIST:}

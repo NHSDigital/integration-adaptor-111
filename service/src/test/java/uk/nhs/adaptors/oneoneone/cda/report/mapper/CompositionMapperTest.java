@@ -14,8 +14,10 @@ import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -34,6 +37,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RelatedDocument1;
 @ExtendWith(MockitoExtension.class)
 public class CompositionMapperTest {
 
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
     private final CarePlan carePlan = new CarePlan();
     private final List<CarePlan> carePlans = Collections.singletonList(carePlan);
     @InjectMocks
@@ -52,6 +56,8 @@ public class CompositionMapperTest {
     private Encounter encounter;
     @Mock
     private ReferralRequest referralRequest;
+    @Mock
+    private ResourceUtil resourceUtil;
     @Mock
     private List<PractitionerRole> practitionerRoles;
     @Mock
@@ -77,6 +83,11 @@ public class CompositionMapperTest {
         when(ce.isSetCode()).thenReturn(true);
         when(ii.isSetRoot()).thenReturn(true);
         when(referralRequest.fhirType()).thenReturn("ReferralRequest");
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+        when(resourceUtil.createReference(encounter)).thenReturn(new Reference(encounter));
+        when(resourceUtil.createReference(questionnaireResponse)).thenReturn(new Reference(questionnaireResponse));
+        when(resourceUtil.createReference(carePlan)).thenReturn(new Reference(carePlan));
+        when(resourceUtil.createReference(referralRequest)).thenReturn(new Reference(referralRequest));
     }
 
     @Test
@@ -98,5 +109,6 @@ public class CompositionMapperTest {
         assertThat(composition.getSection().get(1).getTitle()).isEqualTo("ReferralRequest");
         assertThat(composition.getSection().get(2).getEntry().get(0).getResource()).isEqualTo(questionnaireResponse);
         assertThat(composition.getSection().get(2).getTitle()).isEqualTo(questionnaireResponseTitle);
+        assertThat(composition.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
     }
 }

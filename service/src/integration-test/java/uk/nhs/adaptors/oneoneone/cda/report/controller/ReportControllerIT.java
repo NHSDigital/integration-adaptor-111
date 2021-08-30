@@ -1,57 +1,66 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
-import org.dom4j.DocumentException;
-import org.json.JSONException;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.skyscreamer.jsonassert.Customization;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.skyscreamer.jsonassert.comparator.CustomComparator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.io.Resource;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.nhs.adaptors.containers.IntegrationTestsExtension;
-import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
-import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
-import uk.nhs.adaptors.oneoneone.utils.ResponseElement;
-import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
-
-import javax.jms.IllegalStateException;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.ZoneOffset;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
-
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 import static org.springframework.http.MediaType.TEXT_XML_VALUE;
+
+import static io.restassured.RestAssured.given;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.ACTION;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.BODY;
+
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+import java.util.stream.Stream;
+
+import javax.jms.IllegalStateException;
+import javax.jms.JMSException;
+import javax.jms.Message;
+
+import org.dom4j.DocumentException;
+import org.json.JSONException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.runner.RunWith;
+import org.skyscreamer.jsonassert.Customization;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.skyscreamer.jsonassert.comparator.CustomComparator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import junitparams.JUnitParamsRunner;
+import lombok.extern.slf4j.Slf4j;
+import uk.nhs.adaptors.containers.IntegrationTestsExtension;
+import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
+import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
+import uk.nhs.adaptors.oneoneone.utils.ResponseElement;
+import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ExtendWith({SpringExtension.class, IntegrationTestsExtension.class})
 @AutoConfigureMockMvc
 @DirtiesContext
 @Slf4j
+@RunWith(JUnitParamsRunner.class)
 public class ReportControllerIT {
 
     private static final String APPLICATION_XML_UTF_8 = APPLICATION_XML_VALUE + ";charset=UTF-8";
@@ -66,7 +75,6 @@ public class ReportControllerIT {
         "entry[*].resource.addresses[*].reference",
         "entry[*].resource.appointment.reference",
         "entry[*].resource.author[*].reference",
-        "entry[*].resource.authoredOn",
         "entry[*].resource.careManager.reference",
         "entry[*].resource.consentingParty[*].reference",
         "entry[*].resource.context.reference",
@@ -79,6 +87,7 @@ public class ReportControllerIT {
         "entry[*].resource.episodeOfCare[*].reference",
         "entry[*].resource.evidence[*].detail[*].reference",
         "entry[*].resource.generalPractitioner[*].reference",
+        "entry[*].resource.id",
         "entry[*].resource.incomingReferral[*].reference",
         "entry[*].resource.location[*].location.reference",
         "entry[*].resource.location[*].reference",
@@ -99,8 +108,7 @@ public class ReportControllerIT {
         "entry[*].resource.subject.reference",
         "entry[*].resource.supportingInfo[*].reference",
         "entry[*].resource.practitioner.reference",
-        "entry[*].resource.organization.reference",
-        "entry[*].resource.timestamp");
+        "entry[*].resource.organization.reference");
 
     @Autowired
     private FhirJsonValidator validator;
@@ -116,11 +124,18 @@ public class ReportControllerIT {
     @Autowired
     private ResponseParserUtil responseParserUtil;
 
-    @Value("classpath:json/expectedResult.json")
-    private Resource expectedJson;
-
-    @Value("classpath:xml/ITK_Report_request.xml")
-    private Resource itkReportRequest;
+    private static Stream<Arguments> validItkReportAndExpectedJsonValues() {
+        return Stream.of(
+            Arguments.of(
+                readResource("/xml/ITK_Report_request.xml"),
+                readResource("/json/expectedResult.json")
+            ),
+            Arguments.of(
+                readResource("/xml/ITK_Report_request_2.xml"),
+                readResource("/json/expectedResult2.json")
+            )
+        );
+    }
 
     @BeforeAll
     public static void setUp() {
@@ -146,12 +161,14 @@ public class ReportControllerIT {
             .extract();
     }
 
-    @Test
-    public void postReportValidBody() throws JMSException, DocumentException, JSONException, IOException {
+    @ParameterizedTest(name = "postReportValidBody")
+    @MethodSource("validItkReportAndExpectedJsonValues")
+    public void postReportValidBody(String itkReportRequest, String expectedJson)
+        throws JMSException, DocumentException, JSONException {
         String responseBody = given()
             .port(port)
             .contentType(APPLICATION_XML_UTF_8)
-            .body(IOUtils.toString(itkReportRequest.getInputStream(), StandardCharsets.UTF_8))
+            .body(itkReportRequest)
             .when()
             .post(REPORT_ENDPOINT)
             .then()
@@ -173,12 +190,11 @@ public class ReportControllerIT {
         assertThat(validator.isValid(messageBody)).isEqualTo(true);
         assertThat(jmsMessage.getStringProperty(MESSAGE_ID)).isEqualTo(MESSAGE_ID_VALUE);
 
-        assertMessageContent(messageBody);
+        assertMessageContent(messageBody, expectedJson);
     }
 
-    private void assertMessageContent(String actual) throws JSONException, IOException {
+    private void assertMessageContent(String actual, String expected) throws JSONException {
         LOGGER.info("Validating message content:\n{}", actual);
-        var expected = IOUtils.toString(expectedJson.getInputStream(), StandardCharsets.UTF_8);
 
         //when comparing json objects, this will ignore various json paths that contain random values like ids or timestamps
         var customizations = IGNORED_JSON_PATHS.stream()
@@ -187,5 +203,14 @@ public class ReportControllerIT {
 
         JSONAssert.assertEquals(expected, actual,
             new CustomComparator(JSONCompareMode.STRICT, customizations));
+    }
+
+    private static String readResource(String name) {
+        try {
+            URL resource = ReportControllerIT.class.getResource(name);
+            return Files.readString(Paths.get(resource.getPath()), StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

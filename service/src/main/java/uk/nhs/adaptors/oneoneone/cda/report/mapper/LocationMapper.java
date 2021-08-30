@@ -1,22 +1,26 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.Encounter;
-import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Organization;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
+import uk.nhs.connect.iucds.cda.ucr.AD;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncompassingEncounter;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01HealthCareFacility;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Location;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ParticipantRole;
+import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Place;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PlayingEntity;
 
 @Component
@@ -35,9 +39,11 @@ public class LocationMapper {
 
     private final PeriodMapper periodMapper;
 
+    private final ResourceUtil resourceUtil;
+
     public Location mapRoleToLocation(POCDMT000002UK01ParticipantRole role) {
         Location location = new Location();
-        location.setIdElement(IdType.newRandomUuid());
+        location.setIdElement(resourceUtil.newRandomUuid());
         if (role.sizeOfAddrArray() > 0) {
             location.setAddress(addressMapper.mapAddress(role.getAddrArray(0)));
         }
@@ -55,12 +61,12 @@ public class LocationMapper {
         encounterLocationComponent.setStatus(Encounter.EncounterLocationStatus.ACTIVE);
 
         Location location = new Location();
-        location.setIdElement(newRandomUuid());
+        location.setIdElement(resourceUtil.newRandomUuid());
         Organization managingOrganization = organizationMapper.mapOrganization(organization);
-        location.setManagingOrganization(new Reference(managingOrganization));
+        location.setManagingOrganization(resourceUtil.createReference(managingOrganization));
         location.setManagingOrganizationTarget(managingOrganization);
 
-        encounterLocationComponent.setLocation(new Reference(location));
+        encounterLocationComponent.setLocation(resourceUtil.createReference(location));
         encounterLocationComponent.setLocationTarget(location);
 
         if (organization.isSetAsOrganizationPartOf()) {
@@ -86,7 +92,7 @@ public class LocationMapper {
 
         if (intendedRecipient.isSetReceivedOrganization()) {
             Organization managingOrganization = organizationMapper.mapOrganization(intendedRecipient.getReceivedOrganization());
-            location.setManagingOrganization(new Reference(managingOrganization));
+            location.setManagingOrganization(resourceUtil.createReference(managingOrganization));
             location.setManagingOrganizationTarget(managingOrganization);
         }
 
@@ -94,7 +100,35 @@ public class LocationMapper {
             return null;
         }
 
-        location.setIdElement(IdType.newRandomUuid());
+        location.setIdElement(resourceUtil.newRandomUuid());
         return location;
+    }
+
+    public Encounter.EncounterLocationComponent mapHealthcareFacilityToLocationComponent(
+        POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        POCDMT000002UK01EncompassingEncounter encompassingEncounter = clinicalDocument.getComponentOf().getEncompassingEncounter();
+        POCDMT000002UK01Place place = Optional.ofNullable(encompassingEncounter)
+            .map(POCDMT000002UK01EncompassingEncounter::getLocation)
+            .map(POCDMT000002UK01Location::getHealthCareFacility)
+            .map(POCDMT000002UK01HealthCareFacility::getLocation)
+            .orElse(null);
+
+        if (place != null) {
+            Location location = new Location();
+            location.setIdElement(resourceUtil.newRandomUuid());
+            location.setName(nodeUtil.getAllText(place.getName().getDomNode()));
+
+            AD address = place.getAddr();
+            if (address != null) {
+                location.setAddress(addressMapper.mapAddress(address));
+            }
+
+            Encounter.EncounterLocationComponent encounterLocationComponent = new Encounter.EncounterLocationComponent();
+            encounterLocationComponent.setStatus(Encounter.EncounterLocationStatus.COMPLETED);
+            encounterLocationComponent.setLocation(resourceUtil.createReference(location));
+            encounterLocationComponent.setLocationTarget(location);
+            return encounterLocationComponent;
+        }
+        return null;
     }
 }

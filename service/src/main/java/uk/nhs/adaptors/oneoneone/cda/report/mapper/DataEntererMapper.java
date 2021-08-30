@@ -6,10 +6,10 @@ import java.util.List;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Practitioner;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01DataEnterer;
 
 @Component
@@ -19,6 +19,8 @@ public class DataEntererMapper {
     private final PeriodMapper periodMapper;
 
     private final PractitionerMapper practitionerMapper;
+
+    private final ResourceUtil resourceUtil;
 
     public Encounter.EncounterParticipantComponent mapDataEntererIntoParticipantComponent(POCDMT000002UK01DataEnterer dataEnterer) {
         Practitioner practitioner = practitionerMapper
@@ -30,7 +32,7 @@ public class DataEntererMapper {
             component.setPeriod(periodMapper.mapPeriod(dataEnterer.getTime()));
         }
         component.setIndividualTarget(practitioner);
-        component.setIndividual(new Reference(practitioner));
+        component.setIndividual(resourceUtil.createReference(practitioner));
         return component;
     }
 

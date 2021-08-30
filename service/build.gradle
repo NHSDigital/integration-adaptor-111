@@ -28,9 +28,9 @@ dependencies {
         exclude group: "org.yaml", module: "snakeyaml"
     }
     implementation "org.yaml:snakeyaml:1.26"
-    implementation "org.springframework:spring-webmvc:5.2.8.RELEASE"
-    implementation "org.springframework:spring-web:5.2.8.RELEASE"
-    implementation "org.apache.tomcat.embed:tomcat-embed-core:9.0.37"
+    implementation "org.springframework:spring-webmvc:5.2.15.RELEASE"
+    implementation "org.springframework:spring-web:5.2.15.RELEASE"
+    implementation "org.apache.tomcat.embed:tomcat-embed-core:9.0.43"
     implementation 'org.apache.qpid:qpid-jms-client:0.51.0'
     implementation("org.springframework:spring-jms:5.2.6.RELEASE") {
         exclude group: "org.apache.tomcat", module: "tomcat-embed-core"
@@ -38,7 +38,7 @@ dependencies {
         exclude group: "org.springframework", module: "spring-webmvc"
         exclude group: "org.yaml", module: "snakeyaml"
     }
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-dstu3:4.2.0") {
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-dstu3:5.4.2") {
         exclude group: "commons-codec", module: "commons-codec"
     }
     implementation "commons-codec:commons-codec:1.13"
@@ -63,9 +63,10 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
 
-    testImplementation "io.rest-assured:rest-assured:4.3.0"
-    testImplementation "ca.uhn.hapi.fhir:hapi-fhir-validation-resources-dstu3:4.2.0"
+    testImplementation "io.rest-assured:rest-assured:4.3.3"
+    testImplementation "ca.uhn.hapi.fhir:hapi-fhir-validation-resources-dstu3:5.4.2"
     testImplementation "org.testcontainers:testcontainers:1.15.3"
+    testImplementation "pl.pragmatists:JUnitParams:1.1.1"
 
     components {
         withModule('org.dom4j:dom4j', ClearDependencies)

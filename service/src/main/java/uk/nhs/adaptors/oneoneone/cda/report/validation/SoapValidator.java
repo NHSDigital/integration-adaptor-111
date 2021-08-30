@@ -31,13 +31,14 @@ public class SoapValidator {
     private final SoapProperties soapProperties;
     private final XmlUtils xmlUtils;
 
-    public void checkSoapItkConformance(Element soapHeader) throws SoapClientException, SoapMustUnderstandException,
-        XPathExpressionException {
-        checkSendTo(soapHeader);
-        checkTimestamp(soapHeader);
-        checkUsername(soapHeader);
-        checkReplyTo(soapHeader);
-        checkForeingHeader(soapHeader);
+    public void checkSoapItkConformance(Element soapHeader) throws SoapClientException, SoapMustUnderstandException, XPathExpressionException {
+        if (soapProperties.isValidationEnabled()) {
+            checkSendTo(soapHeader);
+            checkTimestamp(soapHeader);
+            checkUsername(soapHeader);
+            checkReplyTo(soapHeader);
+            checkForeingHeader(soapHeader);
+        }
     }
 
     private void checkForeingHeader(Element soapHeader) throws SoapMustUnderstandException, XPathExpressionException {

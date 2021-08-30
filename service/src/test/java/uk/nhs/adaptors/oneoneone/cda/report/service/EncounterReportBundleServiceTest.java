@@ -6,7 +6,6 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Appointment;
@@ -42,6 +42,7 @@ import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.hl7.fhir.dstu3.model.RelatedPerson;
 import org.hl7.fhir.dstu3.model.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,58 +62,69 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.RelatedPersonMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.INT;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
+import uk.nhs.connect.iucds.cda.ucr.TS;
 
 @ExtendWith(MockitoExtension.class)
 public class EncounterReportBundleServiceTest {
     private static final String SPECIFICATION_KEY = "urn:nhs-itk:ns:201005:interaction";
     private static final String SPECIFICATION_VALUE = "urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0";
     private static final Encounter ENCOUNTER;
-    private static final IdType ENCOUNTER_ID = newRandomUuid();
+    private static final IdType ENCOUNTER_ID = getRandomUUID();
     private static final Organization SERVICE_PROVIDER;
-    private static final IdType SERVICE_PROVIDER_ID = newRandomUuid();
+    private static final IdType SERVICE_PROVIDER_ID = getRandomUUID();
     private static final Encounter.EncounterParticipantComponent ENCOUNTER_PARTICIPANT_COMPONENT;
     private static final Practitioner PRACTITIONER;
-    private static final IdType PRACTITIONER_ID = newRandomUuid();
+    private static final IdType PRACTITIONER_ID = getRandomUUID();
     private static final HumanName PRACTITIONER_NAME;
     private static final Appointment APPOINTMENT;
-    private static final IdType APPOINTMENT_ID = newRandomUuid();
+    private static final IdType APPOINTMENT_ID = getRandomUUID();
     private static final Location LOCATION;
-    private static final IdType LOCATION_ID = newRandomUuid();
+    private static final IdType LOCATION_ID = getRandomUUID();
     private static final Encounter.EncounterLocationComponent ENCOUNTER_LOCATION_COMPONENT;
     private static final Patient PATIENT;
-    private static final IdType PATIENT_ID = newRandomUuid();
+    private static final IdType PATIENT_ID = getRandomUUID();
     private static final ReferralRequest REFERRAL_REQUEST;
-    private static final IdType REFERRAL_REQUEST_ID = newRandomUuid();
+    private static final IdType REFERRAL_REQUEST_ID = getRandomUUID();
     private static final Composition COMPOSITION;
-    private static final IdType COMPOSITION_ID = newRandomUuid();
+    private static final IdType COMPOSITION_ID = getRandomUUID();
     private static final ListResource LIST_RESOURCE;
-    private static final IdType LIST_RESOURCE_ID = newRandomUuid();
+    private static final IdType LIST_RESOURCE_ID = getRandomUUID();
     private static final CarePlan CAREPLAN;
-    private static final IdType CAREPLAN_ID = newRandomUuid();
+    private static final IdType CAREPLAN_ID = getRandomUUID();
     private static final HealthcareService HEALTHCARE_SERVICE;
-    private static final IdType HEALTHCARE_SERVICE_ID = newRandomUuid();
+    private static final IdType HEALTHCARE_SERVICE_ID = getRandomUUID();
     private static final Consent CONSENT;
-    private static final IdType CONSENT_ID = newRandomUuid();
+    private static final IdType CONSENT_ID = getRandomUUID();
     private static final Condition CONDITION;
-    private static final IdType CONDITION_ID = newRandomUuid();
+    private static final IdType CONDITION_ID = getRandomUUID();
     private static final QuestionnaireResponse QUESTIONNAIRE_RESPONSE;
-    private static final IdType QUESTIONNAIRE_RESPONSE_ID = newRandomUuid();
+    private static final IdType QUESTIONNAIRE_RESPONSE_ID = getRandomUUID();
     private static final MessageHeader MESSAGE_HEADER;
-    private static final IdType MESSAGE_HEADER_ID = newRandomUuid();
+    private static final IdType MESSAGE_HEADER_ID = getRandomUUID();
     private static final Observation OBSERVATION;
-    private static final IdType OBSERVATION_ID = newRandomUuid();
+    private static final IdType OBSERVATION_ID = getRandomUUID();
     private static final PractitionerRole AUTHOR_ROLE;
-    private static final IdType AUTHOR_ROLE_ID = newRandomUuid();
+    private static final IdType AUTHOR_ROLE_ID = getRandomUUID();
     private static final Organization AUTHOR_ORG;
-    private static final IdType AUTHOR_ORG_ID = newRandomUuid();
+    private static final IdType AUTHOR_ORG_ID = getRandomUUID();
     private static final PractitionerRole PRACTITIONER_ROLE;
-    private static final IdType PRACTITIONER_ROLE_ID = newRandomUuid();
+    private static final IdType PRACTITIONER_ROLE_ID = getRandomUUID();
     private static final Organization PRACTITIONER_ORG;
-    private static final IdType PRACTITIONER_ORG_ID = newRandomUuid();
+    private static final IdType PRACTITIONER_ORG_ID = getRandomUUID();
     private static final BigInteger VERSION = TWO;
+    private static final String MESSAGEID = getRandomUUID().toString();
+    private static final RelatedPerson RELATED_PERSON;
+    private static final IdType RELATED_PERSON_ID = getRandomUUID();
+    private static final String EFFECTIVE_TIME = "20210406123335+01";
+
+    private static IdType getRandomUUID() {
+        return new IdType(UUID.randomUUID().toString());
+    }
 
     static {
         SERVICE_PROVIDER = new Organization();
@@ -193,6 +205,9 @@ public class EncounterReportBundleServiceTest {
         ENCOUNTER.setSubject(new Reference(PATIENT));
         ENCOUNTER.setSubjectTarget(PATIENT);
         ENCOUNTER.addIncomingReferral(new Reference(REFERRAL_REQUEST));
+
+        RELATED_PERSON = new RelatedPerson();
+        RELATED_PERSON.setIdElement(RELATED_PERSON_ID);
     }
 
     @InjectMocks
@@ -223,15 +238,25 @@ public class EncounterReportBundleServiceTest {
     private PractitionerRoleMapper practitionerRoleMapper;
     @Mock
     private POCDMT000002UK01ClinicalDocument1 document;
+    @Mock
+    private ResourceUtil resourceUtil;
+    @Mock
+    private RelatedPersonMapper relatedPersonMapper;
+    @Mock
+    private TS ts;
+    @Mock
+    private Reference reference;
 
     @BeforeEach
     public void setUp() throws XmlException {
         INT versionNumber = mock(INT.class);
         when(versionNumber.getValue()).thenReturn(VERSION);
         when(document.getVersionNumber()).thenReturn(versionNumber);
+        when(document.getEffectiveTime()).thenReturn(ts);
+        when(ts.getValue()).thenReturn(EFFECTIVE_TIME);
         List<QuestionnaireResponse> questionnaireResponseList = new ArrayList<>();
         questionnaireResponseList.add(QUESTIONNAIRE_RESPONSE);
-        when(encounterMapper.mapEncounter(any(), any())).thenReturn(ENCOUNTER);
+        when(encounterMapper.mapEncounter(any(), any(), any(), any())).thenReturn(ENCOUNTER);
         when(conditionMapper.mapCondition(any(), any(), any())).thenReturn(CONDITION);
         when(compositionMapper.mapComposition(any(), any(), any(), any(), any(), any())).thenReturn(COMPOSITION);
         when(listMapper.mapList(any(), any(), any())).thenReturn(LIST_RESOURCE);
@@ -239,11 +264,12 @@ public class EncounterReportBundleServiceTest {
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
         when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
-        when(messageHeaderService.createMessageHeader(any())).thenReturn(MESSAGE_HEADER);
+        when(messageHeaderService.createMessageHeader(any(), any(), eq(EFFECTIVE_TIME))).thenReturn(MESSAGE_HEADER);
         when(referralRequestMapper.mapReferralRequest(any(), any(), any(), any())).thenReturn(REFERRAL_REQUEST);
         when(observationMapper.mapObservations(any(), eq(ENCOUNTER))).thenReturn(Arrays.asList(OBSERVATION));
         when(practitionerRoleMapper.mapAuthorRoles(any())).thenReturn(singletonList(AUTHOR_ROLE));
         when(practitionerRoleMapper.mapResponsibleParty(any())).thenReturn(Optional.of(PRACTITIONER_ROLE));
+        when(relatedPersonMapper.createEmergencyContactRelatedPerson(eq(document), eq(ENCOUNTER))).thenReturn(RELATED_PERSON);
         Encounter.DiagnosisComponent diagnosisComponent = new Encounter.DiagnosisComponent();
         diagnosisComponent.setCondition(new Reference());
         diagnosisComponent.setRole(new CodeableConcept());
@@ -259,10 +285,10 @@ public class EncounterReportBundleServiceTest {
         itkReportHeader.setSpecKey(SPECIFICATION_KEY);
         itkReportHeader.setSpecVal(SPECIFICATION_VALUE);
 
-        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader);
+        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader, MESSAGEID);
         assertThat(encounterBundle.getType()).isEqualTo(MESSAGE);
         assertThat(encounterBundle.getIdentifier().getValue()).isEqualTo(TWO.toString());
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(20);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(21);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), MESSAGE_HEADER_ID.getValue(), ResourceType.MessageHeader);
         verifyEntry(entries.get(1), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
@@ -283,11 +309,28 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(16), AUTHOR_ORG_ID.getValue(), ResourceType.Organization);
         verifyEntry(entries.get(17), PRACTITIONER_ROLE_ID.getValue(), ResourceType.PractitionerRole);
         verifyEntry(entries.get(18), PRACTITIONER_ORG_ID.getValue(), ResourceType.Organization);
-        verifyEntry(entries.get(19), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+        verifyEntry(entries.get(19), RELATED_PERSON_ID.getValue(), ResourceType.RelatedPerson);
+        verifyEntry(entries.get(20), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+    }
+
+    @Test
+    @SuppressWarnings("MagicNumber")
+    public void shouldMapIncomingReferralWithPractitioners() throws XmlException {
+        ItkReportHeader itkReportHeader = new ItkReportHeader();
+        List<Reference> recipients = new ArrayList<>();
+
+        when(reference.getResource()).thenReturn(PRACTITIONER);
+        recipients.add(reference);
+        REFERRAL_REQUEST.setRecipient(recipients);
+
+        Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader, MESSAGEID);
+        List<BundleEntryComponent> entries = encounterBundle.getEntry();
+        verifyEntry(entries.get(7), REFERRAL_REQUEST_ID.getValue(), ResourceType.ReferralRequest);
+        verifyEntry(entries.get(8), PRACTITIONER_ID.getValue(), ResourceType.Practitioner);
     }
 
     private void verifyEntry(BundleEntryComponent entry, String fullUrl, ResourceType resourceType) {
-        assertThat(entry.getFullUrl()).isEqualTo(fullUrl);
+        assertThat(entry.getFullUrl()).isEqualTo("urn:uuid:" + fullUrl);
         assertThat(entry.getResource().getResourceType()).isEqualTo(resourceType);
     }
 }

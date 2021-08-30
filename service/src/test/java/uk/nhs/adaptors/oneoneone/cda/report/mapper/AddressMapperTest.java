@@ -2,6 +2,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import org.apache.xmlbeans.XmlString;
 import org.hl7.fhir.dstu3.model.Address;
+import org.hl7.fhir.dstu3.model.Address.AddressType;
 import org.hl7.fhir.dstu3.model.Address.AddressUse;
 import org.hl7.fhir.dstu3.model.Period;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.connect.iucds.cda.ucr.AD;
 
@@ -25,6 +27,7 @@ public class AddressMapperTest {
 
     private static final String CITY = "Small City";
     private static final List<String> ADDRESS_USE_LIST = Arrays.asList("H");
+    private static final List<String> ADDRESS_TYPE_LIST = Arrays.asList("PHYS");
     private static final String ADDRESS_LINE = "Magnolia Crescent 1";
     private static final String POSTAL_CODE = "BS2 RF2";
     private static final String COUNTRY = "United Kingdom";
@@ -56,7 +59,7 @@ public class AddressMapperTest {
 
         when(itkAddress.sizeOfUseablePeriodArray()).thenReturn(1);
         when(periodMapper.mapPeriod(ArgumentMatchers.any()))
-                .thenReturn(period);
+            .thenReturn(period);
         when(itkAddress.getStreetAddressLineArray()).thenReturn(ad.getStreetAddressLineArray());
         when(nodeUtil.getNodeValueString(ad.getStreetAddressLineArray(0))).thenReturn(ADDRESS_LINE);
         when(itkAddress.isSetUse()).thenReturn(true);
@@ -93,5 +96,13 @@ public class AddressMapperTest {
         assertThat(address.getState()).isEqualTo(STATE);
         assertThat(address.getDistrict()).isEqualTo(DISTRICT);
         assertThat(address.getPeriod()).isEqualTo(period);
+    }
+
+    @Test
+    public void shouldMapAddressType() {
+        when(itkAddress.getUse()).thenReturn(ADDRESS_TYPE_LIST);
+        Address address = addressMapper.mapAddress(itkAddress);
+
+        assertThat(address.getType()).isEqualTo(AddressType.PHYSICAL);
     }
 }

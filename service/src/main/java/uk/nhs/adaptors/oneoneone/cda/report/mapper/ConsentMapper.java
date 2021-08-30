@@ -3,7 +3,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
 import java.util.Arrays;
@@ -21,11 +20,11 @@ import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.Period;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Authorization;
@@ -49,10 +48,11 @@ public class ConsentMapper {
     private static final String PERMISSION_TO_VIEW = "COCD_TP146050GB01#PermissionToView";
     private static final String DIV_START = "<div>";
     private static final String DIV_END = "</div>";
+    private final ResourceUtil resourceUtil;
 
     public Consent mapConsent(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
         Consent consent = new Consent();
-        consent.setIdElement(newRandomUuid());
+        consent.setIdElement(resourceUtil.newRandomUuid());
 
         if (clinicalDocument.isSetSetId()) {
             Identifier docIdentifier = new Identifier();
@@ -69,7 +69,7 @@ public class ConsentMapper {
             .addOrganization(encounter.getServiceProvider())
             .setData(List.of(new ConsentDataComponent()
                 .setMeaning(ConsentDataMeaning.RELATED)
-                .setReference(new Reference(encounter))))
+                .setReference(resourceUtil.createReference(encounter))))
             .setPolicyRule(OPT_OUT_URI);
 
         extractAuthCodesFromDoc(consent, clinicalDocument);
@@ -119,10 +119,10 @@ public class ConsentMapper {
         Period dataPeriod = new Period();
         IVLTS effectiveTime = observation.getEffectiveTime();
         if (effectiveTime.isSetLow()) {
-            dataPeriod.setStart(DateUtil.parse(effectiveTime.getLow().getValue()));
+            dataPeriod.setStartElement(DateUtil.parse(effectiveTime.getLow().getValue()));
         }
         if (effectiveTime.isSetHigh()) {
-            dataPeriod.setEnd(DateUtil.parse(effectiveTime.getHigh().getValue()));
+            dataPeriod.setEndElement(DateUtil.parse(effectiveTime.getHigh().getValue()));
         }
         return dataPeriod;
     }

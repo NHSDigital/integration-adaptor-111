@@ -4,8 +4,6 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +14,6 @@ import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.ContactPoint;
-import org.hl7.fhir.dstu3.model.Enumerations;
 import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Identifier;
@@ -29,6 +26,7 @@ import org.springframework.stereotype.Component;
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.enums.MaritalStatus;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01LanguageCommunication;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Patient;
@@ -51,10 +49,11 @@ public class PatientMapper {
     private final HumanNameMapper humanNameMapper;
     private final OrganizationMapper orgMapper;
     private final NodeUtil nodeUtil;
+    private final ResourceUtil resourceUtil;
 
     public Patient mapPatient(POCDMT000002UK01PatientRole patientRole) {
         Patient fhirPatient = new Patient();
-        fhirPatient.setIdElement(newRandomUuid());
+        fhirPatient.setIdElement(resourceUtil.newRandomUuid());
         fhirPatient.setIdentifier(getNhsNumbers(patientRole));
         fhirPatient.setActive(true);
         if (patientRole.isSetPatient()) {
@@ -79,9 +78,7 @@ public class PatientMapper {
             }
 
             if (itkPatient.isSetAdministrativeGenderCode()) {
-                String displayName = itkPatient.getAdministrativeGenderCode().getDisplayName();
-                fhirPatient.setGender(Enumerations.AdministrativeGender
-                    .fromCode(displayName == null ? "unknown" : displayName.toLowerCase()));
+                fhirPatient.setGender(GenderMapper.getGenderFromCode(itkPatient.getAdministrativeGenderCode().getCode()));
             }
 
             if (itkPatient.isSetMaritalStatusCode()) {
@@ -172,7 +169,7 @@ public class PatientMapper {
         Reference reference = null;
         if (patientRole.isSetProviderOrganization()) {
             Organization organization = orgMapper.mapOrganization(patientRole.getProviderOrganization());
-            reference = new Reference(organization);
+            reference = resourceUtil.createReference(organization);
         }
         return reference;
     }

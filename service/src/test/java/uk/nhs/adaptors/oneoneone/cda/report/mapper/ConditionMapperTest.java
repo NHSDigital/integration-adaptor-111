@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,7 @@ import org.w3c.dom.Node;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CS;
 import uk.nhs.connect.iucds.cda.ucr.ED;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
@@ -41,6 +43,7 @@ public class ConditionMapperTest {
     private static final String CONIDITION_TEXT = "Condition text";
     private static final String LANGUAGE_CODE = "en";
     private static final String QUESTIONNAIRE_RESPONSE_ID = "questionnaire_response_id";
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
 
     @InjectMocks
     private ConditionMapper conditionMapper;
@@ -74,6 +77,8 @@ public class ConditionMapperTest {
     @Mock
     private NodeUtil nodeUtil;
     @Mock
+    private ResourceUtil resourceUtil;
+    @Mock
     private Reference patient;
     @Mock
     private QuestionnaireResponse questionnaireResponse;
@@ -106,6 +111,9 @@ public class ConditionMapperTest {
         when(itkEncounter.getText()).thenReturn(ed);
         when(ed.getDomNode()).thenReturn(node);
         when(nodeUtil.getAllText(node)).thenReturn(CONIDITION_TEXT);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+        when(resourceUtil.createReference(encounter)).thenReturn(new Reference(encounter));
+        when(resourceUtil.createReference(questionnaireResponse)).thenReturn(new Reference(QUESTIONNAIRE_RESPONSE_ID));
 
         when(section.getComponentArray()).thenReturn(component5Array);
         when(component5.getSection()).thenReturn(section);
@@ -115,7 +123,6 @@ public class ConditionMapperTest {
         when(cs.getCode()).thenReturn(LANGUAGE_CODE);
 
         when(questionnaireResponse.hasId()).thenReturn(true);
-        when(questionnaireResponse.getId()).thenReturn(QUESTIONNAIRE_RESPONSE_ID);
     }
 
     @Test
@@ -124,9 +131,10 @@ public class ConditionMapperTest {
 
         assertThat(condition.getClinicalStatus()).isEqualTo(ACTIVE);
         assertThat(condition.getVerificationStatus()).isEqualTo(UNKNOWN);
-        assertThat(condition.getAssertedDate()).isEqualTo(DateUtil.parse(EFFECTIVE_TIME_STRING));
+        assertThat(condition.getAssertedDateElement()).isEqualToComparingFieldByField(DateUtil.parse(EFFECTIVE_TIME_STRING));
         assertThat(condition.getCategoryFirstRep().getText()).isEqualTo(CONIDITION_TEXT);
         assertThat(condition.getLanguage()).isEqualTo(LANGUAGE_CODE);
         assertThat(condition.getEvidence().get(0).getDetail().get(0).getReference()).isEqualTo(QUESTIONNAIRE_RESPONSE_ID);
+        assertThat(condition.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
     }
 }

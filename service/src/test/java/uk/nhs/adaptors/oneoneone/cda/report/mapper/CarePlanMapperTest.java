@@ -10,6 +10,7 @@ import java.util.List;
 import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Period;
@@ -22,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.CS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -35,12 +37,12 @@ import uk.nhs.connect.iucds.cda.ucr.StrucDocText;
 
 @ExtendWith(MockitoExtension.class)
 public class CarePlanMapperTest {
-    private static final String URN_UUID = "urn:uuid:";
     private static final String LANG = "EN";
     private static final String SNOMED = "2.16.840.1.113883.2.1.3.2.4.15";
     private static final String INFORMATION_ADVICE_GIVEN = "1052951000000105";
     private static final String DESCRIPTION = "description";
     private static final String TITLE = "title";
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
 
     @Mock
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
@@ -71,6 +73,9 @@ public class CarePlanMapperTest {
 
     @Mock
     private NodeUtil nodeUtil;
+
+    @Mock
+    private ResourceUtil resourceUtil;
 
     @Mock
     private Condition condition;
@@ -129,6 +134,9 @@ public class CarePlanMapperTest {
         when(locationref.getResource()).thenReturn(location);
         when(location.hasManagingOrganization()).thenReturn(true);
         when(location.getManagingOrganization()).thenReturn(organization);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+        when(resourceUtil.createReference(encounter)).thenReturn(new Reference(encounter));
+        when(resourceUtil.createReference(condition)).thenReturn(new Reference(condition));
     }
 
     @Test
@@ -139,7 +147,7 @@ public class CarePlanMapperTest {
         assertThat(carePlans).isNotEmpty();
 
         CarePlan carePlan = carePlans.get(0);
-        assertThat(carePlan.getIdElement().getValue()).startsWith(URN_UUID);
+        assertThat(carePlan.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(carePlan.getStatus()).isEqualTo(CarePlan.CarePlanStatus.COMPLETED);
 
         assertThat(carePlan.getIntent()).isEqualTo(CarePlan.CarePlanIntent.PLAN);

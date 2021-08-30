@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 
 import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanIntent.PLAN;
 import static org.hl7.fhir.dstu3.model.CarePlan.CarePlanStatus.COMPLETED;
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component2;
@@ -36,6 +36,7 @@ public class CarePlanMapper {
 
     private final ConditionMapper conditionMapper;
     private final NodeUtil nodeUtil;
+    private final ResourceUtil resourceUtil;
 
     public List<CarePlan> mapCarePlan(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, Condition condition) {
         if (clinicalDocument.getComponent().isSetStructuredBody()) {
@@ -54,16 +55,16 @@ public class CarePlanMapper {
 
     public CarePlan createCarePlanFromSection(POCDMT000002UK01Section cpSection, Encounter encounter, Condition condition) {
         CarePlan carePlan = new CarePlan();
-        carePlan.setIdElement(newRandomUuid());
+        carePlan.setIdElement(resourceUtil.newRandomUuid());
         carePlan
             .setIntent(PLAN)
             .setSubject(encounter.getSubject())
             .setSubjectTarget(encounter.getSubjectTarget())
             .setStatus(COMPLETED)
             .setContextTarget(encounter)
-            .setContext(new Reference(encounter))
+            .setContext(resourceUtil.createReference(encounter))
             .setPeriod(encounter.getPeriod())
-            .addAddresses(new Reference(condition));
+            .addAddresses(resourceUtil.createReference(condition));
 
         if (cpSection.isSetLanguageCode()) {
             carePlan.setLanguage(nodeUtil.getNodeValueString(cpSection.getLanguageCode()));

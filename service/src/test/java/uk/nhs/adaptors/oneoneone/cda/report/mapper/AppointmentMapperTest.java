@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 
 import org.hl7.fhir.dstu3.model.Appointment;
+import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CDNPfITCDAUrl;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
@@ -36,6 +38,7 @@ public class AppointmentMapperTest {
     private static final String TITLE = "title";
     private static final String COMMENT = "comment";
     private static final String REASON = "TheReason";
+    private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
     @Mock
     private LocationMapper locationMapper;
     @InjectMocks
@@ -44,6 +47,8 @@ public class AppointmentMapperTest {
     private Location location;
     @Mock
     private NodeUtil nodeUtil;
+    @Mock
+    private ResourceUtil resourceUtil;
 
     @Test
     public void shouldMapAppointment() {
@@ -52,10 +57,11 @@ public class AppointmentMapperTest {
         Reference patient = mock(Reference.class);
 
         when(locationMapper.mapRoleToLocation(any())).thenReturn(location);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
 
         Optional<Appointment> appointment = appointmentMapper.mapAppointment(entry, section, patient);
         assertThat(appointment.isPresent());
-        assertThat(appointment.get().getIdElement().getValue()).startsWith("urn:uuid:");
+        assertThat(appointment.get().getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(appointment.get().getStatus()).isEqualTo(BOOKED);
         assertThat(appointment.get().getStart()).isNull();
         assertThat(appointment.get().getEnd()).isNull();

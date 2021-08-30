@@ -70,7 +70,7 @@ public class EncounterReportServiceTest {
         header.setSpecVal(SPECIFICATION_VALUE);
         POCDMT000002UK01ClinicalDocument1 clinicalDoc = mock(POCDMT000002UK01ClinicalDocument1.class);
         Bundle encounterBundle = mock(Bundle.class);
-        when(encounterReportBundleService.createEncounterBundle(clinicalDoc, header)).thenReturn(encounterBundle);
+        when(encounterReportBundleService.createEncounterBundle(clinicalDoc, header, MESSAGE_ID)).thenReturn(encounterBundle);
         IParser parser = mock(IParser.class);
         when(fhirContext.newJsonParser()).thenReturn(parser);
         when(parser.setPrettyPrint(true)).thenReturn(parser);

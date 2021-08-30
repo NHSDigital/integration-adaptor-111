@@ -1,6 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
-import static org.hl7.fhir.dstu3.model.IdType.newRandomUuid;
+import static uk.nhs.adaptors.oneoneone.cda.report.util.IsoDateTimeFormatter.toIsoDateTimeString;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,20 +26,22 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 
 @Component
 @AllArgsConstructor
 public class QuestionnaireMapper {
     private static final String NOT_APPLICABLE = "N/A";
+    private final ResourceUtil resourceUtil;
 
     public Questionnaire mapQuestionnaire(PathwaysCase pathwaysCase, TriageLine triageLine) {
         Questionnaire questionnaire = new Questionnaire();
         String publisher = getPublisher(pathwaysCase.getPathwayDetails().getPathwayTriageDetails().getPathwayTriageArray(0).getUser());
         Date latestDate = getLatestDate(pathwaysCase);
 
-        questionnaire.setIdElement(newRandomUuid());
+        questionnaire.setIdElement(resourceUtil.newRandomUuid());
         questionnaire.addIdentifier(new Identifier().setValue(getCaseID(pathwaysCase)))
-            .setVersion(latestDate.toString())
+            .setVersion(toIsoDateTimeString(latestDate))
             .setStatus(Enumerations.PublicationStatus.ACTIVE)
             .setExperimental(false)
             .addSubjectType("Patient")
@@ -126,36 +128,39 @@ public class QuestionnaireMapper {
     }
 
     private QuestionnaireItemComponent getItem(Question question, String caseId) {
-        List<QuestionnaireItemOptionComponent> questionnaireItemOptionComponentList = new ArrayList<>();
-        QuestionnaireItemComponent item = new QuestionnaireItemComponent();
+        if (question != null) {
+            List<QuestionnaireItemOptionComponent> questionnaireItemOptionComponentList = new ArrayList<>();
+            QuestionnaireItemComponent item = new QuestionnaireItemComponent();
 
-        item.setLinkId(caseId);
-        item.setPrefix(getPrefix(question));
-        item.setType(Questionnaire.QuestionnaireItemType.CHOICE);
-        item.setRequired(true);
-        item.setRepeats(false);
+            item.setLinkId(caseId);
+            item.setPrefix(getPrefix(question));
+            item.setType(Questionnaire.QuestionnaireItemType.CHOICE);
+            item.setRequired(true);
+            item.setRepeats(false);
 
-        if (question.getQuestionText() != null) {
-            item.setText(question.getQuestionText());
-        } else {
-            item.setText(NOT_APPLICABLE);
-        }
+            if (question.getQuestionText() != null) {
+                item.setText(question.getQuestionText());
+            } else {
+                item.setText(NOT_APPLICABLE);
+            }
 
-        if (question.getAnswers() != null) {
-            if (question.getAnswers().sizeOfAnswerArray() > 0) {
-                for (Answer answer : question.getAnswers().getAnswerArray()) {
-                    QuestionnaireItemOptionComponent optionComponent = new QuestionnaireItemOptionComponent();
-                    StringType answerStringType = new StringType();
-                    answerStringType.setValueAsString(String.format("%s, Selected: %s", answer.getText(), answer.getSelected()));
-                    optionComponent.setValue(answerStringType);
-                    questionnaireItemOptionComponentList.add(optionComponent);
+            if (question.getAnswers() != null) {
+                if (question.getAnswers().sizeOfAnswerArray() > 0) {
+                    for (Answer answer : question.getAnswers().getAnswerArray()) {
+                        QuestionnaireItemOptionComponent optionComponent = new QuestionnaireItemOptionComponent();
+                        StringType answerStringType = new StringType();
+                        answerStringType.setValueAsString(String.format("%s, Selected: %s", answer.getText(), answer.getSelected()));
+                        optionComponent.setValue(answerStringType);
+                        questionnaireItemOptionComponentList.add(optionComponent);
+                    }
                 }
             }
+
+            item.setOption(questionnaireItemOptionComponentList);
+
+            return item;
         }
-
-        item.setOption(questionnaireItemOptionComponentList);
-
-        return item;
+        return null;
     }
 
     private String getPrefix(Question question) {
