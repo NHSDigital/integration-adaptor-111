@@ -17,10 +17,6 @@ import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportReques
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils.extractDistributionEnvelope;
 import static uk.nhs.adaptors.oneoneone.xml.XmlValidator.validate;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.xmlbeans.XmlException;
@@ -94,10 +90,11 @@ public class ReportController {
                 .get(DISTRIBUTION_ENVELOPE));
             validate(distributionEnvelope);
 
-            List<POCDMT000002UK01ClinicalDocument1> clinicalDocuments = extractClinicalDocument(distributionEnvelope);
+            POCDMT000002UK01ClinicalDocument1 clinicalDocument = extractClinicalDocument(distributionEnvelope);
 
-            validate(getDocumentWithMaxEffectiveDate(clinicalDocuments));
-            encounterReportService.transformAndPopulateToGP(getDocumentWithMaxEffectiveDate(clinicalDocuments), messageId, headerValues);
+            validate(clinicalDocument);
+
+            encounterReportService.transformAndPopulateToGP(clinicalDocument, messageId, headerValues);
 
             return new ResponseEntity<>(itkResponseUtil.createSuccessResponseEntity(messageId, randomUUID().toString().toUpperCase()), OK);
         } catch (DocumentException e) {
@@ -128,14 +125,6 @@ public class ReportController {
                 toAddress, INTERNAL_PROCESSING_ERROR_CODE, FAULT_CODE_CLIENT, INTERNAL_USER_ERROR_MESSAGE, INTERNAL_ERROR_MESSAGE),
                 INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private POCDMT000002UK01ClinicalDocument1 getDocumentWithMaxEffectiveDate(List<POCDMT000002UK01ClinicalDocument1> clinicalDocuments) {
-        return Collections.max(clinicalDocuments, Comparator.comparing(doc -> extractEffectiveDateFromClinicalDocument(doc)));
-    }
-
-    private Date extractEffectiveDateFromClinicalDocument(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        return periodMapper.mapPeriod(clinicalDocument.getEffectiveTime()).getStart();
     }
 
     public static String getValueOrDefaultAddress(Element value) {

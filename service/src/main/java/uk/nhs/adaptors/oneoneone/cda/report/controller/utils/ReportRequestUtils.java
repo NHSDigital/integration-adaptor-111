@@ -2,22 +2,24 @@ package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlTokenSource;
 import org.dom4j.Element;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.ItkXmlException;
+import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.connect.iucds.cda.ucr.ClinicalDocumentDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.itk.envelope.DistributionEnvelopeDocument;
-import uk.nhs.itk.envelope.PayloadType;
 
 public final class ReportRequestUtils {
 
@@ -32,34 +34,44 @@ public final class ReportRequestUtils {
         }
     }
 
-    public static List<POCDMT000002UK01ClinicalDocument1> extractClinicalDocument(DistributionEnvelopeDocument envelopedDocument)
+    public static POCDMT000002UK01ClinicalDocument1 extractClinicalDocument(DistributionEnvelopeDocument envelopedDocument)
         throws ItkXmlException {
-        List<POCDMT000002UK01ClinicalDocument1> clinicalDocuments = new ArrayList<>();
+        List<POCDMT000002UK01ClinicalDocument1> clinicalDocuments;
         try {
-            List<Node> nodes = findClinicalDoc(envelopedDocument);
-            for (Node node : nodes) {
-                clinicalDocuments.add(ClinicalDocumentDocument1.Factory
-                    .parse(node)
-                    .getClinicalDocument());
-            }
+            clinicalDocuments =
+                findClinicalDocs(envelopedDocument).stream()
+                    .map(it -> {
+                        try {
+                            return ClinicalDocumentDocument1.Factory.parse(it);
+                        } catch (XmlException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    })
+                    .map(cl -> cl.getClinicalDocument()).collect(Collectors.toList());
         } catch (XmlException e) {
             throw new ItkXmlException("Clinical document missing from payload", e.getMessage(), e);
         }
 
-        return clinicalDocuments;
+        return getClinicalDocumentWithMaxEffectiveDate(clinicalDocuments);
     }
 
-    private static List<Node> findClinicalDoc(DistributionEnvelopeDocument envelopedDocument)
-        throws XmlException {
-        PayloadType[] payloads = Arrays.stream(envelopedDocument.getDistributionEnvelope()
-            .getPayloads()
-            .getPayloadArray()).toArray(PayloadType[]::new);
+    private static POCDMT000002UK01ClinicalDocument1 getClinicalDocumentWithMaxEffectiveDate(List<POCDMT000002UK01ClinicalDocument1> clinicalDocuments) {
+        return Collections.max(clinicalDocuments, Comparator.comparing(doc -> extractEffectiveDateFromClinicalDocument(doc)));
+    }
 
-        List<NodeList> nodeListsList =
-            Arrays.stream(payloads)
-                .map(XmlTokenSource::getDomNode)
-                .map(Node::getChildNodes)
-                .collect(Collectors.toList());
+    private static Date extractEffectiveDateFromClinicalDocument(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
+        return DateUtil.parseToInstantType(clinicalDocument.getEffectiveTime().getValue()).getValue();
+    }
+
+    private static List<Node> findClinicalDocs(DistributionEnvelopeDocument envelopedDocument)
+        throws XmlException {
+        List<NodeList> nodeListsList = Arrays.stream(envelopedDocument.getDistributionEnvelope()
+            .getPayloads()
+            .getPayloadArray())
+            .map(it -> it.getDomNode())
+            .map(Node::getChildNodes)
+            .collect(Collectors.toList());
 
         return getNodes(nodeListsList);
     }
