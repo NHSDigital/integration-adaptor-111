@@ -3,9 +3,12 @@ package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlTokenSource;
 import org.dom4j.Element;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Node;
@@ -35,12 +38,11 @@ public final class ReportRequestUtils {
         List<POCDMT000002UK01ClinicalDocument1> clinicalDocuments = new ArrayList<>();
         try {
             List<Node> nodes = findClinicalDoc(envelopedDocument);
-            for (Node node:nodes) {
-                clinicalDocuments.add( ClinicalDocumentDocument1.Factory
+            for (Node node : nodes) {
+                clinicalDocuments.add(ClinicalDocumentDocument1.Factory
                     .parse(node)
                     .getClinicalDocument());
             }
-
         } catch (XmlException e) {
             throw new ItkXmlException("Clinical document missing from payload", e.getMessage(), e);
         }
@@ -54,33 +56,24 @@ public final class ReportRequestUtils {
             .getPayloads()
             .getPayloadArray()).toArray(PayloadType[]::new);
 
-        List<NodeList> nodeListList = new ArrayList<>();
-        List<Node> nodesList = new ArrayList<>();
+        List<NodeList> nodeListsList =
+            Arrays.stream(payloads)
+                .map(XmlTokenSource::getDomNode)
+                .map(Node::getChildNodes)
+                .collect(Collectors.toList());
 
-        for (PayloadType payload:payloads) {
-
-            nodeListList.add(payload.getDomNode().getChildNodes());
-
-        }
-
-        List<Node> nodesList1 = getNodes(nodeListList, nodesList);
-        if (nodesList1 != null)
-            return nodesList1;
-        throw new XmlException("No clinical document found in Envelope");
-
+        return getNodes(nodeListsList);
     }
 
     @Nullable
-    private static List<Node> getNodes(List<NodeList> nodeListList, List<Node> nodesList) {
-        for(NodeList nodeList: nodeListList) {
-            Node node;
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                node = nodeList.item(i);
+    private static List<Node> getNodes(List<NodeList> nodeListList) {
+        List<Node> nodesList = new ArrayList<>();
+        for (NodeList x : nodeListList) {
 
-                if (node.getNodeName().contains(CLINICAL_DOCUMENT_NODE_NAME)) {
-                    nodesList.add(node);
-                }
-            }
+            IntStream.range(0, x.getLength())
+                .mapToObj(i -> x.item(i))
+                .filter(item -> item.getNodeName().contains(CLINICAL_DOCUMENT_NODE_NAME))
+                .forEach(item -> nodesList.add(item));
         }
         return nodesList;
     }
