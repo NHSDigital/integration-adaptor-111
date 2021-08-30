@@ -1,10 +1,11 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
+import static java.util.Comparator.comparing;
+
+import static uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil.parseToInstantType;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -15,8 +16,8 @@ import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import lombok.SneakyThrows;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.ItkXmlException;
-import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.connect.iucds.cda.ucr.ClinicalDocumentDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.itk.envelope.DistributionEnvelopeDocument;
@@ -36,32 +37,20 @@ public final class ReportRequestUtils {
 
     public static POCDMT000002UK01ClinicalDocument1 extractClinicalDocument(DistributionEnvelopeDocument envelopedDocument)
         throws ItkXmlException {
-        List<POCDMT000002UK01ClinicalDocument1> clinicalDocuments;
         try {
-            clinicalDocuments =
+            return
                 findClinicalDocs(envelopedDocument).stream()
-                    .map(it -> {
-                        try {
-                            return ClinicalDocumentDocument1.Factory.parse(it);
-                        } catch (XmlException e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    })
-                    .map(cl -> cl.getClinicalDocument()).collect(Collectors.toList());
+                    .map(ReportRequestUtils::parseClinicalDoc)
+                    .max(comparing(doc -> parseToInstantType(doc.getEffectiveTime().getValue()).getValue()))
+                    .get();
         } catch (XmlException e) {
             throw new ItkXmlException("Clinical document missing from payload", e.getMessage(), e);
         }
-
-        return getClinicalDocumentWithMaxEffectiveDate(clinicalDocuments);
     }
 
-    private static POCDMT000002UK01ClinicalDocument1 getClinicalDocumentWithMaxEffectiveDate(List<POCDMT000002UK01ClinicalDocument1> clinicalDocuments) {
-        return Collections.max(clinicalDocuments, Comparator.comparing(doc -> extractEffectiveDateFromClinicalDocument(doc)));
-    }
-
-    private static Date extractEffectiveDateFromClinicalDocument(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        return DateUtil.parseToInstantType(clinicalDocument.getEffectiveTime().getValue()).getValue();
+    @SneakyThrows
+    private static POCDMT000002UK01ClinicalDocument1 parseClinicalDoc(Node node) {
+        return ClinicalDocumentDocument1.Factory.parse(node).getClinicalDocument();
     }
 
     private static List<Node> findClinicalDocs(DistributionEnvelopeDocument envelopedDocument)
