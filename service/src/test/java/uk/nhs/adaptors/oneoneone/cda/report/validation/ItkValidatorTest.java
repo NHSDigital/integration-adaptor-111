@@ -1,5 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.validation;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,7 +13,6 @@ import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElemen
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.MESSAGE_ID;
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_HEADER;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,8 +24,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -35,7 +33,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT) // todo cofnac wsio
 public class ItkValidatorTest {
     private static final String VALID_ACTION_SERVICE = "urn:nhs-itk:services:201005:SendNHS111Report-v2-0";
     private static final String SOAP_ACTION_XPATH = "//*[local-name()='Action']";
@@ -48,30 +45,36 @@ public class ItkValidatorTest {
     private static final String VALID_PROFILE_ID = "urn:nhs-en:profile:nhs111CDADocument-v2-0";
     private static final String VALID_AUDIT_IDENTITY = "urn:nhs-uk:identity:ods:5L399";
 
-    @InjectMocks
-    private ItkValidator itkValidator;
-
     @Mock
     private XmlUtils xmlUtils;
 
     private Map<ReportElement, Element> reportMap;
 
+    @Mock
     private Element itkHeader;
+    @Mock
     private Attr itkService;
+    @Mock
     private Element itkManifest;
-    private Attr itkManifestCount;
+    @Mock
     private Element itkManifestItem;
-    private Attr itkManifestItemId;
+    @Mock
     private Attr itkManifestProfileId;
+    @Mock
     private Element itkPayloads;
-    private Attr itkPayloadsCount;
+    @Mock
     private Element itkPayload;
-    private Attr itkPayloadId;
+    @Mock
     private Element soapHeader;
+    @Mock
     private Node soapAction;
+    @Mock
     private Element auditIdentity;
+    @Mock
     private Element itkAuditIdentityId;
-    private Attr itkAuditIdentityIdUri;
+
+    @InjectMocks
+    private ItkValidator itkValidator;
 
     @BeforeEach
     public void setUp() throws XPathExpressionException {
@@ -83,69 +86,35 @@ public class ItkValidatorTest {
         reportMap.put(ITK_PAYLOADS, prepareItkPayloadsElement());
     }
 
-    private Element prepareItkPayloadsElement() {
-        itkPayloads = mock(Element.class);
-        itkPayloadsCount = mock(Attr.class);
-        itkPayload = mock(Element.class);
-        itkPayloadId = mock(Attr.class);
-
+    private Element prepareItkPayloadsElement() throws XPathExpressionException {
+        when(itkPayloads.getAttribute("count")).thenReturn("1");
+        when(itkPayload.getAttribute("id")).thenReturn("ID");
+        when(xmlUtils.getNodesFromElement(itkPayloads, ITK_PAYLOAD_XPATH)).thenReturn(asList(itkPayload));
 
         return itkPayloads;
     }
 
-    private void prepareItkPayloadMocks() throws XPathExpressionException {
-        when(itkPayloadsCount.getValue()).thenReturn("1");
-        when(itkPayloads.getAttributeNode("count")).thenReturn(itkPayloadsCount);
-        when(itkPayloadId.getValue()).thenReturn("ID");
-        when(itkPayload.getAttributeNode("id")).thenReturn(itkPayloadId);
-        when(xmlUtils.getNodesFromElement(itkPayloads, ITK_PAYLOAD_XPATH))
-            .thenReturn(Collections.singletonList(itkPayload));
-    }
-
-    private Element prepareItkHeaderElement() {
-        itkHeader = mock(Element.class);
-        itkService = mock(Attr.class);
-        itkManifest = mock(Element.class);
-        itkManifestCount = mock(Attr.class);
-        itkManifestItem = mock(Element.class);
-        itkManifestItemId = mock(Attr.class);
-        itkManifestProfileId = mock(Attr.class);
-        auditIdentity = mock(Element.class);
-        itkAuditIdentityId = mock(Element.class);
-        itkAuditIdentityIdUri = mock(Attr.class);
-
-        return itkHeader;
-    }
-
-    private void prepareItkHeaderMocks() throws XPathExpressionException {
+    private Element prepareItkHeaderElement() throws XPathExpressionException {
         when(itkHeader.getAttributeNode("trackingid")).thenReturn(mock(Attr.class));
         when(itkService.getValue()).thenReturn(VALID_ACTION_SERVICE);
         when(itkHeader.getAttributeNode("service")).thenReturn(itkService);
-        when(itkManifestCount.getValue()).thenReturn("1");
-        when(itkManifest.getAttributeNode("count")).thenReturn(itkManifestCount);
-        when(itkManifestItemId.getValue()).thenReturn("ID");
-        when(itkManifestItem.getAttributeNode("id")).thenReturn(itkManifestItemId);
+        when(itkManifest.getAttribute("count")).thenReturn("1");
+        when(itkManifestItem.getAttribute("id")).thenReturn("ID");
         when(itkManifestProfileId.getValue()).thenReturn(VALID_PROFILE_ID);
         when(itkManifestItem.getAttributeNode("profileid")).thenReturn(itkManifestProfileId);
-        when(xmlUtils.getNodesFromElement(itkManifest, ITK_MANIFEST_ITEM_XPATH))
-            .thenReturn(Collections.singletonList(itkManifestItem));
+        when(xmlUtils.getNodesFromElement(itkManifest, ITK_MANIFEST_ITEM_XPATH)).thenReturn(asList(itkManifestItem));
         when(xmlUtils.getSingleNode(itkHeader, ITK_MANIFEST_XPATH)).thenReturn(itkManifest);
-        when(itkAuditIdentityIdUri.getValue()).thenReturn(VALID_AUDIT_IDENTITY);
-        when(itkAuditIdentityId.getAttributeNode("uri")).thenReturn(itkAuditIdentityIdUri);
+        when(itkAuditIdentityId.getAttribute("uri")).thenReturn(VALID_AUDIT_IDENTITY);
         when(xmlUtils.getSingleNode(auditIdentity, ITK_AUDIT_IDENTITY_ID_XPATH)).thenReturn(itkAuditIdentityId);
         when(xmlUtils.getSingleNode(itkHeader, ITK_AUDIT_IDENTITY_XPATH)).thenReturn(auditIdentity);
+        return itkHeader;
     }
 
-    private Element prepareSoapHeaderElement() {
-        soapHeader = mock(Element.class);
-        soapAction = mock(Node.class);
-
-        return soapHeader;
-    }
-
-    private void prepareSoapHeaderMocks() throws XPathExpressionException {
+    private Element prepareSoapHeaderElement() throws XPathExpressionException {
         when(xmlUtils.getSingleNode(soapHeader, SOAP_ACTION_XPATH)).thenReturn(soapAction);
         when(soapAction.getNodeValue()).thenReturn(VALID_ACTION_SERVICE);
+
+        return soapHeader;
     }
 
     @Test
@@ -171,11 +140,7 @@ public class ItkValidatorTest {
 
     @Test
     public void shouldFailWhenSoapActionAndItkServiceDiffer() throws XPathExpressionException {
-        prepareItkHeaderMocks();
-        prepareItkPayloadMocks();
-        prepareSoapHeaderMocks();
         when(itkService.getValue()).thenReturn("invalidActionService");
-
         checkExceptionThrownAndErrorMessage("Soap Action is not equal to ITK service");
     }
 
@@ -206,7 +171,7 @@ public class ItkValidatorTest {
     @Test
     public void shouldFailWhenAuditIdentityInvalid() throws XPathExpressionException {
         String invalidAuditIdentity = "InvalidAuditIdentity";
-        when(itkAuditIdentityIdUri.getValue()).thenReturn(invalidAuditIdentity);
+        when(itkAuditIdentityId.getAttribute("uri")).thenReturn(invalidAuditIdentity);
         checkExceptionThrownAndErrorMessage("Invalid Audit Identity value: InvalidAuditIdentity");
     }
 
