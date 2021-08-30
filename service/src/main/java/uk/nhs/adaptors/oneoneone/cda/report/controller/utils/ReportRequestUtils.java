@@ -4,7 +4,6 @@ import static java.util.Comparator.comparing;
 
 import static uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil.parseToInstantType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +11,7 @@ import java.util.stream.IntStream;
 
 import org.apache.xmlbeans.XmlException;
 import org.dom4j.Element;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -67,14 +67,20 @@ public final class ReportRequestUtils {
 
     @Nullable
     private static List<Node> getNodes(List<NodeList> nodeListList) {
-        List<Node> nodesList = new ArrayList<>();
-        for (NodeList x : nodeListList) {
+        return nodeListList.stream()
+            .map(nodeList-> getNodeListItem(nodeList))
+            .flatMap(List::stream)
+            .filter(item -> item.getNodeName().contains(CLINICAL_DOCUMENT_NODE_NAME))
+            .collect(Collectors.toList());
 
-            IntStream.range(0, x.getLength())
-                .mapToObj(i -> x.item(i))
-                .filter(item -> item.getNodeName().contains(CLINICAL_DOCUMENT_NODE_NAME))
-                .forEach(item -> nodesList.add(item));
-        }
-        return nodesList;
+    }
+
+    @NotNull
+    private static List<Node> getNodeListItem(NodeList nodeList) {
+        return IntStream.range(0, nodeList.getLength())
+            .mapToObj(i -> nodeList.item(i)).collect(Collectors.toList());
+
+
+
     }
 }
