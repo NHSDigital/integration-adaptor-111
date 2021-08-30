@@ -38,7 +38,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkResponseUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHeaderParserUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportParserUtil;
-import uk.nhs.adaptors.oneoneone.cda.report.mapper.PeriodMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkAddressValidator;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
@@ -64,7 +63,6 @@ public class ReportController {
     private final SoapValidator soapValidator;
     private final ReportItkHeaderParserUtil headerParserUtil;
     private final ItkAddressValidator itkAddressValidator;
-    private final PeriodMapper periodMapper;
 
     @PostMapping(value = "/report",
         consumes = {APPLICATION_XML_VALUE, TEXT_XML_VALUE},
