@@ -2,17 +2,12 @@ package uk.nhs.adaptors.oneoneone.cda.report.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
-
-import javax.xml.xpath.XPathExpressionException;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+
+import javax.xml.xpath.XPathExpressionException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -95,7 +90,7 @@ public class SoapValidatorTest {
 
     @Test
     public void shouldFailWhenTimestampIsMissing() throws XPathExpressionException {
-        when(xmlUtils.getSingleNode(soapHeader,SEND_TO_XPATH)).thenReturn(null);
+        when(xmlUtils.getSingleNode(soapHeader, SEND_TO_XPATH)).thenReturn(null);
 
         checkExceptionThrownAndErrorMessage("Send To missing");
     }
@@ -139,7 +134,7 @@ public class SoapValidatorTest {
             assertThat(e.getReason()).isEqualTo(errorMessage);
             assertThat(e.getMessage()).isEqualTo(SOAP_VALIDATION_FAILED_MSG);
         } catch (Exception e) {
-            fail("Unexepected exception thrown");
+            fail("Unexpected exception thrown");
         }
 
         assertThat(exceptionThrown).isTrue();

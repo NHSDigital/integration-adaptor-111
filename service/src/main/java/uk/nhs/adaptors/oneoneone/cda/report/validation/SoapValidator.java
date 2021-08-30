@@ -31,7 +31,8 @@ public class SoapValidator {
     private final SoapProperties soapProperties;
     private final XmlUtils xmlUtils;
 
-    public void checkSoapItkConformance(Element soapHeader) throws SoapClientException, SoapMustUnderstandException, XPathExpressionException {
+    public void checkSoapItkConformance(Element soapHeader) throws SoapClientException, SoapMustUnderstandException,
+        XPathExpressionException {
         if (soapProperties.isValidationEnabled()) {
             checkSendTo(soapHeader);
             checkTimestamp(soapHeader);
