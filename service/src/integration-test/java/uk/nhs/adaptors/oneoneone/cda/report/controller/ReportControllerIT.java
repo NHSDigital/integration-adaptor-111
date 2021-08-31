@@ -11,6 +11,7 @@ import static io.restassured.RestAssured.given;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.ACTION;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.BODY;
 
+import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -24,8 +25,8 @@ import java.util.stream.Stream;
 import javax.jms.IllegalStateException;
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.xml.parsers.ParserConfigurationException;
 
-import org.dom4j.DocumentException;
 import org.json.JSONException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -46,6 +47,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.xml.sax.SAXException;
 
 import junitparams.JUnitParamsRunner;
 import lombok.extern.slf4j.Slf4j;
@@ -164,7 +166,7 @@ public class ReportControllerIT {
     @ParameterizedTest(name = "postReportValidBody")
     @MethodSource("validItkReportAndExpectedJsonValues")
     public void postReportValidBody(String itkReportRequest, String expectedJson)
-        throws JMSException, DocumentException, JSONException {
+        throws JMSException, JSONException, ParserConfigurationException, SAXException, IOException {
         String responseBody = given()
             .port(port)
             .contentType(APPLICATION_XML_UTF_8)

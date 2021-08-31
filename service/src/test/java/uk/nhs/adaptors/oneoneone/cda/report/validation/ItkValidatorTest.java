@@ -4,28 +4,30 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.DISTRIBUTION_ENVELOPE;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_HEADER;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_PAYLOADS;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.MESSAGE_ID;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_HEADER;
+import java.util.UUID;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.dom4j.Attribute;
-import org.dom4j.Element;
-import org.dom4j.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
-import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItems;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
 
+@ExtendWith(MockitoExtension.class)
 public class ItkValidatorTest {
+    private static final String MESSAGE_ID = UUID.randomUUID().toString();
+    private static final String SOAP_ADDRESS = "http://www.w3.org/2005/08/addressing/anonymous";
     private static final String VALID_ACTION_SERVICE = "urn:nhs-itk:services:201005:SendNHS111Report-v2-0";
     private static final String SOAP_ACTION_XPATH = "//*[local-name()='Action']";
     private static final String ITK_MANIFEST_XPATH = "//*[local-name()='manifest']";
@@ -37,106 +39,96 @@ public class ItkValidatorTest {
     private static final String VALID_PROFILE_ID = "urn:nhs-en:profile:nhs111CDADocument-v2-0";
     private static final String VALID_AUDIT_IDENTITY = "urn:nhs-uk:identity:ods:5L399";
 
-    private ItkValidator itkValidator = new ItkValidator();
+    @Mock
+    private XmlUtils xmlUtils;
 
-    private Map<ReportElement, Element> reportMap;
+    private ReportItems reportItems;
 
+    @Mock
     private Element itkHeader;
-    private Attribute itkService;
+    @Mock
+    private Attr itkService;
+    @Mock
     private Element itkManifest;
-    private Attribute itkManifestCount;
+    @Mock
     private Element itkManifestItem;
-    private Attribute itkManifestItemId;
-    private Attribute itkManifestProfileId;
+    @Mock
+    private Attr itkManifestProfileId;
+    @Mock
     private Element itkPayloads;
-    private Attribute itkPayloadsCount;
+    @Mock
     private Element itkPayload;
-    private Attribute itkPayloadId;
+    @Mock
     private Element soapHeader;
+    @Mock
     private Node soapAction;
+    @Mock
     private Element auditIdentity;
+    @Mock
     private Element itkAuditIdentityId;
-    private Attribute itkAuditIdentityIdUri;
+
+    @InjectMocks
+    private ItkValidator itkValidator;
 
     @BeforeEach
     public void setUp() {
-        reportMap = new HashMap<>();
-        reportMap.put(MESSAGE_ID, mock(Element.class));
-        reportMap.put(DISTRIBUTION_ENVELOPE, mock(Element.class));
-        reportMap.put(ITK_HEADER, prepareItkHeaderElement());
-        reportMap.put(SOAP_HEADER, prepareSoapHeaderElement());
-        reportMap.put(ITK_PAYLOADS, prepareItkPayloadsElement());
+        reportItems = new ReportItems();
+        reportItems.setMessageId(MESSAGE_ID);
+        reportItems.setSoapAddress(SOAP_ADDRESS);
+        reportItems.setDistributionEnvelope(mock(Node.class));
+        reportItems.setItkHeader(prepareItkHeaderElement());
+        reportItems.setSoapHeader(prepareSoapHeaderElement());
+        reportItems.setPayloads(prepareItkPayloadsElement());
     }
 
     private Element prepareItkPayloadsElement() {
-        itkPayloads = mock(Element.class);
-        itkPayloadsCount = mock(Attribute.class);
-        when(itkPayloadsCount.getValue()).thenReturn("1");
-        when(itkPayloads.attribute("count")).thenReturn(itkPayloadsCount);
-        itkPayload = mock(Element.class);
-        itkPayloadId = mock(Attribute.class);
-        when(itkPayloadId.getValue()).thenReturn("ID");
-        when(itkPayload.attribute("id")).thenReturn(itkPayloadId);
-        when(itkPayloads.selectNodes(ITK_PAYLOAD_XPATH)).thenReturn(asList(itkPayload));
+        lenient().when(itkPayloads.getAttribute("count")).thenReturn("1");
+        lenient().when(itkPayload.getAttribute("id")).thenReturn("ID");
+        lenient().when(xmlUtils.getNodesFromElement(itkPayloads, ITK_PAYLOAD_XPATH)).thenReturn(asList(itkPayload));
 
         return itkPayloads;
     }
 
     private Element prepareItkHeaderElement() {
-        itkHeader = mock(Element.class);
-        when(itkHeader.attribute("trackingid")).thenReturn(mock(Attribute.class));
-        itkService = mock(Attribute.class);
-        when(itkService.getValue()).thenReturn(VALID_ACTION_SERVICE);
-        when(itkHeader.attribute("service")).thenReturn(itkService);
-        itkManifest = mock(Element.class);
-        itkManifestCount = mock(Attribute.class);
-        when(itkManifestCount.getValue()).thenReturn("1");
-        when(itkManifest.attribute("count")).thenReturn(itkManifestCount);
-        itkManifestItem = mock(Element.class);
-        itkManifestItemId = mock(Attribute.class);
-        when(itkManifestItemId.getValue()).thenReturn("ID");
-        when(itkManifestItem.attribute("id")).thenReturn(itkManifestItemId);
-        itkManifestProfileId = mock(Attribute.class);
-        when(itkManifestProfileId.getValue()).thenReturn(VALID_PROFILE_ID);
-        when(itkManifestItem.attribute("profileid")).thenReturn(itkManifestProfileId);
-        when(itkManifest.selectNodes(ITK_MANIFEST_ITEM_XPATH)).thenReturn(asList(itkManifestItem));
-        when(itkHeader.selectSingleNode(ITK_MANIFEST_XPATH)).thenReturn(itkManifest);
-        auditIdentity = mock(Element.class);
-        itkAuditIdentityId = mock(Element.class);
-        itkAuditIdentityIdUri = mock(Attribute.class);
-        when(itkAuditIdentityIdUri.getValue()).thenReturn(VALID_AUDIT_IDENTITY);
-        when(itkAuditIdentityId.attribute("uri")).thenReturn(itkAuditIdentityIdUri);
-        when(auditIdentity.selectSingleNode(ITK_AUDIT_IDENTITY_ID_XPATH)).thenReturn(itkAuditIdentityId);
-        when(itkHeader.selectSingleNode(ITK_AUDIT_IDENTITY_XPATH)).thenReturn(auditIdentity);
+        lenient().when(itkHeader.getAttributeNode("trackingid")).thenReturn(mock(Attr.class));
+        lenient().when(itkService.getValue()).thenReturn(VALID_ACTION_SERVICE);
+        lenient().when(itkHeader.getAttributeNode("service")).thenReturn(itkService);
+        lenient().when(itkManifest.getAttribute("count")).thenReturn("1");
+        lenient().when(itkManifestItem.getAttribute("id")).thenReturn("ID");
+        lenient().when(itkManifestProfileId.getValue()).thenReturn(VALID_PROFILE_ID);
+        lenient().when(itkManifestItem.getAttributeNode("profileid")).thenReturn(itkManifestProfileId);
+        lenient().when(xmlUtils.getNodesFromElement(itkManifest, ITK_MANIFEST_ITEM_XPATH)).thenReturn(asList(itkManifestItem));
+        lenient().when(xmlUtils.getSingleNode(itkHeader, ITK_MANIFEST_XPATH)).thenReturn(itkManifest);
+        lenient().when(itkAuditIdentityId.getAttribute("uri")).thenReturn(VALID_AUDIT_IDENTITY);
+        lenient().when(xmlUtils.getSingleNode(auditIdentity, ITK_AUDIT_IDENTITY_ID_XPATH)).thenReturn(itkAuditIdentityId);
+        lenient().when(xmlUtils.getSingleNode(itkHeader, ITK_AUDIT_IDENTITY_XPATH)).thenReturn(auditIdentity);
         return itkHeader;
     }
 
     private Element prepareSoapHeaderElement() {
-        soapHeader = mock(Element.class);
-        soapAction = mock(Node.class);
-        when(soapHeader.selectSingleNode(SOAP_ACTION_XPATH)).thenReturn(soapAction);
-        when(soapAction.getText()).thenReturn(VALID_ACTION_SERVICE);
+        lenient().when(xmlUtils.getSingleNode(soapHeader, SOAP_ACTION_XPATH)).thenReturn(soapAction);
+        lenient().when(soapAction.getTextContent()).thenReturn(VALID_ACTION_SERVICE);
 
         return soapHeader;
     }
 
     @Test
     public void shouldFailWhenMessageIdDoesNotExist() {
-        reportMap.remove(MESSAGE_ID);
+        reportItems.setMessageId(null);
 
         checkExceptionThrownAndErrorMessage("MessageId missing");
     }
 
     @Test
     public void shouldFailWhenDistributionEnvelopeDoesNotExist() {
-        reportMap.remove(DISTRIBUTION_ENVELOPE);
+        reportItems.setDistributionEnvelope(null);
 
         checkExceptionThrownAndErrorMessage("DistributionEnvelope missing");
     }
 
     @Test
     public void shouldFailWhenTrackingIdDoesNotExist() {
-        when(reportMap.get(ITK_HEADER).attribute("trackingid")).thenReturn(null);
+        when(reportItems.getItkHeader().getAttributeNode("trackingid")).thenReturn(null);
 
         checkExceptionThrownAndErrorMessage("Itk TrackingId missing");
     }
@@ -149,13 +141,13 @@ public class ItkValidatorTest {
 
     @Test
     public void shouldFailWhenManifestItemsAndCountDiffer() {
-        when(itkManifest.selectNodes(ITK_MANIFEST_ITEM_XPATH)).thenReturn(emptyList());
+        when(xmlUtils.getNodesFromElement(itkManifest, ITK_MANIFEST_ITEM_XPATH)).thenReturn(emptyList());
         checkExceptionThrownAndErrorMessage("Manifest count attribute and manifest items size don't match");
     }
 
     @Test
     public void shouldFailWhenPayloadsAndCountDiffer() {
-        when(itkPayloads.selectNodes(ITK_PAYLOAD_XPATH)).thenReturn(emptyList());
+        when(xmlUtils.getNodesFromElement(itkPayloads, ITK_PAYLOAD_XPATH)).thenReturn(emptyList());
         checkExceptionThrownAndErrorMessage("Payload count attribute and payload items size don't match");
     }
 
@@ -167,21 +159,21 @@ public class ItkValidatorTest {
 
     @Test
     public void shouldFailWhenProfileIdMissing() {
-        when(itkManifestItem.attribute("profileid")).thenReturn(null);
+        when(itkManifestItem.getAttributeNode("profileid")).thenReturn(null);
         checkExceptionThrownAndErrorMessage("Manifest profile Id missing");
     }
 
     @Test
     public void shouldFailWhenAuditIdentityInvalid() {
         String invalidAuditIdentity = "InvalidAuditIdentity";
-        when(itkAuditIdentityIdUri.getValue()).thenReturn(invalidAuditIdentity);
+        when(itkAuditIdentityId.getAttribute("uri")).thenReturn(invalidAuditIdentity);
         checkExceptionThrownAndErrorMessage("Invalid Audit Identity value: InvalidAuditIdentity");
     }
 
     private void checkExceptionThrownAndErrorMessage(String errorMessage) {
         boolean exceptionThrown = false;
         try {
-            itkValidator.checkItkConformance(reportMap);
+            itkValidator.checkItkConformance(reportItems);
         } catch (SoapClientException e) {
             exceptionThrown = true;
             assertThat(e.getReason()).isEqualTo(errorMessage);
