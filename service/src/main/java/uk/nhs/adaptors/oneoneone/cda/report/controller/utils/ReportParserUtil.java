@@ -1,19 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
 import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.DocumentBuilderUtil.parseDocument;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.DISTRIBUTION_ENVELOPE;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_HEADER;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_PAYLOADS;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.MESSAGE_ID;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_ADDRESS;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_HEADER;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -28,26 +19,25 @@ public class ReportParserUtil {
 
     private static final String MESSAGE_ID_NODE = "//*[local-name()='MessageID']";
     private static final String ADDRESS_NODE = "//*[local-name()='Address']";
-    private static final String DISTRIBUTION_ENVELOPE_NODE = "//*[local-name()='DistributionEnvelope']";
+    private static final String DISTRIBUTION_ENVELOPE_NODE = "/Envelope/Body/DistributionEnvelope";
     private static final String ITK_PAYLOADS_NODE = "//*[local-name()='payloads']";
     private static final String HEADER_NODE = "//*[local-name()='header']";
     private static final String SOAP_HEADER_NODE = "//*[local-name()='Header']";
 
     private final XmlUtils xmlUtils;
 
-    public Map<ReportElement, Element> parseReportXml(String reportXml) throws XPathExpressionException, ParserConfigurationException,
-        IOException, SAXException {
+    public ReportItems parseReportXml(String reportXml) throws IOException, SAXException, ParserConfigurationException {
 
-        Map<ReportElement, Element> reportElementsMap = new HashMap<>();
+        ReportItems reportItems = new ReportItems();
         Document document = parseDocument(reportXml);
 
-        reportElementsMap.put(MESSAGE_ID, xmlUtils.getElement(document, MESSAGE_ID_NODE));
-        reportElementsMap.put(SOAP_ADDRESS, xmlUtils.getElement(document, ADDRESS_NODE));
-        reportElementsMap.put(DISTRIBUTION_ENVELOPE, xmlUtils.getElement(document, DISTRIBUTION_ENVELOPE_NODE));
-        reportElementsMap.put(ITK_PAYLOADS, xmlUtils.getElement(document, ITK_PAYLOADS_NODE));
-        reportElementsMap.put(ITK_HEADER, xmlUtils.getElement(document, HEADER_NODE));
-        reportElementsMap.put(SOAP_HEADER, xmlUtils.getElement(document, SOAP_HEADER_NODE));
+        reportItems.setMessageId(xmlUtils.getSingleNodeAsString(document, MESSAGE_ID_NODE));
+        reportItems.setSoapAddress(xmlUtils.getSingleNodeAsString(document, ADDRESS_NODE));
+        reportItems.setDistributionEnvelope(xmlUtils.getSingleNode(document, DISTRIBUTION_ENVELOPE_NODE));
+        reportItems.setPayloads((Element) xmlUtils.getSingleNode(document, ITK_PAYLOADS_NODE));
+        reportItems.setItkHeader((Element) xmlUtils.getSingleNode(document, HEADER_NODE));
+        reportItems.setSoapHeader((Element) xmlUtils.getSingleNode(document, SOAP_HEADER_NODE));
 
-        return reportElementsMap;
+        return reportItems;
     }
 }

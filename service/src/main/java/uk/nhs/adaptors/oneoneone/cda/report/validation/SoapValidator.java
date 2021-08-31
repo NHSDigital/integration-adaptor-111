@@ -2,8 +2,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.validation;
 
 import java.time.OffsetDateTime;
 
-import javax.xml.xpath.XPathExpressionException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Attr;
@@ -31,8 +29,7 @@ public class SoapValidator {
     private final SoapProperties soapProperties;
     private final XmlUtils xmlUtils;
 
-    public void checkSoapItkConformance(Element soapHeader) throws SoapClientException, SoapMustUnderstandException,
-        XPathExpressionException {
+    public void checkSoapItkConformance(Element soapHeader) throws SoapClientException, SoapMustUnderstandException {
         if (soapProperties.isValidationEnabled()) {
             checkSendTo(soapHeader);
             checkTimestamp(soapHeader);
@@ -42,7 +39,7 @@ public class SoapValidator {
         }
     }
 
-    private void checkForeingHeader(Element soapHeader) throws SoapMustUnderstandException, XPathExpressionException {
+    private void checkForeingHeader(Element soapHeader) throws SoapMustUnderstandException {
         Node localHeader = xmlUtils.getSingleNode(soapHeader, LOCAL_HEADER_XPATH);
         if (localHeader != null) {
             Attr mustUnderstand = ((Element) localHeader).getAttributeNode("mustUnderstand");
@@ -52,16 +49,16 @@ public class SoapValidator {
         }
     }
 
-    private void checkReplyTo(Element soapHeader) throws SoapClientException, XPathExpressionException {
+    private void checkReplyTo(Element soapHeader) throws SoapClientException {
         Node replyToAddress = xmlUtils.getSingleNode(soapHeader, REPLY_TO_ADDRESS_XPATH);
         if (replyToAddress != null) {
-            if (!StringUtils.equals(REPLY_TO, replyToAddress.getNodeValue())) {
-                throw new SoapClientException("Soap validation failed", "Invalid ReplyTo: " + replyToAddress.getNodeValue());
+            if (!StringUtils.equals(REPLY_TO, replyToAddress.getTextContent())) {
+                throw new SoapClientException("Soap validation failed", "Invalid ReplyTo: " + replyToAddress.getTextContent());
             }
         }
     }
 
-    private void checkUsername(Element soapHeader) throws SoapClientException, XPathExpressionException {
+    private void checkUsername(Element soapHeader) throws SoapClientException {
         Node username = xmlUtils.getSingleNode(soapHeader, USERNAME_XPATH);
 
         if (username == null) {
@@ -69,28 +66,28 @@ public class SoapValidator {
         }
     }
 
-    private void checkTimestamp(Element soapHeader) throws SoapClientException, XPathExpressionException {
+    private void checkTimestamp(Element soapHeader) throws SoapClientException {
         Node timestamp = xmlUtils.getSingleNode(soapHeader, TIMESTAMP_XPATH);
 
         if (timestamp == null) {
             throw new SoapClientException("Soap validation failed", "Timestamp missing");
         }
 
-        String created = xmlUtils.getSingleNode(timestamp, TIMESTAMP_CREATED_XPATH).getNodeValue();
-        String expires = xmlUtils.getSingleNode(timestamp, TIMESTAMP_EXPIRES_XPATH).getNodeValue();
+        String created = xmlUtils.getSingleNode(timestamp, TIMESTAMP_CREATED_XPATH).getTextContent();
+        String expires = xmlUtils.getSingleNode(timestamp, TIMESTAMP_EXPIRES_XPATH).getTextContent();
         if (OffsetDateTime.parse(created).isAfter(OffsetDateTime.parse(expires))) {
             throw new SoapClientException("Soap validation failed", "Invalid timestamp");
         }
     }
 
-    private void checkSendTo(Element soapHeader) throws SoapClientException, XPathExpressionException {
+    private void checkSendTo(Element soapHeader) throws SoapClientException {
         Node sendToNode = xmlUtils.getSingleNode(soapHeader, SEND_TO_XPATH);
 
         if (sendToNode == null) {
             throw new SoapClientException("Soap validation failed", "Send To missing");
         }
 
-        String sendTo = sendToNode.getNodeValue();
+        String sendTo = sendToNode.getTextContent();
 
         if (!StringUtils.equals(soapProperties.getSendTo(), sendTo)) {
             throw new SoapClientException("Soap validation failed", "Invalid Send To value: " + sendTo);

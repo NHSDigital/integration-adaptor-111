@@ -7,8 +7,6 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-import javax.xml.xpath.XPathExpressionException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,38 +56,38 @@ public class SoapValidatorTest {
     private XmlUtils xmlUtils;
 
     @BeforeEach
-    public void setUp() throws XPathExpressionException  {
+    public void setUp() {
         when(soapProperties.isValidationEnabled()).thenReturn(true);
         lenient().when(xmlUtils.getSingleNode(soapHeader, SEND_TO_XPATH)).thenReturn(to);
         lenient().when(soapProperties.getSendTo()).thenReturn(VALID_SOAP_TO);
-        lenient().when(to.getNodeValue()).thenReturn(VALID_SOAP_TO);
+        lenient().when(to.getTextContent()).thenReturn(VALID_SOAP_TO);
         lenient().when(xmlUtils.getSingleNode(soapHeader, TIMESTAMP_XPATH)).thenReturn(timestamp);
-        lenient().when(timestampCreated.getNodeValue()).thenReturn("2020-09-03T11:27:30Z");
+        lenient().when(timestampCreated.getTextContent()).thenReturn("2020-09-03T11:27:30Z");
         lenient().when(xmlUtils.getSingleNode(timestamp, TIMESTAMP_CREATED_XPATH)).thenReturn(timestampCreated);
-        lenient().when(timestampExpires.getNodeValue()).thenReturn("2020-09-04T11:27:30Z");
+        lenient().when(timestampExpires.getTextContent()).thenReturn("2020-09-04T11:27:30Z");
         lenient().when(xmlUtils.getSingleNode(timestamp, TIMESTAMP_EXPIRES_XPATH)).thenReturn(timestampExpires);
         lenient().when(xmlUtils.getSingleNode(soapHeader, USERNAME_XPATH)).thenReturn(username);
-        lenient().when(replyToAddress.getNodeValue()).thenReturn(VALID_REPLY_TO);
+        lenient().when(replyToAddress.getTextContent()).thenReturn(VALID_REPLY_TO);
         lenient().when(xmlUtils.getSingleNode(soapHeader, REPLY_TO_ADDRESS_XPATH)).thenReturn(replyToAddress);
     }
 
     @Test
     public void shouldFailWhenSoapToIsInvalid() {
         String invalidTo = "InvalidTo";
-        when(to.getNodeValue()).thenReturn(invalidTo);
+        when(to.getTextContent()).thenReturn(invalidTo);
 
         checkExceptionThrownAndErrorMessage("Invalid Send To value: " + invalidTo);
     }
 
     @Test
-    public void shouldFailWhenSoapToIsMissing() throws XPathExpressionException {
+    public void shouldFailWhenSoapToIsMissing() {
         when(xmlUtils.getSingleNode(soapHeader, SEND_TO_XPATH)).thenReturn(null);
 
         checkExceptionThrownAndErrorMessage("Send To missing");
     }
 
     @Test
-    public void shouldFailWhenTimestampIsMissing() throws XPathExpressionException {
+    public void shouldFailWhenTimestampIsMissing() {
         when(xmlUtils.getSingleNode(soapHeader, SEND_TO_XPATH)).thenReturn(null);
 
         checkExceptionThrownAndErrorMessage("Send To missing");
@@ -97,13 +95,13 @@ public class SoapValidatorTest {
 
     @Test
     public void shouldFailWhenTimestampIsInvalid() {
-        when(timestampExpires.getNodeValue()).thenReturn("2018-09-04T11:27:30Z");
+        when(timestampExpires.getTextContent()).thenReturn("2018-09-04T11:27:30Z");
 
         checkExceptionThrownAndErrorMessage("Invalid timestamp");
     }
 
     @Test
-    public void shouldFailWhenUsernameIsMissing() throws XPathExpressionException {
+    public void shouldFailWhenUsernameIsMissing() {
         when(xmlUtils.getSingleNode(soapHeader, USERNAME_XPATH)).thenReturn(null);
 
         checkExceptionThrownAndErrorMessage("Username missing");
@@ -112,7 +110,7 @@ public class SoapValidatorTest {
     @Test
     public void shouldFailWhenReplyToInvalid() {
         String invalidReplyTo = "InvalidReplyTo";
-        when(replyToAddress.getNodeValue()).thenReturn(invalidReplyTo);
+        when(replyToAddress.getTextContent()).thenReturn(invalidReplyTo);
 
         checkExceptionThrownAndErrorMessage("Invalid ReplyTo: InvalidReplyTo");
     }

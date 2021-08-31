@@ -13,8 +13,6 @@ import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHea
 
 import java.util.List;
 
-import javax.xml.xpath.XPathExpressionException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +53,7 @@ public class ReportItkHeaderParserUtilTest {
     private Attr typeAttribute;
 
     @BeforeEach
-    private void setUp() throws XPathExpressionException {
+    private void setUp() {
         when(specificationElement.getAttribute(KEY_ATTRIBUTE)).thenReturn(SPEC_KEY);
         when(specificationElement.getAttribute(VALUE_ATTRIBUTE)).thenReturn(SPEC_VALUE);
         when(headerElement.getAttribute(TRACKING_ID_ATTRIBUTE)).thenReturn(TRACKING_ID);
@@ -63,7 +61,7 @@ public class ReportItkHeaderParserUtilTest {
     }
 
     @Test
-    public void getHeaderValuesWithOdsAndDosIdShouldReturnCorrectItkReportHeader() throws XPathExpressionException {
+    public void getHeaderValuesWithOdsAndDosIdShouldReturnCorrectItkReportHeader() {
         when(odsCodeElement.getAttribute(URI_ATTRIBUTE)).thenReturn(ODS_CODE);
         when(dosIdElement.getAttribute(URI_ATTRIBUTE)).thenReturn(DOS_ID);
         when(dosIdElement.getAttributeNode(TYPE_ATTRIBUTE)).thenReturn(typeAttribute);
@@ -80,7 +78,7 @@ public class ReportItkHeaderParserUtilTest {
     }
 
     @Test
-    public void getHeaderValuesWithOdsShouldReturnCorrectItkReportHeader() throws XPathExpressionException {
+    public void getHeaderValuesWithOdsShouldReturnCorrectItkReportHeader() {
         when(odsCodeElement.getAttribute(URI_ATTRIBUTE)).thenReturn(ODS_CODE);
         when(xmlUtils.getNodesFromElement(headerElement, ITK_ADDRESS_NODE)).thenReturn(List.of(odsCodeElement));
 
@@ -94,7 +92,7 @@ public class ReportItkHeaderParserUtilTest {
     }
 
     @Test
-    public void getHeaderValuesWithDosIdShouldReturnCorrectItkReportHeader() throws XPathExpressionException {
+    public void getHeaderValuesWithDosIdShouldReturnCorrectItkReportHeader() {
         when(dosIdElement.getAttribute(URI_ATTRIBUTE)).thenReturn(DOS_ID);
         when(dosIdElement.getAttributeNode(TYPE_ATTRIBUTE)).thenReturn(typeAttribute);
         when(dosIdElement.getAttribute(TYPE_ATTRIBUTE)).thenReturn(TYPE);

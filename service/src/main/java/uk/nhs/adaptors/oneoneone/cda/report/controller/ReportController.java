@@ -8,16 +8,7 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 import static org.springframework.http.MediaType.TEXT_XML_VALUE;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.DISTRIBUTION_ENVELOPE;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_HEADER;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.MESSAGE_ID;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_ADDRESS;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_HEADER;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils.extractClinicalDocument;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils.extractDistributionEnvelope;
 import static uk.nhs.adaptors.oneoneone.xml.XmlValidator.validate;
-
-import java.util.Map;
 
 import org.apache.xmlbeans.XmlException;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import lombok.AllArgsConstructor;
@@ -35,9 +25,10 @@ import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientExce
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapMustUnderstandException;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkResponseUtil;
-import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItems;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHeaderParserUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportParserUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils;
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkAddressValidator;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
@@ -64,6 +55,7 @@ public class ReportController {
     private final ReportItkHeaderParserUtil headerParserUtil;
     private final ItkAddressValidator itkAddressValidator;
     private final ReportParserUtil reportParserUtil;
+    private final ReportRequestUtils reportRequestUtils;
 
     @PostMapping(value = "/report",
         consumes = {APPLICATION_XML_VALUE, TEXT_XML_VALUE},
@@ -74,27 +66,27 @@ public class ReportController {
         String toAddress = null;
         String messageId;
         try {
-            Map<ReportElement, Element> reportElementsMap = reportParserUtil.parseReportXml(reportXml);
-            itkValidator.checkItkConformance(reportElementsMap);
-            soapValidator.checkSoapItkConformance(reportElementsMap.get(SOAP_HEADER));
-            itkAddressValidator.checkItkOdsAndDosId(reportElementsMap.get(ITK_HEADER));
-            ItkReportHeader headerValues = headerParserUtil.getHeaderValues(reportElementsMap.get(ITK_HEADER));
-            messageId = reportElementsMap.get(MESSAGE_ID).getNodeValue();
-            toAddress = getValueOrDefaultAddress(reportElementsMap.get(SOAP_ADDRESS));
+            ReportItems reportItems = reportParserUtil.parseReportXml(reportXml);
+            itkValidator.checkItkConformance(reportItems);
+            soapValidator.checkSoapItkConformance(reportItems.getSoapHeader());
+            itkAddressValidator.checkItkOdsAndDosId(reportItems.getItkHeader());
+            ItkReportHeader headerValues = headerParserUtil.getHeaderValues(reportItems.getItkHeader());
+            toAddress = getValueOrDefaultAddress(reportItems.getSoapAddress());
 
             LOGGER.info("ITK SOAP message received. MessageId: {}, ItkTrackingId: {}",
-                messageId, headerValues.getTrackingId());
+                reportItems.getMessageId(), headerValues.getTrackingId());
 
-            DistributionEnvelopeDocument distributionEnvelope = extractDistributionEnvelope(reportElementsMap
-                .get(DISTRIBUTION_ENVELOPE));
+            DistributionEnvelopeDocument distributionEnvelope = reportRequestUtils.extractDistributionEnvelope(reportItems
+                .getDistributionEnvelope());
             validate(distributionEnvelope);
-            POCDMT000002UK01ClinicalDocument1 clinicalDocument = extractClinicalDocument(distributionEnvelope);
+            POCDMT000002UK01ClinicalDocument1 clinicalDocument = reportRequestUtils.extractClinicalDocument(distributionEnvelope);
 
             validate(clinicalDocument);
 
-            encounterReportService.transformAndPopulateToGP(clinicalDocument, messageId, headerValues);
+            encounterReportService.transformAndPopulateToGP(clinicalDocument, reportItems.getMessageId(), headerValues);
 
-            return new ResponseEntity<>(itkResponseUtil.createSuccessResponseEntity(messageId, randomUUID().toString().toUpperCase()), OK);
+            return new ResponseEntity<>(
+                itkResponseUtil.createSuccessResponseEntity(reportItems.getMessageId(), randomUUID().toString().toUpperCase()), OK);
         } catch (SAXException e) {
             LOGGER.error(e.getMessage(), e);
             return new ResponseEntity<>(createErrorResponseBody(
@@ -125,8 +117,8 @@ public class ReportController {
         }
     }
 
-    public static String getValueOrDefaultAddress(Element value) {
-        return value == null ? DEFAULT_ADDRESS : value.getNodeValue();
+    public static String getValueOrDefaultAddress(String value) {
+        return value == null ? DEFAULT_ADDRESS : value;
     }
 
     private String createErrorResponseBody(String toAddress, String errorCode, String faultCode, String errorForUser, String errorMessage) {

@@ -8,8 +8,6 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.xml.xpath.XPathExpressionException;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,7 +40,7 @@ public class ItkAddressValidatorTest {
     private ItkAddressValidator itkAddressValidator;
 
     @Test
-    public void shouldFailWhenOdsAndDosIdAreNotSupported() throws XPathExpressionException {
+    public void shouldFailWhenOdsAndDosIdAreNotSupported() {
         when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES);
         when(itkProperties.getDosIds()).thenReturn(SUPPORTED_DOS_IDS);
         when(reportItkHeaderParserUtil.getOdsCode(itkHeader)).thenReturn(NOT_SUPPORTED_ODS_CODE);
@@ -51,7 +49,7 @@ public class ItkAddressValidatorTest {
         checkExceptionThrown(itkHeader);
     }
 
-    private void checkExceptionThrown(Element header) throws XPathExpressionException {
+    private void checkExceptionThrown(Element header) {
         String expectedMessage = String.format("Both ODS code (%s) and DOS ID (%s) are invalid",
             NOT_SUPPORTED_ODS_CODE, NOT_SUPPORTED_DOS_ID);
         String expectedReason = "Message rejected";
@@ -69,7 +67,7 @@ public class ItkAddressValidatorTest {
     }
 
     @Test
-    public void shouldNotFailWhenOdsIsSupported() throws XPathExpressionException {
+    public void shouldNotFailWhenOdsIsSupported() {
         when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES);
         when(itkProperties.getDosIds()).thenReturn(SUPPORTED_DOS_IDS);
         when(reportItkHeaderParserUtil.getOdsCode(itkHeader)).thenReturn(SUPPORTED_ODS_CODE);
@@ -79,7 +77,7 @@ public class ItkAddressValidatorTest {
     }
 
     @Test
-    public void shouldFailWhenOdsNotSupportedAndDosIdEmpty() throws XPathExpressionException {
+    public void shouldFailWhenOdsNotSupportedAndDosIdEmpty() {
         when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES);
         when(itkProperties.getDosIds()).thenReturn(newArrayList());
         when(reportItkHeaderParserUtil.getOdsCode(itkHeader)).thenReturn(NOT_SUPPORTED_ODS_CODE);
@@ -89,7 +87,7 @@ public class ItkAddressValidatorTest {
     }
 
     @Test
-    public void shouldNotFailWhenBothOdsAndDosListNotDefined() throws XPathExpressionException {
+    public void shouldNotFailWhenBothOdsAndDosListNotDefined() {
         when(itkProperties.getOdsCodes()).thenReturn(newArrayList());
         when(itkProperties.getDosIds()).thenReturn(newArrayList());
 
@@ -97,7 +95,7 @@ public class ItkAddressValidatorTest {
     }
 
     @Test
-    public void shouldNotFailWhenDosIdIsSupported() throws XPathExpressionException {
+    public void shouldNotFailWhenDosIdIsSupported() {
         when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES);
         when(itkProperties.getDosIds()).thenReturn(SUPPORTED_DOS_IDS);
         when(reportItkHeaderParserUtil.getOdsCode(itkHeader)).thenReturn(NOT_SUPPORTED_ODS_CODE);
@@ -107,7 +105,7 @@ public class ItkAddressValidatorTest {
     }
 
     @Test
-    public void shouldNotFailWhenOdsAndDosIdAreSupported() throws XPathExpressionException {
+    public void shouldNotFailWhenOdsAndDosIdAreSupported() {
         when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES);
         when(itkProperties.getDosIds()).thenReturn(SUPPORTED_DOS_IDS);
         when(reportItkHeaderParserUtil.getOdsCode(itkHeader)).thenReturn(SUPPORTED_ODS_CODE);
@@ -116,7 +114,7 @@ public class ItkAddressValidatorTest {
         checkExceptionNotThrown();
     }
 
-    private void checkExceptionNotThrown() throws XPathExpressionException {
+    private void checkExceptionNotThrown() {
         boolean exceptionThrown = false;
         try {
             itkAddressValidator.checkItkOdsAndDosId(itkHeader);

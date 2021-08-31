@@ -1,5 +1,10 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
+import static javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD;
+import static javax.xml.XMLConstants.ACCESS_EXTERNAL_SCHEMA;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -19,8 +24,8 @@ public class DocumentBuilderUtil {
 
     private static DocumentBuilder documentBuilder() throws ParserConfigurationException {
         DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
-        //        df.setAttribute(ACCESS_EXTERNAL_DTD, EMPTY);
-        //        df.setAttribute(ACCESS_EXTERNAL_SCHEMA, EMPTY);
+        df.setAttribute(ACCESS_EXTERNAL_DTD, EMPTY);
+        df.setAttribute(ACCESS_EXTERNAL_SCHEMA, EMPTY);
         return df.newDocumentBuilder();
     }
 }

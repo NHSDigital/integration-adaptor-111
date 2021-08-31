@@ -9,8 +9,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import javax.xml.xpath.XPathExpressionException;
-
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
 
@@ -29,7 +27,7 @@ public class ReportItkHeaderParserUtil {
 
     private final XmlUtils xmlUtils;
 
-    public ItkReportHeader getHeaderValues(Element headerElement) throws XPathExpressionException {
+    public ItkReportHeader getHeaderValues(Element headerElement) {
         ItkReportHeader header = new ItkReportHeader();
         header.setTrackingId(headerElement.getAttribute(TRACKING_ID_ATTRIBUTE));
         setSpecification(header, headerElement);
@@ -38,7 +36,7 @@ public class ReportItkHeaderParserUtil {
         return header;
     }
 
-    public String getDosServiceId(Element headerElement) throws XPathExpressionException {
+    public String getDosServiceId(Element headerElement) {
         List<Element> elements = getElements(headerElement, ITK_ADDRESS_NODE);
         return elements.stream()
             .filter(it -> it.getAttributeNode(TYPE_ATTRIBUTE) != null
@@ -49,7 +47,7 @@ public class ReportItkHeaderParserUtil {
             .orElse(null);
     }
 
-    public String getOdsCode(Element headerElement) throws XPathExpressionException {
+    public String getOdsCode(Element headerElement) {
         List<Element> elements = getElements(headerElement, ITK_ADDRESS_NODE);
         return elements.stream()
             .filter(it -> it.getAttributeNode(TYPE_ATTRIBUTE) == null
@@ -60,7 +58,7 @@ public class ReportItkHeaderParserUtil {
             .orElse(null);
     }
 
-    private void setAddressList(ItkReportHeader header, Element headerElement) throws XPathExpressionException {
+    private void setAddressList(ItkReportHeader header, Element headerElement) {
         String dosServiceId = Optional
             .ofNullable(getDosServiceId(headerElement))
             .map("DOSServiceID:"::concat)
@@ -78,13 +76,13 @@ public class ReportItkHeaderParserUtil {
         header.setAddressList(Collections.singletonList(address));
     }
 
-    private void setSpecification(ItkReportHeader header, Element headerElement) throws XPathExpressionException {
+    private void setSpecification(ItkReportHeader header, Element headerElement) {
         Element spec = getElements(headerElement, SPECIFICATION_NODE).get(0);
         header.setSpecKey(spec.getAttribute(KEY_ATTRIBUTE));
         header.setSpecVal(spec.getAttribute(VALUE_ATTRIBUTE));
     }
 
-    private List<Element> getElements(Element element, String xpath) throws XPathExpressionException {
+    private List<Element> getElements(Element element, String xpath) {
         return xmlUtils.getNodesFromElement(element, xpath).stream().map(it -> (Element) it).collect(toList());
     }
 }

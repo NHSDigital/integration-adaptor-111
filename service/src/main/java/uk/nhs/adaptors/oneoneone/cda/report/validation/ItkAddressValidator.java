@@ -2,8 +2,6 @@ package uk.nhs.adaptors.oneoneone.cda.report.validation;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
-import javax.xml.xpath.XPathExpressionException;
-
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
 
@@ -20,7 +18,7 @@ public class ItkAddressValidator {
     private final ItkProperties itkProperties;
     private final ReportItkHeaderParserUtil reportItkHeaderParserUtil;
 
-    public void checkItkOdsAndDosId(Element itkHeader) throws SoapClientException, XPathExpressionException {
+    public void checkItkOdsAndDosId(Element itkHeader) throws SoapClientException {
         if (!isEmpty(itkProperties.getOdsCodes()) || !isEmpty(itkProperties.getDosIds())) {
             String odsCode = reportItkHeaderParserUtil.getOdsCode(itkHeader);
             String dosServiceId = reportItkHeaderParserUtil.getDosServiceId(itkHeader);

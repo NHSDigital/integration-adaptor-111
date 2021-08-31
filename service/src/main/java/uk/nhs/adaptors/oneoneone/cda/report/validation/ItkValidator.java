@@ -2,16 +2,7 @@ package uk.nhs.adaptors.oneoneone.cda.report.validation;
 
 import static java.util.Arrays.asList;
 
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.DISTRIBUTION_ENVELOPE;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_HEADER;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.ITK_PAYLOADS;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.MESSAGE_ID;
-import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement.SOAP_HEADER;
-
 import java.util.List;
-import java.util.Map;
-
-import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -21,7 +12,7 @@ import org.w3c.dom.Node;
 
 import lombok.RequiredArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
-import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportElement;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItems;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
 
 @Component
@@ -41,17 +32,17 @@ public class ItkValidator {
 
     private final XmlUtils xmlUtils;
 
-    public void checkItkConformance(Map<ReportElement, Element> report) throws SoapClientException, XPathExpressionException {
-        checkMessageIdExists(report.get(MESSAGE_ID));
-        checkDistributionEnvelopeExists(report.get(DISTRIBUTION_ENVELOPE));
-        Element itkHeader = report.get(ITK_HEADER);
+    public void checkItkConformance(ReportItems report) throws SoapClientException {
+        checkMessageIdExists(report.getMessageId());
+        checkDistributionEnvelopeExists(report.getDistributionEnvelope());
+        Element itkHeader = report.getItkHeader();
         checkTrackingIdExists(itkHeader);
-        checkSoapAndItkService(report.get(SOAP_HEADER), itkHeader);
-        checkPayloadAndManifest(itkHeader, report.get(ITK_PAYLOADS));
+        checkSoapAndItkService(report.getSoapHeader(), itkHeader);
+        checkPayloadAndManifest(itkHeader, report.getPayloads());
         checkAuditIdentity(itkHeader);
     }
 
-    private void checkAuditIdentity(Element itkHeader) throws SoapClientException, XPathExpressionException {
+    private void checkAuditIdentity(Element itkHeader) throws SoapClientException {
         Node auditNode = xmlUtils.getSingleNode(itkHeader, ITK_AUDIT_IDENTITY_XPATH);
         Node auditIdNode = xmlUtils.getSingleNode((Element) auditNode, AUDIT_IDENTITY_ID_XPATH);
         String auditIdentity = ((Element) auditIdNode).getAttribute("uri");
@@ -61,7 +52,7 @@ public class ItkValidator {
         }
     }
 
-    private void checkPayloadAndManifest(Element itkHeader, Element itkPayloads) throws SoapClientException, XPathExpressionException {
+    private void checkPayloadAndManifest(Element itkHeader, Element itkPayloads) throws SoapClientException {
         Element itkManifest = (Element) xmlUtils.getSingleNode(itkHeader, ITK_MANIFEST_XPATH);
         String manifestCount = itkManifest.getAttribute("count");
         String payloadCount = itkPayloads.getAttribute("count");
@@ -115,13 +106,13 @@ public class ItkValidator {
         }
     }
 
-    private void checkSoapAndItkService(Element soapHeader, Element itkHeader) throws SoapClientException, XPathExpressionException {
+    private void checkSoapAndItkService(Element soapHeader, Element itkHeader) throws SoapClientException {
         Node actionNode = xmlUtils.getSingleNode(soapHeader, SOAP_ACTION_XPATH);
         if (actionNode == null) {
             throw new SoapClientException(SOAP_VALIDATION_FAILED_MSG, "Action node missing");
         }
 
-        String soapAction = actionNode.getNodeValue();
+        String soapAction = actionNode.getTextContent();
         String itkService = itkHeader.getAttributeNode("service").getValue();
 
         if (!StringUtils.equals(soapAction, itkService)) {
@@ -136,14 +127,14 @@ public class ItkValidator {
         }
     }
 
-    private void checkDistributionEnvelopeExists(Element element) throws SoapClientException {
+    private void checkDistributionEnvelopeExists(Node element) throws SoapClientException {
         if (element == null) {
             throw new SoapClientException(SOAP_VALIDATION_FAILED_MSG, "DistributionEnvelope missing");
         }
     }
 
-    private void checkMessageIdExists(Element element) throws SoapClientException {
-        if (element == null) {
+    private void checkMessageIdExists(String messageId) throws SoapClientException {
+        if (messageId == null) {
             throw new SoapClientException(SOAP_VALIDATION_FAILED_MSG, "MessageId missing");
         }
     }
