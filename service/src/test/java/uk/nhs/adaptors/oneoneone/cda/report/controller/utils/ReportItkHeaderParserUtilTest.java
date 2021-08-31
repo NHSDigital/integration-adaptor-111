@@ -13,14 +13,14 @@ import static uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHea
 
 import java.util.List;
 
-import org.dom4j.Attribute;
-import org.dom4j.Element;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportItkHeaderParserUtilTest {
@@ -32,7 +32,10 @@ public class ReportItkHeaderParserUtilTest {
     private static final String TYPE = "2.16.840.1.113883.2.1.3.2.4.18.44";
 
     @InjectMocks
-    private final ReportItkHeaderParserUtil reportItkHeaderParserUtil = new ReportItkHeaderParserUtil();
+    private ReportItkHeaderParserUtil reportItkHeaderParserUtil;
+
+    @Mock
+    private XmlUtils xmlUtils;
 
     @Mock
     private Element headerElement;
@@ -47,23 +50,23 @@ public class ReportItkHeaderParserUtilTest {
     private Element dosIdElement;
 
     @Mock
-    private Attribute typeAttribute;
+    private Attr typeAttribute;
 
     @BeforeEach
     private void setUp() {
-        when(specificationElement.attributeValue(KEY_ATTRIBUTE)).thenReturn(SPEC_KEY);
-        when(specificationElement.attributeValue(VALUE_ATTRIBUTE)).thenReturn(SPEC_VALUE);
-        when(headerElement.attributeValue(TRACKING_ID_ATTRIBUTE)).thenReturn(TRACKING_ID);
-        when(headerElement.selectNodes(SPECIFICATION_NODE)).thenReturn(List.of(specificationElement));
+        when(specificationElement.getAttribute(KEY_ATTRIBUTE)).thenReturn(SPEC_KEY);
+        when(specificationElement.getAttribute(VALUE_ATTRIBUTE)).thenReturn(SPEC_VALUE);
+        when(headerElement.getAttribute(TRACKING_ID_ATTRIBUTE)).thenReturn(TRACKING_ID);
+        when(xmlUtils.getNodesFromElement(headerElement, SPECIFICATION_NODE)).thenReturn(List.of(specificationElement));
     }
 
     @Test
     public void getHeaderValuesWithOdsAndDosIdShouldReturnCorrectItkReportHeader() {
-        when(odsCodeElement.attributeValue(URI_ATTRIBUTE)).thenReturn(ODS_CODE);
-        when(dosIdElement.attributeValue(URI_ATTRIBUTE)).thenReturn(DOS_ID);
-        when(dosIdElement.attribute(TYPE_ATTRIBUTE)).thenReturn(typeAttribute);
-        when(dosIdElement.attributeValue(TYPE_ATTRIBUTE)).thenReturn(TYPE);
-        when(headerElement.selectNodes(ITK_ADDRESS_NODE)).thenReturn(List.of(odsCodeElement, dosIdElement));
+        when(odsCodeElement.getAttribute(URI_ATTRIBUTE)).thenReturn(ODS_CODE);
+        when(dosIdElement.getAttribute(URI_ATTRIBUTE)).thenReturn(DOS_ID);
+        when(dosIdElement.getAttributeNode(TYPE_ATTRIBUTE)).thenReturn(typeAttribute);
+        when(dosIdElement.getAttribute(TYPE_ATTRIBUTE)).thenReturn(TYPE);
+        when(xmlUtils.getNodesFromElement(headerElement, ITK_ADDRESS_NODE)).thenReturn(List.of(odsCodeElement, dosIdElement));
 
         ItkReportHeader header = reportItkHeaderParserUtil.getHeaderValues(headerElement);
 
@@ -76,8 +79,8 @@ public class ReportItkHeaderParserUtilTest {
 
     @Test
     public void getHeaderValuesWithOdsShouldReturnCorrectItkReportHeader() {
-        when(odsCodeElement.attributeValue(URI_ATTRIBUTE)).thenReturn(ODS_CODE);
-        when(headerElement.selectNodes(ITK_ADDRESS_NODE)).thenReturn(List.of(odsCodeElement));
+        when(odsCodeElement.getAttribute(URI_ATTRIBUTE)).thenReturn(ODS_CODE);
+        when(xmlUtils.getNodesFromElement(headerElement, ITK_ADDRESS_NODE)).thenReturn(List.of(odsCodeElement));
 
         ItkReportHeader header = reportItkHeaderParserUtil.getHeaderValues(headerElement);
 
@@ -90,10 +93,10 @@ public class ReportItkHeaderParserUtilTest {
 
     @Test
     public void getHeaderValuesWithDosIdShouldReturnCorrectItkReportHeader() {
-        when(dosIdElement.attributeValue(URI_ATTRIBUTE)).thenReturn(DOS_ID);
-        when(dosIdElement.attribute(TYPE_ATTRIBUTE)).thenReturn(typeAttribute);
-        when(dosIdElement.attributeValue(TYPE_ATTRIBUTE)).thenReturn(TYPE);
-        when(headerElement.selectNodes(ITK_ADDRESS_NODE)).thenReturn(List.of(dosIdElement));
+        when(dosIdElement.getAttribute(URI_ATTRIBUTE)).thenReturn(DOS_ID);
+        when(dosIdElement.getAttributeNode(TYPE_ATTRIBUTE)).thenReturn(typeAttribute);
+        when(dosIdElement.getAttribute(TYPE_ATTRIBUTE)).thenReturn(TYPE);
+        when(xmlUtils.getNodesFromElement(headerElement, ITK_ADDRESS_NODE)).thenReturn(List.of(dosIdElement));
 
         ItkReportHeader header = reportItkHeaderParserUtil.getHeaderValues(headerElement);
 

@@ -1,29 +1,35 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
 import org.apache.xmlbeans.XmlException;
-import org.dom4j.Element;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.ItkXmlException;
 import uk.nhs.connect.iucds.cda.ucr.ClinicalDocumentDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.itk.envelope.DistributionEnvelopeDocument;
 
-public final class ReportRequestUtils {
+@Component
+@RequiredArgsConstructor
+public class ReportRequestUtils {
 
     private static final String CLINICAL_DOCUMENT_NODE_NAME = "ClinicalDocument";
 
-    public static DistributionEnvelopeDocument extractDistributionEnvelope(Element distributionEnvelope) throws ItkXmlException {
+    private final XmlUtils xmlUtils;
+
+    @SneakyThrows
+    public DistributionEnvelopeDocument extractDistributionEnvelope(Node distributionEnvelope) throws ItkXmlException {
         try {
-            DistributionEnvelopeDocument envelopedDocument = DistributionEnvelopeDocument.Factory.parse(distributionEnvelope.asXML());
-            return envelopedDocument;
+            return DistributionEnvelopeDocument.Factory.parse(xmlUtils.serialize(distributionEnvelope));
         } catch (XmlException e) {
             throw new ItkXmlException("DistributionEnvelope missing", e.getMessage(), e);
         }
     }
 
-    public static POCDMT000002UK01ClinicalDocument1 extractClinicalDocument(DistributionEnvelopeDocument envelopedDocument)
+    public POCDMT000002UK01ClinicalDocument1 extractClinicalDocument(DistributionEnvelopeDocument envelopedDocument)
         throws ItkXmlException {
         POCDMT000002UK01ClinicalDocument1 clinicalDocument;
         try {
@@ -37,7 +43,7 @@ public final class ReportRequestUtils {
         return clinicalDocument;
     }
 
-    private static Node findClinicalDoc(DistributionEnvelopeDocument envelopedDocument)
+    private Node findClinicalDoc(DistributionEnvelopeDocument envelopedDocument)
         throws XmlException {
         NodeList childNodes = envelopedDocument.getDistributionEnvelope()
             .getPayloads()

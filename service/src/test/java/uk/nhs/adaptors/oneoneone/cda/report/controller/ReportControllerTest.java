@@ -5,10 +5,10 @@ import static java.nio.file.Files.readAllBytes;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -18,19 +18,23 @@ import java.net.URL;
 import java.nio.file.Paths;
 
 import org.apache.xmlbeans.XmlException;
-import org.dom4j.Element;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+import org.w3c.dom.Element;
 
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkResponseUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportItkHeaderParserUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportParserUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ReportRequestUtils;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
 import uk.nhs.adaptors.oneoneone.cda.report.service.EncounterReportService;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkAddressValidator;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
@@ -64,6 +68,11 @@ public class ReportControllerTest {
 
     @Mock
     private ItkAddressValidator itkAddressValidator;
+
+    @Spy
+    private ReportParserUtil reportParserUtil = new ReportParserUtil(spy(XmlUtils.class));
+    @Spy
+    private ReportRequestUtils reportRequestUtils = new ReportRequestUtils(spy(XmlUtils.class));
 
     @Test
     public void postReportValidRequest() throws XmlException {
@@ -106,7 +115,7 @@ public class ReportControllerTest {
     @Test
     public void postReportInvalidItkRequest() throws SoapClientException {
         doThrow(new SoapClientException("Soap validation failed", "ITK header missing"))
-            .when(itkValidator).checkItkConformance(anyMap());
+            .when(itkValidator).checkItkConformance(any());
         String invalidRequest = getValidXmlReportRequest();
 
         ResponseEntity<String> response = reportController.postReport(invalidRequest);
