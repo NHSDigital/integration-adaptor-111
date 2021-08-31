@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import lombok.Getter;
 import lombok.Setter;
 
 @Component
@@ -19,6 +20,10 @@ import lombok.Setter;
 public class ItkProperties {
     private String odsCodes;
     private String dosIds;
+    @Getter
+    private String url;
+    @Getter
+    private int fetchIntervalMinutes;
 
     public List<String> getOdsCodes() {
         return splitAndTrim(odsCodes);
