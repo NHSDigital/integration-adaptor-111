@@ -1,17 +1,17 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
+import static java.nio.charset.Charset.defaultCharset;
+import static java.nio.file.Files.readAllBytes;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
 import java.net.URL;
-import java.nio.file.Files;
+import java.nio.file.Paths;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Node;
 
 import lombok.SneakyThrows;
@@ -19,7 +19,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.itk.envelope.DistributionEnvelopeDocument;
 
 public class ReportRequestUtilsTest {
-
     private static final String EFFECTIVE_DATE = "20291030182905+00";
     private static final String TYPE_ID_EXTENSION = "POCD_HD000040";
     private static final int VERSION_NUMBER = 1;
@@ -30,32 +29,19 @@ public class ReportRequestUtilsTest {
     private static final String MANIFEST_ID = "uuid_A25CDB08-9AE9-483D-9833-D78A6E40D0AF";
     private static final String CLINICAL_DOCUMENT_NODE_NAME = "ClinicalDocument";
 
-    private ReportRequestUtils reportRequestUtils;
+    private XmlUtils xmlUtils = Mockito.mock(XmlUtils.class);
+    private ReportRequestUtils reportRequestUtils = new ReportRequestUtils(xmlUtils);
+    private URL resourceURL = getClass().getResource("/xml/six-clinical-docs.xml");
     private DistributionEnvelopeDocument distributionEnvelopeDocument;
 
-
-    private XmlUtils xmlUtils = Mockito.mock(XmlUtils.class);
     @Mock
     private Node distributionEnvelope;
 
-    private URL resourceURL = getClass().getResource("/xml/six-clinical-docs.xml");
-
-    @SneakyThrows
-    @BeforeEach
-    private void setUp() {
-
-        reportRequestUtils = new ReportRequestUtils(xmlUtils);
-
-        distributionEnvelopeDocument = DistributionEnvelopeDocument.Factory.parse(resourceURL);
-    }
 
     @SneakyThrows
     @Test
     public void extractDistributionEnvelopeShouldReturnDistributionEnvelopeDocument() {
-        File resourceFile = new ClassPathResource("/xml/six-clinical-docs.xml").getFile();
-        String resourceFileString = new String(Files.readAllBytes(resourceFile.toPath()));
-
-        when(xmlUtils.serialize(distributionEnvelope)).thenReturn(resourceFileString);
+        when(xmlUtils.serialize(distributionEnvelope)).thenReturn(getValidXmlReportRequest());
         DistributionEnvelopeDocument distributionEnvelopeDocumentTest =
             reportRequestUtils.extractDistributionEnvelope(distributionEnvelope);
 
@@ -72,6 +58,8 @@ public class ReportRequestUtilsTest {
     @Test
     public void extractClinicalDocumentShouldReturnClinicalDocument() {
 
+        distributionEnvelopeDocument = DistributionEnvelopeDocument.Factory.parse(resourceURL);
+
         POCDMT000002UK01ClinicalDocument1 clinicalDocumentTest = reportRequestUtils.extractClinicalDocument(distributionEnvelopeDocument);
 
         assertThat(clinicalDocumentTest).isNotEqualTo(null);
@@ -81,6 +69,15 @@ public class ReportRequestUtilsTest {
         assertThat(clinicalDocumentTest.getRecordTargetArray(0).getTypeCode()).isEqualTo(RECORD_TARGET_TYPE_CODE);
         assertThat(clinicalDocumentTest.getRecordTargetArray(0).getPatientRole().getClassCode()).isEqualTo(PATIENT_ROLE);
         assertThat(clinicalDocumentTest.getRecordTargetArray(0).getPatientRole().getAddrArray(0).getUse().get(0)).isEqualTo(ADDRESS_USE);
+    }
+
+    private String getValidXmlReportRequest() {
+        try {
+            URL reportXmlResource = this.getClass().getResource("/xml/six-clinical-docs.xml");
+            return new String(readAllBytes(Paths.get(reportXmlResource.getPath())), defaultCharset());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
