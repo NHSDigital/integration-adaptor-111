@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlTokenSource;
 import org.dom4j.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +42,9 @@ public final class ReportRequestUtils {
             return
                 findClinicalDocs(envelopedDocument).stream()
                     .map(ReportRequestUtils::parseClinicalDoc)
-                    .max(comparing(doc -> parseToInstantType(doc.getEffectiveTime().getValue()).getValue()))
+                    .max(comparing(doc -> {
+                        return parseToInstantType(doc.getEffectiveTime().getValue()).getValue();
+                    }))
                     .get();
         } catch (XmlException e) {
             throw new ItkXmlException("Clinical document missing from payload", e.getMessage(), e);
@@ -58,7 +61,7 @@ public final class ReportRequestUtils {
         List<NodeList> nodeListsList = Arrays.stream(envelopedDocument.getDistributionEnvelope()
             .getPayloads()
             .getPayloadArray())
-            .map(it -> it.getDomNode())
+            .map(XmlTokenSource::getDomNode)
             .map(Node::getChildNodes)
             .collect(Collectors.toList());
 
@@ -68,19 +71,15 @@ public final class ReportRequestUtils {
     @Nullable
     private static List<Node> getNodes(List<NodeList> nodeListList) {
         return nodeListList.stream()
-            .map(nodeList-> getNodeListItem(nodeList))
+            .map(nodeList -> getNodeListItem(nodeList))
             .flatMap(List::stream)
             .filter(item -> item.getNodeName().contains(CLINICAL_DOCUMENT_NODE_NAME))
             .collect(Collectors.toList());
-
     }
 
     @NotNull
     private static List<Node> getNodeListItem(NodeList nodeList) {
         return IntStream.range(0, nodeList.getLength())
             .mapToObj(i -> nodeList.item(i)).collect(Collectors.toList());
-
-
-
     }
 }
