@@ -1,9 +1,17 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
+import static java.util.Comparator.comparing;
+
+import static uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil.parseToInstantType;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.apache.xmlbeans.XmlException;
 import org.springframework.stereotype.Component;
 import org.apache.xmlbeans.XmlTokenSource;
-import org.dom4j.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Node;
@@ -53,7 +61,7 @@ public class ReportRequestUtils {
         return ClinicalDocumentDocument1.Factory.parse(node).getClinicalDocument();
     }
 
-    private Node findClinicalDoc(DistributionEnvelopeDocument envelopedDocument)
+    private List<Node> findClinicalDocs(DistributionEnvelopeDocument envelopedDocument)
         throws XmlException {
         List<NodeList> nodeListsList = Arrays.stream(envelopedDocument.getDistributionEnvelope()
             .getPayloads()
