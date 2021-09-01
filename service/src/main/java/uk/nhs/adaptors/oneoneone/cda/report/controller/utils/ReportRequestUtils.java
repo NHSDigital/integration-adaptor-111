@@ -1,15 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
-import static java.util.Comparator.comparing;
-
-import static uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil.parseToInstantType;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import org.apache.xmlbeans.XmlException;
+import org.springframework.stereotype.Component;
 import org.apache.xmlbeans.XmlTokenSource;
 import org.dom4j.Element;
 import org.jetbrains.annotations.NotNull;
@@ -17,26 +9,31 @@ import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.ItkXmlException;
 import uk.nhs.connect.iucds.cda.ucr.ClinicalDocumentDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.itk.envelope.DistributionEnvelopeDocument;
 
-public final class ReportRequestUtils {
+@Component
+@RequiredArgsConstructor
+public class ReportRequestUtils {
 
     private static final String CLINICAL_DOCUMENT_NODE_NAME = "ClinicalDocument";
 
-    public static DistributionEnvelopeDocument extractDistributionEnvelope(Element distributionEnvelope) throws ItkXmlException {
+    private final XmlUtils xmlUtils;
+
+    @SneakyThrows
+    public DistributionEnvelopeDocument extractDistributionEnvelope(Node distributionEnvelope) throws ItkXmlException {
         try {
-            DistributionEnvelopeDocument envelopedDocument = DistributionEnvelopeDocument.Factory.parse(distributionEnvelope.asXML());
-            return envelopedDocument;
+            return DistributionEnvelopeDocument.Factory.parse(xmlUtils.serialize(distributionEnvelope));
         } catch (XmlException e) {
             throw new ItkXmlException("DistributionEnvelope missing", e.getMessage(), e);
         }
     }
 
-    public static POCDMT000002UK01ClinicalDocument1 extractClinicalDocument(DistributionEnvelopeDocument envelopedDocument)
+    public POCDMT000002UK01ClinicalDocument1 extractClinicalDocument(DistributionEnvelopeDocument envelopedDocument)
         throws ItkXmlException {
         try {
             return
@@ -56,7 +53,7 @@ public final class ReportRequestUtils {
         return ClinicalDocumentDocument1.Factory.parse(node).getClinicalDocument();
     }
 
-    private static List<Node> findClinicalDocs(DistributionEnvelopeDocument envelopedDocument)
+    private Node findClinicalDoc(DistributionEnvelopeDocument envelopedDocument)
         throws XmlException {
         List<NodeList> nodeListsList = Arrays.stream(envelopedDocument.getDistributionEnvelope()
             .getPayloads()

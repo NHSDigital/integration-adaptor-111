@@ -7,16 +7,17 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-import org.dom4j.Element;
-import org.dom4j.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
 import uk.nhs.adaptors.oneoneone.config.SoapProperties;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,55 +52,57 @@ public class SoapValidatorTest {
     private Node username;
     @Mock
     private Node replyToAddress;
+    @Mock
+    private XmlUtils xmlUtils;
 
     @BeforeEach
     public void setUp() {
         when(soapProperties.isValidationEnabled()).thenReturn(true);
-        lenient().when(soapHeader.selectSingleNode(SEND_TO_XPATH)).thenReturn(to);
+        lenient().when(xmlUtils.getSingleNode(soapHeader, SEND_TO_XPATH)).thenReturn(to);
         lenient().when(soapProperties.getSendTo()).thenReturn(VALID_SOAP_TO);
-        lenient().when(to.getText()).thenReturn(VALID_SOAP_TO);
-        lenient().when(soapHeader.selectSingleNode(TIMESTAMP_XPATH)).thenReturn(timestamp);
-        lenient().when(timestampCreated.getText()).thenReturn("2020-09-03T11:27:30Z");
-        lenient().when(timestamp.selectSingleNode(TIMESTAMP_CREATED_XPATH)).thenReturn(timestampCreated);
-        lenient().when(timestampExpires.getText()).thenReturn("2020-09-04T11:27:30Z");
-        lenient().when(timestamp.selectSingleNode(TIMESTAMP_EXPIRES_XPATH)).thenReturn(timestampExpires);
-        lenient().when(soapHeader.selectSingleNode(USERNAME_XPATH)).thenReturn(username);
-        lenient().when(replyToAddress.getText()).thenReturn(VALID_REPLY_TO);
-        lenient().when(soapHeader.selectSingleNode(REPLY_TO_ADDRESS_XPATH)).thenReturn(replyToAddress);
+        lenient().when(to.getTextContent()).thenReturn(VALID_SOAP_TO);
+        lenient().when(xmlUtils.getSingleNode(soapHeader, TIMESTAMP_XPATH)).thenReturn(timestamp);
+        lenient().when(timestampCreated.getTextContent()).thenReturn("2020-09-03T11:27:30Z");
+        lenient().when(xmlUtils.getSingleNode(timestamp, TIMESTAMP_CREATED_XPATH)).thenReturn(timestampCreated);
+        lenient().when(timestampExpires.getTextContent()).thenReturn("2020-09-04T11:27:30Z");
+        lenient().when(xmlUtils.getSingleNode(timestamp, TIMESTAMP_EXPIRES_XPATH)).thenReturn(timestampExpires);
+        lenient().when(xmlUtils.getSingleNode(soapHeader, USERNAME_XPATH)).thenReturn(username);
+        lenient().when(replyToAddress.getTextContent()).thenReturn(VALID_REPLY_TO);
+        lenient().when(xmlUtils.getSingleNode(soapHeader, REPLY_TO_ADDRESS_XPATH)).thenReturn(replyToAddress);
     }
 
     @Test
     public void shouldFailWhenSoapToIsInvalid() {
         String invalidTo = "InvalidTo";
-        when(to.getText()).thenReturn(invalidTo);
+        when(to.getTextContent()).thenReturn(invalidTo);
 
         checkExceptionThrownAndErrorMessage("Invalid Send To value: " + invalidTo);
     }
 
     @Test
     public void shouldFailWhenSoapToIsMissing() {
-        when(soapHeader.selectSingleNode(SEND_TO_XPATH)).thenReturn(null);
+        when(xmlUtils.getSingleNode(soapHeader, SEND_TO_XPATH)).thenReturn(null);
 
         checkExceptionThrownAndErrorMessage("Send To missing");
     }
 
     @Test
     public void shouldFailWhenTimestampIsMissing() {
-        when(soapHeader.selectSingleNode(SEND_TO_XPATH)).thenReturn(null);
+        when(xmlUtils.getSingleNode(soapHeader, SEND_TO_XPATH)).thenReturn(null);
 
         checkExceptionThrownAndErrorMessage("Send To missing");
     }
 
     @Test
     public void shouldFailWhenTimestampIsInvalid() {
-        when(timestampExpires.getText()).thenReturn("2018-09-04T11:27:30Z");
+        when(timestampExpires.getTextContent()).thenReturn("2018-09-04T11:27:30Z");
 
         checkExceptionThrownAndErrorMessage("Invalid timestamp");
     }
 
     @Test
     public void shouldFailWhenUsernameIsMissing() {
-        when(soapHeader.selectSingleNode(USERNAME_XPATH)).thenReturn(null);
+        when(xmlUtils.getSingleNode(soapHeader, USERNAME_XPATH)).thenReturn(null);
 
         checkExceptionThrownAndErrorMessage("Username missing");
     }
@@ -107,7 +110,7 @@ public class SoapValidatorTest {
     @Test
     public void shouldFailWhenReplyToInvalid() {
         String invalidReplyTo = "InvalidReplyTo";
-        when(replyToAddress.getText()).thenReturn(invalidReplyTo);
+        when(replyToAddress.getTextContent()).thenReturn(invalidReplyTo);
 
         checkExceptionThrownAndErrorMessage("Invalid ReplyTo: InvalidReplyTo");
     }
@@ -129,7 +132,7 @@ public class SoapValidatorTest {
             assertThat(e.getReason()).isEqualTo(errorMessage);
             assertThat(e.getMessage()).isEqualTo(SOAP_VALIDATION_FAILED_MSG);
         } catch (Exception e) {
-            fail("Unexepected exception thrown");
+            fail("Unexpected exception thrown");
         }
 
         assertThat(exceptionThrown).isTrue();

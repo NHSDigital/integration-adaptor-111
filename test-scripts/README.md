@@ -15,11 +15,11 @@
 
 Each release has its own folder, use the scripts for specific release
 
-`$ cd 0.7.0`
+`$ cd 0.8.0`
 
 ### Start it up
 
-`integration-adaptor-111/test-scripts/0.7.0$ ./run.sh`
+`integration-adaptor-111/test-scripts/0.8.0$ ./run.sh`
 
 This will build the application container locally and start it along with ActiveMQ
 The services will listen on following ports
@@ -30,7 +30,7 @@ The services will listen on following ports
 ## Testing
 
 ## How to run the acceptance test:
-* Navigate to `integration-adaptor-111/test-scripts/0.7.0/tests/`
+* Navigate to `integration-adaptor-111/test-scripts/0.8.0/tests/`
 * Run ./acceptance.sh
 
 ## Example bundle message 

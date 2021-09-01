@@ -2,8 +2,8 @@ package uk.nhs.adaptors.oneoneone.cda.report.validation;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
-import org.dom4j.Element;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Element;
 
 import lombok.RequiredArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.exceptions.SoapClientException;
