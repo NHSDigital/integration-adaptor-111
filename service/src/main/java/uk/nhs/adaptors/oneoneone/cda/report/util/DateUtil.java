@@ -39,8 +39,6 @@ public class DateUtil {
     private static final String DATETIME_SECONDS_FORMAT = "yyyyMMddHHmmss";
     private static final String DATETIME_MINUTES_FORMAT = "yyyyMMddHHmm";
     private static final String DATETIME_HOURS_FORMAT = "yyyyMMddHH";
-    private static final String DATE_TIME_ISO_SECONDS = "yyyy-MM-ddTHH:mm:ss";
-    private static final String DATE_TIME_ISO_MINUTES = "yyyy-MM-ddTHH:mm";
     private static final String DATE_FORMAT = "yyyyMMdd";
     private static final String DATE_MONTH_FORMAT = "yyyyMM";
     private static final String DATE_YEAR_FORMAT = "yyyy";
