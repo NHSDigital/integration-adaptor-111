@@ -10,16 +10,19 @@ import java.net.URL;
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.w3c.dom.Node;
 
 import lombok.SneakyThrows;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.itk.envelope.DistributionEnvelopeDocument;
 
+@ExtendWith(MockitoExtension.class)
 public class ReportRequestUtilsTest {
-    private static final String EFFECTIVE_DATE = "20291030182905+00";
+    private static final String EFFECTIVE_DATE = "20201030182905+00";
     private static final String TYPE_ID_EXTENSION = "POCD_HD000040";
     private static final int VERSION_NUMBER = 1;
     private static final String RECORD_TARGET_TYPE_CODE = "RCT";
@@ -29,14 +32,16 @@ public class ReportRequestUtilsTest {
     private static final String MANIFEST_ID = "uuid_A25CDB08-9AE9-483D-9833-D78A6E40D0AF";
     private static final String CLINICAL_DOCUMENT_NODE_NAME = "ClinicalDocument";
 
-    private XmlUtils xmlUtils = Mockito.mock(XmlUtils.class);
-    private ReportRequestUtils reportRequestUtils = new ReportRequestUtils(xmlUtils);
-    private URL resourceURL = getClass().getResource("/xml/six-clinical-docs.xml");
-    private DistributionEnvelopeDocument distributionEnvelopeDocument;
-
     @Mock
     private Node distributionEnvelope;
 
+    @Mock
+    private XmlUtils xmlUtils;
+
+    @InjectMocks
+    private ReportRequestUtils reportRequestUtils;
+    private URL resourceURL = getClass().getResource("/xml/six-clinical-docs.xml");
+    private DistributionEnvelopeDocument distributionEnvelopeDocument;
 
     @SneakyThrows
     @Test
