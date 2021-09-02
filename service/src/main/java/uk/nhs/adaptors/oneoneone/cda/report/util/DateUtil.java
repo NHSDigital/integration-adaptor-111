@@ -3,8 +3,10 @@ package uk.nhs.adaptors.oneoneone.cda.report.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -67,7 +69,12 @@ public class DateUtil {
     }
 
     public static Date parsePathwaysDate(String dateStr) {
-        return Date.from(Instant.parse(dateStr));
+        try {
+            return Date.from(Instant.parse(dateStr));
+        } catch (DateTimeParseException exc) {
+            LocalDateTime parse = LocalDateTime.parse(dateStr);
+            return Date.from(Instant.from(parse.atZone(UK_ZONE_ID)));
+        }
     }
 
     private DateFormat getFormat(String date) {
