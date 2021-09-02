@@ -53,24 +53,24 @@ public class HealthcareServiceMapper {
 
         healthcareService.setIdElement(resourceUtil.newRandomUuid());
 
-        Location location = locationMapper.mapRecipientToLocation(intendedRecipient);
-        healthcareService.addLocation(resourceUtil.createReference(location));
-
-        if (intendedRecipient.sizeOfTelecomArray() > 0) {
-            for (TEL tel : intendedRecipient.getTelecomArray()) {
-                healthcareService.addTelecom(contactPointMapper.mapContactPoint(tel));
-            }
-        }
-
+        Organization organization = new Organization();
         if (intendedRecipient.isSetReceivedOrganization()) {
             POCDMT000002UK01Organization receivedOrganization = intendedRecipient.getReceivedOrganization();
-            Organization organization = organizationMapper
-                .mapOrganization(informationRecipient);
+            organization = organizationMapper.mapOrganization(informationRecipient);
             healthcareService.setProvidedBy(resourceUtil.createReference(organization));
             healthcareService.setProvidedByTarget(organization);
             if (receivedOrganization.sizeOfNameArray() > 0) {
                 ON name = receivedOrganization.getNameArray(0);
                 healthcareService.setName(nodeUtil.getAllText(name.getDomNode()));
+            }
+        }
+
+        Location location = locationMapper.mapRecipientToLocation(intendedRecipient, organization);
+        healthcareService.addLocation(resourceUtil.createReference(location));
+
+        if (intendedRecipient.sizeOfTelecomArray() > 0) {
+            for (TEL tel : intendedRecipient.getTelecomArray()) {
+                healthcareService.addTelecom(contactPointMapper.mapContactPoint(tel));
             }
         }
 
