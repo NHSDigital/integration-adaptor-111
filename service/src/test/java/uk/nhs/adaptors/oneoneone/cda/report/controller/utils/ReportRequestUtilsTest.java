@@ -40,7 +40,7 @@ public class ReportRequestUtilsTest {
 
     @InjectMocks
     private ReportRequestUtils reportRequestUtils;
-    private URL resourceURL = getClass().getResource("/xml/six-clinical-docs.xml");
+    private URL resourceURL = getClass().getResource("/xml/repeatCaller.xml");
     private DistributionEnvelopeDocument distributionEnvelopeDocument;
 
     @SneakyThrows
@@ -78,7 +78,7 @@ public class ReportRequestUtilsTest {
 
     private String getValidXmlReportRequest() {
         try {
-            URL reportXmlResource = this.getClass().getResource("/xml/six-clinical-docs.xml");
+            URL reportXmlResource = this.getClass().getResource("/xml/repeatCaller.xml");
             return new String(readAllBytes(Paths.get(reportXmlResource.getPath())), defaultCharset());
         } catch (Exception e) {
             throw new RuntimeException(e);
