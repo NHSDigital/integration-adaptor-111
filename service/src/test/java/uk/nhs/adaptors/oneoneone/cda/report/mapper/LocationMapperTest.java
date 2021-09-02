@@ -44,8 +44,7 @@ public class LocationMapperTest {
     private static final String DESCRIPTION = "description";
     private static final String NAME = "Mick Jones";
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
-    @Mock
-    private POCDMT000002UK01Organization pocdmt000002UK01Organization;
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private POCDMT000002UK01ClinicalDocument1 clinicalDocument;
     @Mock
@@ -125,28 +124,30 @@ public class LocationMapperTest {
 
     @Test
     public void shouldMapRecipientToLocation() {
-        POCDMT000002UK01IntendedRecipient itkIntendedRecipient = mock(POCDMT000002UK01IntendedRecipient.class);
-
-        AD itkAddress = mock(AD.class);
-        TEL itkTelecom = mock(TEL.class);
-
-        when(itkIntendedRecipient.sizeOfAddrArray()).thenReturn(new AD[] {itkAddress}.length);
-        when(addressMapper.mapAddress(any())).thenReturn(address);
-        when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[] {itkTelecom});
-        when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
-        when(itkIntendedRecipient.isSetReceivedOrganization()).thenReturn(true);
-        when(itkIntendedRecipient.getReceivedOrganization()).thenReturn(pocdmt000002UK01Organization);
-        when(organizationMapper.mapOrganization(any(POCDMT000002UK01Organization.class))).thenReturn(organization);
-        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+        POCDMT000002UK01IntendedRecipient itkIntendedRecipient = prepareIntendedRecipientMocks();
 
         Location referenceRecipientToLocation = locationMapper
-            .mapRecipientToLocation(itkIntendedRecipient);
+            .mapRecipientToLocation(itkIntendedRecipient, organization);
 
         assertThat(referenceRecipientToLocation.getId()).isEqualTo(RANDOM_UUID);
         assertThat(referenceRecipientToLocation.getAddress()).isEqualTo(address);
         assertThat(referenceRecipientToLocation.getTelecom()).isEqualTo(List.of(contactPoint));
         assertThat(referenceRecipientToLocation.getManagingOrganization()).isNotNull();
         assertThat(referenceRecipientToLocation.getManagingOrganizationTarget()).isEqualTo(organization);
+        assertThat(referenceRecipientToLocation.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
+    }
+
+    @Test
+    public void shouldMapRecipientToLocationWithoutOrganizationIfItsEmpty() {
+        POCDMT000002UK01IntendedRecipient itkIntendedRecipient = prepareIntendedRecipientMocks();
+
+        Location referenceRecipientToLocation = locationMapper
+            .mapRecipientToLocation(itkIntendedRecipient, new Organization());
+
+        assertThat(referenceRecipientToLocation.getId()).isEqualTo(RANDOM_UUID);
+        assertThat(referenceRecipientToLocation.getAddress()).isEqualTo(address);
+        assertThat(referenceRecipientToLocation.getTelecom()).isEqualTo(List.of(contactPoint));
+        assertThat(referenceRecipientToLocation.hasManagingOrganization()).isFalse();
         assertThat(referenceRecipientToLocation.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
     }
 
@@ -165,5 +166,20 @@ public class LocationMapperTest {
         assertThat(locationComponent.getLocationTarget().getAddress()).isEqualTo(address);
         assertThat(locationComponent.getLocationTarget().getName()).isEqualTo(locationName);
         assertThat(locationComponent.getStatus()).isEqualTo(Encounter.EncounterLocationStatus.COMPLETED);
+    }
+
+    private POCDMT000002UK01IntendedRecipient prepareIntendedRecipientMocks() {
+        POCDMT000002UK01IntendedRecipient itkIntendedRecipient = mock(POCDMT000002UK01IntendedRecipient.class);
+
+        AD itkAddress = mock(AD.class);
+        TEL itkTelecom = mock(TEL.class);
+
+        when(itkIntendedRecipient.sizeOfAddrArray()).thenReturn(new AD[] {itkAddress}.length);
+        when(addressMapper.mapAddress(any())).thenReturn(address);
+        when(itkIntendedRecipient.getTelecomArray()).thenReturn(new TEL[] {itkTelecom});
+        when(contactPointMapper.mapContactPoint(any())).thenReturn(contactPoint);
+        when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+
+        return itkIntendedRecipient;
     }
 }

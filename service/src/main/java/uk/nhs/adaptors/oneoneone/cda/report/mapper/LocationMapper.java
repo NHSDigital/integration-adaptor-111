@@ -79,7 +79,7 @@ public class LocationMapper {
         return encounterLocationComponent;
     }
 
-    public Location mapRecipientToLocation(POCDMT000002UK01IntendedRecipient intendedRecipient) {
+    public Location mapRecipientToLocation(POCDMT000002UK01IntendedRecipient intendedRecipient, Organization organization) {
         Location location = new Location();
         if (intendedRecipient.sizeOfAddrArray() > 0) {
             location.setAddress(addressMapper.mapAddress(intendedRecipient.getAddrArray(0)));
@@ -90,10 +90,9 @@ public class LocationMapper {
             .map(contactPointMapper::mapContactPoint)
             .collect(Collectors.toList()));
 
-        if (intendedRecipient.isSetReceivedOrganization()) {
-            Organization managingOrganization = organizationMapper.mapOrganization(intendedRecipient.getReceivedOrganization());
-            location.setManagingOrganization(resourceUtil.createReference(managingOrganization));
-            location.setManagingOrganizationTarget(managingOrganization);
+        if (!organization.isEmpty()) {
+            location.setManagingOrganization(resourceUtil.createReference(organization));
+            location.setManagingOrganizationTarget(organization);
         }
 
         if (location.isEmpty()) {
