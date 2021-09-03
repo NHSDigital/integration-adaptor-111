@@ -40,13 +40,13 @@ public class ReportRequestUtilsTest {
 
     @InjectMocks
     private ReportRequestUtils reportRequestUtils;
-    private URL resourceURL = getClass().getResource("/xml/repeatCaller.xml");
+    private String repeatCallerXmlString = getRepeatCallerXmlString();
     private DistributionEnvelopeDocument distributionEnvelopeDocument;
 
     @SneakyThrows
     @Test
     public void extractDistributionEnvelopeShouldReturnDistributionEnvelopeDocument() {
-        when(xmlUtils.serialize(distributionEnvelope)).thenReturn(getValidXmlReportRequest());
+        when(xmlUtils.serialize(distributionEnvelope)).thenReturn(repeatCallerXmlString);
         DistributionEnvelopeDocument distributionEnvelopeDocumentTest =
             reportRequestUtils.extractDistributionEnvelope(distributionEnvelope);
 
@@ -63,7 +63,7 @@ public class ReportRequestUtilsTest {
     @Test
     public void extractClinicalDocumentShouldReturnClinicalDocument() {
 
-        distributionEnvelopeDocument = DistributionEnvelopeDocument.Factory.parse(resourceURL);
+        distributionEnvelopeDocument = DistributionEnvelopeDocument.Factory.parse(repeatCallerXmlString);
 
         POCDMT000002UK01ClinicalDocument1 clinicalDocumentTest = reportRequestUtils.extractClinicalDocument(distributionEnvelopeDocument);
 
@@ -76,13 +76,10 @@ public class ReportRequestUtilsTest {
         assertThat(clinicalDocumentTest.getRecordTargetArray(0).getPatientRole().getAddrArray(0).getUse().get(0)).isEqualTo(ADDRESS_USE);
     }
 
-    private String getValidXmlReportRequest() {
-        try {
-            URL reportXmlResource = this.getClass().getResource("/xml/repeatCaller.xml");
-            return new String(readAllBytes(Paths.get(reportXmlResource.getPath())), defaultCharset());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    @SneakyThrows
+    private static String getRepeatCallerXmlString() {
+        URL reportXmlResource = ReportRequestUtilsTest.class.getResource("/xml/repeatCallerItkRequest.xml");
+        return new String(readAllBytes(Paths.get(reportXmlResource.getPath())), defaultCharset());
     }
 }
 
