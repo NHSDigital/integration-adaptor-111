@@ -1,5 +1,12 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+import static uk.nhs.connect.iucds.cda.ucr.XInformationRecipientX.Enum.forString;
+
+import java.util.List;
+
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Location;
@@ -19,14 +26,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01InformationRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01IntendedRecipient;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Organization;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
-import static uk.nhs.connect.iucds.cda.ucr.XInformationRecipientX.Enum.forString;
 
 @ExtendWith(MockitoExtension.class)
 public class HealthcareServiceMapperTest {
@@ -72,15 +71,13 @@ public class HealthcareServiceMapperTest {
 
     @Test
     public void shouldMapHealthcareService() {
-        when(locationMapper.mapRecipientToLocation(intendedRecipient))
-            .thenReturn(location);
-        when(organizationMapper.mapOrganization(any(POCDMT000002UK01InformationRecipient.class)))
-            .thenReturn(organization);
         when(informationRecipient.getIntendedRecipient()).thenReturn(intendedRecipient);
         when(intendedRecipient.isSetReceivedOrganization()).thenReturn(true);
         when(intendedRecipient.getReceivedOrganization()).thenReturn(receivedOrganization);
         when(receivedOrganization.sizeOfNameArray()).thenReturn(1);
         when(receivedOrganization.getNameArray(0)).thenReturn(name);
+        when(organizationMapper.mapOrganization(informationRecipient)).thenReturn(organization);
+        when(locationMapper.mapRecipientToLocation(intendedRecipient, organization)).thenReturn(location);
         when(name.getDomNode()).thenReturn(node);
         when(nodeUtil.getAllText(name.getDomNode())).thenReturn(HEALTHCARE_SERVICE_NAME);
         when(informationRecipient.getTypeCode()).thenReturn(forString(PRCP_TYPE_CODE));
