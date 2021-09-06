@@ -129,12 +129,12 @@ public class ReportControllerIT {
     private static Stream<Arguments> validItkReportAndExpectedJsonValues() {
         return Stream.of(
             Arguments.of(
-                readResource("/xml/ITK_Report_request.xml"),
-                readResource("/json/expectedResult.json")
+                readResource("/xml/primaryEmergencyItkRequest.xml"),
+                readResource("/json/primaryEmergencyFhirResult.json")
             ),
             Arguments.of(
-                readResource("/xml/ITK_Report_request_2.xml"),
-                readResource("/json/expectedResult2.json")
+                readResource("/xml/repeatCallerItkRequest.xml"),
+                readResource("/json/repeatCallerFhirResult.json")
             )
         );
     }

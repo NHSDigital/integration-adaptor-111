@@ -1,6 +1,18 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller.utils;
 
+import static java.util.Comparator.comparing;
+
+import static uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil.parseToInstantType;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlTokenSource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -20,7 +32,6 @@ public class ReportRequestUtils {
 
     private final XmlUtils xmlUtils;
 
-    @SneakyThrows
     public DistributionEnvelopeDocument extractDistributionEnvelope(Node distributionEnvelope) throws ItkXmlException {
         try {
             return DistributionEnvelopeDocument.Factory.parse(xmlUtils.serialize(distributionEnvelope));
@@ -31,33 +42,41 @@ public class ReportRequestUtils {
 
     public POCDMT000002UK01ClinicalDocument1 extractClinicalDocument(DistributionEnvelopeDocument envelopedDocument)
         throws ItkXmlException {
-        POCDMT000002UK01ClinicalDocument1 clinicalDocument;
-        try {
-            clinicalDocument = ClinicalDocumentDocument1.Factory
-                .parse(findClinicalDoc(envelopedDocument))
-                .getClinicalDocument();
-        } catch (XmlException e) {
-            throw new ItkXmlException("Clinical document missing from payload", e.getMessage(), e);
-        }
-
-        return clinicalDocument;
+        return
+            findClinicalDocs(envelopedDocument).stream()
+                .map(ReportRequestUtils::parseClinicalDoc)
+                .max(comparing(doc -> parseToInstantType(doc.getEffectiveTime().getValue()).getValue()))
+                .orElseThrow(() -> new ItkXmlException("ClinicalDocument missing", "Unable to find ClinicalDocument element"));
     }
 
-    private Node findClinicalDoc(DistributionEnvelopeDocument envelopedDocument)
-        throws XmlException {
-        NodeList childNodes = envelopedDocument.getDistributionEnvelope()
+    @SneakyThrows
+    private static POCDMT000002UK01ClinicalDocument1 parseClinicalDoc(Node node) {
+        return ClinicalDocumentDocument1.Factory.parse(node).getClinicalDocument();
+    }
+
+    private List<Node> findClinicalDocs(DistributionEnvelopeDocument envelopedDocument) {
+        List<NodeList> nodeListsList = Arrays.stream(envelopedDocument.getDistributionEnvelope()
             .getPayloads()
-            .getPayloadArray(0)
-            .getDomNode()
-            .getChildNodes();
+            .getPayloadArray())
+            .map(XmlTokenSource::getDomNode)
+            .map(Node::getChildNodes)
+            .collect(Collectors.toList());
 
-        for (int i = 0; i < childNodes.getLength(); i++) {
-            Node node = childNodes.item(i);
+        return getNodes(nodeListsList);
+    }
 
-            if (node.getNodeName().contains(CLINICAL_DOCUMENT_NODE_NAME)) {
-                return node;
-            }
-        }
-        throw new XmlException("No clinical document found in Envelope");
+    @Nullable
+    private static List<Node> getNodes(List<NodeList> nodeListList) {
+        return nodeListList.stream()
+            .map(nodeList -> getNodeListItem(nodeList))
+            .flatMap(List::stream)
+            .filter(item -> item.getNodeName().contains(CLINICAL_DOCUMENT_NODE_NAME))
+            .collect(Collectors.toList());
+    }
+
+    @NotNull
+    private static List<Node> getNodeListItem(NodeList nodeList) {
+        return IntStream.range(0, nodeList.getLength())
+            .mapToObj(i -> nodeList.item(i)).collect(Collectors.toList());
     }
 }

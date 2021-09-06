@@ -10,4 +10,9 @@ public class ItkXmlException extends Exception {
         super(message, err);
         this.reason = reason;
     }
+
+    public ItkXmlException(String message, String reason) {
+        super(message);
+        this.reason = reason;
+    }
 }
