@@ -108,7 +108,7 @@ public class ReferralRequestMapperTest {
     @Test
     public void shouldMapReferralRequest() {
         ReferralRequest referralRequest = referralRequestMapper
-            .mapReferralRequest(clinicalDocument, encounter, healthcareServiceList, condition);
+            .mapReferralRequest(clinicalDocument, encounter, healthcareServiceList, condition, deviceRef);
 
         assertThat(ReferralRequest.ReferralRequestStatus.ACTIVE).isEqualTo(referralRequest.getStatus());
         assertThat(ReferralRequest.ReferralCategory.PLAN).isEqualTo(referralRequest.getIntent());

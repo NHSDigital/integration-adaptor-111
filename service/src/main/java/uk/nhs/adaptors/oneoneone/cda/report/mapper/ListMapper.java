@@ -34,7 +34,6 @@ public class ListMapper {
     private static final String ORDER_BY_CODE = "event-date";
     private static final String ORDER_BY_SYSTEM = "http://hl7.org/fhir/list-order";
     private static final String ORDER_BY_DISPLAY = "Sorted by Event Date";
-    private static final Reference TRANSFORMER_DEVICE = new Reference("Device/1");
     private static final List<ResourceType> TRIAGE_RESOURCES = List.of(
         ResourceType.Condition, ResourceType.Questionnaire, ResourceType.QuestionnaireResponse,
         ResourceType.Observation, ResourceType.Organization, ResourceType.Practitioner, ResourceType.Provenance,
@@ -45,7 +44,7 @@ public class ListMapper {
     private final ResourceUtil resourceUtil;
 
     public ListResource mapList(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
-        Collection<Resource> resourcesCreated) {
+        Collection<Resource> resourcesCreated, Reference deviceRef) {
         ListResource listResource = new ListResource();
 
         listResource.setIdElement(resourceUtil.newRandomUuid());
@@ -64,7 +63,7 @@ public class ListMapper {
             .setEncounter(resourceUtil.createReference(encounter))
             .setEncounterTarget(encounter)
             .setDate(new Date())
-            .setSource(TRANSFORMER_DEVICE)
+            .setSource(deviceRef)
             .setOrderedBy(createOrderByConcept());
 
         resourcesCreated.stream()

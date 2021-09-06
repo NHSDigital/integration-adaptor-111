@@ -6,6 +6,7 @@ import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,6 +51,9 @@ public class ListMapperTest {
     @Mock
     private ResourceUtil resourceUtil;
 
+    @Mock
+    private Reference deviceRef;
+
     private List<Resource> resourcesCreated;
 
     @BeforeEach
@@ -66,7 +70,7 @@ public class ListMapperTest {
 
     @Test
     public void shouldMapList() {
-        ListResource listResource = listMapper.mapList(clinicalDocument, encounter, resourcesCreated);
+        ListResource listResource = listMapper.mapList(clinicalDocument, encounter, resourcesCreated, deviceRef);
 
         assertThat(listResource.getStatus()).isEqualTo(CURRENT);
         assertThat(listResource.getTitle()).isEqualTo("111 Report List");
@@ -81,5 +85,6 @@ public class ListMapperTest {
         assertThat(code.getDisplay()).isEqualTo("Triage");
         assertThat(listResource.getEntry().size()).isEqualTo(1);
         assertThat(listResource.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
+        assertThat(deviceRef.getReference()).isEqualTo(listResource.getSource().getReference());
     }
 }

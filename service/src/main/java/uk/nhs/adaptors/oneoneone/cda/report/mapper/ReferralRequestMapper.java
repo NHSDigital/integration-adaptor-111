@@ -32,13 +32,12 @@ public class ReferralRequestMapper {
     private static final String REFT_TYPE_CODE = "REFT";
     private static final int SECONDS_IN_HOUR = 60 * 60;
     private static final String AUTHOR_TYPE_CODE = "AUT";
-    private final Reference transformerDevice = new Reference("Device/1");
     private final ProcedureRequestMapper procedureRequestMapper;
     private final ResourceUtil resourceUtil;
     private final PractitionerMapper practitionerMapper;
 
     public ReferralRequest mapReferralRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
-        List<HealthcareService> healthcareServiceList, Reference condition) {
+        List<HealthcareService> healthcareServiceList, Reference condition, Reference deviceReference) {
 
         ReferralRequest referralRequest = new ReferralRequest();
         referralRequest.setIdElement(resourceUtil.newRandomUuid());
@@ -57,7 +56,7 @@ public class ReferralRequestMapper {
                 .setEnd(Date.from(now.toInstant().plusSeconds(SECONDS_IN_HOUR))))
             .setAuthoredOnElement(getAuthoredOn(clinicalDocument))
             .setRequester(new ReferralRequest.ReferralRequestRequesterComponent()
-                .setAgent(transformerDevice)
+                .setAgent(deviceReference)
                 .setOnBehalfOf(encounter.getServiceProvider()))
             .addReasonReference(condition)
             .addSupportingInfo(resourceUtil.createReference(procedureRequestMapper.mapProcedureRequest(clinicalDocument,

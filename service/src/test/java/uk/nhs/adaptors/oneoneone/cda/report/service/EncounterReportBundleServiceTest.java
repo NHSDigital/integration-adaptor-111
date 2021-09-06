@@ -27,6 +27,7 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Consent;
+import org.hl7.fhir.dstu3.model.Device;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.HumanName;
@@ -56,6 +57,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConditionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.DeviceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
@@ -74,6 +76,7 @@ public class EncounterReportBundleServiceTest {
     private static final String SPECIFICATION_KEY = "urn:nhs-itk:ns:201005:interaction";
     private static final String SPECIFICATION_VALUE = "urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0";
     private static final Encounter ENCOUNTER;
+    private static final Device DEVICE;
     private static final IdType ENCOUNTER_ID = getRandomUUID();
     private static final Organization SERVICE_PROVIDER;
     private static final IdType SERVICE_PROVIDER_ID = getRandomUUID();
@@ -120,6 +123,7 @@ public class EncounterReportBundleServiceTest {
     private static final String MESSAGEID = getRandomUUID().toString();
     private static final RelatedPerson RELATED_PERSON;
     private static final IdType RELATED_PERSON_ID = getRandomUUID();
+    private static final IdType DEVICE_ID = getRandomUUID();
     private static final String EFFECTIVE_TIME = "20210406123335+01";
 
     private static IdType getRandomUUID() {
@@ -208,6 +212,9 @@ public class EncounterReportBundleServiceTest {
 
         RELATED_PERSON = new RelatedPerson();
         RELATED_PERSON.setIdElement(RELATED_PERSON_ID);
+
+        DEVICE = new Device();
+        DEVICE.setIdElement(DEVICE_ID);
     }
 
     @InjectMocks
@@ -246,6 +253,8 @@ public class EncounterReportBundleServiceTest {
     private TS ts;
     @Mock
     private Reference reference;
+    @Mock
+    private DeviceMapper deviceMapper;
 
     @BeforeEach
     public void setUp() throws XmlException {
@@ -256,20 +265,22 @@ public class EncounterReportBundleServiceTest {
         when(ts.getValue()).thenReturn(EFFECTIVE_TIME);
         List<QuestionnaireResponse> questionnaireResponseList = new ArrayList<>();
         questionnaireResponseList.add(QUESTIONNAIRE_RESPONSE);
+        when(deviceMapper.mapDevice()).thenReturn(DEVICE);
         when(encounterMapper.mapEncounter(any(), any(), any(), any())).thenReturn(ENCOUNTER);
         when(conditionMapper.mapCondition(any(), any(), any())).thenReturn(CONDITION);
         when(compositionMapper.mapComposition(any(), any(), any(), any(), any(), any())).thenReturn(COMPOSITION);
-        when(listMapper.mapList(any(), any(), any())).thenReturn(LIST_RESOURCE);
+        when(listMapper.mapList(any(), any(), any(), any())).thenReturn(LIST_RESOURCE);
         when(carePlanMapper.mapCarePlan(any(), any(), any())).thenReturn(singletonList(CAREPLAN));
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
         when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
         when(messageHeaderService.createMessageHeader(any(), any(), eq(EFFECTIVE_TIME))).thenReturn(MESSAGE_HEADER);
-        when(referralRequestMapper.mapReferralRequest(any(), any(), any(), any())).thenReturn(REFERRAL_REQUEST);
+        when(referralRequestMapper.mapReferralRequest(any(), any(), any(), any(), any())).thenReturn(REFERRAL_REQUEST);
         when(observationMapper.mapObservations(any(), eq(ENCOUNTER))).thenReturn(Arrays.asList(OBSERVATION));
         when(practitionerRoleMapper.mapAuthorRoles(any())).thenReturn(singletonList(AUTHOR_ROLE));
         when(practitionerRoleMapper.mapResponsibleParty(any())).thenReturn(Optional.of(PRACTITIONER_ROLE));
         when(relatedPersonMapper.createEmergencyContactRelatedPerson(eq(document), eq(ENCOUNTER))).thenReturn(RELATED_PERSON);
+        when(deviceMapper.mapDevice()).thenReturn(DEVICE);
         Encounter.DiagnosisComponent diagnosisComponent = new Encounter.DiagnosisComponent();
         diagnosisComponent.setCondition(new Reference());
         diagnosisComponent.setRole(new CodeableConcept());
@@ -288,7 +299,7 @@ public class EncounterReportBundleServiceTest {
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(document, itkReportHeader, MESSAGEID);
         assertThat(encounterBundle.getType()).isEqualTo(MESSAGE);
         assertThat(encounterBundle.getIdentifier().getValue()).isEqualTo(TWO.toString());
-        assertThat(encounterBundle.getEntry().size()).isEqualTo(21);
+        assertThat(encounterBundle.getEntry().size()).isEqualTo(22);
         List<BundleEntryComponent> entries = encounterBundle.getEntry();
         verifyEntry(entries.get(0), MESSAGE_HEADER_ID.getValue(), ResourceType.MessageHeader);
         verifyEntry(entries.get(1), ENCOUNTER_ID.getValue(), ResourceType.Encounter);
@@ -310,7 +321,9 @@ public class EncounterReportBundleServiceTest {
         verifyEntry(entries.get(17), PRACTITIONER_ROLE_ID.getValue(), ResourceType.PractitionerRole);
         verifyEntry(entries.get(18), PRACTITIONER_ORG_ID.getValue(), ResourceType.Organization);
         verifyEntry(entries.get(19), RELATED_PERSON_ID.getValue(), ResourceType.RelatedPerson);
-        verifyEntry(entries.get(20), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+        verifyEntry(entries.get(20), DEVICE_ID.getValue(), ResourceType.Device);
+        verifyEntry(entries.get(21), LIST_RESOURCE_ID.getValue(), ResourceType.List);
+
     }
 
     @Test
