@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.xmlbeans.XmlException;
-import org.springframework.stereotype.Component;
 import org.apache.xmlbeans.XmlTokenSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -32,7 +32,6 @@ public class ReportRequestUtils {
 
     private final XmlUtils xmlUtils;
 
-    @SneakyThrows
     public DistributionEnvelopeDocument extractDistributionEnvelope(Node distributionEnvelope) throws ItkXmlException {
         try {
             return DistributionEnvelopeDocument.Factory.parse(xmlUtils.serialize(distributionEnvelope));
@@ -43,17 +42,11 @@ public class ReportRequestUtils {
 
     public POCDMT000002UK01ClinicalDocument1 extractClinicalDocument(DistributionEnvelopeDocument envelopedDocument)
         throws ItkXmlException {
-        try {
-            return
-                findClinicalDocs(envelopedDocument).stream()
-                    .map(ReportRequestUtils::parseClinicalDoc)
-                    .max(comparing(doc -> {
-                        return parseToInstantType(doc.getEffectiveTime().getValue()).getValue();
-                    }))
-                    .get();
-        } catch (XmlException e) {
-            throw new ItkXmlException("Clinical document missing from payload", e.getMessage(), e);
-        }
+        return
+            findClinicalDocs(envelopedDocument).stream()
+                .map(ReportRequestUtils::parseClinicalDoc)
+                .max(comparing(doc -> parseToInstantType(doc.getEffectiveTime().getValue()).getValue()))
+                .orElseThrow(() -> new ItkXmlException("ClinicalDocument missing", "Unable to find ClinicalDocument element"));
     }
 
     @SneakyThrows
@@ -61,8 +54,7 @@ public class ReportRequestUtils {
         return ClinicalDocumentDocument1.Factory.parse(node).getClinicalDocument();
     }
 
-    private List<Node> findClinicalDocs(DistributionEnvelopeDocument envelopedDocument)
-        throws XmlException {
+    private List<Node> findClinicalDocs(DistributionEnvelopeDocument envelopedDocument) {
         List<NodeList> nodeListsList = Arrays.stream(envelopedDocument.getDistributionEnvelope()
             .getPayloads()
             .getPayloadArray())
