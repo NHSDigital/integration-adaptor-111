@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
-import uk.nhs.adaptors.oneoneone.config.DeviceProperties;
+import uk.nhs.adaptors.oneoneone.config.OneOneOneProperties;
 
 @Component
 @AllArgsConstructor
@@ -13,13 +13,13 @@ public class DeviceMapper {
     private static final String DEVICE_MODEL_NAME = "111 Adaptor";
 
     private final ResourceUtil resourceUtil;
-    private final DeviceProperties deviceProperties;
+    private final OneOneOneProperties oneOneOneProperties;
 
     public Device mapDevice() {
         Device device = new Device();
 
         device.setIdElement(resourceUtil.newRandomUuid());
-        device.setVersion(deviceProperties.getVersion())
+        device.setVersion(oneOneOneProperties.getVersion())
             .setModel(DEVICE_MODEL_NAME);
         return device;
     }

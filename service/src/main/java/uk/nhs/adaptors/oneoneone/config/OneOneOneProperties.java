@@ -10,6 +10,6 @@ import lombok.Setter;
 @ConfigurationProperties
 @Getter
 @Setter
-public class DeviceProperties {
+public class OneOneOneProperties {
     private String version;
 }
