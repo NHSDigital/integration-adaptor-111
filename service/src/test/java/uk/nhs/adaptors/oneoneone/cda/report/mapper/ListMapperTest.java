@@ -66,7 +66,6 @@ public class ListMapperTest {
         when(clinicalDocument.getSetId()).thenReturn(ii);
         when(ii.getRoot()).thenReturn("411910CF-1A76-4330-98FE-C345DDEE5553");
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
-        //when(deviceRef.getReference()).thenReturn()
     }
 
     @Test
