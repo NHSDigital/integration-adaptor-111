@@ -85,6 +85,6 @@ public class ListMapperTest {
         assertThat(code.getDisplay()).isEqualTo("Triage");
         assertThat(listResource.getEntry().size()).isEqualTo(1);
         assertThat(listResource.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
-        assertThat(deviceRef.getClass()).isEqualTo(listResource.getSource().getClass());
+        assertThat(deviceRef).isEqualTo(listResource.getSource());
     }
 }
