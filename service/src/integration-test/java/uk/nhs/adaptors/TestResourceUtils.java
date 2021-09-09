@@ -11,7 +11,7 @@ import lombok.SneakyThrows;
 public class TestResourceUtils {
     @SneakyThrows
     public static String readResourceAsString(String path) {
-        URL resource = WireMockInitializer.class.getResource(path);
+        URL resource = TestResourceUtils.class.getResource(path);
         return Files.readString(Paths.get(resource.getPath()), UTF_8);
     }
 }
