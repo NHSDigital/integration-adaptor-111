@@ -26,19 +26,19 @@ public class ItkPropertiesValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-//        ItkProperties itkProperties = (ItkProperties) target;
-//        if (!isAtLeastOneItkPropertySet(itkProperties)) {
-//            errors.reject("1", "Configuration Error. "
-//                + "At least one of PEM111_ITK_ODS_CODE_LIST, PEM111_ITK_DOS_ID_LIST, PEM111_ITK_EXTERNAL_CONFIGURATION_URL itk properties"
-//                + " has to be set.");
-//            return;
-//        }
-//        String url = itkProperties.getExternalConfigurationServiceUrl();
-//        if (isNotEmpty(url)) {
-//            if (!isExternalConfigurationServiceUp(url)) {
-//                errors.reject("1", "Failed to retrieve configuration from external server: " + url);
-//            }
-//        }
+        ItkProperties itkProperties = (ItkProperties) target;
+        if (!isAtLeastOneItkPropertySet(itkProperties)) {
+            errors.reject("1", "Configuration Error. "
+                + "At least one of PEM111_ITK_ODS_CODE_LIST, PEM111_ITK_DOS_ID_LIST, PEM111_ITK_EXTERNAL_CONFIGURATION_URL itk properties"
+                + " has to be set.");
+            return;
+        }
+        String url = itkProperties.getExternalConfigurationServiceUrl();
+        if (isNotEmpty(url)) {
+            if (!isExternalConfigurationServiceUp(url)) {
+                errors.reject("1", "Failed to retrieve configuration from external server: " + url);
+            }
+        }
     }
 
     private boolean isAtLeastOneItkPropertySet(ItkProperties itkProperties) {
