@@ -16,6 +16,7 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Composition;
 import org.hl7.fhir.dstu3.model.Condition;
 import org.hl7.fhir.dstu3.model.Consent;
+import org.hl7.fhir.dstu3.model.Device;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.HealthcareService;
@@ -43,6 +44,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.CarePlanMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.CompositionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConditionMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ConsentMapper;
+import uk.nhs.adaptors.oneoneone.cda.report.mapper.DeviceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.EncounterMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.HealthcareServiceMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ListMapper;
@@ -73,6 +75,7 @@ public class EncounterReportBundleService {
     private final PractitionerRoleMapper practitionerRoleMapper;
     private final RelatedPersonMapper relatedPersonMapper;
     private final ResourceUtil resourceUtil;
+    private final DeviceMapper deviceMapper;
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
@@ -96,8 +99,9 @@ public class EncounterReportBundleService {
             encounter.getSubject(), resourceUtil.createReference(encounter));
         Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter, questionnaireResponseList);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, condition);
+        Device device = deviceMapper.mapDevice();
         ReferralRequest referralRequest = referralRequestMapper.mapReferralRequest(clinicalDocument,
-            encounter, healthcareServiceList, resourceUtil.createReference(condition));
+            encounter, healthcareServiceList, resourceUtil.createReference(condition), resourceUtil.createReference(device));
         Composition composition = compositionMapper.mapComposition(clinicalDocument, encounter, carePlans, questionnaireResponseList,
             referralRequest, authorPractitionerRoles);
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
@@ -120,8 +124,9 @@ public class EncounterReportBundleService {
         addObservations(bundle, observations);
         addPractitionerRoles(bundle, authorPractitionerRoles, responsibleParty);
         addRelatedPerson(bundle, relatedPerson);
+        addEntry(bundle, device);
 
-        ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter);
+        ListResource listResource = getReferenceFromBundle(bundle, clinicalDocument, encounter, device);
         addEntry(bundle, listResource);
 
         return bundle;
@@ -149,9 +154,10 @@ public class EncounterReportBundleService {
         });
     }
 
-    private ListResource getReferenceFromBundle(Bundle bundle, POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter) {
+    private ListResource getReferenceFromBundle(Bundle bundle, POCDMT000002UK01ClinicalDocument1 clinicalDocument,
+        Encounter encounter, Device device) {
         Collection<Resource> resourcesCreated = bundle.getEntry().stream().map(it -> it.getResource()).collect(toSet());
-        return listMapper.mapList(clinicalDocument, encounter, resourcesCreated);
+        return listMapper.mapList(clinicalDocument, encounter, resourcesCreated, resourceUtil.createReference(device));
     }
 
     private void addEncounter(Bundle bundle, Encounter encounter) {

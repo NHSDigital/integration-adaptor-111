@@ -107,9 +107,11 @@ public class ReportControllerIT {
         "entry[*].resource.questionnaire.reference",
         "entry[*].resource.reasonReference[*].reference",
         "entry[*].resource.recipient[*].reference",
+        "entry[*].resource.requester.agent.reference",
         "entry[*].resource.requester.onBehalfOf.reference",
         "entry[*].resource.section[*].entry[*].reference",
         "entry[*].resource.serviceProvider.reference",
+        "entry[*].resource.source.reference",
         "entry[*].resource.subject.reference",
         "entry[*].resource.supportingInfo[*].reference",
         "entry[*].resource.practitioner.reference",
@@ -138,12 +140,12 @@ public class ReportControllerIT {
     private static Stream<Arguments> validItkReportAndExpectedJsonValues() {
         return Stream.of(
             Arguments.of(
-                readResourceAsString("/xml/ITK_Report_request.xml"),
-                readResourceAsString("/json/expectedResult.json")
+                readResourceAsString("/xml/primaryEmergencyItkRequest.xml"),
+                readResourceAsString("/json/primaryEmergencyFhirResult.json")
             ),
             Arguments.of(
-                readResourceAsString("/xml/ITK_Report_request_2.xml"),
-                readResourceAsString("/json/expectedResult2.json")
+                readResourceAsString("/xml/repeatCallerItkRequest.xml"),
+                readResourceAsString("/json/repeatCallerFhirResult.json")
             )
         );
     }
