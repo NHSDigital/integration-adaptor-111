@@ -1,6 +1,7 @@
 package uk.nhs.adaptors.oneoneone.config;
 
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import static org.apache.commons.lang3.StringUtils.split;
@@ -21,7 +22,7 @@ public class ItkProperties {
     private String odsCodes;
     private String dosIds;
     @Getter
-    private String url;
+    private String externalConfigurationServiceUrl;
     @Getter
     private int fetchIntervalMinutes;
 
@@ -31,6 +32,11 @@ public class ItkProperties {
 
     public List<String> getDosIds() {
         return splitAndTrim(dosIds);
+    }
+
+    public void setOdsCodesDosIds(OdsCodesDosIds odsCodesDosIds) {
+        odsCodes = odsCodesDosIds.getOdsCodes().stream().collect(joining(","));
+        dosIds = odsCodesDosIds.getDosIds().stream().collect(joining(","));
     }
 
     private List<String> splitAndTrim(String list) {

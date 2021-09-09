@@ -1,26 +1,22 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestTemplate;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import uk.nhs.adaptors.oneoneone.config.ItkProperties;
+import uk.nhs.adaptors.oneoneone.config.OdsCodesDosIds;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OdsDosService {
     private final ItkProperties itkProperties;
+    private final RestTemplate restTemplate;
 
-    public void fetchOdsCodeAndDosIds() {
-        WebClient webClient = WebClient.builder()
-            .baseUrl(itkProperties.getUrl())
-            .build();
-
-        webClient.get()
-            .uri("/")
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve();
-//            .bodyToMono(.class); // todo
+    public OdsCodesDosIds fetchOdsCodeAndDosIds() {
+        ResponseEntity<OdsCodesDosIds> response = restTemplate.getForEntity(itkProperties.getExternalConfigurationServiceUrl(),
+            OdsCodesDosIds.class);
+        return response.getBody();
     }
 }
