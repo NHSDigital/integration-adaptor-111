@@ -9,6 +9,7 @@ import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 import static org.springframework.http.MediaType.TEXT_XML_VALUE;
 
 import static io.restassured.RestAssured.given;
+import static uk.nhs.adaptors.TestResourceUtils.readResourceAsString;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.ACTION;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.BODY;
 
@@ -48,13 +49,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.xml.sax.SAXException;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+
 import junitparams.JUnitParamsRunner;
 import lombok.extern.slf4j.Slf4j;
+import uk.nhs.adaptors.WireMockInitializer;
 import uk.nhs.adaptors.containers.IntegrationTestsExtension;
 import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
+import uk.nhs.adaptors.oneoneone.config.ItkProperties;
 import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
 import uk.nhs.adaptors.oneoneone.utils.ResponseElement;
 import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
@@ -70,6 +76,7 @@ public class ReportControllerIT {
     private static final String APPLICATION_XML_UTF_8 = APPLICATION_XML_VALUE + ";charset=UTF-8";
     private static final boolean OVERWRITE_XML = false;
     public static final String MESSAGE_ID = "messageId";
+    private static final String MESSAGE_ID_VALUE = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
     private static final String REPORT_ENDPOINT = "/report";
     private static final String EXPECTED_ACTION = "urn:nhs-itk:services:201005:SendNHS111Report-v2-0Response";
     private static final String EXPECTED_BODY = "<itk:SimpleMessageResponse xmlns:itk=\"urn:nhs-itk:ns:201005\">OK:%s</itk"
@@ -129,6 +136,12 @@ public class ReportControllerIT {
 
     @Autowired
     private ResponseParserUtil responseParserUtil;
+
+    @Autowired
+    private WireMockServer wireMockServer;
+
+    @Autowired
+    private ItkProperties itkProperties;
 
     private static Stream<Arguments> validItkReportAndExpectedJsonValues() {
         return Stream.of(

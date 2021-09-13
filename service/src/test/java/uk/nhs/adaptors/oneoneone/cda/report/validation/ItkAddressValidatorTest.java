@@ -87,14 +87,6 @@ public class ItkAddressValidatorTest {
     }
 
     @Test
-    public void shouldNotFailWhenBothOdsAndDosListNotDefined() {
-        when(itkProperties.getOdsCodes()).thenReturn(newArrayList());
-        when(itkProperties.getDosIds()).thenReturn(newArrayList());
-
-        checkExceptionNotThrown();
-    }
-
-    @Test
     public void shouldNotFailWhenDosIdIsSupported() {
         when(itkProperties.getOdsCodes()).thenReturn(SUPPORTED_ODS_CODES);
         when(itkProperties.getDosIds()).thenReturn(SUPPORTED_DOS_IDS);
