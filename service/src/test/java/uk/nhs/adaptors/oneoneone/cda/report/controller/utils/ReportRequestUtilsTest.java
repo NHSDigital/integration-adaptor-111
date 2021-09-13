@@ -78,7 +78,7 @@ public class ReportRequestUtilsTest {
 
     @SneakyThrows
     private static String getRepeatCallerXml() {
-        URL reportXmlResource = ReportRequestUtilsTest.class.getResource("/xml/repeat.xml");
+        URL reportXmlResource = ReportRequestUtilsTest.class.getResource("/xml/repeat-caller-itk-request.xml");
         return new String(readAllBytes(Paths.get(reportXmlResource.getPath())), defaultCharset());
     }
 }
