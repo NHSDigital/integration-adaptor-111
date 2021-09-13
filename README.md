@@ -41,6 +41,54 @@ Values should be set in the following env variables:
 * PEM111_ITK_ODS_CODE_LIST
 * PEM111_ITK_DOS_ID_LIST
 
+Alternatively you can configure the adaptor to fetch the ODS codes/DOS Ids from external server. Adaptor will read the configuration and reload it without any downtime. Following variables can be used to set up configuration service URL and the poll interval.
+* PEM111_ITK_EXTERNAL_CONFIGURATION_URL
+* PEM111_ITK_FETCH_INTERVAL_MIN
+
+Configuration service has to expose a single GET endpoint returning application/json data in matching the following schema:
+```
+{
+  "type": "object",
+  "required": ["odsCodes", "dosIds"],
+  "properties": {
+    "odsCodes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dosIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
+```
+
+Example:
+```
+{
+   "odsCodes": [
+      "EM396",
+      "5L399"
+   ],
+   "dosIds": [
+      "26428",
+      "96465",
+      "48583"
+   ]
+}
+```
+
+#### ODS code/DOS ID validation rules
+- At least one property of `PEM111_ITK_ODS_CODE_LIST`, `PEM111_ITK_DOS_ID_LIST`, `PEM111_ITK_EXTERNAL_CONFIGURATION_URL` has to be set. Adaptor will fail to start if none is provided.
+- If you provide external service URL as well as ODS/DOS lists then external configuration overrides the defined lists.
+- Adaptor validates provided external service URL on startup. If the endpoint is unreachable, does not respond with HTTP 200 or responds with invalid data then adaptor will fail to start.
+- Incoming ITK message will be accepted when either ODS code or DOS Id is correct.
+
+
 ### TLS Mutual Authentication
 Nginx proxy is used to handle TLS MA. In order to configure it you need to set the following env variables:
 * NGINX_PUBLIC_CERT - Server public certificate
