@@ -1,0 +1,314 @@
+<s:Envelope xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Header>
+        <a:Action s:mustUnderstand="1">urn:nhs-itk:services:201005:SendNHS111Report-v2-0</a:Action>
+        <a:MessageID>F7916D36-4D5F-4A64-BD08-644E8A234AE2</a:MessageID>
+        <a:ReplyTo>
+            <a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>
+        </a:ReplyTo>
+        <a:To s:mustUnderstand="1">https://nve61.oneoneone.nhs.uk:1880/NHS111Reportv20.svc</a:To>
+    </s:Header>
+    <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <DistributionEnvelope xmlns="urn:nhs-itk:ns:201005">
+            <header trackingid="3D9370C5-2D2E-4503-935B-8416AC744BE0" service="urn:nhs-itk:services:201005:SendNHS111Report-v2-0">
+                <addresslist>
+                    <address uri="urn:nhs-uk:addressing:ods:NVE06" />
+                    <address type="2.16.840.1.113883.2.1.3.2.4.18.44" uri="1335970392" />
+                </addresslist>
+                <auditIdentity>
+                    <id uri="urn:nhs-uk:identity:ods:NVE" />
+                </auditIdentity>
+                <manifest count="1">
+                    <manifestitem id="uuid_63C9E5BB-D99F-4523-9711-AF92A3A0E136" mimetype="text/xml" profileid="urn:nhs-en:profile:nhs111CDADocument-v2-0" />
+                </manifest>
+                <senderAddress uri="urn:nhs-uk:addressing:ods:NVE" />
+                <handlingSpecification>
+                    <spec key="urn:nhs-itk:ns:201005:interaction" value="urn:nhs-itk:interaction:primaryOutofHourRecipientNHS111CDADocument-v2-0" />
+                </handlingSpecification>
+            </header>
+            <payloads count="1">
+                <payload id="uuid_63C9E5BB-D99F-4523-9711-AF92A3A0E136">
+                    <ClinicalDocument xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" moodCode="EVN" classCode="DOCCLIN" xmlns="urn:hl7-org:v3">
+                        <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3" />
+                        <messageType extension="POCD_MT200001GB02" root="2.16.840.1.113883.2.1.3.2.4.18.17" xmlns="NPFIT:HL7:Localisation" />
+                        <id root="11C461AF-684A-4D0E-8865-FC25042657C4" />
+                        <code code="819551000000100" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" />
+                        <title>NHS 111 Report</title>
+                        <effectiveTime value="20210513182456+0100" />
+                        <confidentialityCode code="R" codeSystem="2.16.840.1.113883.1.11.16926" displayName="restricted" />
+                        <setId root="895062D0-60A8-4EB4-9017-5F489D53694D" />
+                        <versionNumber value="1" />
+                        <recordTarget typeCode="RCT" contextControlCode="OP">
+                            <contentId extension="COCD_TP145201GB01#PatientRole" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                            <patientRole classCode="PAT">
+                                <templateId extension="COCD_TP145201GB01#PatientRole" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                <id assigningAuthorityName="NTN08:Norfolk and Wisbech 111" extension="DRSM-C2YMQR-308" root="2.16.840.1.113883.2.1.3.2.4.18.24" />
+                                <addr use="H">
+                                    <streetAddressLine>313 VICTORIA ROAD</streetAddressLine>
+                                    <streetAddressLine>LOWESTOFT</streetAddressLine>
+                                    <postalCode>NR33 9LS</postalCode>
+                                </addr>
+                                <addr use="PHYS">
+                                    <streetAddressLine>313 VICTORIA ROAD</streetAddressLine>
+                                    <streetAddressLine>LOWESTOFT</streetAddressLine>
+                                    <postalCode>NR33 9LS</postalCode>
+                                </addr>
+                                <telecom value="tel:01233123123" use="EC" />
+                                <patient determinerCode="INSTANCE" classCode="PSN">
+                                    <templateId extension="COCD_TP145201GB01#patientPatient" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                    <name>
+                                        <given>Test Call Dx10</given>
+                                        <family>TEST CALL DX10</family>
+                                    </name>
+                                    <administrativeGenderCode code="1" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.25" displayName="Male" />
+                                    <birthTime value="19960325" />
+                                    <languageCommunication>
+                                        <templateId extension="COCD_TP145201GB01#languageCommunication" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                        <languageCode code="en" />
+                                        <modeCode code="RSP" codeSystem="2.16.840.1.113883.5.60" displayName="Received Spoken" />
+                                        <proficiencyLevelCode code="F" codeSystem="2.16.840.1.113883.5.61" displayName="Fair" />
+                                        <preferenceInd nullFlavor="UNK" />
+                                    </languageCommunication>
+                                </patient>
+                                <providerOrganization determinerCode="INSTANCE" classCode="ORG">
+                                    <templateId extension="COCD_TP145201GB01#providerOrganization" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                    <id extension="Z10000" root="2.16.840.1.113883.2.1.3.2.4.19.1" />
+                                    <name>UNKNOWN</name>
+                                    <standardIndustryClassCode code="001" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.289" displayName="GP Practice" />
+                                </providerOrganization>
+                            </patientRole>
+                        </recordTarget>
+                        <author typeCode="AUT" contextControlCode="OP">
+                            <contentId extension="COCD_TP145200GB01#AssignedAuthor" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                            <functionCode code="OA" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.178" displayName="Originating Author" />
+                            <time value="20210513182456+0100" />
+                            <assignedAuthor classCode="ASSIGNED">
+                                <templateId extension="COCD_TP145200GB01#AssignedAuthor" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                <id extension="Ben Smythson" root="2.16.840.1.113883.2.1.3.2.4.18.24" />
+                                <code code="NR1690" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.196" displayName="Call Operator" />
+                                <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+                                    <templateId extension="COCD_TP145200GB01#assignedPerson" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                    <name>Ben Smythson</name>
+                                </assignedPerson>
+                                <representedOrganization determinerCode="INSTANCE" classCode="ORG">
+                                    <templateId extension="COCD_TP145200GB01#representedOrganization" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                    <id extension="NTN08" root="2.16.840.1.113883.2.1.3.2.4.19.2" />
+                                    <name>Norfolk and Wisbech 111</name>
+                                </representedOrganization>
+                            </assignedAuthor>
+                        </author>
+                        <informant typeCode="INF" contextControlCode="OP">
+                            <contentId extension="COCD_TP145007UK03#RelatedEntity" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                            <relatedEntity classCode="PRS">
+                                <templateId extension="COCD_TP145007UK03#RelatedEntity" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                <code code="21" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.45" displayName="Self" />
+                                <telecom value="tel:01233123123" use="EC" />
+                                <relatedPerson classCode="PSN" determinerCode="INSTANCE">
+                                    <templateId extension="COCD_TP145007UK03#relationshipHolder" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                    <name>Test Call Dx10 TEST CALL DX10</name>
+                                </relatedPerson>
+                            </relatedEntity>
+                        </informant>
+                        <custodian typeCode="CST">
+                            <contentId extension="COCD_TP145018UK03#AssignedCustodian" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                            <assignedCustodian classCode="ASSIGNED">
+                                <templateId extension="COCD_TP145018UK03#AssignedCustodian" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                <representedCustodianOrganization classCode="ORG" determinerCode="INSTANCE">
+                                    <templateId extension="COCD_TP145018UK03#representedCustodianOrganization" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                    <id extension="NTN08" root="2.16.840.1.113883.2.1.3.2.4.19.2" />
+                                    <name>Norfolk and Wisbech 111</name>
+                                </representedCustodianOrganization>
+                            </assignedCustodian>
+                        </custodian>
+                        <informationRecipient typeCode="PRCP">
+                            <contentId extension="COCD_TP145203GB03#IntendedRecipient" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                            <intendedRecipient classCode="ASSIGNED">
+                                <templateId extension="COCD_TP145203GB03#IntendedRecipient" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                <receivedOrganization determinerCode="INSTANCE" classCode="ORG">
+                                    <templateId extension="COCD_TP145203GB03#representedOrganization" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                    <id extension="NVE06" root="2.16.840.1.113883.2.1.3.2.4.19.1" />
+                                    <name>Out of Hours GP Service (Waveney) - Kirkley Mill Health Centre, Lowestoft</name>
+                                </receivedOrganization>
+                            </intendedRecipient>
+                        </informationRecipient>
+                        <participant typeCode="REFT" contextControlCode="OP">
+                            <contentId extension="COCD_TP145214GB01#AssociatedEntity" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                            <associatedEntity classCode="ASSIGNED">
+                                <templateId extension="COCD_TP145214GB01#AssociatedEntity" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                <id extension="Z10000" root="2.16.840.1.113883.2.1.3.2.4.19.2" />
+                                <addr use="PHYS">
+                                    <streetAddressLine>Kingston House</streetAddressLine>
+                                    <streetAddressLine>The Long Barrow</streetAddressLine>
+                                    <streetAddressLine>Orbital Park</streetAddressLine>
+                                    <streetAddressLine>Ashford</streetAddressLine>
+                                    <streetAddressLine>Kent</streetAddressLine>
+                                    <postalCode>TN24 0GP</postalCode>
+                                </addr>
+                                <telecom value="tel:01233505450" use="EC" />
+                                <scopingOrganization determinerCode="INSTANCE" classCode="ORG">
+                                    <templateId extension="COCD_TP145214GB01#scopingOrganization" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                    <id extension="NTN08" root="2.16.840.1.113883.2.1.3.2.4.19.1" />
+                                    <name>Norfolk and Wisbech 111</name>
+                                </scopingOrganization>
+                            </associatedEntity>
+                        </participant>
+                        <authorization typeCode="AUTH">
+                            <contentId extension="COCD_TP146226GB02#Consent" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                            <consent classCode="CONS" moodCode="EVN">
+                                <templateId extension="COCD_TP146226GB02#Consent" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                <id root="F2D29195-DEAD-4A40-8E73-00E581643F33" />
+                                <code code="425691002" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Consent given for electronic record sharing" />
+                                <statusCode code="completed" />
+                            </consent>
+                        </authorization>
+                        <componentOf typeCode="COMP">
+                            <contentId extension="COCD_TP146232GB01#EncompassingEncounter" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                            <encompassingEncounter classCode="ENC" moodCode="EVN">
+                                <templateId extension="COCD_TP146232GB01#EncompassingEncounter" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                <id extension="2DBAE50F-F88C-4572-9866-F94FE0F1F25A" root="2.16.840.1.113883.2.1.3.2.4.18.34" />
+                                <id extension="2100310450" root="2.16.840.1.113883.2.1.3.2.4.18.35" />
+                                <code code="NHS111Encounter" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.326" displayName="NHS111 Encounter" />
+                                <effectiveTime>
+                                    <low value="20210513174724+0100" />
+                                    <high value="20210513182456+0100" />
+                                </effectiveTime>
+                                <dischargeDispositionCode code="Dx10" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.325" displayName="MUST contact a local service for a Non-Urgent Appointment" />
+                                <location typeCode="LOC">
+                                    <templateId extension="COCD_TP146232GB01#location" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                    <contentId extension="COCD_TP145222GB02#HealthCareFacility" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                                    <healthCareFacility classCode="ISDLOC">
+                                        <templateId extension="COCD_TP145222GB02#HealthCareFacility" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                        <id nullFlavor="NA" />
+                                        <location classCode="PLC" determinerCode="INSTANCE">
+                                            <templateId extension="COCD_TP145222GB02#location" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                            <name nullFlavor="NI" />
+                                            <addr use="PHYS">
+                                                <streetAddressLine>313 VICTORIA ROAD</streetAddressLine>
+                                                <streetAddressLine>LOWESTOFT</streetAddressLine>
+                                                <postalCode>NR33 9LS</postalCode>
+                                            </addr>
+                                        </location>
+                                    </healthCareFacility>
+                                </location>
+                            </encompassingEncounter>
+                        </componentOf>
+                        <component typeCode="COMP" contextConductionInd="true">
+                            <structuredBody classCode="DOCBODY" moodCode="EVN">
+                                <component typeCode="COMP" contextConductionInd="true">
+                                    <section moodCode="EVN" classCode="DOCSECT">
+                                        <id root="2DBAE50F-F88C-4572-9866-F94FE0F1F25A" />
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                                            <section moodCode="EVN" classCode="DOCSECT">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                                <id root="5E9C1BC9-7F89-4F83-BC6B-939D8B7469C4" />
+                                                <title>Patient's Reported Condition</title>
+                                                <text mediaType="text/x-hl7-text+xml">
+                                                    <content>&lt;CLEO Ref: 2100310450&gt; Test Call <br />
+                                                    </content>
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                                            <section moodCode="EVN" classCode="DOCSECT">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                                <id root="2D4E3B7F-3F86-421B-989A-756BF3379BE5" />
+                                                <title>Pathways Disposition</title>
+                                                <text mediaType="text/x-hl7-text+xml">
+                                                    <content>If a pharmacy service is not available contact the GP practice during normal working hours. (Dx10)</content>
+                                                    <br />
+                                                    <br />
+                                                    <content>Selected Service: 1335970392, Out of Hours GP Service (Waveney) - Kirkley Mill Health Centre, Lowestoft, 111</content>
+                                                    <br />
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                                            <section moodCode="EVN" classCode="DOCSECT">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                                <id root="4F890131-208D-477F-B628-1BCB1DFD6B6E" />
+                                                <title>Consultation Summary</title>
+                                                <text mediaType="text/x-hl7-text+xml">
+                                                    <content>
+                                                        <content>Worst acne feature, blackheads or whiteheads</content>
+                                                        <br />
+                                                        <content>Acne</content>
+                                                        <br />
+                                                        <content>Warm to touch</content>
+                                                        <br />
+                                                        <content>Illness - test</content>
+                                                        <br />
+                                                    </content>
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                                            <section moodCode="EVN" classCode="DOCSECT">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                                <id root="5D8772CC-56A8-441D-AC81-D5E696CCBA2B" />
+                                                <title>Pathways Assessment</title>
+                                                <text mediaType="text/x-hl7-text+xml">
+                                                    <content>An injury or health problem was the reason for the contact.</content>
+                                                    <br />
+                                                    <content>Heavy bleeding had not occurred in the previous 2 hours.</content>
+                                                    <br />
+                                                    <content>An illness or health problem was the main problem. - test</content>
+                                                    <br />
+                                                    <content>The individual was not fighting for breath.</content>
+                                                    <br />
+                                                    <content>The main reason for the assessment was not an allergic reaction, heart attack, chest/upper back pain, probable stroke, recent fit/seizure or suicide attempt.</content>
+                                                    <br />
+                                                    <content>The main reason for contact was not new confusion, declared diabetic hypo/hyperglycaemia, or ICD shock.</content>
+                                                    <br />
+                                                    <content>The skin on the torso felt normal, warm or hot.</content>
+                                                    <br />
+                                                    <content>The main problem was not a rash, itch, jaundice, skin lumps or abnormal bruising.</content>
+                                                    <br />
+                                                    <content>The main problem was acne, spots or pimples.</content>
+                                                    <br />
+                                                    <content>The worst problem with the acne was blackheads or white heads.</content>
+                                                    <br />
+                                                    <content>The problem had not persisted for 3 months or got worse over that time.</content>
+                                                    <br />
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                                            <section moodCode="EVN" classCode="DOCSECT">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                                <id root="FF3D47AD-E573-4715-8186-7878DFCB1D39" />
+                                                <title>Advice Given</title>
+                                                <text mediaType="text/x-hl7-text+xml">
+                                                    <content>Speak to a pharmacist for advice on suitable treatment.</content>
+                                                    <br />
+                                                    <content>If there are any new symptoms, or if the condition gets worse, changes or you have any other concerns, call us back.</content>
+                                                    <br />
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16" xmlns="NPFIT:HL7:Localisation" />
+                                            <section moodCode="EVN" classCode="DOCSECT">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
+                                                <id root="F0C29F80-E782-4E77-954B-2668CBFF2FA6" />
+                                                <title>SCR Consent</title>
+                                                <text mediaType="text/x-hl7-text+xml">
+                                                    <content>Consent given for SCR sharing<br />
+                                                        <br />
+                                                    </content>
+                                                </text>
+                                            </section>
+                                        </component>
+                                    </section>
+                                </component>
+                            </structuredBody>
+                        </component>
+                    </ClinicalDocument>
+                </payload>
+            </payloads>
+        </DistributionEnvelope>
+    </s:Body>
+</s:Envelope>
