@@ -71,12 +71,12 @@ import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
 @DirtiesContext
 @Slf4j
 @RunWith(JUnitParamsRunner.class)
+@ContextConfiguration(initializers = WireMockInitializer.class)
 public class ReportControllerIT {
 
     private static final String APPLICATION_XML_UTF_8 = APPLICATION_XML_VALUE + ";charset=UTF-8";
     private static final boolean OVERWRITE_XML = false;
     public static final String MESSAGE_ID = "messageId";
-    private static final String MESSAGE_ID_VALUE = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
     private static final String REPORT_ENDPOINT = "/report";
     private static final String EXPECTED_ACTION = "urn:nhs-itk:services:201005:SendNHS111Report-v2-0Response";
     private static final String EXPECTED_BODY = "<itk:SimpleMessageResponse xmlns:itk=\"urn:nhs-itk:ns:201005\">OK:%s</itk"
