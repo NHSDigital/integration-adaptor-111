@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2021-09-14
+- Replace dom4j with standard Java xpath library
+- Fixed issue with Date/Time parsing
+- When handling repeat caller case, mapping only one `ClinicalDocument` with the newest date from `EffectiveTime` property
+- Mapping `IntendedRecipient.ReceivedOrganization` to FHIR `Organization` resource and referencing it in
+  `HealthcareService.Location.ManagingOrganization`and in `HealthcareService.ProvidedBy` properties
+- Adding `Device` resource and referencing it in `ReferralRequest.Requester.Agent` and `List.Source` instead of hardcoded 'Device/1' value.
+  `Device` resource is populated with:
+    FHIR | value
+    ---- | ---
+    model | 111 Adaptor
+    version | <current_version>
+- Possibility to override supported ODS codes and DOS IDs set in yaml and retrieve them from endpoint configured in `PEM111_ITK_EXTERNAL_CONFIGURATION_URL` env var.
+  Poll intervals can be set in `PEM111_ITK_FETCH_INTERVAL_MIN` env var.
 ## [0.8.0] - 2021-08-27
 - possibility to switch off SOAP Header validation using env var - `PEM111_SOAP_VALIDATION_ENABLED`
 - Fixed issues with Date/Time parsing
