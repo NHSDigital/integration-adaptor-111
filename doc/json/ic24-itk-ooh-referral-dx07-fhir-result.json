@@ -1,0 +1,626 @@
+{
+  "resourceType": "Bundle",
+  "identifier": {
+    "type": {
+      "text": "ClinicalDocument VersionNumber"
+    },
+    "value": "1"
+  },
+  "type": "message",
+  "entry": [ {
+    "fullUrl": "urn:uuid:4A4DE551-F585-49BB-A1D3-12DCC764AF52",
+    "resource": {
+      "resourceType": "MessageHeader",
+      "id": "4A4DE551-F585-49BB-A1D3-12DCC764AF52",
+      "event": {
+        "system": "https://fhir.nhs.uk/STU3/CodeSystem/EventType-1",
+        "code": "referral-1",
+        "display": "Referral"
+      },
+      "destination": [ {
+        "endpoint": "urn:nhs-uk:addressing:ods:NVE06:DOSServiceID:1335970392"
+      } ],
+      "timestamp": "2021-05-11T08:58:52.000+00:00",
+      "source": {
+        "name": "NHS 111 Adaptor",
+        "endpoint": "http://localhost:8080/report"
+      },
+      "reason": {
+        "coding": [ {
+          "system": "urn:nhs-itk:ns:201005:interaction",
+          "code": "urn:nhs-itk:interaction:primaryOutofHourRecipientNHS111CDADocument-v2-0"
+        } ]
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:3eab31cd-242b-4fef-b45d-b87e0e305539",
+    "resource": {
+      "resourceType": "Encounter",
+      "id": "3eab31cd-242b-4fef-b45d-b87e0e305539",
+      "identifier": [ {
+        "system": "2.16.840.1.113883.2.1.3.2.4.18.34",
+        "value": "D21E3785-658E-4B35-A8B2-2E59906B8983"
+      }, {
+        "system": "2.16.840.1.113883.2.1.3.2.4.18.35",
+        "value": "2100310384"
+      } ],
+      "status": "finished",
+      "type": [ {
+        "text": "111 Encounter Referral"
+      } ],
+      "subject": {
+        "reference": "urn:uuid:b7cbd72b-79d2-4690-946c-1697735db27d"
+      },
+      "participant": [ {
+        "type": [ {
+          "coding": [ {
+            "system": "http://hl7.org/fhir/ValueSet/encounter-participant-type",
+            "code": "PPRF",
+            "display": "Author"
+          } ]
+        } ],
+        "individual": {
+          "reference": "urn:uuid:2ae4f194-1926-43ab-9901-6c183849e660"
+        }
+      }, {
+        "type": [ {
+          "text": "Informant"
+        } ],
+        "individual": {
+          "reference": "urn:uuid:3e283733-08e0-4246-b6f4-ebcbf3a551ab"
+        }
+      } ],
+      "period": {
+        "start": "2021-05-11T08:58:52+00:00"
+      },
+      "location": [ {
+        "location": {
+          "reference": "urn:uuid:cb548615-f9cb-4483-9e3d-83585e39c62e"
+        },
+        "status": "active"
+      }, {
+        "location": {
+          "reference": "urn:uuid:c9ab5881-9e7a-4b4a-9eff-e8ffd9061446"
+        },
+        "status": "completed"
+      } ],
+      "serviceProvider": {
+        "reference": "urn:uuid:324d01fa-f806-456a-b145-e50d1b4618a4"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:324d01fa-f806-456a-b145-e50d1b4618a4",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "324d01fa-f806-456a-b145-e50d1b4618a4",
+      "active": true,
+      "type": [ {
+        "text": "CST"
+      } ],
+      "name": "Norfolk and Wisbech 111"
+    }
+  }, {
+    "fullUrl": "urn:uuid:2ae4f194-1926-43ab-9901-6c183849e660",
+    "resource": {
+      "resourceType": "Practitioner",
+      "id": "2ae4f194-1926-43ab-9901-6c183849e660",
+      "active": true,
+      "name": [ {
+        "text": "Ben Smythson"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:3e283733-08e0-4246-b6f4-ebcbf3a551ab",
+    "resource": {
+      "resourceType": "RelatedPerson",
+      "id": "3e283733-08e0-4246-b6f4-ebcbf3a551ab",
+      "active": true,
+      "patient": {
+        "reference": "urn:uuid:b7cbd72b-79d2-4690-946c-1697735db27d"
+      },
+      "relationship": {
+        "coding": [ {
+          "system": "2.16.840.1.113883.2.1.3.2.4.16.45",
+          "code": "21",
+          "display": "Self"
+        }, {
+          "system": "http://hl7.org/fhir/v2/0131",
+          "code": "C",
+          "display": "Emergency Contact"
+        } ]
+      },
+      "name": [ {
+        "text": "Test Call TEST CALL DX07"
+      } ],
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:01233123123"
+      } ],
+      "gender": "unknown"
+    }
+  }, {
+    "fullUrl": "urn:uuid:cb548615-f9cb-4483-9e3d-83585e39c62e",
+    "resource": {
+      "resourceType": "Location",
+      "id": "cb548615-f9cb-4483-9e3d-83585e39c62e",
+      "managingOrganization": {
+        "reference": "urn:uuid:d26bab1b-306d-4c1f-b791-baffe2121b4b"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:d26bab1b-306d-4c1f-b791-baffe2121b4b",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "d26bab1b-306d-4c1f-b791-baffe2121b4b",
+      "identifier": [ {
+        "value": "Z10000"
+      } ],
+      "type": [ {
+        "text": "GP Practice"
+      } ],
+      "name": "UNKNOWN"
+    }
+  }, {
+    "fullUrl": "urn:uuid:c9ab5881-9e7a-4b4a-9eff-e8ffd9061446",
+    "resource": {
+      "resourceType": "Location",
+      "id": "c9ab5881-9e7a-4b4a-9eff-e8ffd9061446",
+      "address": {
+        "type": "physical",
+        "line": [ "313 VICTORIA ROAD", "LOWESTOFT" ],
+        "postalCode": "NR33 9LS"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:b7cbd72b-79d2-4690-946c-1697735db27d",
+    "resource": {
+      "resourceType": "Patient",
+      "id": "b7cbd72b-79d2-4690-946c-1697735db27d",
+      "language": "en",
+      "active": true,
+      "name": [ {
+        "use": "official",
+        "family": "TEST CALL DX07",
+        "given": [ "Test Call" ]
+      } ],
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:01233123123"
+      } ],
+      "gender": "male",
+      "birthDate": "1996-03-25",
+      "address": [ {
+        "use": "home",
+        "line": [ "313 VICTORIA ROAD", "LOWESTOFT" ],
+        "postalCode": "NR33 9LS"
+      }, {
+        "type": "physical",
+        "line": [ "313 VICTORIA ROAD", "LOWESTOFT" ],
+        "postalCode": "NR33 9LS"
+      } ],
+      "generalPractitioner": [ {
+        "reference": "urn:uuid:47d9f2fc-1f54-4f2c-a4c6-5548eb7afdc2"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:47d9f2fc-1f54-4f2c-a4c6-5548eb7afdc2",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "47d9f2fc-1f54-4f2c-a4c6-5548eb7afdc2",
+      "identifier": [ {
+        "value": "Z10000"
+      } ],
+      "type": [ {
+        "text": "GP Practice"
+      } ],
+      "name": "UNKNOWN"
+    }
+  }, {
+    "fullUrl": "urn:uuid:18fbe9a2-4ba5-49b2-9997-dfb58f5063aa",
+    "resource": {
+      "resourceType": "HealthcareService",
+      "id": "18fbe9a2-4ba5-49b2-9997-dfb58f5063aa",
+      "active": true,
+      "providedBy": {
+        "reference": "urn:uuid:a526fe25-eb03-45ff-81c1-ba33f1297ffd"
+      },
+      "location": [ {
+        "reference": "urn:uuid:4a261fdd-77dd-4574-9641-da82297d821c"
+      } ],
+      "name": "Out of Hours GP Service (Waveney) - Kirkley Mill Health Centre, Lowestoft"
+    }
+  }, {
+    "fullUrl": "urn:uuid:4a261fdd-77dd-4574-9641-da82297d821c",
+    "resource": {
+      "resourceType": "Location",
+      "id": "4a261fdd-77dd-4574-9641-da82297d821c",
+      "managingOrganization": {
+        "reference": "urn:uuid:a526fe25-eb03-45ff-81c1-ba33f1297ffd"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:a526fe25-eb03-45ff-81c1-ba33f1297ffd",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "a526fe25-eb03-45ff-81c1-ba33f1297ffd",
+      "identifier": [ {
+        "value": "NVE06"
+      } ],
+      "type": [ {
+        "coding": [ {
+          "code": "PRCP",
+          "display": "Out of Hours GP Service (Waveney) - Kirkley Mill Health Centre, Lowestoft"
+        } ]
+      } ],
+      "name": "Out of Hours GP Service (Waveney) - Kirkley Mill Health Centre, Lowestoft"
+    }
+  }, {
+    "fullUrl": "urn:uuid:76bf5c6c-bdf5-4fe2-a591-ebea618559e5",
+    "resource": {
+      "resourceType": "ReferralRequest",
+      "id": "76bf5c6c-bdf5-4fe2-a591-ebea618559e5",
+      "status": "active",
+      "intent": "plan",
+      "priority": "routine",
+      "subject": {
+        "reference": "urn:uuid:b7cbd72b-79d2-4690-946c-1697735db27d"
+      },
+      "context": {
+        "reference": "urn:uuid:3eab31cd-242b-4fef-b45d-b87e0e305539"
+      },
+      "occurrencePeriod": {
+        "start": "2021-09-14T09:23:31+00:00",
+        "end": "2021-09-14T10:23:31+00:00"
+      },
+      "authoredOn": "2021-05-11T08:58:52+00:00",
+      "requester": {
+        "agent": {
+          "reference": "urn:uuid:92239fb6-0dfe-4caa-a0f0-4609bc39a8ef"
+        },
+        "onBehalfOf": {
+          "reference": "urn:uuid:324d01fa-f806-456a-b145-e50d1b4618a4"
+        }
+      },
+      "recipient": [ {
+        "reference": "urn:uuid:6e442261-431d-49c5-9441-4797dc097735"
+      }, {
+        "reference": "urn:uuid:18fbe9a2-4ba5-49b2-9997-dfb58f5063aa"
+      } ],
+      "reasonReference": [ {
+        "reference": "urn:uuid:44b77a11-5be7-42a6-84ea-bd1c5649653d"
+      } ],
+      "supportingInfo": [ {
+        "reference": "urn:uuid:b0a28b66-5150-43f1-8d95-915d9e54cd6d"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:b0a28b66-5150-43f1-8d95-915d9e54cd6d",
+    "resource": {
+      "resourceType": "ProcedureRequest",
+      "id": "b0a28b66-5150-43f1-8d95-915d9e54cd6d",
+      "status": "active",
+      "intent": "plan",
+      "priority": "routine",
+      "doNotPerform": false,
+      "code": {
+        "coding": [ {
+          "system": "2.16.840.1.113883.2.1.3.2.4.17.325",
+          "code": "Dx07",
+          "display": "To contact a local service within 12 hours"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:b7cbd72b-79d2-4690-946c-1697735db27d"
+      },
+      "occurrencePeriod": {
+        "start": "2021-09-14T09:23:31+00:00",
+        "end": "2021-09-14T10:23:31+00:00"
+      },
+      "reasonReference": [ {
+        "reference": "urn:uuid:44b77a11-5be7-42a6-84ea-bd1c5649653d"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:6e442261-431d-49c5-9441-4797dc097735",
+    "resource": {
+      "resourceType": "Practitioner",
+      "id": "6e442261-431d-49c5-9441-4797dc097735",
+      "active": true,
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:01233505450"
+      } ],
+      "address": [ {
+        "type": "physical",
+        "line": [ "Kingston House", "The Long Barrow", "Orbital Park", "Ashford", "Kent" ],
+        "postalCode": "TN24 0GP"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:2f8edeb3-43e1-4881-b509-430d3ae33572",
+    "resource": {
+      "resourceType": "Composition",
+      "id": "2f8edeb3-43e1-4881-b509-430d3ae33572",
+      "identifier": {
+        "use": "usual",
+        "value": "B172BCF7-DD1C-4508-B781-6BE68ABD1F79"
+      },
+      "status": "final",
+      "type": {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "371531000",
+          "display": "Report of clinical encounter (record artifact)"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:b7cbd72b-79d2-4690-946c-1697735db27d"
+      },
+      "encounter": {
+        "reference": "urn:uuid:3eab31cd-242b-4fef-b45d-b87e0e305539"
+      },
+      "date": "2021-09-14T09:23:31+00:00",
+      "author": [ {
+        "reference": "urn:uuid:2ae4f194-1926-43ab-9901-6c183849e660"
+      } ],
+      "title": "111 Report",
+      "confidentiality": "R",
+      "section": [ {
+        "section": [ {
+          "title": "Patient's Reported Condition",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment mediaType=&quot;text/x-hl7-text+xml&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;&amp;lt;CLEO Ref: 2100310384&gt; Test Call for Dx07.\n                                                        &lt;urn:br/&gt;\n                                                    &lt;/urn:content&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "Pathways Disposition",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment mediaType=&quot;text/x-hl7-text+xml&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The individual needs to contact a local service within 12 hours. (Dx07)&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Selected Service: 1335970392, Out of Hours GP Service (Waveney) - Kirkley Mill Health Centre, Lowestoft, 111&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "Consultation Summary",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment mediaType=&quot;text/x-hl7-text+xml&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;\n                                                        &lt;urn:content&gt;Excessive thirst in last 4 weeks&lt;/urn:content&gt;\n                                                        &lt;urn:br/&gt;\n                                                        &lt;urn:content&gt;Warm to touch&lt;/urn:content&gt;\n                                                        &lt;urn:br/&gt;\n                                                        &lt;urn:content&gt;Illness - Test&lt;/urn:content&gt;\n                                                        &lt;urn:br/&gt;\n                                                    &lt;/urn:content&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "Pathways Assessment",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment mediaType=&quot;text/x-hl7-text+xml&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;An injury or health problem was the reason for the contact.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Heavy bleeding had not occurred in the previous 2 hours.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;An illness or health problem was the main problem. - Test&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The individual was not fighting for breath.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The main reason for the assessment was not an allergic reaction, heart attack, chest/upper back pain, probable stroke, recent fit/seizure or suicide attempt.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The main reason for contact was not new confusion, declared diabetic hypo/hyperglycaemia, or ICD shock.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The skin on the torso felt normal, warm or hot.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;There was no vomiting, diarrhoea, rectal bleeding, groin pain or groin swelling.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;There was no new genital pain or swelling.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The individual was able to carry out most or all normal activities.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;There was no crushing or severe aching chest, upper back or upper abdominal pain, or pain going to the arm, neck, jaw or shoulder.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The individual had not ingested a harmful or toxic substance.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;There had been no black and tarry or red/maroon bowel motions.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;There was no new or worsening confusion.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Breathing harder or faster when doing nothing was not described.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;There was no new shoulder tip pain or pain in the lower right abdomen.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The individual did not use anticoagulant medication or have a bleeding/clotting disorder.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The individual had not been in constant pain for 4 hours or more.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The individual was not jaundiced.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The individual had experienced extreme thirst during the previous 4 weeks.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "Advice Given",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment mediaType=&quot;text/x-hl7-text+xml&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Unless advised not to, paracetamol may be used to relieve pain or fever. Follow the instructions in the pack. If in doubt ask a pharmacist.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Don't use ibuprofen or any other anti-inflammatory medication until you have spoken to a healthcare professional.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;If there are any new symptoms, or if the condition gets worse, changes or you have any other concerns, call us back.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Remember to take a list of any current medications if you go to the out of hours surgery.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "SCR Consent",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment mediaType=&quot;text/x-hl7-text+xml&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Consent given for SCR sharing\n                                                        &lt;urn:br/&gt;\n                                                        &lt;urn:br/&gt;\n                                                    &lt;/urn:content&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+          }
+        } ]
+      }, {
+        "title": "ReferralRequest",
+        "entry": [ {
+          "reference": "urn:uuid:76bf5c6c-bdf5-4fe2-a591-ebea618559e5"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:1c5db31e-5fa4-4ad6-979c-8fbe3aa350ac",
+    "resource": {
+      "resourceType": "Consent",
+      "id": "1c5db31e-5fa4-4ad6-979c-8fbe3aa350ac",
+      "identifier": {
+        "use": "usual",
+        "value": "B172BCF7-DD1C-4508-B781-6BE68ABD1F79"
+      },
+      "status": "active",
+      "patient": {
+        "reference": "urn:uuid:b7cbd72b-79d2-4690-946c-1697735db27d"
+      },
+      "period": {
+        "start": "2021-05-11T08:58:52+00:00"
+      },
+      "consentingParty": [ {
+        "reference": "urn:uuid:b7cbd72b-79d2-4690-946c-1697735db27d"
+      } ],
+      "action": [ {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "425691002",
+          "display": "Consent given for electronic record sharing"
+        } ],
+        "text": "Consent given for electronic record sharing"
+      } ],
+      "organization": [ {
+        "reference": "urn:uuid:324d01fa-f806-456a-b145-e50d1b4618a4"
+      } ],
+      "policyRule": "http://hl7.org/fhir/ConsentPolicy/opt-out",
+      "data": [ {
+        "meaning": "related",
+        "reference": {
+          "reference": "urn:uuid:3eab31cd-242b-4fef-b45d-b87e0e305539"
+        }
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:44b77a11-5be7-42a6-84ea-bd1c5649653d",
+    "resource": {
+      "resourceType": "Condition",
+      "id": "44b77a11-5be7-42a6-84ea-bd1c5649653d",
+      "clinicalStatus": "active",
+      "verificationStatus": "unknown",
+      "subject": {
+        "reference": "urn:uuid:b7cbd72b-79d2-4690-946c-1697735db27d"
+      },
+      "context": {
+        "reference": "urn:uuid:3eab31cd-242b-4fef-b45d-b87e0e305539"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:92f22ad1-48d8-4984-85a8-491b60fae730",
+    "resource": {
+      "resourceType": "Observation",
+      "id": "92f22ad1-48d8-4984-85a8-491b60fae730",
+      "status": "final",
+      "code": {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "33962009",
+          "display": "Presenting complaint"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:b7cbd72b-79d2-4690-946c-1697735db27d"
+      },
+      "context": {
+        "reference": "urn:uuid:3eab31cd-242b-4fef-b45d-b87e0e305539"
+      },
+      "valueString": "<CLEO Ref: 2100310384> Test Call for Dx07.\n                                                        "
+    }
+  }, {
+    "fullUrl": "urn:uuid:48dd2672-346e-487c-8c3a-f97c4528e5ee",
+    "resource": {
+      "resourceType": "PractitionerRole",
+      "id": "48dd2672-346e-487c-8c3a-f97c4528e5ee",
+      "practitioner": {
+        "reference": "urn:uuid:2ae4f194-1926-43ab-9901-6c183849e660"
+      },
+      "organization": {
+        "reference": "urn:uuid:09af24d7-ecad-4dd5-9bd6-e795b665ce5b"
+      },
+      "code": [ {
+        "coding": [ {
+          "system": "2.16.840.1.113883.2.1.3.2.4.17.196",
+          "code": "NR1690",
+          "display": "Call Operator"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:09af24d7-ecad-4dd5-9bd6-e795b665ce5b",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "09af24d7-ecad-4dd5-9bd6-e795b665ce5b",
+      "identifier": [ {
+        "value": "NTN08"
+      } ],
+      "name": "Norfolk and Wisbech 111"
+    }
+  }, {
+    "fullUrl": "urn:uuid:38c58830-f106-41dc-b94e-a73236bde1cd",
+    "resource": {
+      "resourceType": "RelatedPerson",
+      "id": "38c58830-f106-41dc-b94e-a73236bde1cd",
+      "patient": {
+        "reference": "urn:uuid:b7cbd72b-79d2-4690-946c-1697735db27d"
+      },
+      "relationship": {
+        "coding": [ {
+          "system": "http://hl7.org/fhir/v2/0131",
+          "code": "C",
+          "display": "Emergency Contact"
+        } ]
+      },
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:01233123123"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:92239fb6-0dfe-4caa-a0f0-4609bc39a8ef",
+    "resource": {
+      "resourceType": "Device",
+      "id": "92239fb6-0dfe-4caa-a0f0-4609bc39a8ef",
+      "model": "111 Adaptor",
+      "version": "0.8.0"
+    }
+  }, {
+    "fullUrl": "urn:uuid:274a95b4-244c-4be2-b1ce-3c17b2cfa9d8",
+    "resource": {
+      "resourceType": "List",
+      "id": "274a95b4-244c-4be2-b1ce-3c17b2cfa9d8",
+      "status": "current",
+      "mode": "working",
+      "title": "111 Report List",
+      "code": {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "225390008",
+          "display": "Triage"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:b7cbd72b-79d2-4690-946c-1697735db27d"
+      },
+      "encounter": {
+        "reference": "urn:uuid:3eab31cd-242b-4fef-b45d-b87e0e305539"
+      },
+      "date": "2021-09-14T09:23:31+00:00",
+      "source": {
+        "reference": "urn:uuid:92239fb6-0dfe-4caa-a0f0-4609bc39a8ef"
+      },
+      "orderedBy": {
+        "coding": [ {
+          "system": "http://hl7.org/fhir/list-order",
+          "code": "event-date",
+          "display": "Sorted by Event Date"
+        } ]
+      },
+      "entry": [ {
+        "item": {
+          "reference": "urn:uuid:2ae4f194-1926-43ab-9901-6c183849e660"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:a526fe25-eb03-45ff-81c1-ba33f1297ffd"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:3e283733-08e0-4246-b6f4-ebcbf3a551ab"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:d26bab1b-306d-4c1f-b791-baffe2121b4b"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:47d9f2fc-1f54-4f2c-a4c6-5548eb7afdc2"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:6e442261-431d-49c5-9441-4797dc097735"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:38c58830-f106-41dc-b94e-a73236bde1cd"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:44b77a11-5be7-42a6-84ea-bd1c5649653d"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:92f22ad1-48d8-4984-85a8-491b60fae730"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:09af24d7-ecad-4dd5-9bd6-e795b665ce5b"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:324d01fa-f806-456a-b145-e50d1b4618a4"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:76bf5c6c-bdf5-4fe2-a591-ebea618559e5"
+        }
+      } ]
+    }
+  } ]
+}

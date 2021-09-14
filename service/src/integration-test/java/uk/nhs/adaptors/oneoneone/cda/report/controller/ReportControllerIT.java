@@ -9,7 +9,6 @@ import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 import static org.springframework.http.MediaType.TEXT_XML_VALUE;
 
 import static io.restassured.RestAssured.given;
-import static uk.nhs.adaptors.TestResourceUtils.readResourceAsString;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.ACTION;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.BODY;
 
@@ -75,7 +74,7 @@ import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
 public class ReportControllerIT {
 
     private static final String APPLICATION_XML_UTF_8 = APPLICATION_XML_VALUE + ";charset=UTF-8";
-    private static final boolean OVERWRITE_XML = false;
+    private static final boolean OVERWRITE_JSON = false;
     public static final String MESSAGE_ID = "messageId";
     private static final String REPORT_ENDPOINT = "/report";
     private static final String EXPECTED_ACTION = "urn:nhs-itk:services:201005:SendNHS111Report-v2-0Response";
@@ -262,11 +261,11 @@ public class ReportControllerIT {
             throw new IllegalStateException("Message must not be null");
         }
         String messageBody = jmsMessage.getBody(String.class);
-        if (OVERWRITE_XML) {
-            try (PrintWriter printWriter = new PrintWriter("/json" + expectedJsonPath, StandardCharsets.UTF_8)) {
-                printWriter.print(jmsMessage);
+        if (OVERWRITE_JSON) {
+            try (PrintWriter printWriter = new PrintWriter("../doc" + expectedJsonPath, StandardCharsets.UTF_8)) {
+                printWriter.print(messageBody);
             }
-            fail("Re-run the tests with OVERWRITE_XML=false");
+            fail("Re-run the tests with OVERWRITE_JSON=false");
         }
 
         assertThat(validator.isValid(messageBody)).isEqualTo(true);

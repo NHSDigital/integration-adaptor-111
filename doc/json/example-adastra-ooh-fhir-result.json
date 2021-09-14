@@ -1,0 +1,1739 @@
+{
+  "resourceType": "Bundle",
+  "identifier": {
+    "type": {
+      "text": "ClinicalDocument VersionNumber"
+    },
+    "value": "1"
+  },
+  "type": "message",
+  "entry": [ {
+    "fullUrl": "urn:uuid:05040617-33BA-4344-AA59-281CF2FE63CA",
+    "resource": {
+      "resourceType": "MessageHeader",
+      "id": "05040617-33BA-4344-AA59-281CF2FE63CA",
+      "event": {
+        "system": "https://fhir.nhs.uk/STU3/CodeSystem/EventType-1",
+        "code": "referral-1",
+        "display": "Referral"
+      },
+      "destination": [ {
+        "endpoint": "urn:nhs-uk:addressing:ods:FHR04RPX:DOSServiceID:2000038667"
+      } ],
+      "timestamp": "2021-04-06T15:19:34.000+00:00",
+      "source": {
+        "name": "NHS 111 Adaptor",
+        "endpoint": "http://localhost:8080/report"
+      },
+      "reason": {
+        "coding": [ {
+          "system": "urn:nhs-itk:ns:201005:interaction",
+          "code": "urn:nhs-itk:interaction:primaryOutofHourRecipientNHS111CDADocument-v2-0"
+        } ]
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c",
+    "resource": {
+      "resourceType": "Encounter",
+      "id": "4ecbc584-8c5e-461c-af28-40097ba7629c",
+      "identifier": [ {
+        "system": "2.16.840.1.113883.2.1.3.2.4.18.34",
+        "value": "AdastraCaseGUID34"
+      }, {
+        "system": "2.16.840.1.113883.2.1.3.2.4.18.35",
+        "value": "AdastraCaseID35"
+      }, {
+        "system": "2.16.840.1.113883.2.1.3.2.4.18.49",
+        "value": "AdastraCaseGUID49"
+      } ],
+      "status": "finished",
+      "type": [ {
+        "text": "111 Encounter Referral"
+      } ],
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "participant": [ {
+        "type": [ {
+          "coding": [ {
+            "system": "http://hl7.org/fhir/ValueSet/encounter-participant-type",
+            "code": "PPRF",
+            "display": "Author"
+          } ]
+        } ],
+        "individual": {
+          "reference": "urn:uuid:ea0cae34-0be2-4143-9004-4a691c529a2f"
+        }
+      }, {
+        "type": [ {
+          "text": "Informant"
+        } ],
+        "individual": {
+          "reference": "urn:uuid:873fe11d-e86d-40cb-8930-e419280a659c"
+        }
+      }, {
+        "type": [ {
+          "coding": [ {
+            "system": "http://hl7.org/fhir/ValueSet/encounter-participant-type",
+            "code": "ATND",
+            "display": "Responsible Party"
+          } ]
+        } ],
+        "individual": {
+          "reference": "urn:uuid:97de335c-ed02-46d4-907d-48947cf20115"
+        }
+      } ],
+      "period": {
+        "start": "2021-04-06T15:19:34+00:00"
+      },
+      "location": [ {
+        "location": {
+          "reference": "urn:uuid:12932308-810f-46a5-9dc5-0ca7430674e6"
+        },
+        "status": "completed"
+      } ],
+      "serviceProvider": {
+        "reference": "urn:uuid:d1c09fe4-fcdb-4272-9384-5ca1281809e3"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:d1c09fe4-fcdb-4272-9384-5ca1281809e3",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "d1c09fe4-fcdb-4272-9384-5ca1281809e3",
+      "active": true,
+      "type": [ {
+        "text": "CST"
+      } ],
+      "name": "CustodianName"
+    }
+  }, {
+    "fullUrl": "urn:uuid:ea0cae34-0be2-4143-9004-4a691c529a2f",
+    "resource": {
+      "resourceType": "Practitioner",
+      "id": "ea0cae34-0be2-4143-9004-4a691c529a2f",
+      "active": true,
+      "name": [ {
+        "use": "official",
+        "family": "AuthorAssignedPerson FamilyName",
+        "given": [ "AuthorAssignedPerson GivenName" ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:873fe11d-e86d-40cb-8930-e419280a659c",
+    "resource": {
+      "resourceType": "RelatedPerson",
+      "id": "873fe11d-e86d-40cb-8930-e419280a659c",
+      "active": true,
+      "patient": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "relationship": {
+        "coding": [ {
+          "system": "2.16.840.1.113883.2.1.3.2.4.16.45",
+          "code": "16",
+          "display": "Relative"
+        } ]
+      },
+      "name": [ {
+        "text": "RelatedPerson Name"
+      } ],
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:01111111111",
+        "use": "home"
+      } ],
+      "gender": "unknown"
+    }
+  }, {
+    "fullUrl": "urn:uuid:97de335c-ed02-46d4-907d-48947cf20115",
+    "resource": {
+      "resourceType": "Practitioner",
+      "id": "97de335c-ed02-46d4-907d-48947cf20115",
+      "active": true,
+      "name": [ {
+        "use": "official",
+        "family": "ResponsablePartyMD FamilyName",
+        "given": [ "ResponsablePartyMD GivenName" ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:12932308-810f-46a5-9dc5-0ca7430674e6",
+    "resource": {
+      "resourceType": "Location",
+      "id": "12932308-810f-46a5-9dc5-0ca7430674e6",
+      "name": "Incident Location",
+      "address": {
+        "type": "physical",
+        "line": [ "HealthCareFacility AddressLine1", "HealthCareFacility AddressLine2", "HealthCareFacility AddressLine3", "HealthCareFacility AddressLine4", "HealthCareFacility AddressLine5" ],
+        "postalCode": "LOH25 4NS"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387",
+    "resource": {
+      "resourceType": "Patient",
+      "id": "05f7a20e-4d12-4e8e-bf23-5f9eca01b387",
+      "active": true,
+      "name": [ {
+        "use": "official",
+        "family": "Patient Family Name",
+        "given": [ "Patient Given Name" ]
+      } ],
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:000000000000",
+        "use": "home"
+      }, {
+        "system": "phone",
+        "value": "tel:000000000000"
+      } ],
+      "gender": "other",
+      "birthDate": "1990-02-02",
+      "address": [ {
+        "use": "home",
+        "line": [ "Home Address Line 1", "Home Address Line 2", "Home Address Line 3", "Home Address Line 4", "Home Address Line 5" ],
+        "postalCode": "HA25 4NS"
+      }, {
+        "type": "physical",
+        "line": [ "Home Address Line 1", "Home Address Line 2", "Home Address Line 3", "Home Address Line 4", "Home Address Line 5" ],
+        "postalCode": "PH25 4NS"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:14b96f11-40e2-472c-8eb0-d16918f747ef",
+    "resource": {
+      "resourceType": "HealthcareService",
+      "id": "14b96f11-40e2-472c-8eb0-d16918f747ef",
+      "active": true,
+      "providedBy": {
+        "reference": "urn:uuid:477ca92c-ffeb-43a7-a7fa-efa35a33aa5d"
+      },
+      "location": [ {
+        "reference": "urn:uuid:8197ce38-4d13-486f-92c1-aa39b220bd86"
+      } ],
+      "name": "InformationRecipient IntendedRecipient Name FHR0"
+    }
+  }, {
+    "fullUrl": "urn:uuid:8197ce38-4d13-486f-92c1-aa39b220bd86",
+    "resource": {
+      "resourceType": "Location",
+      "id": "8197ce38-4d13-486f-92c1-aa39b220bd86",
+      "managingOrganization": {
+        "reference": "urn:uuid:477ca92c-ffeb-43a7-a7fa-efa35a33aa5d"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:477ca92c-ffeb-43a7-a7fa-efa35a33aa5d",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "477ca92c-ffeb-43a7-a7fa-efa35a33aa5d",
+      "identifier": [ {
+        "value": "FHR04RPX"
+      } ],
+      "type": [ {
+        "coding": [ {
+          "code": "PRCP",
+          "display": "InformationRecipient IntendedRecipient Name FHR0"
+        } ]
+      } ],
+      "name": "InformationRecipient IntendedRecipient Name FHR0"
+    }
+  }, {
+    "fullUrl": "urn:uuid:b25da9a5-a13b-41ac-af62-d7f7a3c79782",
+    "resource": {
+      "resourceType": "ReferralRequest",
+      "id": "b25da9a5-a13b-41ac-af62-d7f7a3c79782",
+      "status": "active",
+      "intent": "plan",
+      "priority": "routine",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "occurrencePeriod": {
+        "start": "2021-09-14T09:23:29+00:00",
+        "end": "2021-09-14T10:23:29+00:00"
+      },
+      "authoredOn": "2021-04-06T15:19:29+00:00",
+      "requester": {
+        "agent": {
+          "reference": "urn:uuid:040f7a48-3ce2-4717-ae0c-60ba48d69892"
+        },
+        "onBehalfOf": {
+          "reference": "urn:uuid:d1c09fe4-fcdb-4272-9384-5ca1281809e3"
+        }
+      },
+      "recipient": [ {
+        "reference": "urn:uuid:14b96f11-40e2-472c-8eb0-d16918f747ef"
+      } ],
+      "reasonReference": [ {
+        "reference": "urn:uuid:ca134ec8-36fc-40a1-834a-8788ad9ce250"
+      } ],
+      "supportingInfo": [ {
+        "reference": "urn:uuid:8e8c2301-02f9-419a-8b32-1d0162272a2a"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:8e8c2301-02f9-419a-8b32-1d0162272a2a",
+    "resource": {
+      "resourceType": "ProcedureRequest",
+      "id": "8e8c2301-02f9-419a-8b32-1d0162272a2a",
+      "status": "active",
+      "intent": "plan",
+      "priority": "routine",
+      "doNotPerform": false,
+      "code": {
+        "coding": [ {
+          "system": "2.16.840.1.113883.2.1.3.2.4.17.325",
+          "code": "DispoCodeDx87",
+          "display": "DispoName - Repeat Prescription required within 24 hours"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "occurrencePeriod": {
+        "start": "2021-09-14T09:23:29+00:00",
+        "end": "2021-09-14T10:23:29+00:00"
+      },
+      "reasonReference": [ {
+        "reference": "urn:uuid:ca134ec8-36fc-40a1-834a-8788ad9ce250"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:979968f2-ff8b-4f8a-9358-e902403d3523",
+    "resource": {
+      "resourceType": "Composition",
+      "id": "979968f2-ff8b-4f8a-9358-e902403d3523",
+      "identifier": {
+        "use": "usual",
+        "value": "E2DF04F7-95CA-40AD-808D-797C0A89E39C"
+      },
+      "status": "final",
+      "type": {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "371531000",
+          "display": "Report of clinical encounter (record artifact)"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "encounter": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "date": "2021-09-14T09:23:29+00:00",
+      "author": [ {
+        "reference": "urn:uuid:ea0cae34-0be2-4143-9004-4a691c529a2f"
+      } ],
+      "title": "111 Report",
+      "confidentiality": "N",
+      "section": [ {
+        "section": [ {
+          "title": "ComponentTitle - Patient's Reported Condition",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;ComponentText - Pharmacy ITK Testing&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "ComponentTitle - Pathways Disposition",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;ComponentText - Repeat Prescription required within 24 hours (Dx87)                                         &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;                                         Selected service: Springvale, Fraser Road, Kings Worthy, Winchester&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "ComponentTitle - Consultation Summary",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;ComponentText - Prescription request&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;Not enough medication until surgery opens&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;No medication available&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;Next dose due in over 12 hours time&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "ComponentTitle - Pathways Assessment",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;ComponentText - Reason for call menu - continued to next list.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;A prescription request was the main reason for the contact.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;The main reason for the contact was not a new or worsening illness.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;The individual did not have enough medication to last until the surgery next opened.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;The medication was suitable for repeat prescribing without further consultation.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;The individual had no medication available.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;The next dose was due in over 12 hours time.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;Instructions given were: The individual needs a repeat prescription.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;Directory of Services referral: Springvale, Fraser Road, Kings Worthy, Winchester&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "ComponentTitle - Advice Given",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;ComponentText - I will arrange for a clinician or pharmacist to speak to the individual.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;IF THE RECOMMENDED TIMEFRAME FALLS OUTSIDE OPENING HOURS: I will arrange for a clinician to speak to the individual.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "ComponentTitle - Information And Advice Given",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;/&gt;</div>"
+          }
+        }, {
+          "title": "ComponentTitle - Disposition",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;ComponentText - Repeat Prescription required within 24 hours&lt;urn:br/&gt;\n                                                    &lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+          }
+        } ]
+      }, {
+        "title": "CarePlan",
+        "entry": [ {
+          "reference": "urn:uuid:259fa317-51a1-4bbf-aa33-00f8cb79105b"
+        } ]
+      }, {
+        "title": "ReferralRequest",
+        "entry": [ {
+          "reference": "urn:uuid:b25da9a5-a13b-41ac-af62-d7f7a3c79782"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:0b87d659-80a1-4c2d-a02d-a81e1ca90503"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:99e44b56-158e-40e9-a60b-a7f85788fcfa"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:697e7a14-8d34-4284-94ab-d85562dca302"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:2abd231c-6db1-4ed1-bc16-5347654336e9"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:f7f5f25e-6873-409f-b3ec-890ed3658d77"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:8d029651-9ede-4baa-b7d2-5ce34eef6c0d"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:e4fc869c-1bb6-4546-bead-d7340ac014fa"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:afe9e24f-b1aa-454d-b826-1260cfb8fdee"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:0e8db9e9-42c9-4fed-b518-ce66d04bfd45"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:5b986532-1051-4435-9fbc-6dafbf700356"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:1cc98b78-5581-4360-8cbf-a9d94441cb7d"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:cd907f46-dc95-413f-a243-3c2c9c5bab9c"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:6b945e82-f699-4408-9151-24314f6a7185"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:8c732b85-8f33-4e71-945e-33d44550163a"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:2d20f707-5920-495e-b03e-1a1f29bbdc55"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:259fa317-51a1-4bbf-aa33-00f8cb79105b",
+    "resource": {
+      "resourceType": "CarePlan",
+      "id": "259fa317-51a1-4bbf-aa33-00f8cb79105b",
+      "status": "completed",
+      "intent": "plan",
+      "title": "ComponentTitle - Information And Advice Given",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "period": {
+        "start": "2021-04-06T15:19:34+00:00"
+      },
+      "addresses": [ {
+        "reference": "urn:uuid:ca134ec8-36fc-40a1-834a-8788ad9ce250"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:1e7f5760-e62f-4e5e-9352-6ac576afd65d",
+    "resource": {
+      "resourceType": "Consent",
+      "id": "1e7f5760-e62f-4e5e-9352-6ac576afd65d",
+      "identifier": {
+        "use": "usual",
+        "value": "E2DF04F7-95CA-40AD-808D-797C0A89E39C"
+      },
+      "status": "active",
+      "patient": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "period": {
+        "start": "2021-04-06T15:19:34+00:00"
+      },
+      "consentingParty": [ {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      } ],
+      "action": [ {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "425691002",
+          "display": "Consent given for electronic record sharing"
+        } ],
+        "text": "Consent given for electronic record sharing"
+      } ],
+      "organization": [ {
+        "reference": "urn:uuid:d1c09fe4-fcdb-4272-9384-5ca1281809e3"
+      } ],
+      "policyRule": "http://hl7.org/fhir/ConsentPolicy/opt-out",
+      "data": [ {
+        "meaning": "related",
+        "reference": {
+          "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+        }
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:ca134ec8-36fc-40a1-834a-8788ad9ce250",
+    "resource": {
+      "resourceType": "Condition",
+      "id": "ca134ec8-36fc-40a1-834a-8788ad9ce250",
+      "clinicalStatus": "active",
+      "verificationStatus": "unknown",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "evidence": [ {
+        "detail": [ {
+          "reference": "urn:uuid:0b87d659-80a1-4c2d-a02d-a81e1ca90503"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:99e44b56-158e-40e9-a60b-a7f85788fcfa"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:697e7a14-8d34-4284-94ab-d85562dca302"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:2abd231c-6db1-4ed1-bc16-5347654336e9"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:f7f5f25e-6873-409f-b3ec-890ed3658d77"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:8d029651-9ede-4baa-b7d2-5ce34eef6c0d"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:e4fc869c-1bb6-4546-bead-d7340ac014fa"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:afe9e24f-b1aa-454d-b826-1260cfb8fdee"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:0e8db9e9-42c9-4fed-b518-ce66d04bfd45"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:5b986532-1051-4435-9fbc-6dafbf700356"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:1cc98b78-5581-4360-8cbf-a9d94441cb7d"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:cd907f46-dc95-413f-a243-3c2c9c5bab9c"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:6b945e82-f699-4408-9151-24314f6a7185"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:8c732b85-8f33-4e71-945e-33d44550163a"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:2d20f707-5920-495e-b03e-1a1f29bbdc55"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:0b87d659-80a1-4c2d-a02d-a81e1ca90503",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "0b87d659-80a1-4c2d-a02d-a81e1ca90503",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:6612ee0e-916f-41ba-a0d9-b96687f24be2"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00",
+      "item": [ {
+        "linkId": "Tx220109",
+        "text": "What is the reason for the contact?",
+        "answer": [ {
+          "valueString": "more"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:6612ee0e-916f-41ba-a0d9-b96687f24be2",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "6612ee0e-916f-41ba-a0d9-b96687f24be2",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "60319",
+        "prefix": "5",
+        "text": "What is the reason for the contact?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "an injury or other health problem, Selected: false"
+        }, {
+          "valueString": "a need to access another healthcare service, Selected: false"
+        }, {
+          "valueString": "a healthcare professional requesting contact with another clinician, Selected: false"
+        }, {
+          "valueString": "a report of results or tests, Selected: false"
+        }, {
+          "valueString": "more, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:99e44b56-158e-40e9-a60b-a7f85788fcfa",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "99e44b56-158e-40e9-a60b-a7f85788fcfa",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:7a69a66e-e045-4992-89dd-ac2b2e69fe85"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00",
+      "item": [ {
+        "linkId": "Tx221793",
+        "text": "STRING:to'Social&information'-further'Callreason'menu",
+        "answer": [ {
+          "valueString": "\"present\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:7a69a66e-e045-4992-89dd-ac2b2e69fe85",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "7a69a66e-e045-4992-89dd-ac2b2e69fe85",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "60319",
+        "prefix": "600",
+        "text": "STRING:to'Social&information'-further'Callreason'menu",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "\"present\", Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:697e7a14-8d34-4284-94ab-d85562dca302",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "697e7a14-8d34-4284-94ab-d85562dca302",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:f77604ef-e002-4691-b3e9-1638831d3666"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00"
+    }
+  }, {
+    "fullUrl": "urn:uuid:f77604ef-e002-4691-b3e9-1638831d3666",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "f77604ef-e002-4691-b3e9-1638831d3666",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:2abd231c-6db1-4ed1-bc16-5347654336e9",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "2abd231c-6db1-4ed1-bc16-5347654336e9",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:271c2b76-3282-4fbf-8bb3-5a7d2bdf7406"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00",
+      "item": [ {
+        "linkId": "Tx221804",
+        "text": "STRING:transfertofurthermenuquestionestablishedinEntryFlow",
+        "answer": [ {
+          "valueString": "\"present\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:271c2b76-3282-4fbf-8bb3-5a7d2bdf7406",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "271c2b76-3282-4fbf-8bb3-5a7d2bdf7406",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "60319",
+        "prefix": "41",
+        "text": "STRING:transfertofurthermenuquestionestablishedinEntryFlow",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "\"present\", Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:f7f5f25e-6873-409f-b3ec-890ed3658d77",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "f7f5f25e-6873-409f-b3ec-890ed3658d77",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:861fa112-11e3-4b4d-8d87-aa75f10aea7b"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00",
+      "item": [ {
+        "linkId": "Tx224998",
+        "text": "SYSTEM_COVIDLEVEL2",
+        "answer": [ {
+          "valueString": "==\"covidlevel2\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:861fa112-11e3-4b4d-8d87-aa75f10aea7b",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "861fa112-11e3-4b4d-8d87-aa75f10aea7b",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "60319",
+        "prefix": "5900",
+        "text": "SYSTEM_COVIDLEVEL2",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "==\"covidlevel2\", Selected: true"
+        }, {
+          "valueString": "*, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:8d029651-9ede-4baa-b7d2-5ce34eef6c0d",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "8d029651-9ede-4baa-b7d2-5ce34eef6c0d",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:e2add9b3-00fc-4683-a114-2fde0cbe21fd"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00",
+      "item": [ {
+        "linkId": "Tx225069",
+        "text": "What is the reason for the contact?",
+        "answer": [ {
+          "valueString": "a prescription request"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:e2add9b3-00fc-4683-a114-2fde0cbe21fd",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "e2add9b3-00fc-4683-a114-2fde0cbe21fd",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "60319",
+        "prefix": "6000",
+        "text": "What is the reason for the contact?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "a child protection/vulnerable adult concern (specify), Selected: false"
+        }, {
+          "valueString": "a social or domestic emergency, Selected: false"
+        }, {
+          "valueString": "a prescription request, Selected: true"
+        }, {
+          "valueString": "an appointment request, Selected: false"
+        }, {
+          "valueString": "a request for health or medication information, Selected: false"
+        }, {
+          "valueString": "public health alert information, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:e4fc869c-1bb6-4546-bead-d7340ac014fa",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "e4fc869c-1bb6-4546-bead-d7340ac014fa",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:33918f56-98a3-4447-8623-ac87915c513d"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00",
+      "item": [ {
+        "linkId": "Tx220957",
+        "text": "Is this contact about a new or worsening illness?",
+        "answer": [ {
+          "valueString": "no"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:33918f56-98a3-4447-8623-ac87915c513d",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "33918f56-98a3-4447-8623-ac87915c513d",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "60319",
+        "prefix": "1400",
+        "text": "Is this contact about a new or worsening illness?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: false"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:afe9e24f-b1aa-454d-b826-1260cfb8fdee",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "afe9e24f-b1aa-454d-b826-1260cfb8fdee",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:bd48687c-12ea-41af-8788-f9e1a596db5d"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00",
+      "item": [ {
+        "linkId": "Tx221352",
+        "text": "Have you got enough medication to last until the surgery opens?",
+        "answer": [ {
+          "valueString": "no"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:bd48687c-12ea-41af-8788-f9e1a596db5d",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "bd48687c-12ea-41af-8788-f9e1a596db5d",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "60319",
+        "prefix": "1500",
+        "text": "Have you got enough medication to last until the surgery opens?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: false"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:0e8db9e9-42c9-4fed-b518-ce66d04bfd45",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "0e8db9e9-42c9-4fed-b518-ce66d04bfd45",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:16a7d1d9-747e-4d4d-bd63-d286c0dc8ce4"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00"
+    }
+  }, {
+    "fullUrl": "urn:uuid:16a7d1d9-747e-4d4d-bd63-d286c0dc8ce4",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "16a7d1d9-747e-4d4d-bd63-d286c0dc8ce4",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:5b986532-1051-4435-9fbc-6dafbf700356",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "5b986532-1051-4435-9fbc-6dafbf700356",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:cd14f68f-507b-45d2-a86d-fed496e5945f"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00",
+      "item": [ {
+        "linkId": "Tx224231",
+        "text": "FROM WHAT YOU HAVE HEARD IS A CONSULTATION WITH A PRESCRIBER NEEDED?",
+        "answer": [ {
+          "valueString": "no"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:cd14f68f-507b-45d2-a86d-fed496e5945f",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "cd14f68f-507b-45d2-a86d-fed496e5945f",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "60319",
+        "prefix": "0",
+        "text": "FROM WHAT YOU HAVE HEARD IS A CONSULTATION WITH A PRESCRIBER NEEDED?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: false"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:1cc98b78-5581-4360-8cbf-a9d94441cb7d",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "1cc98b78-5581-4360-8cbf-a9d94441cb7d",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:6fc9ab37-4bf3-4b2b-b2b3-1ff4c958f280"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00",
+      "item": [ {
+        "linkId": "Tx222687",
+        "text": "Have you got any of the medication available at the moment?",
+        "answer": [ {
+          "valueString": "no"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:6fc9ab37-4bf3-4b2b-b2b3-1ff4c958f280",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "6fc9ab37-4bf3-4b2b-b2b3-1ff4c958f280",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "60319",
+        "prefix": "200",
+        "text": "Have you got any of the medication available at the moment?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: false"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:cd907f46-dc95-413f-a243-3c2c9c5bab9c",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "cd907f46-dc95-413f-a243-3c2c9c5bab9c",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:265fbf1b-0c79-4749-9023-004cd9a40151"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00",
+      "item": [ {
+        "linkId": "Tx221367",
+        "text": "When is the next dose due?",
+        "answer": [ {
+          "valueString": "over 12 hours time"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:265fbf1b-0c79-4749-9023-004cd9a40151",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "265fbf1b-0c79-4749-9023-004cd9a40151",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "60319",
+        "prefix": "100",
+        "text": "When is the next dose due?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "within the next 2 hours, Selected: false"
+        }, {
+          "valueString": "within the next 6 hours, Selected: false"
+        }, {
+          "valueString": "within the next 12 hours, Selected: false"
+        }, {
+          "valueString": "over 12 hours time, Selected: true"
+        }, {
+          "valueString": "not sure, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:6b945e82-f699-4408-9151-24314f6a7185",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "6b945e82-f699-4408-9151-24314f6a7185",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:adc7de39-52d6-49f6-b521-41586024302b"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00",
+      "item": [ {
+        "linkId": "Tx223441",
+        "text": "STRING:SDPCRepeatPrescription",
+        "answer": [ {
+          "valueString": "\"PC repeat prescription\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:adc7de39-52d6-49f6-b521-41586024302b",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "adc7de39-52d6-49f6-b521-41586024302b",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "60319",
+        "prefix": "1100",
+        "text": "STRING:SDPCRepeatPrescription",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "\"PC repeat prescription\", Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:8c732b85-8f33-4e71-945e-33d44550163a",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "8c732b85-8f33-4e71-945e-33d44550163a",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:46349e68-2f8d-4896-bed3-4a8564137eb5"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00"
+    }
+  }, {
+    "fullUrl": "urn:uuid:46349e68-2f8d-4896-bed3-4a8564137eb5",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "46349e68-2f8d-4896-bed3-4a8564137eb5",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:2d20f707-5920-495e-b03e-1a1f29bbdc55",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "2d20f707-5920-495e-b03e-1a1f29bbdc55",
+      "identifier": {
+        "value": "60319"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:89abb345-e2d6-49bf-a318-b3d6f6abfecf"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "context": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "authored": "2021-04-06T15:19:34+00:00"
+    }
+  }, {
+    "fullUrl": "urn:uuid:89abb345-e2d6-49bf-a318-b3d6f6abfecf",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "89abb345-e2d6-49bf-a318-b3d6f6abfecf",
+      "identifier": [ {
+        "value": "60319"
+      } ],
+      "version": "2021-04-06T15:19:34.083Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-04-06T15:19:34+00:00",
+      "publisher": "User ID: 'HADFIELDR' User name: 'Ryan Hadfield' User skill set: 'T3'",
+      "lastReviewDate": "2021-04-06",
+      "contact": [ {
+        "telecom": [ {
+          "value": "0111 111 1111"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:09187275-b044-4e41-9688-cfbf43da6921",
+    "resource": {
+      "resourceType": "PractitionerRole",
+      "id": "09187275-b044-4e41-9688-cfbf43da6921",
+      "practitioner": {
+        "reference": "urn:uuid:ea0cae34-0be2-4143-9004-4a691c529a2f"
+      },
+      "organization": {
+        "reference": "urn:uuid:7dd4979a-1f0b-4532-a65f-5ae458f13fec"
+      },
+      "code": [ {
+        "coding": [ {
+          "system": "2.16.840.1.113883.2.1.3.2.4.17.339",
+          "code": "DOCTOR",
+          "display": "Doctor"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:7dd4979a-1f0b-4532-a65f-5ae458f13fec",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "7dd4979a-1f0b-4532-a65f-5ae458f13fec",
+      "identifier": [ {
+        "value": "RYE"
+      } ],
+      "name": "RepresentedOrg Name"
+    }
+  }, {
+    "fullUrl": "urn:uuid:faecedc7-081f-4927-93ed-3816221e3033",
+    "resource": {
+      "resourceType": "PractitionerRole",
+      "id": "faecedc7-081f-4927-93ed-3816221e3033",
+      "practitioner": {
+        "reference": "urn:uuid:97de335c-ed02-46d4-907d-48947cf20115"
+      },
+      "organization": {
+        "reference": "urn:uuid:56d2c522-7737-47f2-9916-ecffffeabdd0"
+      },
+      "code": [ {
+        "coding": [ {
+          "system": "2.16.840.1.113883.2.1.3.2.4.17.196",
+          "code": "R0010",
+          "display": "Medical Director"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:56d2c522-7737-47f2-9916-ecffffeabdd0",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "56d2c522-7737-47f2-9916-ecffffeabdd0",
+      "identifier": [ {
+        "value": "RYE"
+      } ],
+      "name": "RepresentedOrgNameRYE"
+    }
+  }, {
+    "fullUrl": "urn:uuid:477a4074-3733-4e7e-9ff0-dd2e320093e0",
+    "resource": {
+      "resourceType": "RelatedPerson",
+      "id": "477a4074-3733-4e7e-9ff0-dd2e320093e0",
+      "patient": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "relationship": {
+        "coding": [ {
+          "system": "http://hl7.org/fhir/v2/0131",
+          "code": "C",
+          "display": "Emergency Contact"
+        } ]
+      },
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:000000000000"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:040f7a48-3ce2-4717-ae0c-60ba48d69892",
+    "resource": {
+      "resourceType": "Device",
+      "id": "040f7a48-3ce2-4717-ae0c-60ba48d69892",
+      "model": "111 Adaptor",
+      "version": "0.8.0"
+    }
+  }, {
+    "fullUrl": "urn:uuid:0af511bc-f33b-4ba1-a316-d453eacfc7fa",
+    "resource": {
+      "resourceType": "List",
+      "id": "0af511bc-f33b-4ba1-a316-d453eacfc7fa",
+      "status": "current",
+      "mode": "working",
+      "title": "111 Report List",
+      "code": {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "225390008",
+          "display": "Triage"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:05f7a20e-4d12-4e8e-bf23-5f9eca01b387"
+      },
+      "encounter": {
+        "reference": "urn:uuid:4ecbc584-8c5e-461c-af28-40097ba7629c"
+      },
+      "date": "2021-09-14T09:23:29+00:00",
+      "source": {
+        "reference": "urn:uuid:040f7a48-3ce2-4717-ae0c-60ba48d69892"
+      },
+      "orderedBy": {
+        "coding": [ {
+          "system": "http://hl7.org/fhir/list-order",
+          "code": "event-date",
+          "display": "Sorted by Event Date"
+        } ]
+      },
+      "entry": [ {
+        "item": {
+          "reference": "urn:uuid:d1c09fe4-fcdb-4272-9384-5ca1281809e3"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:477a4074-3733-4e7e-9ff0-dd2e320093e0"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:873fe11d-e86d-40cb-8930-e419280a659c"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:ca134ec8-36fc-40a1-834a-8788ad9ce250"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:ea0cae34-0be2-4143-9004-4a691c529a2f"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:56d2c522-7737-47f2-9916-ecffffeabdd0"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:7dd4979a-1f0b-4532-a65f-5ae458f13fec"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:477ca92c-ffeb-43a7-a7fa-efa35a33aa5d"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:97de335c-ed02-46d4-907d-48947cf20115"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:bd48687c-12ea-41af-8788-f9e1a596db5d"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:e2add9b3-00fc-4683-a114-2fde0cbe21fd"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:adc7de39-52d6-49f6-b521-41586024302b"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:5b986532-1051-4435-9fbc-6dafbf700356"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:46349e68-2f8d-4896-bed3-4a8564137eb5"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:16a7d1d9-747e-4d4d-bd63-d286c0dc8ce4"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:7a69a66e-e045-4992-89dd-ac2b2e69fe85"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:1cc98b78-5581-4360-8cbf-a9d94441cb7d"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:8c732b85-8f33-4e71-945e-33d44550163a"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:271c2b76-3282-4fbf-8bb3-5a7d2bdf7406"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:8d029651-9ede-4baa-b7d2-5ce34eef6c0d"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:afe9e24f-b1aa-454d-b826-1260cfb8fdee"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:cd14f68f-507b-45d2-a86d-fed496e5945f"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:861fa112-11e3-4b4d-8d87-aa75f10aea7b"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:2abd231c-6db1-4ed1-bc16-5347654336e9"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:265fbf1b-0c79-4749-9023-004cd9a40151"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:6fc9ab37-4bf3-4b2b-b2b3-1ff4c958f280"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:f7f5f25e-6873-409f-b3ec-890ed3658d77"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:6b945e82-f699-4408-9151-24314f6a7185"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:33918f56-98a3-4447-8623-ac87915c513d"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:6612ee0e-916f-41ba-a0d9-b96687f24be2"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:f77604ef-e002-4691-b3e9-1638831d3666"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:e4fc869c-1bb6-4546-bead-d7340ac014fa"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:99e44b56-158e-40e9-a60b-a7f85788fcfa"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:697e7a14-8d34-4284-94ab-d85562dca302"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:0e8db9e9-42c9-4fed-b518-ce66d04bfd45"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:0b87d659-80a1-4c2d-a02d-a81e1ca90503"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:2d20f707-5920-495e-b03e-1a1f29bbdc55"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:cd907f46-dc95-413f-a243-3c2c9c5bab9c"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:89abb345-e2d6-49bf-a318-b3d6f6abfecf"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:b25da9a5-a13b-41ac-af62-d7f7a3c79782"
+        }
+      } ]
+    }
+  } ]
+}
