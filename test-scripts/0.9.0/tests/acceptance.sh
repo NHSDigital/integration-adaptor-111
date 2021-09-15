@@ -4,7 +4,7 @@ set -ex
 
 #adaptor only
 curl -i --location --request POST 'http://localhost:8080/report' \
-     --data '@../../../service/src/test/resources/xml/primaryEmergencyItkRequest.xml' \
+     --data '@../../../service/src/test/resources/xml/primary-emergency-itk-request.xml' \
      -H "Content-Type: application/xml"
 
 

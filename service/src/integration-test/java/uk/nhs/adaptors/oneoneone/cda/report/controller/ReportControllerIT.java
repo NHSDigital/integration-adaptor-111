@@ -286,13 +286,4 @@ public class ReportControllerIT {
         JSONAssert.assertEquals(expected, actual,
             new CustomComparator(JSONCompareMode.STRICT, customizations));
     }
-
-    private static String readResource(String name) {
-        try {
-            URL resource = ReportControllerIT.class.getResource(name);
-            return Files.readString(Paths.get(resource.getPath()), StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
