@@ -9,6 +9,7 @@ import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 import static org.springframework.http.MediaType.TEXT_XML_VALUE;
 
 import static io.restassured.RestAssured.given;
+import static uk.nhs.adaptors.TestResourceUtils.readResourceAsString;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.ACTION;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.BODY;
 
@@ -190,7 +191,7 @@ public class ReportControllerIT {
                 "F7916D36-4D5F-4A64-BD08-644E8A234AE2"
             ),
             Arguments.of(
-                "/xml/example-adastra-ooh-itk-request.xlm",
+                "/xml/example-adastra-ooh-itk-request.xml",
                 "/json/example-adastra-ooh-fhir-result.json",
                 "05040617-33BA-4344-AA59-281CF2FE63CA"
             ),
@@ -243,7 +244,7 @@ public class ReportControllerIT {
         String responseBody = given()
             .port(port)
             .contentType(APPLICATION_XML_UTF_8)
-            .body(readResource(itkReportRequestPath))
+            .body(readResourceAsString(itkReportRequestPath))
             .when()
             .post(REPORT_ENDPOINT)
             .then()
@@ -271,7 +272,7 @@ public class ReportControllerIT {
         assertThat(validator.isValid(messageBody)).isEqualTo(true);
         assertThat(jmsMessage.getStringProperty(MESSAGE_ID)).isEqualTo(messageIdValue);
 
-        assertMessageContent(messageBody, readResource(expectedJsonPath));
+        assertMessageContent(messageBody, readResourceAsString(expectedJsonPath));
     }
 
     private void assertMessageContent(String actual, String expected) throws JSONException {
