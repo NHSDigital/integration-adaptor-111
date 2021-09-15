@@ -1,0 +1,2219 @@
+{
+  "resourceType": "Bundle",
+  "identifier": {
+    "type": {
+      "text": "ClinicalDocument VersionNumber"
+    },
+    "value": "1"
+  },
+  "type": "message",
+  "entry": [ {
+    "fullUrl": "urn:uuid:C34D38AA-2A35-4E0C-AAB2-BCC8D397736A",
+    "resource": {
+      "resourceType": "MessageHeader",
+      "id": "C34D38AA-2A35-4E0C-AAB2-BCC8D397736A",
+      "event": {
+        "system": "https://fhir.nhs.uk/STU3/CodeSystem/EventType-1",
+        "code": "referral-1",
+        "display": "Referral"
+      },
+      "destination": [ {
+        "endpoint": "urn:nhs-uk:addressing:ods:A82018:DOSServiceID:136753"
+      } ],
+      "timestamp": "2021-08-03T13:07:14.000+00:00",
+      "source": {
+        "name": "NHS 111 Adaptor",
+        "endpoint": "http://localhost:8080/report"
+      },
+      "reason": {
+        "coding": [ {
+          "system": "urn:nhs-itk:ns:201005:interaction",
+          "code": "urn:nhs-itk:interaction:primaryGeneralPractitionerRecipientNHS111CDADocument-v2-0"
+        } ]
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051",
+    "resource": {
+      "resourceType": "Encounter",
+      "id": "2a4d71ac-3dc4-4028-a7b5-61c4249be051",
+      "identifier": [ {
+        "system": "2.16.840.1.113883.2.1.3.2.4.18.49",
+        "value": "6C072313-DFFB-4D60-9416-43B044FDBA9F"
+      }, {
+        "system": "2.16.840.1.113883.2.1.3.2.4.18.34",
+        "value": "1766759"
+      }, {
+        "system": "2.16.840.1.113883.2.1.3.2.4.18.35",
+        "value": "1766759"
+      } ],
+      "status": "finished",
+      "type": [ {
+        "text": "111 Encounter Referral"
+      } ],
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "participant": [ {
+        "type": [ {
+          "coding": [ {
+            "system": "http://hl7.org/fhir/ValueSet/encounter-participant-type",
+            "code": "PPRF",
+            "display": "Author"
+          } ]
+        } ],
+        "individual": {
+          "reference": "urn:uuid:69c8e353-19dc-4e65-bc01-72496ac0f17e"
+        }
+      } ],
+      "period": {
+        "start": "2021-08-03T13:07:14+00:00"
+      },
+      "location": [ {
+        "location": {
+          "reference": "urn:uuid:47c544a2-2b52-4bac-95b7-4b70304e8a07"
+        },
+        "status": "active"
+      }, {
+        "location": {
+          "reference": "urn:uuid:28889ee3-4b76-4378-a544-e726572c746f"
+        },
+        "status": "completed"
+      } ],
+      "serviceProvider": {
+        "reference": "urn:uuid:c94808a2-007e-4c3c-a04f-c1f7fec8edb3"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:c94808a2-007e-4c3c-a04f-c1f7fec8edb3",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "c94808a2-007e-4c3c-a04f-c1f7fec8edb3",
+      "active": true,
+      "type": [ {
+        "text": "CST"
+      } ],
+      "name": "NWAS 111"
+    }
+  }, {
+    "fullUrl": "urn:uuid:69c8e353-19dc-4e65-bc01-72496ac0f17e",
+    "resource": {
+      "resourceType": "Practitioner",
+      "id": "69c8e353-19dc-4e65-bc01-72496ac0f17e",
+      "active": true,
+      "name": [ {
+        "text": "AndrewJ.Walford"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:47c544a2-2b52-4bac-95b7-4b70304e8a07",
+    "resource": {
+      "resourceType": "Location",
+      "id": "47c544a2-2b52-4bac-95b7-4b70304e8a07",
+      "managingOrganization": {
+        "reference": "urn:uuid:25d1bb19-aa0b-4003-ab19-c6e3ef3d0118"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:25d1bb19-aa0b-4003-ab19-c6e3ef3d0118",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "25d1bb19-aa0b-4003-ab19-c6e3ef3d0118",
+      "identifier": [ {
+        "value": "A82018"
+      } ],
+      "type": [ {
+        "text": "GP Practice"
+      } ],
+      "name": "Spencer St Surgery",
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:01228529171",
+        "use": "work"
+      } ],
+      "address": [ {
+        "use": "work",
+        "line": [ "Spencer Street Surgery", "10 Spencer Street", "Carlisle" ],
+        "postalCode": "CA1 1BP"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:28889ee3-4b76-4378-a544-e726572c746f",
+    "resource": {
+      "resourceType": "Location",
+      "id": "28889ee3-4b76-4378-a544-e726572c746f",
+      "address": {
+        "type": "physical",
+        "line": [ "North West Ambulance Service Nhs Trust Salkeld Hall", "Infirmary Street", "Carlisle" ],
+        "postalCode": "CA2 7AN"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801",
+    "resource": {
+      "resourceType": "Patient",
+      "id": "d9b7d97c-c029-4000-85fc-276d1b3ab801",
+      "active": true,
+      "name": [ {
+        "use": "official",
+        "family": "Please Disregard",
+        "given": [ "Dx09 Test" ]
+      } ],
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:07798501130",
+        "use": "mobile"
+      }, {
+        "system": "phone",
+        "value": "tel:07798501130"
+      } ],
+      "gender": "male",
+      "birthDate": "1980-01-01",
+      "address": [ {
+        "use": "home",
+        "line": [ "North West Ambulance Service Nhs Trust Salkeld Hall", "Infirmary Street", "Carlisle" ],
+        "postalCode": "CA2 7AN"
+      }, {
+        "type": "physical",
+        "line": [ "North West Ambulance Service Nhs Trust Salkeld Hall", "Infirmary Street", "Carlisle" ],
+        "postalCode": "CA2 7AN"
+      } ],
+      "generalPractitioner": [ {
+        "reference": "urn:uuid:e9a920b5-ead1-428a-9add-f62ac95b383c"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:e9a920b5-ead1-428a-9add-f62ac95b383c",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "e9a920b5-ead1-428a-9add-f62ac95b383c",
+      "identifier": [ {
+        "value": "A82018"
+      } ],
+      "type": [ {
+        "text": "GP Practice"
+      } ],
+      "name": "Spencer St Surgery",
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:01228529171",
+        "use": "work"
+      } ],
+      "address": [ {
+        "use": "work",
+        "line": [ "Spencer Street Surgery", "10 Spencer Street", "Carlisle" ],
+        "postalCode": "CA1 1BP"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:cfd2c910-5105-4e8b-9834-c4151fbc84b6",
+    "resource": {
+      "resourceType": "HealthcareService",
+      "id": "cfd2c910-5105-4e8b-9834-c4151fbc84b6",
+      "active": true,
+      "providedBy": {
+        "reference": "urn:uuid:1520f397-fae5-4958-8dda-539bca5d5b6b"
+      },
+      "location": [ {
+        "reference": "urn:uuid:3c927375-c5f1-4bee-97de-6591bb7ea103"
+      } ],
+      "name": "Spencer St Surgery",
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:01228529171",
+        "use": "work"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:3c927375-c5f1-4bee-97de-6591bb7ea103",
+    "resource": {
+      "resourceType": "Location",
+      "id": "3c927375-c5f1-4bee-97de-6591bb7ea103",
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:01228529171",
+        "use": "work"
+      } ],
+      "address": {
+        "use": "work",
+        "line": [ "Spencer Street Surgery", "10 Spencer Street", "Carlisle" ],
+        "postalCode": "CA1 1BP"
+      },
+      "managingOrganization": {
+        "reference": "urn:uuid:1520f397-fae5-4958-8dda-539bca5d5b6b"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:1520f397-fae5-4958-8dda-539bca5d5b6b",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "1520f397-fae5-4958-8dda-539bca5d5b6b",
+      "identifier": [ {
+        "value": "A82018"
+      } ],
+      "type": [ {
+        "coding": [ {
+          "code": "PRCP",
+          "display": "Spencer St Surgery"
+        } ]
+      } ],
+      "name": "Spencer St Surgery"
+    }
+  }, {
+    "fullUrl": "urn:uuid:8f65a3cd-8009-44c1-b8f4-2a38a6a5eb37",
+    "resource": {
+      "resourceType": "ReferralRequest",
+      "id": "8f65a3cd-8009-44c1-b8f4-2a38a6a5eb37",
+      "status": "active",
+      "intent": "plan",
+      "priority": "routine",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "occurrencePeriod": {
+        "start": "2021-09-15T09:16:05+00:00",
+        "end": "2021-09-15T10:16:05+00:00"
+      },
+      "authoredOn": "2021-08-03T12:36:56+00:00",
+      "requester": {
+        "agent": {
+          "reference": "urn:uuid:d8330866-b2ef-4f67-bb10-bdcc3ed378e7"
+        },
+        "onBehalfOf": {
+          "reference": "urn:uuid:c94808a2-007e-4c3c-a04f-c1f7fec8edb3"
+        }
+      },
+      "recipient": [ {
+        "reference": "urn:uuid:7979416a-8b4e-4e22-9385-68a09da2d4b4"
+      }, {
+        "reference": "urn:uuid:cfd2c910-5105-4e8b-9834-c4151fbc84b6"
+      } ],
+      "reasonReference": [ {
+        "reference": "urn:uuid:f60e36d9-58d2-4a2a-a76f-fb82b5e6e598"
+      } ],
+      "supportingInfo": [ {
+        "reference": "urn:uuid:5dd12ec4-6618-46cb-8801-0829f73bfa8b"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:5dd12ec4-6618-46cb-8801-0829f73bfa8b",
+    "resource": {
+      "resourceType": "ProcedureRequest",
+      "id": "5dd12ec4-6618-46cb-8801-0829f73bfa8b",
+      "status": "active",
+      "intent": "plan",
+      "priority": "routine",
+      "doNotPerform": false,
+      "code": {
+        "coding": [ {
+          "system": "2.16.840.1.113883.2.1.3.2.4.17.325",
+          "code": "Dx09",
+          "display": "For Persistent Or Recurrent Symptoms: Get In Touch With A Local Service For A Non-urgent Appointment"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "occurrencePeriod": {
+        "start": "2021-09-15T09:16:05+00:00",
+        "end": "2021-09-15T10:16:05+00:00"
+      },
+      "reasonReference": [ {
+        "reference": "urn:uuid:f60e36d9-58d2-4a2a-a76f-fb82b5e6e598"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:7979416a-8b4e-4e22-9385-68a09da2d4b4",
+    "resource": {
+      "resourceType": "Practitioner",
+      "id": "7979416a-8b4e-4e22-9385-68a09da2d4b4",
+      "active": true,
+      "address": [ {
+        "type": "physical",
+        "line": [ "Spencer Street Surgery", "Spencer Street", "Carlisle" ],
+        "postalCode": "CA1 1BP"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:7ed0ba0e-f246-4500-b905-4f1456303610",
+    "resource": {
+      "resourceType": "Composition",
+      "id": "7ed0ba0e-f246-4500-b905-4f1456303610",
+      "identifier": {
+        "use": "usual",
+        "value": "B5A4AC85-5A10-4D08-B956-83421A24BB81"
+      },
+      "status": "final",
+      "type": {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "371531000",
+          "display": "Report of clinical encounter (record artifact)"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "encounter": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "date": "2021-09-15T09:16:05+00:00",
+      "author": [ {
+        "reference": "urn:uuid:69c8e353-19dc-4e65-bc01-72496ac0f17e"
+      } ],
+      "title": "111 Report",
+      "confidentiality": "N",
+      "section": [ {
+        "section": [ {
+          "title": "Patient's Reported Condition",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;**test From Nwas111 - No Action Required - Please Disregard Test&lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "Case Summary",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot;&gt;\n                                                    &lt;urn:content styleCode=&quot;bold&quot; xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Pathways Disposition: Dx09&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;For Persistent Or Recurrent Symptoms: Get In Touch With A Local Service For A Non-urgent Appointment&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content styleCode=&quot;bold&quot; xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Consultation Summary:&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Illness - '**Test From NWAS111 - No Action required - Please Disregard Test case**'&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Warm to touch&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Head lice&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Head lice contact&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Recent sudden loss of clumps of hair&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content styleCode=&quot;bold&quot; xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Pathways Assessment:&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;An injury or health problem was the reason for the contact.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;User comment - '**Test From NWAS111 - No Action required - Please Disregard Test case**'&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Heavy bleeding had not occurred in the previous 2 hours.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;An illness or health problem was the main problem.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;User comment - '**Test From NWAS111 - No Action required - Please Disregard Test case**'&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The individual was not fighting for breath.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The main reason for the assessment was not an allergic reaction, heart attack, chest/upper back pain, probable stroke, recent fit/seizure or suicide attempt.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The main reason for contact was not new confusion, declared diabetic hypo/hyperglycaemia, or ICD shock.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The skin on the torso felt normal, warm or hot.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Pathway selected - Skin Problems&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The main problem was not a rash, itch, jaundice, skin lumps or abnormal bruising.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;The main problem was head lice.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;There had been contact with somebody with head lice.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;There was recent patchy hair loss.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;User comment - 'GP - Spencer Street Surgery - Cumbria (Home GP)'&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content styleCode=&quot;bold&quot; xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Advice Given:&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:content xmlns:urn=&quot;urn:hl7-org:v3&quot;&gt;Head lice is common. Speak to a pharmacist for advice on suitable treatments.&lt;/urn:content&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                &lt;/xml-fragment&gt;</div>"
+          }
+        } ]
+      }, {
+        "title": "ReferralRequest",
+        "entry": [ {
+          "reference": "urn:uuid:8f65a3cd-8009-44c1-b8f4-2a38a6a5eb37"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:d1fe831c-08ce-4fca-a015-8c83e97d8544"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:aa31dc94-7449-4742-ac4a-da380a16651c"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:04575858-6cb1-4951-b0c0-c64769a7cd79"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:e3ff8f02-9af2-4bbf-a6d6-4ff39d588842"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:1aac7fba-0c2b-43a3-9b56-2f79dfb1eabf"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:ccfa374d-38ce-49e7-8cd5-d6d633f466e1"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:bcc2fbe4-15c3-4ec3-b658-0d1dbb875475"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:be6e3a1d-041c-4b01-8a8e-1d3c008d4286"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:b4b9dc38-5c4f-4e52-ad84-119de3678928"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:0b03db84-a587-42ac-b095-9c1ea6f0da17"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:89d29938-3433-43dd-8fb9-58d7a8631162"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:4b235343-83d8-459c-8ee9-9ae1d930590c"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:1ec4cbd0-fdb0-4680-b7ee-a0c5bbcf10f7"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:2f82779b-ca3f-439e-9ec6-42e8d4c93d14"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:cecf7084-f284-48f7-86ca-82c11ec03591"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:f902ea40-9017-4857-87d7-5327abb65fc6"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:7fa45164-8b9d-4f8f-b39d-c315b3bab910"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:a0f9e99c-ae06-4922-8ec7-0054b0420baf"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:5ca241c2-0195-4d33-b339-d71bece29ac4"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:5b898608-1a8e-40f8-a758-40c35bb69735"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:6766971d-e262-40ab-b982-8f45e9442f43"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:3a12c1ce-a8dc-490e-9e4b-43be3f93189e",
+    "resource": {
+      "resourceType": "Consent",
+      "id": "3a12c1ce-a8dc-490e-9e4b-43be3f93189e",
+      "identifier": {
+        "use": "usual",
+        "value": "B5A4AC85-5A10-4D08-B956-83421A24BB81"
+      },
+      "status": "active",
+      "patient": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "period": {
+        "start": "2021-08-03T13:07:14+00:00"
+      },
+      "consentingParty": [ {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      } ],
+      "action": [ {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "425691002",
+          "display": "Consent given for electronic record sharing"
+        } ],
+        "text": "Consent given for electronic record sharing"
+      } ],
+      "organization": [ {
+        "reference": "urn:uuid:c94808a2-007e-4c3c-a04f-c1f7fec8edb3"
+      } ],
+      "policyRule": "http://hl7.org/fhir/ConsentPolicy/opt-out",
+      "data": [ {
+        "meaning": "related",
+        "reference": {
+          "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+        }
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:f60e36d9-58d2-4a2a-a76f-fb82b5e6e598",
+    "resource": {
+      "resourceType": "Condition",
+      "id": "f60e36d9-58d2-4a2a-a76f-fb82b5e6e598",
+      "clinicalStatus": "active",
+      "verificationStatus": "unknown",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "evidence": [ {
+        "detail": [ {
+          "reference": "urn:uuid:d1fe831c-08ce-4fca-a015-8c83e97d8544"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:aa31dc94-7449-4742-ac4a-da380a16651c"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:04575858-6cb1-4951-b0c0-c64769a7cd79"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:e3ff8f02-9af2-4bbf-a6d6-4ff39d588842"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:1aac7fba-0c2b-43a3-9b56-2f79dfb1eabf"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:ccfa374d-38ce-49e7-8cd5-d6d633f466e1"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:bcc2fbe4-15c3-4ec3-b658-0d1dbb875475"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:be6e3a1d-041c-4b01-8a8e-1d3c008d4286"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:b4b9dc38-5c4f-4e52-ad84-119de3678928"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:0b03db84-a587-42ac-b095-9c1ea6f0da17"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:89d29938-3433-43dd-8fb9-58d7a8631162"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:4b235343-83d8-459c-8ee9-9ae1d930590c"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:1ec4cbd0-fdb0-4680-b7ee-a0c5bbcf10f7"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:2f82779b-ca3f-439e-9ec6-42e8d4c93d14"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:cecf7084-f284-48f7-86ca-82c11ec03591"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:f902ea40-9017-4857-87d7-5327abb65fc6"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:7fa45164-8b9d-4f8f-b39d-c315b3bab910"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:a0f9e99c-ae06-4922-8ec7-0054b0420baf"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:5ca241c2-0195-4d33-b339-d71bece29ac4"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:5b898608-1a8e-40f8-a758-40c35bb69735"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:6766971d-e262-40ab-b982-8f45e9442f43"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:d1fe831c-08ce-4fca-a015-8c83e97d8544",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "d1fe831c-08ce-4fca-a015-8c83e97d8544",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:14b813a0-17db-49a6-a674-440e82e162d0"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx220109",
+        "text": "What is the reason for the contact?",
+        "answer": [ {
+          "valueString": "an injury or other health problem"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:14b813a0-17db-49a6-a674-440e82e162d0",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "14b813a0-17db-49a6-a674-440e82e162d0",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "5",
+        "text": "What is the reason for the contact?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "an injury or other health problem, Selected: true"
+        }, {
+          "valueString": "a need to access another healthcare service, Selected: false"
+        }, {
+          "valueString": "a healthcare professional requesting contact with another clinician, Selected: false"
+        }, {
+          "valueString": "a report of results or tests, Selected: false"
+        }, {
+          "valueString": "more, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:aa31dc94-7449-4742-ac4a-da380a16651c",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "aa31dc94-7449-4742-ac4a-da380a16651c",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:e37783d4-a9c5-41d4-9a56-1f5d93e9371f"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx221788",
+        "text": "STRING:to'ImmediateThreatsToLife(SPA/OOHversion)'-'ABC'menu",
+        "answer": [ {
+          "valueString": "\"\"present\"\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:e37783d4-a9c5-41d4-9a56-1f5d93e9371f",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "e37783d4-a9c5-41d4-9a56-1f5d93e9371f",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "500",
+        "text": "STRING:to'ImmediateThreatsToLife(SPA/OOHversion)'-'ABC'menu",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "\"\"present\"\", Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:04575858-6cb1-4951-b0c0-c64769a7cd79",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "04575858-6cb1-4951-b0c0-c64769a7cd79",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:d39de7c6-ea27-4d97-bd5b-c84445d37a93"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx221814",
+        "text": "STRING:aninjuryorotherhealthproblemestablishedinEntryFlow",
+        "answer": [ {
+          "valueString": "\"\"present\"\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:d39de7c6-ea27-4d97-bd5b-c84445d37a93",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "d39de7c6-ea27-4d97-bd5b-c84445d37a93",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "0",
+        "text": "STRING:aninjuryorotherhealthproblemestablishedinEntryFlow",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "\"\"present\"\", Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:e3ff8f02-9af2-4bbf-a6d6-4ff39d588842",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "e3ff8f02-9af2-4bbf-a6d6-4ff39d588842",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:1334b6e1-fb1c-4bb7-b5ce-197cdb9b7464"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx224120",
+        "text": "Have you been bleeding RED BLOOD very heavily IN THE LAST 2 HOURS?",
+        "answer": [ {
+          "valueString": "no"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:1334b6e1-fb1c-4bb7-b5ce-197cdb9b7464",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "1334b6e1-fb1c-4bb7-b5ce-197cdb9b7464",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "7000",
+        "text": "Have you been bleeding RED BLOOD very heavily IN THE LAST 2 HOURS?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: false"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:1aac7fba-0c2b-43a3-9b56-2f79dfb1eabf",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "1aac7fba-0c2b-43a3-9b56-2f79dfb1eabf",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:1c3aa228-c749-40d1-aac2-6dce177bab88"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx221343",
+        "text": "SocialConcernsExcluded",
+        "answer": [ {
+          "valueString": "*"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:1c3aa228-c749-40d1-aac2-6dce177bab88",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "1c3aa228-c749-40d1-aac2-6dce177bab88",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "2700",
+        "text": "SocialConcernsExcluded",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "==\"\"present\"\", Selected: false"
+        }, {
+          "valueString": "*, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:ccfa374d-38ce-49e7-8cd5-d6d633f466e1",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "ccfa374d-38ce-49e7-8cd5-d6d633f466e1",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:820131c0-14ae-4997-9161-58c6f6d3c634"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx130011",
+        "text": "What is the main problem?",
+        "answer": [ {
+          "valueString": "illness or other health problem (specify)"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:820131c0-14ae-4997-9161-58c6f6d3c634",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "820131c0-14ae-4997-9161-58c6f6d3c634",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "3400",
+        "text": "What is the main problem?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "the individual has been told to follow a particular course of action (specify), Selected: false"
+        }, {
+          "valueString": "the individual is an identified frequent caller, Selected: false"
+        }, {
+          "valueString": "injury (specify), Selected: false"
+        }, {
+          "valueString": "illness or other health problem (specify), Selected: true"
+        }, {
+          "valueString": "child protection/vulnerable adult concern, Selected: false"
+        }, {
+          "valueString": "social or domestic emergency, Selected: false"
+        }, {
+          "valueString": "the environment potentially poses an immediate threat to life (specify), Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:bcc2fbe4-15c3-4ec3-b658-0d1dbb875475",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "bcc2fbe4-15c3-4ec3-b658-0d1dbb875475",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:86313c54-d9b1-42b4-935d-80c3e32d8c6f"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx61025",
+        "text": "Are you so breathless that speaking more than a few words is impossible?",
+        "answer": [ {
+          "valueString": "no"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:86313c54-d9b1-42b4-935d-80c3e32d8c6f",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "86313c54-d9b1-42b4-935d-80c3e32d8c6f",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "0",
+        "text": "Are you so breathless that speaking more than a few words is impossible?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: false"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:be6e3a1d-041c-4b01-8a8e-1d3c008d4286",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "be6e3a1d-041c-4b01-8a8e-1d3c008d4286",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:d2a26cfc-2590-4c86-8c8a-afafcb10d819"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx220845",
+        "text": "SYSTEM_FLUPANDEMIC",
+        "answer": [ {
+          "valueString": "*"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:d2a26cfc-2590-4c86-8c8a-afafcb10d819",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "d2a26cfc-2590-4c86-8c8a-afafcb10d819",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "100",
+        "text": "SYSTEM_FLUPANDEMIC",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "==\"\"pandemic\"\", Selected: false"
+        }, {
+          "valueString": "*, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:b4b9dc38-5c4f-4e52-ad84-119de3678928",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "b4b9dc38-5c4f-4e52-ad84-119de3678928",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:9b359e81-8169-4b03-ab9d-311e9100d268"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx223440",
+        "text": "WHAT IS SAID TO BE THE MAIN REASON FOR THIS CONTACT?",
+        "answer": [ {
+          "valueString": "more"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:9b359e81-8169-4b03-ab9d-311e9100d268",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "9b359e81-8169-4b03-ab9d-311e9100d268",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "5000",
+        "text": "WHAT IS SAID TO BE THE MAIN REASON FOR THIS CONTACT?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "a probable allergic reaction now, Selected: false"
+        }, {
+          "valueString": "a probable heart attack, Selected: false"
+        }, {
+          "valueString": "chest or upper back pain, Selected: false"
+        }, {
+          "valueString": "a probable stroke or mini-stroke, Selected: false"
+        }, {
+          "valueString": "a probable fit or seizure within the last 12 hours, Selected: false"
+        }, {
+          "valueString": "a suicide attempt, Selected: false"
+        }, {
+          "valueString": "more, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:0b03db84-a587-42ac-b095-9c1ea6f0da17",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "0b03db84-a587-42ac-b095-9c1ea6f0da17",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:faaf6a83-5778-4157-828c-5e65e1ed9dfa"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx220032",
+        "text": "WHAT IS SAID TO BE THE MAIN REASON FOR THIS CONTACT?",
+        "answer": [ {
+          "valueString": "none of the above"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:faaf6a83-5778-4157-828c-5e65e1ed9dfa",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "faaf6a83-5778-4157-828c-5e65e1ed9dfa",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "1900",
+        "text": "WHAT IS SAID TO BE THE MAIN REASON FOR THIS CONTACT?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "new confusion now, Selected: false"
+        }, {
+          "valueString": "a diabetic hypo (low blood sugar) or a diabetic hyper (high blood sugar), Selected: false"
+        }, {
+          "valueString": "recovery from an ICD (implanted cardioverter defibrillator) shock, Selected: false"
+        }, {
+          "valueString": "none of the above, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:89d29938-3433-43dd-8fb9-58d7a8631162",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "89d29938-3433-43dd-8fb9-58d7a8631162",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:4c659533-fea1-4ac3-b9ac-971c52c501cc"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx223142",
+        "text": "Does the skin on the chest, back or abdomen feel a normal temperature?",
+        "answer": [ {
+          "valueString": "yes - normal, warm or hot"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:4c659533-fea1-4ac3-b9ac-971c52c501cc",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "4c659533-fea1-4ac3-b9ac-971c52c501cc",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "4000",
+        "text": "Does the skin on the chest, back or abdomen feel a normal temperature?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes - normal, warm or hot, Selected: true"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no - cool OR cold, Selected: false"
+        }, {
+          "valueString": "not safe to touch, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:4b235343-83d8-459c-8ee9-9ae1d930590c",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "4b235343-83d8-459c-8ee9-9ae1d930590c",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:488751e6-f667-4d94-bfa2-0f1e46c639af"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx221724",
+        "text": "STRING:ShockAsked",
+        "answer": [ {
+          "valueString": "\"\"present\"\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:488751e6-f667-4d94-bfa2-0f1e46c639af",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "488751e6-f667-4d94-bfa2-0f1e46c639af",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "3300",
+        "text": "STRING:ShockAsked",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "\"\"present\"\", Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:1ec4cbd0-fdb0-4680-b7ee-a0c5bbcf10f7",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "1ec4cbd0-fdb0-4680-b7ee-a0c5bbcf10f7",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:c7600501-4ca8-4c43-9969-b6c72fcaa45c"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00"
+    }
+  }, {
+    "fullUrl": "urn:uuid:c7600501-4ca8-4c43-9969-b6c72fcaa45c",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "c7600501-4ca8-4c43-9969-b6c72fcaa45c",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:2f82779b-ca3f-439e-9ec6-42e8d4c93d14",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "2f82779b-ca3f-439e-9ec6-42e8d4c93d14",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:df472395-5c29-493e-86cf-0cc49cc5f2e3"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx222984",
+        "text": "WHAT IS THE MAIN PROBLEM?",
+        "answer": [ {
+          "valueString": "more"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:df472395-5c29-493e-86cf-0cc49cc5f2e3",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "df472395-5c29-493e-86cf-0cc49cc5f2e3",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "0",
+        "text": "WHAT IS THE MAIN PROBLEM?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "a rash, Selected: false"
+        }, {
+          "valueString": "itch, Selected: false"
+        }, {
+          "valueString": "yellow skin, Selected: false"
+        }, {
+          "valueString": "skin lumps, Selected: false"
+        }, {
+          "valueString": "easy or unexplained bruising, Selected: false"
+        }, {
+          "valueString": "more, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:cecf7084-f284-48f7-86ca-82c11ec03591",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "cecf7084-f284-48f7-86ca-82c11ec03591",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:f1f1ab40-f77c-4e00-8a62-323bfc360154"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx222985",
+        "text": "WHAT IS THE MAIN PROBLEM?",
+        "answer": [ {
+          "valueString": "declared head lice"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:f1f1ab40-f77c-4e00-8a62-323bfc360154",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "f1f1ab40-f77c-4e00-8a62-323bfc360154",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "700",
+        "text": "WHAT IS THE MAIN PROBLEM?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "declared head lice, Selected: true"
+        }, {
+          "valueString": "declared pubic lice, Selected: false"
+        }, {
+          "valueString": "declared scabies, Selected: false"
+        }, {
+          "valueString": "declared athlete's foot, Selected: false"
+        }, {
+          "valueString": "acne, spots or pimples, Selected: false"
+        }, {
+          "valueString": "more, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:f902ea40-9017-4857-87d7-5327abb65fc6",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "f902ea40-9017-4857-87d7-5327abb65fc6",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:9953d2d5-d556-480a-85ae-f869b0713002"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx220667",
+        "text": "Have you been in contact with somebody with head lice or nits?",
+        "answer": [ {
+          "valueString": "yes"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:9953d2d5-d556-480a-85ae-f869b0713002",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "9953d2d5-d556-480a-85ae-f869b0713002",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "0",
+        "text": "Have you been in contact with somebody with head lice or nits?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: true"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:7fa45164-8b9d-4f8f-b39d-c315b3bab910",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "7fa45164-8b9d-4f8f-b39d-c315b3bab910",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:57cbb1d2-047d-431e-8ac4-6e0a39f9870e"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx220664",
+        "text": "Have you lost patches or clumps of hair OVER THE LAST FEW WEEKS?",
+        "answer": [ {
+          "valueString": "yes"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:57cbb1d2-047d-431e-8ac4-6e0a39f9870e",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "57cbb1d2-047d-431e-8ac4-6e0a39f9870e",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "300",
+        "text": "Have you lost patches or clumps of hair OVER THE LAST FEW WEEKS?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: true"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:a0f9e99c-ae06-4922-8ec7-0054b0420baf",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "a0f9e99c-ae06-4922-8ec7-0054b0420baf",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:04a45233-20ab-4c2c-8ed3-dda74e83902b"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "Tx221449",
+        "text": "STRING:SDPCFullPrimaryCareassessmentandprescribingcapability",
+        "answer": [ {
+          "valueString": "\"\"PC full Primary Care assessment and prescribing capability\"\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:04a45233-20ab-4c2c-8ed3-dda74e83902b",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "04a45233-20ab-4c2c-8ed3-dda74e83902b",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "prefix": "500",
+        "text": "STRING:SDPCFullPrimaryCareassessmentandprescribingcapability",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "\"\"PC full Primary Care assessment and prescribing capability\"\", Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:5ca241c2-0195-4d33-b339-d71bece29ac4",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "5ca241c2-0195-4d33-b339-d71bece29ac4",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:36007273-6b68-44da-8c3f-74dfb747553b"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00"
+    }
+  }, {
+    "fullUrl": "urn:uuid:36007273-6b68-44da-8c3f-74dfb747553b",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "36007273-6b68-44da-8c3f-74dfb747553b",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:5b898608-1a8e-40f8-a758-40c35bb69735",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "5b898608-1a8e-40f8-a758-40c35bb69735",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:5668c239-bb96-44ce-af11-cb5bef904078"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00",
+      "item": [ {
+        "linkId": "N/A"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:5668c239-bb96-44ce-af11-cb5bef904078",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "5668c239-bb96-44ce-af11-cb5bef904078",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "1766759",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": ", Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:6766971d-e262-40ab-b982-8f45e9442f43",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "6766971d-e262-40ab-b982-8f45e9442f43",
+      "identifier": {
+        "value": "1766759"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:239effe4-cde8-483c-aa70-178a2f22abc3"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "authored": "2021-08-03T13:07:14+00:00"
+    }
+  }, {
+    "fullUrl": "urn:uuid:239effe4-cde8-483c-aa70-178a2f22abc3",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "239effe4-cde8-483c-aa70-178a2f22abc3",
+      "identifier": [ {
+        "value": "1766759"
+      } ],
+      "version": "2021-08-03T13:07:14.000Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2021-08-03T13:07:14+00:00",
+      "publisher": "User ID: '922' User name: 'AndrewJ.Walford' User skill set: 'T4'",
+      "lastReviewDate": "2021-08-03",
+      "contact": [ {
+        "telecom": [ {
+          "value": "07798501130"
+        } ]
+      } ],
+      "subjectType": [ "Patient" ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:a6670b6c-2429-4020-b4ef-9e8ae6c2cfc3",
+    "resource": {
+      "resourceType": "Observation",
+      "id": "a6670b6c-2429-4020-b4ef-9e8ae6c2cfc3",
+      "status": "final",
+      "code": {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "33962009",
+          "display": "Presenting complaint"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "context": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:ed43dcb7-27cd-48e6-b2e7-9410a7b28f23",
+    "resource": {
+      "resourceType": "PractitionerRole",
+      "id": "ed43dcb7-27cd-48e6-b2e7-9410a7b28f23",
+      "practitioner": {
+        "reference": "urn:uuid:69c8e353-19dc-4e65-bc01-72496ac0f17e"
+      },
+      "organization": {
+        "reference": "urn:uuid:534b703f-0e89-40d9-a807-f2ce64d50f76"
+      },
+      "code": [ {
+        "coding": [ {
+          "system": "2.16.840.1.113883.2.1.3.2.4.17.339",
+          "code": "NP",
+          "display": "Nurse Practitioner"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:534b703f-0e89-40d9-a807-f2ce64d50f76",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "534b703f-0e89-40d9-a807-f2ce64d50f76",
+      "identifier": [ {
+        "value": "RX7"
+      } ],
+      "name": "NWAS 111"
+    }
+  }, {
+    "fullUrl": "urn:uuid:836ecd0e-0e10-4011-b2f4-1627fb7ad56e",
+    "resource": {
+      "resourceType": "RelatedPerson",
+      "id": "836ecd0e-0e10-4011-b2f4-1627fb7ad56e",
+      "patient": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "relationship": {
+        "coding": [ {
+          "system": "http://hl7.org/fhir/v2/0131",
+          "code": "C",
+          "display": "Emergency Contact"
+        } ]
+      },
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:07798501130"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:d8330866-b2ef-4f67-bb10-bdcc3ed378e7",
+    "resource": {
+      "resourceType": "Device",
+      "id": "d8330866-b2ef-4f67-bb10-bdcc3ed378e7",
+      "model": "111 Adaptor",
+      "version": "0.9.0"
+    }
+  }, {
+    "fullUrl": "urn:uuid:e648df81-1285-4212-b311-9d0dd072384b",
+    "resource": {
+      "resourceType": "List",
+      "id": "e648df81-1285-4212-b311-9d0dd072384b",
+      "status": "current",
+      "mode": "working",
+      "title": "111 Report List",
+      "code": {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "225390008",
+          "display": "Triage"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:d9b7d97c-c029-4000-85fc-276d1b3ab801"
+      },
+      "encounter": {
+        "reference": "urn:uuid:2a4d71ac-3dc4-4028-a7b5-61c4249be051"
+      },
+      "date": "2021-09-15T09:16:05+00:00",
+      "source": {
+        "reference": "urn:uuid:d8330866-b2ef-4f67-bb10-bdcc3ed378e7"
+      },
+      "orderedBy": {
+        "coding": [ {
+          "system": "http://hl7.org/fhir/list-order",
+          "code": "event-date",
+          "display": "Sorted by Event Date"
+        } ]
+      },
+      "entry": [ {
+        "item": {
+          "reference": "urn:uuid:1520f397-fae5-4958-8dda-539bca5d5b6b"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:25d1bb19-aa0b-4003-ab19-c6e3ef3d0118"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:534b703f-0e89-40d9-a807-f2ce64d50f76"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:e9a920b5-ead1-428a-9add-f62ac95b383c"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:69c8e353-19dc-4e65-bc01-72496ac0f17e"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:a6670b6c-2429-4020-b4ef-9e8ae6c2cfc3"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:7979416a-8b4e-4e22-9385-68a09da2d4b4"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:c94808a2-007e-4c3c-a04f-c1f7fec8edb3"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:f60e36d9-58d2-4a2a-a76f-fb82b5e6e598"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:836ecd0e-0e10-4011-b2f4-1627fb7ad56e"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:d1fe831c-08ce-4fca-a015-8c83e97d8544"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:7fa45164-8b9d-4f8f-b39d-c315b3bab910"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:e37783d4-a9c5-41d4-9a56-1f5d93e9371f"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:9953d2d5-d556-480a-85ae-f869b0713002"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:5b898608-1a8e-40f8-a758-40c35bb69735"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:9b359e81-8169-4b03-ab9d-311e9100d268"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:df472395-5c29-493e-86cf-0cc49cc5f2e3"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:1c3aa228-c749-40d1-aac2-6dce177bab88"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:5668c239-bb96-44ce-af11-cb5bef904078"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:be6e3a1d-041c-4b01-8a8e-1d3c008d4286"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:36007273-6b68-44da-8c3f-74dfb747553b"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:e3ff8f02-9af2-4bbf-a6d6-4ff39d588842"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:04a45233-20ab-4c2c-8ed3-dda74e83902b"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:239effe4-cde8-483c-aa70-178a2f22abc3"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:aa31dc94-7449-4742-ac4a-da380a16651c"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:488751e6-f667-4d94-bfa2-0f1e46c639af"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:b4b9dc38-5c4f-4e52-ad84-119de3678928"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:86313c54-d9b1-42b4-935d-80c3e32d8c6f"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:f1f1ab40-f77c-4e00-8a62-323bfc360154"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:14b813a0-17db-49a6-a674-440e82e162d0"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:1aac7fba-0c2b-43a3-9b56-2f79dfb1eabf"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:4c659533-fea1-4ac3-b9ac-971c52c501cc"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:4b235343-83d8-459c-8ee9-9ae1d930590c"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:820131c0-14ae-4997-9161-58c6f6d3c634"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:a0f9e99c-ae06-4922-8ec7-0054b0420baf"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:6766971d-e262-40ab-b982-8f45e9442f43"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:0b03db84-a587-42ac-b095-9c1ea6f0da17"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:ccfa374d-38ce-49e7-8cd5-d6d633f466e1"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:1334b6e1-fb1c-4bb7-b5ce-197cdb9b7464"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:57cbb1d2-047d-431e-8ac4-6e0a39f9870e"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:cecf7084-f284-48f7-86ca-82c11ec03591"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:d39de7c6-ea27-4d97-bd5b-c84445d37a93"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:2f82779b-ca3f-439e-9ec6-42e8d4c93d14"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:c7600501-4ca8-4c43-9969-b6c72fcaa45c"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:f902ea40-9017-4857-87d7-5327abb65fc6"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:5ca241c2-0195-4d33-b339-d71bece29ac4"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:d2a26cfc-2590-4c86-8c8a-afafcb10d819"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:1ec4cbd0-fdb0-4680-b7ee-a0c5bbcf10f7"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:faaf6a83-5778-4157-828c-5e65e1ed9dfa"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:89d29938-3433-43dd-8fb9-58d7a8631162"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:04575858-6cb1-4951-b0c0-c64769a7cd79"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:bcc2fbe4-15c3-4ec3-b658-0d1dbb875475"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:8f65a3cd-8009-44c1-b8f4-2a38a6a5eb37"
+        }
+      } ]
+    }
+  } ]
+}

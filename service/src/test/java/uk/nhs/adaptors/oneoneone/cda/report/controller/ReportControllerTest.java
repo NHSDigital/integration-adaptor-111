@@ -97,7 +97,7 @@ public class ReportControllerTest {
 
     private String getValidXmlReportRequest() {
         try {
-            URL reportXmlResource = this.getClass().getResource("/xml/primaryEmergencyItkRequest.xml");
+            URL reportXmlResource = this.getClass().getResource("/xml/primary-emergency-itk-request.xml");
             return new String(readAllBytes(Paths.get(reportXmlResource.getPath())), defaultCharset());
         } catch (Exception e) {
             throw new RuntimeException(e);

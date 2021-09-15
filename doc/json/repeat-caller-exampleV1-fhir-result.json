@@ -1,0 +1,2240 @@
+{
+  "resourceType": "Bundle",
+  "identifier": {
+    "type": {
+      "text": "ClinicalDocument VersionNumber"
+    },
+    "value": "1"
+  },
+  "type": "message",
+  "entry": [ {
+    "fullUrl": "urn:uuid:A12F527F-3808-44BC-9272-8C8A92884A37",
+    "resource": {
+      "resourceType": "MessageHeader",
+      "id": "A12F527F-3808-44BC-9272-8C8A92884A37",
+      "event": {
+        "system": "https://fhir.nhs.uk/STU3/CodeSystem/EventType-1",
+        "code": "referral-1",
+        "display": "Referral"
+      },
+      "destination": [ {
+        "endpoint": "urn:nhs-uk:addressing:ods:20000729:DOSServiceID:2000072936"
+      } ],
+      "timestamp": "2020-10-30T18:29:05.000+00:00",
+      "source": {
+        "name": "NHS 111 Adaptor",
+        "endpoint": "http://localhost:8080/report"
+      },
+      "reason": {
+        "coding": [ {
+          "system": "urn:nhs-itk:ns:201005:interaction",
+          "code": "urn:nhs-itk:interaction:primaryNHS111RepeatCallerDocumentSet-v1-0"
+        } ]
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6",
+    "resource": {
+      "resourceType": "Encounter",
+      "id": "483706fa-c4dd-48aa-9744-73b75060caa6",
+      "identifier": [ {
+        "system": "2.16.840.1.113883.2.1.3.2.4.18.34",
+        "value": "CF1F65AB-2392-4582-9E14-F0384358CB6A"
+      }, {
+        "system": "2.16.840.1.113883.2.1.3.2.4.18.35",
+        "value": "7434927"
+      } ],
+      "status": "finished",
+      "type": [ {
+        "text": "111 Encounter Referral"
+      } ],
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "participant": [ {
+        "type": [ {
+          "coding": [ {
+            "system": "http://hl7.org/fhir/ValueSet/encounter-participant-type",
+            "code": "PPRF",
+            "display": "Author"
+          } ]
+        } ],
+        "individual": {
+          "reference": "urn:uuid:cbda9d46-f040-4d07-9f71-f71a49e5beb5"
+        }
+      }, {
+        "type": [ {
+          "coding": [ {
+            "system": "http://hl7.org/fhir/ValueSet/encounter-participant-type",
+            "code": "ATND",
+            "display": "Responsible Party"
+          } ]
+        } ],
+        "individual": {
+          "reference": "urn:uuid:851984c6-4e83-4c87-b399-7ec049e3476f"
+        }
+      } ],
+      "period": {
+        "start": "2020-10-30T18:29:05+00:00"
+      },
+      "location": [ {
+        "location": {
+          "reference": "urn:uuid:3526c22a-f6fb-4dc1-a359-27e6db480cb5"
+        },
+        "status": "active"
+      }, {
+        "location": {
+          "reference": "urn:uuid:0838c5ba-8708-44ff-9901-12f849a2686a"
+        },
+        "status": "completed"
+      } ],
+      "serviceProvider": {
+        "reference": "urn:uuid:674ed1a0-b9ee-4efb-a9cc-724c9a0bfa23"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:674ed1a0-b9ee-4efb-a9cc-724c9a0bfa23",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "674ed1a0-b9ee-4efb-a9cc-724c9a0bfa23",
+      "active": true,
+      "type": [ {
+        "text": "CST"
+      } ],
+      "name": "Devon Doctors Group"
+    }
+  }, {
+    "fullUrl": "urn:uuid:cbda9d46-f040-4d07-9f71-f71a49e5beb5",
+    "resource": {
+      "resourceType": "Practitioner",
+      "id": "cbda9d46-f040-4d07-9f71-f71a49e5beb5",
+      "active": true,
+      "name": [ {
+        "use": "official",
+        "family": "Service Advisor",
+        "given": [ "Dental" ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:851984c6-4e83-4c87-b399-7ec049e3476f",
+    "resource": {
+      "resourceType": "Practitioner",
+      "id": "851984c6-4e83-4c87-b399-7ec049e3476f",
+      "active": true,
+      "name": [ {
+        "use": "official",
+        "family": "Eggleton",
+        "given": [ "Dr. Mark" ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:3526c22a-f6fb-4dc1-a359-27e6db480cb5",
+    "resource": {
+      "resourceType": "Location",
+      "id": "3526c22a-f6fb-4dc1-a359-27e6db480cb5",
+      "managingOrganization": {
+        "reference": "urn:uuid:2cbed662-9d29-400f-9dc3-e344282cb4a3"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:2cbed662-9d29-400f-9dc3-e344282cb4a3",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "2cbed662-9d29-400f-9dc3-e344282cb4a3",
+      "identifier": [ {
+        "value": "J85990"
+      } ],
+      "type": [ {
+        "text": "GP Practice"
+      } ],
+      "name": "Test Somerset"
+    }
+  }, {
+    "fullUrl": "urn:uuid:0838c5ba-8708-44ff-9901-12f849a2686a",
+    "resource": {
+      "resourceType": "Location",
+      "id": "0838c5ba-8708-44ff-9901-12f849a2686a",
+      "name": "Incident Location",
+      "address": {
+        "type": "physical",
+        "line": [ "NHS England", "Quarry House Quarry Hill", "Leeds", "West Yorkshire" ],
+        "postalCode": "LS2 7UE"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae",
+    "resource": {
+      "resourceType": "Patient",
+      "id": "6d5687ba-d4f6-40ce-b143-f305a3c463ae",
+      "identifier": [ {
+        "extension": [ {
+          "url": "https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-NHSNumberVerificationStatus-1",
+          "valueCodeableConcept": {
+            "coding": [ {
+              "system": "https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-NHSNumberVerificationStatus-1",
+              "code": "02"
+            } ]
+          }
+        } ],
+        "system": "https://fhir.nhs.uk/Id/nhs-number",
+        "value": "9990238359"
+      } ],
+      "active": true,
+      "name": [ {
+        "use": "official",
+        "family": "Xxtestpatientdzadn",
+        "given": [ "Scrdonotuse" ]
+      } ],
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:01702123456",
+        "use": "home"
+      }, {
+        "system": "phone",
+        "value": "tel:01702123456"
+      } ],
+      "gender": "female",
+      "birthDate": "1965-02-17",
+      "address": [ {
+        "use": "home",
+        "line": [ "NHS England", "Quarry House Quarry Hill", "Leeds", "West Yorkshire" ],
+        "postalCode": "LS2 7UE"
+      } ],
+      "generalPractitioner": [ {
+        "reference": "urn:uuid:fade0bb7-63a9-4916-988f-9ff56a0a2bb0"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:fade0bb7-63a9-4916-988f-9ff56a0a2bb0",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "fade0bb7-63a9-4916-988f-9ff56a0a2bb0",
+      "identifier": [ {
+        "value": "J85990"
+      } ],
+      "type": [ {
+        "text": "GP Practice"
+      } ],
+      "name": "Test Somerset"
+    }
+  }, {
+    "fullUrl": "urn:uuid:9beb7aaa-1447-492c-89de-e85e48d2c896",
+    "resource": {
+      "resourceType": "HealthcareService",
+      "id": "9beb7aaa-1447-492c-89de-e85e48d2c896",
+      "active": true,
+      "providedBy": {
+        "reference": "urn:uuid:88721efd-7663-439c-b0f8-389d13102ce0"
+      },
+      "location": [ {
+        "reference": "urn:uuid:7d7cf747-2d29-4ed7-9be4-150fef08d72f"
+      } ],
+      "name": "**TESTING ONLY** DO NOT SEND PATIENTS - ED Test Service for EDDI"
+    }
+  }, {
+    "fullUrl": "urn:uuid:7d7cf747-2d29-4ed7-9be4-150fef08d72f",
+    "resource": {
+      "resourceType": "Location",
+      "id": "7d7cf747-2d29-4ed7-9be4-150fef08d72f",
+      "managingOrganization": {
+        "reference": "urn:uuid:88721efd-7663-439c-b0f8-389d13102ce0"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:88721efd-7663-439c-b0f8-389d13102ce0",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "88721efd-7663-439c-b0f8-389d13102ce0",
+      "identifier": [ {
+        "value": "20000729"
+      } ],
+      "type": [ {
+        "coding": [ {
+          "code": "PRCP",
+          "display": "**TESTING ONLY** DO NOT SEND PATIENTS - ED Test Service for EDDI"
+        } ]
+      } ],
+      "name": "**TESTING ONLY** DO NOT SEND PATIENTS - ED Test Service for EDDI"
+    }
+  }, {
+    "fullUrl": "urn:uuid:28d45f68-35e8-48c9-a3e3-4395ffb83090",
+    "resource": {
+      "resourceType": "ReferralRequest",
+      "id": "28d45f68-35e8-48c9-a3e3-4395ffb83090",
+      "status": "active",
+      "intent": "plan",
+      "priority": "routine",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "occurrencePeriod": {
+        "start": "2021-09-15T09:16:10+00:00",
+        "end": "2021-09-15T10:16:10+00:00"
+      },
+      "authoredOn": "2020-10-30T18:28:58+00:00",
+      "requester": {
+        "agent": {
+          "reference": "urn:uuid:61c52545-4a85-487a-851b-7aa306192fe0"
+        },
+        "onBehalfOf": {
+          "reference": "urn:uuid:674ed1a0-b9ee-4efb-a9cc-724c9a0bfa23"
+        }
+      },
+      "recipient": [ {
+        "reference": "urn:uuid:9beb7aaa-1447-492c-89de-e85e48d2c896"
+      } ],
+      "reasonReference": [ {
+        "reference": "urn:uuid:f1b4909c-b810-499d-b0a1-5f5fdb3a0759"
+      } ],
+      "supportingInfo": [ {
+        "reference": "urn:uuid:e232d603-6ca5-4ec5-a03b-e2233b062841"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:e232d603-6ca5-4ec5-a03b-e2233b062841",
+    "resource": {
+      "resourceType": "ProcedureRequest",
+      "id": "e232d603-6ca5-4ec5-a03b-e2233b062841",
+      "status": "active",
+      "intent": "plan",
+      "priority": "routine",
+      "doNotPerform": false,
+      "code": {
+        "coding": [ {
+          "system": "2.16.840.1.113883.2.1.3.2.4.17.325",
+          "code": "Dx02",
+          "display": "Attend a Treatment Centre within 1 hour"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "occurrencePeriod": {
+        "start": "2021-09-15T09:16:10+00:00",
+        "end": "2021-09-15T10:16:10+00:00"
+      },
+      "reasonReference": [ {
+        "reference": "urn:uuid:f1b4909c-b810-499d-b0a1-5f5fdb3a0759"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:74693485-a881-4be4-a61d-4c7b9b97e43e",
+    "resource": {
+      "resourceType": "Composition",
+      "id": "74693485-a881-4be4-a61d-4c7b9b97e43e",
+      "identifier": {
+        "use": "usual",
+        "value": "B53175B4-0A4A-4503-A6CD-94333AA01645"
+      },
+      "status": "final",
+      "type": {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "371531000",
+          "display": "Report of clinical encounter (record artifact)"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "encounter": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "date": "2021-09-15T09:16:10+00:00",
+      "author": [ {
+        "reference": "urn:uuid:cbda9d46-f040-4d07-9f71-f71a49e5beb5"
+      } ],
+      "title": "111 Report",
+      "confidentiality": "N",
+      "section": [ {
+        "section": [ {
+          "title": "Patient's Reported Condition",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;TEST&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;&lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "Pathways Disposition",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;Attend a Treatment Centre within 1 hour (Dx02)\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;\n                                                    Selected service: **TESTING ONLY** DO NOT SEND PATIENTS - ED Test Se&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;&lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "Consultation Summary",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;Illness&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;Warm to touch&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;Nose bleeding freely&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;Nose bleeding despite first aid measures&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;&lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "Pathways Assessment",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;An injury or health problem was the reason for the contact.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;Heavy bleeding had not occurred in the previous 2 hours.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;An illness or health problem was the main problem.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;User Comments: TEST&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;The individual was not fighting for breath.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;The main reason for the assessment was not an allergic reaction, heart attack, chest/upper back pain, probable stroke, recent fit/seizure or suicide attempt.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;The main reason for contact was not new confusion, declared diabetic hypo/hyperglycaemia, or ICD shock.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;The skin on the torso felt normal, warm or hot.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;Pathway selected - Nosebleeds without Injury&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;The individual was not feeling faint or dizzy.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;The nose was continuing to bleed.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;There was no nasal foreign body.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;Constant pressure had been applied to the soft part of the nose for at least 10 minutes.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;Instructions given were: The individual needs to attend a treatment centre within 1 hour.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;Directory of Services referral: **TESTING ONLY** DO NOT SEND PATIENTS - ED Test Service for EDDI&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;Advice given:\n                                                    Worsening\n                                                    &lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;&lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "Advice Given",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;If there are any new symptoms, or if the condition gets worse, changes or you have any other concerns, call us back.&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;&lt;urn:br xmlns:urn=&quot;urn:hl7-org:v3&quot;/&gt;&lt;/xml-fragment&gt;</div>"
+          }
+        }, {
+          "title": "Special Patient Notes",
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;xml-fragment xmlns:npfitlc=&quot;NPFIT:HL7:Localisation&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;Special Notes from an external system were flagged as being present for this patient.&lt;/xml-fragment&gt;</div>"
+          }
+        } ]
+      }, {
+        "title": "ReferralRequest",
+        "entry": [ {
+          "reference": "urn:uuid:28d45f68-35e8-48c9-a3e3-4395ffb83090"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:7e1c4621-60e0-4729-bc04-ae5e24cb36e2"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:a0f98e44-81cc-4fb2-803e-ff00974b77ed"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:3d682327-f4d4-45fd-9c08-434b90cbc3f5"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:ca57cea2-2883-4550-892e-ba6d4f54d897"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:8f9c7d47-0471-4e22-b07d-3621473b28da"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:ae0b09bc-a9f3-4645-8c25-9ffb98662735"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:4bdf2cdf-b1b9-496b-8497-bb7bc2309795"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:f78a0106-90ea-4ce1-9469-028bcbbd2c35"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:1a5b96bb-d44b-4483-b8bd-f2e063c18dd2"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:84a08699-d8d1-4104-a4c9-cec396847dfe"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:be35a1b2-cf79-41e3-976d-500ebdd4cdf7"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:58e33c27-3339-4e27-a641-8dad6a8fe408"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:f65853c9-d7e0-421c-ac5c-de2dada3b951"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:d51a26d1-9b7d-4a96-be67-02067a69c904"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:4a433d1c-e805-4d03-b048-300132b3171c"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:c12fdced-7e52-4a37-9728-405f64aa7e67"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:092840ae-2b03-47d4-ac18-1a7c706eeb1d"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:7da8cdbe-d846-4ed8-9880-f09f036cf092"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:65ec4957-b33f-4370-ad35-1a8a0bdd723b"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:0938b976-4460-4ff1-9827-1d106bb17169"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:bf48f732-9042-4031-9969-9e078ce4faba"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:9fc65222-a751-4554-912d-5ebc8af41144"
+        } ]
+      }, {
+        "title": "QuestionnaireResponse",
+        "entry": [ {
+          "reference": "urn:uuid:bbb5ffc1-eef8-4c5c-b0cb-1b29042e17ee"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:88738a94-c5a5-445e-9b34-ed761d7ef6a1",
+    "resource": {
+      "resourceType": "Consent",
+      "id": "88738a94-c5a5-445e-9b34-ed761d7ef6a1",
+      "identifier": {
+        "use": "usual",
+        "value": "B53175B4-0A4A-4503-A6CD-94333AA01645"
+      },
+      "status": "active",
+      "patient": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "period": {
+        "start": "2020-10-30T18:29:05+00:00"
+      },
+      "consentingParty": [ {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      } ],
+      "action": [ {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "425691002",
+          "display": "Consent given for electronic record sharing"
+        } ],
+        "text": "Consent given for electronic record sharing"
+      } ],
+      "organization": [ {
+        "reference": "urn:uuid:674ed1a0-b9ee-4efb-a9cc-724c9a0bfa23"
+      } ],
+      "policyRule": "http://hl7.org/fhir/ConsentPolicy/opt-out",
+      "data": [ {
+        "meaning": "related",
+        "reference": {
+          "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+        }
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:f1b4909c-b810-499d-b0a1-5f5fdb3a0759",
+    "resource": {
+      "resourceType": "Condition",
+      "id": "f1b4909c-b810-499d-b0a1-5f5fdb3a0759",
+      "clinicalStatus": "active",
+      "verificationStatus": "unknown",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "evidence": [ {
+        "detail": [ {
+          "reference": "urn:uuid:7e1c4621-60e0-4729-bc04-ae5e24cb36e2"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:a0f98e44-81cc-4fb2-803e-ff00974b77ed"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:3d682327-f4d4-45fd-9c08-434b90cbc3f5"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:ca57cea2-2883-4550-892e-ba6d4f54d897"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:8f9c7d47-0471-4e22-b07d-3621473b28da"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:ae0b09bc-a9f3-4645-8c25-9ffb98662735"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:4bdf2cdf-b1b9-496b-8497-bb7bc2309795"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:f78a0106-90ea-4ce1-9469-028bcbbd2c35"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:1a5b96bb-d44b-4483-b8bd-f2e063c18dd2"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:84a08699-d8d1-4104-a4c9-cec396847dfe"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:be35a1b2-cf79-41e3-976d-500ebdd4cdf7"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:58e33c27-3339-4e27-a641-8dad6a8fe408"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:f65853c9-d7e0-421c-ac5c-de2dada3b951"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:d51a26d1-9b7d-4a96-be67-02067a69c904"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:4a433d1c-e805-4d03-b048-300132b3171c"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:c12fdced-7e52-4a37-9728-405f64aa7e67"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:092840ae-2b03-47d4-ac18-1a7c706eeb1d"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:7da8cdbe-d846-4ed8-9880-f09f036cf092"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:65ec4957-b33f-4370-ad35-1a8a0bdd723b"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:0938b976-4460-4ff1-9827-1d106bb17169"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:bf48f732-9042-4031-9969-9e078ce4faba"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:9fc65222-a751-4554-912d-5ebc8af41144"
+        } ]
+      }, {
+        "detail": [ {
+          "reference": "urn:uuid:bbb5ffc1-eef8-4c5c-b0cb-1b29042e17ee"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:7e1c4621-60e0-4729-bc04-ae5e24cb36e2",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "7e1c4621-60e0-4729-bc04-ae5e24cb36e2",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:acde625c-71ae-4887-afab-74beab61c65c"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx220074",
+        "text": "What is the reason for the contact?",
+        "answer": [ {
+          "valueString": "an injury or other health problem"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:acde625c-71ae-4887-afab-74beab61c65c",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "acde625c-71ae-4887-afab-74beab61c65c",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "5",
+        "text": "What is the reason for the contact?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "an injury or other health problem, Selected: true"
+        }, {
+          "valueString": "labour or childbirth, Selected: false"
+        }, {
+          "valueString": "a need to access another healthcare service, Selected: false"
+        }, {
+          "valueString": "a healthcare professional requesting contact with another clinician, Selected: false"
+        }, {
+          "valueString": "a report of results or tests, Selected: false"
+        }, {
+          "valueString": "a possible failure of contraception, Selected: false"
+        }, {
+          "valueString": "more, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:a0f98e44-81cc-4fb2-803e-ff00974b77ed",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "a0f98e44-81cc-4fb2-803e-ff00974b77ed",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:5317d664-f460-4746-a5be-8072077c48e8"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx221807",
+        "text": "STRING:to'Immediatethreatstolife(SPA/OOHversion)'-'Majorbloodloss'stem",
+        "answer": [ {
+          "valueString": "\"present\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:5317d664-f460-4746-a5be-8072077c48e8",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "5317d664-f460-4746-a5be-8072077c48e8",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "200",
+        "text": "STRING:to'Immediatethreatstolife(SPA/OOHversion)'-'Majorbloodloss'stem",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "\"present\", Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:3d682327-f4d4-45fd-9c08-434b90cbc3f5",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "3d682327-f4d4-45fd-9c08-434b90cbc3f5",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:cb9f9e6c-2a52-49f8-a7f0-556065558412"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00"
+    }
+  }, {
+    "fullUrl": "urn:uuid:cb9f9e6c-2a52-49f8-a7f0-556065558412",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "cb9f9e6c-2a52-49f8-a7f0-556065558412",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:ca57cea2-2883-4550-892e-ba6d4f54d897",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "ca57cea2-2883-4550-892e-ba6d4f54d897",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:22b80a9b-3c51-451a-8ee8-61ff8f6c3fed"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx221799",
+        "text": "STRING:injury,illnessorlabourestablishedinEntryFlow",
+        "answer": [ {
+          "valueString": "\"present\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:22b80a9b-3c51-451a-8ee8-61ff8f6c3fed",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "22b80a9b-3c51-451a-8ee8-61ff8f6c3fed",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "0",
+        "text": "STRING:injury,illnessorlabourestablishedinEntryFlow",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "\"present\", Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:8f9c7d47-0471-4e22-b07d-3621473b28da",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "8f9c7d47-0471-4e22-b07d-3621473b28da",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:c29c058a-de82-4da1-83ae-685cf7495878"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx224120",
+        "text": "Have you been bleeding RED BLOOD very heavily IN THE LAST 2 HOURS?",
+        "answer": [ {
+          "valueString": "no"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:c29c058a-de82-4da1-83ae-685cf7495878",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "c29c058a-de82-4da1-83ae-685cf7495878",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "10100",
+        "text": "Have you been bleeding RED BLOOD very heavily IN THE LAST 2 HOURS?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: false"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:ae0b09bc-a9f3-4645-8c25-9ffb98662735",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "ae0b09bc-a9f3-4645-8c25-9ffb98662735",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:bf0a8be4-7147-4737-b77f-b7e66b1e22fc"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx221343",
+        "text": "SocialConcernsExcluded",
+        "answer": [ {
+          "valueString": "==\"present\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:bf0a8be4-7147-4737-b77f-b7e66b1e22fc",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "bf0a8be4-7147-4737-b77f-b7e66b1e22fc",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "1100",
+        "text": "SocialConcernsExcluded",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "==\"present\", Selected: true"
+        }, {
+          "valueString": "*, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:4bdf2cdf-b1b9-496b-8497-bb7bc2309795",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "4bdf2cdf-b1b9-496b-8497-bb7bc2309795",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:7ebf24db-36d4-404f-863f-7dbb3c100969"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx130011",
+        "text": "What is the main problem?",
+        "answer": [ {
+          "valueString": "illness or other health problem (specify)"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:7ebf24db-36d4-404f-863f-7dbb3c100969",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "7ebf24db-36d4-404f-863f-7dbb3c100969",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "2300",
+        "text": "What is the main problem?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "the individual has been told to follow a particular course of action (specify), Selected: false"
+        }, {
+          "valueString": "the individual is an identified frequent caller, Selected: false"
+        }, {
+          "valueString": "injury (specify), Selected: false"
+        }, {
+          "valueString": "illness or other health problem (specify), Selected: true"
+        }, {
+          "valueString": "child protection/vulnerable adult concern, Selected: false"
+        }, {
+          "valueString": "social or domestic emergency, Selected: false"
+        }, {
+          "valueString": "the environment potentially poses an immediate threat to life (specify), Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:f78a0106-90ea-4ce1-9469-028bcbbd2c35",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "f78a0106-90ea-4ce1-9469-028bcbbd2c35",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:a2921915-5401-4695-9b46-64d82083b188"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00"
+    }
+  }, {
+    "fullUrl": "urn:uuid:a2921915-5401-4695-9b46-64d82083b188",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "a2921915-5401-4695-9b46-64d82083b188",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:1a5b96bb-d44b-4483-b8bd-f2e063c18dd2",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "1a5b96bb-d44b-4483-b8bd-f2e063c18dd2",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:b049574c-b276-4e4f-a268-a1abadec36d8"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx61025",
+        "text": "Are you so breathless that speaking more than a few words is impossible?",
+        "answer": [ {
+          "valueString": "no"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:b049574c-b276-4e4f-a268-a1abadec36d8",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "b049574c-b276-4e4f-a268-a1abadec36d8",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "0",
+        "text": "Are you so breathless that speaking more than a few words is impossible?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: false"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:84a08699-d8d1-4104-a4c9-cec396847dfe",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "84a08699-d8d1-4104-a4c9-cec396847dfe",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:fed574e9-151a-41d8-ae45-89bba80adbba"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx220845",
+        "text": "SYSTEM_FLUPANDEMIC",
+        "answer": [ {
+          "valueString": "==\"pandemic\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:fed574e9-151a-41d8-ae45-89bba80adbba",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "fed574e9-151a-41d8-ae45-89bba80adbba",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "100",
+        "text": "SYSTEM_FLUPANDEMIC",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "==\"pandemic\", Selected: true"
+        }, {
+          "valueString": "*, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:be35a1b2-cf79-41e3-976d-500ebdd4cdf7",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "be35a1b2-cf79-41e3-976d-500ebdd4cdf7",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:3b25102d-fe4a-4270-b7fc-835ca260a792"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx223440",
+        "text": "WHAT IS SAID TO BE THE MAIN REASON FOR THIS CONTACT?",
+        "answer": [ {
+          "valueString": "more"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:3b25102d-fe4a-4270-b7fc-835ca260a792",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "3b25102d-fe4a-4270-b7fc-835ca260a792",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "5200",
+        "text": "WHAT IS SAID TO BE THE MAIN REASON FOR THIS CONTACT?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "a probable allergic reaction now, Selected: false"
+        }, {
+          "valueString": "a probable heart attack, Selected: false"
+        }, {
+          "valueString": "chest or upper back pain, Selected: false"
+        }, {
+          "valueString": "a probable stroke or mini-stroke, Selected: false"
+        }, {
+          "valueString": "a probable fit or seizure within the last 12 hours, Selected: false"
+        }, {
+          "valueString": "a suicide attempt, Selected: false"
+        }, {
+          "valueString": "more, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:58e33c27-3339-4e27-a641-8dad6a8fe408",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "58e33c27-3339-4e27-a641-8dad6a8fe408",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:3640d676-1c4f-48c8-bd95-cf74733662bf"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx220032",
+        "text": "WHAT IS SAID TO BE THE MAIN REASON FOR THIS CONTACT?",
+        "answer": [ {
+          "valueString": "none of the above"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:3640d676-1c4f-48c8-bd95-cf74733662bf",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "3640d676-1c4f-48c8-bd95-cf74733662bf",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "2200",
+        "text": "WHAT IS SAID TO BE THE MAIN REASON FOR THIS CONTACT?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "new confusion now, Selected: false"
+        }, {
+          "valueString": "a diabetic hypo (low blood sugar) or a diabetic hyper (high blood sugar), Selected: false"
+        }, {
+          "valueString": "recovery from an ICD (implanted cardioverter defibrillator) shock, Selected: false"
+        }, {
+          "valueString": "none of the above, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:f65853c9-d7e0-421c-ac5c-de2dada3b951",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "f65853c9-d7e0-421c-ac5c-de2dada3b951",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:612b5efa-a28b-4f80-83ff-a82d6b54530c"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx223142",
+        "text": "Does the skin on the chest, back or abdomen feel a normal temperature?",
+        "answer": [ {
+          "valueString": "yes - normal, warm or hot"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:612b5efa-a28b-4f80-83ff-a82d6b54530c",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "612b5efa-a28b-4f80-83ff-a82d6b54530c",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "4200",
+        "text": "Does the skin on the chest, back or abdomen feel a normal temperature?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes - normal, warm or hot, Selected: true"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no - cool OR cold, Selected: false"
+        }, {
+          "valueString": "not safe to touch, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:d51a26d1-9b7d-4a96-be67-02067a69c904",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "d51a26d1-9b7d-4a96-be67-02067a69c904",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:48e6fc40-377d-4aa7-9e3b-032392fb33e6"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx221724",
+        "text": "STRING:ShockAsked",
+        "answer": [ {
+          "valueString": "\"present\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:48e6fc40-377d-4aa7-9e3b-032392fb33e6",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "48e6fc40-377d-4aa7-9e3b-032392fb33e6",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "3700",
+        "text": "STRING:ShockAsked",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "\"present\", Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:4a433d1c-e805-4d03-b048-300132b3171c",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "4a433d1c-e805-4d03-b048-300132b3171c",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:94181034-155e-4121-b57d-d794cf0ad47f"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00"
+    }
+  }, {
+    "fullUrl": "urn:uuid:94181034-155e-4121-b57d-d794cf0ad47f",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "94181034-155e-4121-b57d-d794cf0ad47f",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:c12fdced-7e52-4a37-9728-405f64aa7e67",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "c12fdced-7e52-4a37-9728-405f64aa7e67",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:2cc026b4-34d2-4d52-9cf4-c05bd063aeb3"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx42307",
+        "text": "Are you feeling faint or dizzy?",
+        "answer": [ {
+          "valueString": "no"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:2cc026b4-34d2-4d52-9cf4-c05bd063aeb3",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "2cc026b4-34d2-4d52-9cf4-c05bd063aeb3",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "0",
+        "text": "Are you feeling faint or dizzy?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: false"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:092840ae-2b03-47d4-ac18-1a7c706eeb1d",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "092840ae-2b03-47d4-ac18-1a7c706eeb1d",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:98f2a25a-cc2e-42d6-bd55-b4be7be190cc"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx1260",
+        "text": "Is the nose still bleeding?",
+        "answer": [ {
+          "valueString": "yes"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:98f2a25a-cc2e-42d6-bd55-b4be7be190cc",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "98f2a25a-cc2e-42d6-bd55-b4be7be190cc",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "100",
+        "text": "Is the nose still bleeding?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: true"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:7da8cdbe-d846-4ed8-9880-f09f036cf092",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "7da8cdbe-d846-4ed8-9880-f09f036cf092",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:742419c2-6d92-4820-8c8c-1adbda95722c"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx1258",
+        "text": "Is anything stuck up the nose?",
+        "answer": [ {
+          "valueString": "no"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:742419c2-6d92-4820-8c8c-1adbda95722c",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "742419c2-6d92-4820-8c8c-1adbda95722c",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "300",
+        "text": "Is anything stuck up the nose?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: false"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:65ec4957-b33f-4370-ad35-1a8a0bdd723b",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "65ec4957-b33f-4370-ad35-1a8a0bdd723b",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:431e9a23-4bf9-42d2-92d8-5d417859a34a"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx1259",
+        "text": "Have you pinched the soft part of the nose for AT LEAST 10 MINUTES without a break?",
+        "answer": [ {
+          "valueString": "yes"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:431e9a23-4bf9-42d2-92d8-5d417859a34a",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "431e9a23-4bf9-42d2-92d8-5d417859a34a",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "1500",
+        "text": "Have you pinched the soft part of the nose for AT LEAST 10 MINUTES without a break?",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "yes, Selected: true"
+        }, {
+          "valueString": "not sure, Selected: false"
+        }, {
+          "valueString": "no, Selected: false"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:0938b976-4460-4ff1-9827-1d106bb17169",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "0938b976-4460-4ff1-9827-1d106bb17169",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:38365378-8f5e-4b02-9bdb-69bc79a5b5dd"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00",
+      "item": [ {
+        "linkId": "Tx221512",
+        "text": "STRING:SDEDFullEDassessmentandmanagementcapability",
+        "answer": [ {
+          "valueString": "\"ED full ED assessment and management capability\""
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:38365378-8f5e-4b02-9bdb-69bc79a5b5dd",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "38365378-8f5e-4b02-9bdb-69bc79a5b5dd",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ],
+      "item": [ {
+        "linkId": "7434927",
+        "prefix": "1700",
+        "text": "STRING:SDEDFullEDassessmentandmanagementcapability",
+        "type": "choice",
+        "required": true,
+        "repeats": false,
+        "option": [ {
+          "valueString": "\"ED full ED assessment and management capability\", Selected: true"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:bf48f732-9042-4031-9969-9e078ce4faba",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "bf48f732-9042-4031-9969-9e078ce4faba",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:8209d67d-cfa4-4157-9f05-8b3b2741627e"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00"
+    }
+  }, {
+    "fullUrl": "urn:uuid:8209d67d-cfa4-4157-9f05-8b3b2741627e",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "8209d67d-cfa4-4157-9f05-8b3b2741627e",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:9fc65222-a751-4554-912d-5ebc8af41144",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "9fc65222-a751-4554-912d-5ebc8af41144",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:2afc7e75-0852-498b-ad0d-c2a6765b1d6e"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00"
+    }
+  }, {
+    "fullUrl": "urn:uuid:2afc7e75-0852-498b-ad0d-c2a6765b1d6e",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "2afc7e75-0852-498b-ad0d-c2a6765b1d6e",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:bbb5ffc1-eef8-4c5c-b0cb-1b29042e17ee",
+    "resource": {
+      "resourceType": "QuestionnaireResponse",
+      "id": "bbb5ffc1-eef8-4c5c-b0cb-1b29042e17ee",
+      "identifier": {
+        "value": "7434927"
+      },
+      "questionnaire": {
+        "reference": "urn:uuid:f3c3ed1a-e2da-4675-881e-258662d9f6cc"
+      },
+      "status": "completed",
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "authored": "2020-10-30T18:29:05+00:00"
+    }
+  }, {
+    "fullUrl": "urn:uuid:f3c3ed1a-e2da-4675-881e-258662d9f6cc",
+    "resource": {
+      "resourceType": "Questionnaire",
+      "id": "f3c3ed1a-e2da-4675-881e-258662d9f6cc",
+      "identifier": [ {
+        "value": "7434927"
+      } ],
+      "version": "2020-10-30T18:29:05.808Z",
+      "status": "active",
+      "experimental": false,
+      "date": "2020-10-30T18:29:05+00:00",
+      "publisher": "User ID: 'RB12' User name: 'Rachel Boyer' User skill set: 'T3'",
+      "lastReviewDate": "2020-10-30",
+      "subjectType": [ "Patient" ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:ad3b4c04-baa2-4d70-93fb-eaa20f97effd",
+    "resource": {
+      "resourceType": "Observation",
+      "id": "ad3b4c04-baa2-4d70-93fb-eaa20f97effd",
+      "status": "final",
+      "code": {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "33962009",
+          "display": "Presenting complaint"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "context": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:e23c8712-e245-45c0-9db4-3bb486d55ae3",
+    "resource": {
+      "resourceType": "PractitionerRole",
+      "id": "e23c8712-e245-45c0-9db4-3bb486d55ae3",
+      "practitioner": {
+        "reference": "urn:uuid:cbda9d46-f040-4d07-9f71-f71a49e5beb5"
+      },
+      "organization": {
+        "reference": "urn:uuid:b4b43fa7-b91c-401c-aa31-25309f7d4cbe"
+      },
+      "code": [ {
+        "coding": [ {
+          "system": "2.16.840.1.113883.2.1.3.2.4.17.339",
+          "code": "OTHER",
+          "display": "Assessed by"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:b4b43fa7-b91c-401c-aa31-25309f7d4cbe",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "b4b43fa7-b91c-401c-aa31-25309f7d4cbe",
+      "identifier": [ {
+        "value": "Y00397"
+      } ],
+      "name": "Devon 111 (Devon Doctors Group)"
+    }
+  }, {
+    "fullUrl": "urn:uuid:075c2a16-2c93-4a28-b22f-5478d09f694b",
+    "resource": {
+      "resourceType": "PractitionerRole",
+      "id": "075c2a16-2c93-4a28-b22f-5478d09f694b",
+      "practitioner": {
+        "reference": "urn:uuid:851984c6-4e83-4c87-b399-7ec049e3476f"
+      },
+      "organization": {
+        "reference": "urn:uuid:3272de87-7954-4f80-9ae8-d2507724e9bc"
+      },
+      "code": [ {
+        "coding": [ {
+          "system": "2.16.840.1.113883.2.1.3.2.4.17.196",
+          "code": "R0010",
+          "display": "Medical Director"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:3272de87-7954-4f80-9ae8-d2507724e9bc",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "3272de87-7954-4f80-9ae8-d2507724e9bc",
+      "identifier": [ {
+        "value": "Y00397"
+      } ],
+      "name": "Devon Doctors Group"
+    }
+  }, {
+    "fullUrl": "urn:uuid:ae9e4dfa-0707-404f-89b7-3d41934f1861",
+    "resource": {
+      "resourceType": "RelatedPerson",
+      "id": "ae9e4dfa-0707-404f-89b7-3d41934f1861",
+      "patient": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "relationship": {
+        "coding": [ {
+          "system": "http://hl7.org/fhir/v2/0131",
+          "code": "C",
+          "display": "Emergency Contact"
+        } ]
+      },
+      "telecom": [ {
+        "system": "phone",
+        "value": "tel:01702123456"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:61c52545-4a85-487a-851b-7aa306192fe0",
+    "resource": {
+      "resourceType": "Device",
+      "id": "61c52545-4a85-487a-851b-7aa306192fe0",
+      "model": "111 Adaptor",
+      "version": "0.9.0"
+    }
+  }, {
+    "fullUrl": "urn:uuid:65bc054e-5b10-417c-bc90-14203dce429d",
+    "resource": {
+      "resourceType": "List",
+      "id": "65bc054e-5b10-417c-bc90-14203dce429d",
+      "status": "current",
+      "mode": "working",
+      "title": "111 Report List",
+      "code": {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "225390008",
+          "display": "Triage"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:6d5687ba-d4f6-40ce-b143-f305a3c463ae"
+      },
+      "encounter": {
+        "reference": "urn:uuid:483706fa-c4dd-48aa-9744-73b75060caa6"
+      },
+      "date": "2021-09-15T09:16:10+00:00",
+      "source": {
+        "reference": "urn:uuid:61c52545-4a85-487a-851b-7aa306192fe0"
+      },
+      "orderedBy": {
+        "coding": [ {
+          "system": "http://hl7.org/fhir/list-order",
+          "code": "event-date",
+          "display": "Sorted by Event Date"
+        } ]
+      },
+      "entry": [ {
+        "item": {
+          "reference": "urn:uuid:ad3b4c04-baa2-4d70-93fb-eaa20f97effd"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:2cbed662-9d29-400f-9dc3-e344282cb4a3"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:674ed1a0-b9ee-4efb-a9cc-724c9a0bfa23"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:851984c6-4e83-4c87-b399-7ec049e3476f"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:f1b4909c-b810-499d-b0a1-5f5fdb3a0759"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:b4b43fa7-b91c-401c-aa31-25309f7d4cbe"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:88721efd-7663-439c-b0f8-389d13102ce0"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:fade0bb7-63a9-4916-988f-9ff56a0a2bb0"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:cbda9d46-f040-4d07-9f71-f71a49e5beb5"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:3272de87-7954-4f80-9ae8-d2507724e9bc"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:ae9e4dfa-0707-404f-89b7-3d41934f1861"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:7e1c4621-60e0-4729-bc04-ae5e24cb36e2"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:84a08699-d8d1-4104-a4c9-cec396847dfe"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:c12fdced-7e52-4a37-9728-405f64aa7e67"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:2cc026b4-34d2-4d52-9cf4-c05bd063aeb3"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:ae0b09bc-a9f3-4645-8c25-9ffb98662735"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:7da8cdbe-d846-4ed8-9880-f09f036cf092"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:d51a26d1-9b7d-4a96-be67-02067a69c904"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:a0f98e44-81cc-4fb2-803e-ff00974b77ed"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:4bdf2cdf-b1b9-496b-8497-bb7bc2309795"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:be35a1b2-cf79-41e3-976d-500ebdd4cdf7"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:092840ae-2b03-47d4-ac18-1a7c706eeb1d"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:acde625c-71ae-4887-afab-74beab61c65c"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:cb9f9e6c-2a52-49f8-a7f0-556065558412"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:3640d676-1c4f-48c8-bd95-cf74733662bf"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:fed574e9-151a-41d8-ae45-89bba80adbba"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:8209d67d-cfa4-4157-9f05-8b3b2741627e"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:0938b976-4460-4ff1-9827-1d106bb17169"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:bf48f732-9042-4031-9969-9e078ce4faba"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:ca57cea2-2883-4550-892e-ba6d4f54d897"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:58e33c27-3339-4e27-a641-8dad6a8fe408"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:f78a0106-90ea-4ce1-9469-028bcbbd2c35"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:742419c2-6d92-4820-8c8c-1adbda95722c"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:bbb5ffc1-eef8-4c5c-b0cb-1b29042e17ee"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:1a5b96bb-d44b-4483-b8bd-f2e063c18dd2"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:2afc7e75-0852-498b-ad0d-c2a6765b1d6e"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:f65853c9-d7e0-421c-ac5c-de2dada3b951"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:4a433d1c-e805-4d03-b048-300132b3171c"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:22b80a9b-3c51-451a-8ee8-61ff8f6c3fed"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:8f9c7d47-0471-4e22-b07d-3621473b28da"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:bf0a8be4-7147-4737-b77f-b7e66b1e22fc"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:7ebf24db-36d4-404f-863f-7dbb3c100969"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:48e6fc40-377d-4aa7-9e3b-032392fb33e6"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:5317d664-f460-4746-a5be-8072077c48e8"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:94181034-155e-4121-b57d-d794cf0ad47f"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:a2921915-5401-4695-9b46-64d82083b188"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:3b25102d-fe4a-4270-b7fc-835ca260a792"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:b049574c-b276-4e4f-a268-a1abadec36d8"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:38365378-8f5e-4b02-9bdb-69bc79a5b5dd"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:c29c058a-de82-4da1-83ae-685cf7495878"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:3d682327-f4d4-45fd-9c08-434b90cbc3f5"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:612b5efa-a28b-4f80-83ff-a82d6b54530c"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:9fc65222-a751-4554-912d-5ebc8af41144"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:98f2a25a-cc2e-42d6-bd55-b4be7be190cc"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:65ec4957-b33f-4370-ad35-1a8a0bdd723b"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:431e9a23-4bf9-42d2-92d8-5d417859a34a"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:f3c3ed1a-e2da-4675-881e-258662d9f6cc"
+        }
+      }, {
+        "item": {
+          "reference": "urn:uuid:28d45f68-35e8-48c9-a3e3-4395ffb83090"
+        }
+      } ]
+    }
+  } ]
+}

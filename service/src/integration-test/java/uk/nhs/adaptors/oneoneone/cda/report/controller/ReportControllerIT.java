@@ -1,6 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Fail.fail;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
@@ -13,6 +14,8 @@ import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.ACTION;
 import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.BODY;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
@@ -69,8 +72,8 @@ import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
 public class ReportControllerIT {
 
     private static final String APPLICATION_XML_UTF_8 = APPLICATION_XML_VALUE + ";charset=UTF-8";
-    private static final String MESSAGE_ID_VALUE = "2B77B3F5-3016-4A6D-821F-152CE420E58D";
-    private static final String MESSAGE_ID = "messageId";
+    private static final boolean OVERWRITE_JSON = false;
+    public static final String MESSAGE_ID = "messageId";
     private static final String REPORT_ENDPOINT = "/report";
     private static final String EXPECTED_ACTION = "urn:nhs-itk:services:201005:SendNHS111Report-v2-0Response";
     private static final String EXPECTED_BODY = "<itk:SimpleMessageResponse xmlns:itk=\"urn:nhs-itk:ns:201005\">OK:%s</itk"
@@ -140,12 +143,69 @@ public class ReportControllerIT {
     private static Stream<Arguments> validItkReportAndExpectedJsonValues() {
         return Stream.of(
             Arguments.of(
-                readResourceAsString("/xml/primaryEmergencyItkRequest.xml"),
-                readResourceAsString("/json/primaryEmergencyFhirResult.json")
+                "/xml/primary-emergency-itk-request.xml",
+                "/json/primary-emergency-fhir-result.json",
+                "2B77B3F5-3016-4A6D-821F-152CE420E58D"
             ),
             Arguments.of(
-                readResourceAsString("/xml/repeatCallerItkRequest.xml"),
-                readResourceAsString("/json/repeatCallerFhirResult.json")
+                "/xml/repeat-caller-itk-request.xml",
+                "/json/repeat-caller-fhir-result.json",
+                "2B77B3F5-3016-4A6D-821F-152CE420E58D"
+            ),
+            Arguments.of(
+                "/xml/adastra-itk-ooh-referral-dx06-itk-request.xml",
+                "/json/adastra-itk-ooh-referral-dx06-fhir-result.json",
+                "7AEFFED7-78AF-4940-9EE2-5FAA3920ECFE"
+            ),
+            Arguments.of(
+                "/xml/adastra-itk-ooh-referral-dx86-itk-request.xml",
+                "/json/adastra-itk-ooh-referral-dx86-fhir-result.json",
+                "2F182787-CA39-46F8-9B1C-8E77F3050067"
+            ),
+            Arguments.of(
+                "/xml/cleric-itk-ooh-referral-dx09-itk-request.xml",
+                "/json/cleric-itk-ooh-referral-dx09-fhir-result.json",
+                "C34D38AA-2A35-4E0C-AAB2-BCC8D397736A"
+            ),
+            Arguments.of(
+                "/xml/cleric-itk-ooh-referral-dx10-itk-request.xml",
+                "/json/cleric-itk-ooh-referral-dx10-fhir-result.json",
+                "B447241A-CEBD-41DF-AC62-46FE8022876F"
+            ),
+            Arguments.of(
+                "/xml/conformance-example-adastra-ooh-itk-request.xml",
+                "/json/conformance-example-adastra-ooh-fhir-result.json",
+                "05040617-33BA-4344-AA59-281CF2FE63CA"
+            ),
+            Arguments.of(
+                "/xml/conformance-example-adastra-original-itk-request.xml",
+                "/json/conformance-example-adastra-original-fhir-result.json",
+                "F7916D36-4D5F-4A64-BD08-644E8A234AE2"
+            ),
+            Arguments.of(
+                "/xml/conformance-example-ic24-original-itk-request.xml",
+                "/json/conformance-example-ic24-original-fhir-result.json",
+                "F7916D36-4D5F-4A64-BD08-644E8A234AE2"
+            ),
+            Arguments.of(
+                "/xml/example-adastra-ooh-itk-request.xml",
+                "/json/example-adastra-ooh-fhir-result.json",
+                "05040617-33BA-4344-AA59-281CF2FE63CA"
+            ),
+            Arguments.of(
+                "/xml/ic24-itk-ooh-referral-dx06-itk-request.xml",
+                "/json/ic24-itk-ooh-referral-dx06-fhir-result.json",
+                "D78E4686-5082-4E76-9359-6A84AE0C9C10"
+            ),
+            Arguments.of(
+                "/xml/ic24-itk-ooh-referral-dx07-itk-request.xml",
+                "/json/ic24-itk-ooh-referral-dx07-fhir-result.json",
+                "4A4DE551-F585-49BB-A1D3-12DCC764AF52"
+            ),
+            Arguments.of(
+                "/xml/repeat-caller-exampleV1-itk-request.xml",
+                "/json/repeat-caller-exampleV1-fhir-result.json",
+                "A12F527F-3808-44BC-9272-8C8A92884A37"
             )
         );
     }
@@ -176,12 +236,12 @@ public class ReportControllerIT {
 
     @ParameterizedTest(name = "postReportValidBody")
     @MethodSource("validItkReportAndExpectedJsonValues")
-    public void postReportValidBody(String itkReportRequest, String expectedJson)
+    public void postReportValidBody(String itkReportRequestPath, String expectedJsonPath, String messageIdValue)
         throws JMSException, JSONException, ParserConfigurationException, SAXException, IOException {
         String responseBody = given()
             .port(port)
             .contentType(APPLICATION_XML_UTF_8)
-            .body(itkReportRequest)
+            .body(readResourceAsString(itkReportRequestPath))
             .when()
             .post(REPORT_ENDPOINT)
             .then()
@@ -192,18 +252,24 @@ public class ReportControllerIT {
 
         Map<ResponseElement, String> responseElementsMap = responseParserUtil.parseSuccessfulResponseXml(responseBody);
         assertThat(responseElementsMap.get(ACTION)).isEqualTo(EXPECTED_ACTION);
-        assertThat(responseElementsMap.get(BODY)).isEqualTo(String.format(EXPECTED_BODY, MESSAGE_ID_VALUE));
+        assertThat(responseElementsMap.get(BODY)).isEqualTo(String.format(EXPECTED_BODY, messageIdValue));
 
         Message jmsMessage = jmsTemplate.receive(amqpProperties.getQueueName());
         if (jmsMessage == null) {
             throw new IllegalStateException("Message must not be null");
         }
         String messageBody = jmsMessage.getBody(String.class);
+        if (OVERWRITE_JSON) {
+            try (PrintWriter printWriter = new PrintWriter("../doc" + expectedJsonPath, StandardCharsets.UTF_8)) {
+                printWriter.print(messageBody);
+            }
+            fail("Re-run the tests with OVERWRITE_JSON=false");
+        }
 
         assertThat(validator.isValid(messageBody)).isEqualTo(true);
-        assertThat(jmsMessage.getStringProperty(MESSAGE_ID)).isEqualTo(MESSAGE_ID_VALUE);
+        assertThat(jmsMessage.getStringProperty(MESSAGE_ID)).isEqualTo(messageIdValue);
 
-        assertMessageContent(messageBody, expectedJson);
+        assertMessageContent(messageBody, readResourceAsString(expectedJsonPath));
     }
 
     private void assertMessageContent(String actual, String expected) throws JSONException {
