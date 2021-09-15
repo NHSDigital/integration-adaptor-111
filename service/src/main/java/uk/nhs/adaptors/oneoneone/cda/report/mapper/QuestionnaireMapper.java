@@ -1,5 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem.PHONE;
+
 import static uk.nhs.adaptors.oneoneone.cda.report.util.IsoDateTimeFormatter.toIsoDateTimeString;
 
 import java.util.ArrayList;
@@ -53,9 +55,9 @@ public class QuestionnaireMapper {
                     getCountry(pathwaysCase))))
             .addContact(
                 new ContactDetail().addTelecom(
-                    new ContactPoint().setValue(
-                        getContactNumber(pathwaysCase)
-                    )))
+                    new ContactPoint().setSystem(PHONE)
+                        .setValue(getContactNumber(pathwaysCase)
+                        )))
             .addItem(getItem(triageLine.getQuestion(), getCaseID(pathwaysCase)));
 
         return questionnaire;
