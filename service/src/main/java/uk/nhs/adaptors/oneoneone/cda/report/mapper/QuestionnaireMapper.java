@@ -53,14 +53,20 @@ public class QuestionnaireMapper {
             .setJurisdiction(Collections.singletonList(
                 new CodeableConcept().setText(
                     getCountry(pathwaysCase))))
-            .addContact(
+            .addItem(getItem(triageLine.getQuestion(), getCaseID(pathwaysCase)));
+        setContact(pathwaysCase, questionnaire);
+
+        return questionnaire;
+    }
+
+    private void setContact(PathwaysCase pathwaysCase, Questionnaire questionnaire) {
+        if (!(getContactNumber(pathwaysCase) == null)) {
+            questionnaire.addContact(
                 new ContactDetail().addTelecom(
                     new ContactPoint().setSystem(PHONE)
                         .setValue(getContactNumber(pathwaysCase)
-                        )))
-            .addItem(getItem(triageLine.getQuestion(), getCaseID(pathwaysCase)));
-
-        return questionnaire;
+                        )));
+        }
     }
 
     private String getPublisher(User user) {
