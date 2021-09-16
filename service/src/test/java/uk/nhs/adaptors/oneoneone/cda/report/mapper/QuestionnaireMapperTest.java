@@ -80,6 +80,5 @@ public class QuestionnaireMapperTest {
         assertThat(toIsoDateTimeString(questionnaire.getDate())).isEqualTo("2011-02-17T17:31:14.313Z");
         assertThat(questionnaire.getPublisher()).isEqualTo("N/A");
         assertThat(questionnaire.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
-        assertThat((questionnaire.getContact().get(0).getTelecom().get(0).getSystem())).isEqualTo(PHONE);
     }
 }
