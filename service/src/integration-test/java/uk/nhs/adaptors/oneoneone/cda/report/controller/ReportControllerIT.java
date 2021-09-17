@@ -234,7 +234,7 @@ public class ReportControllerIT {
             .extract();
     }
 
-    @ParameterizedTest(name = "postReportValidBody")
+    @ParameterizedTest(name = "postReportValidBody {0}")
     @MethodSource("validItkReportAndExpectedJsonValues")
     public void postReportValidBody(String itkReportRequestPath, String expectedJsonPath, String messageIdValue)
         throws JMSException, JSONException, ParserConfigurationException, SAXException, IOException {

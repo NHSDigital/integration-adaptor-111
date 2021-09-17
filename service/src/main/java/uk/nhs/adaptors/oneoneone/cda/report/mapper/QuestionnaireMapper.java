@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
@@ -19,6 +20,7 @@ import org.hl7.fhir.dstu3.model.Questionnaire;
 import org.hl7.fhir.dstu3.model.Questionnaire.QuestionnaireItemComponent;
 import org.hl7.fhir.dstu3.model.Questionnaire.QuestionnaireItemOptionComponent;
 import org.hl7.fhir.dstu3.model.StringType;
+import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.TriageLineDetails.TriageLine;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.TriageLineDetails.TriageLine.Question;
@@ -60,12 +62,13 @@ public class QuestionnaireMapper {
     }
 
     private void setContact(PathwaysCase pathwaysCase, Questionnaire questionnaire) {
-        if (!(getContactNumber(pathwaysCase) == null)) {
+        String contactNumber = getContactNumber(pathwaysCase);
+        if (contactNumber != null) {
             questionnaire.addContact(
                 new ContactDetail().addTelecom(
-                    new ContactPoint().setSystem(PHONE)
-                        .setValue(getContactNumber(pathwaysCase)
-                        )));
+                    new ContactPoint()
+                        .setSystem(PHONE)
+                        .setValue(contactNumber)));
         }
     }
 
@@ -120,19 +123,13 @@ public class QuestionnaireMapper {
     }
 
     private String getContactNumber(PathwaysCase pathwaysCase) {
-        if (pathwaysCase.getCaseDetails() != null) {
-            if (pathwaysCase.getCaseDetails().getContactDetails() != null) {
-                if (pathwaysCase.getCaseDetails().getContactDetails().sizeOfCallerArray() > 0) {
-                    if (pathwaysCase.getCaseDetails().getContactDetails().getCallerArray(0).isSetPhone()) {
-                        if (pathwaysCase.getCaseDetails().getContactDetails().getCallerArray(0).getPhone().getNumber() != null) {
-                            return pathwaysCase.getCaseDetails().getContactDetails().getCallerArray(0).getPhone().getNumber();
-                        }
-                    }
-                }
-            }
-        }
-
-        return null;
+        return Optional.ofNullable(pathwaysCase.getCaseDetails())
+            .map(PathwaysCaseDocument.PathwaysCase.CaseDetails::getContactDetails)
+            .map(PathwaysCase.CaseDetails.ContactDetails::getCallerArray)
+            .map(it -> it.length > 0 ? it[0] : null)
+            .map(PathwaysCaseDocument.PathwaysCase.CaseDetails.ContactDetails.Caller::getPhone)
+            .map(PathwaysCaseDocument.PathwaysCase.CaseDetails.ContactDetails.Caller.Phone::getNumber)
+            .orElse(null);
     }
 
     private QuestionnaireItemComponent getItem(Question question, String caseId) {
