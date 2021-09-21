@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2021-09-21
+- Setting `Questionnaire.contact.telecom.system` property when `Questionnaire.contact.telecom.value` is set
+- Adding more messages to integration tests
 ## [0.9.0] - 2021-09-14
 - Replace dom4j with standard Java xpath library
 - Fixed issue with Date/Time parsing
