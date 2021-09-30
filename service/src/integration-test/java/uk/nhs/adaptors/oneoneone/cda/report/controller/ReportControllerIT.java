@@ -1,5 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.controller;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -15,7 +17,6 @@ import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.BODY;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,7 @@ import org.xml.sax.SAXException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 
 import junitparams.JUnitParamsRunner;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import uk.nhs.adaptors.WireMockInitializer;
 import uk.nhs.adaptors.containers.IntegrationTestsExtension;
@@ -259,17 +261,25 @@ public class ReportControllerIT {
             throw new IllegalStateException("Message must not be null");
         }
         String messageBody = jmsMessage.getBody(String.class);
-        if (OVERWRITE_JSON) {
-            try (PrintWriter printWriter = new PrintWriter("../doc" + expectedJsonPath, StandardCharsets.UTF_8)) {
-                printWriter.print(messageBody);
-            }
-            fail("Re-run the tests with OVERWRITE_JSON=false");
-        }
+        overwriteJson(expectedJsonPath, messageBody);
 
         assertThat(validator.isValid(messageBody)).isEqualTo(true);
         assertThat(jmsMessage.getStringProperty(MESSAGE_ID)).isEqualTo(messageIdValue);
 
         assertMessageContent(messageBody, readResourceAsString(expectedJsonPath));
+    }
+
+    @SneakyThrows
+    private void overwriteJson(String expectedJsonPath, String messageBody) {
+        if (OVERWRITE_JSON) {
+            try (PrintWriter printWriter = new PrintWriter("../doc" + expectedJsonPath, UTF_8)) {
+                printWriter.print(messageBody);
+            }
+            try (PrintWriter printWriter = new PrintWriter("src/integration-test/resources" + expectedJsonPath, UTF_8)) {
+                printWriter.print(messageBody);
+            }
+            fail("Re-run the tests with OVERWRITE_JSON=false");
+        }
     }
 
     private void assertMessageContent(String actual, String expected) throws JSONException {
