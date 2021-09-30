@@ -1,14 +1,16 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hl7.fhir.dstu3.model.Composition.CompositionStatus.FINAL;
 import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
-import static org.hl7.fhir.utilities.xhtml.NodeType.Document;
 
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.xmlbeans.XmlObject;
 import org.hl7.fhir.dstu3.model.CarePlan;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
@@ -21,10 +23,15 @@ import org.hl7.fhir.dstu3.model.Narrative;
 import org.hl7.fhir.dstu3.model.PractitionerRole;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
+import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.DocumentBuilderUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -40,8 +47,11 @@ public class CompositionMapper {
     private static final String SNOMED_CODE = "371531000";
     private static final String SNOMED_CODE_DISPLAY = "Report of clinical encounter (record artifact)";
     private static final String COMPOSITION_TITLE = "111 Report";
+    private static final String TAG_END = ">";
+    private static final String TAG_START = "<";
     private final NodeUtil nodeUtil;
     private final ResourceUtil resourceUtil;
+    private final XmlUtils xmlUtils;
 
     public Composition mapComposition(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter, List<CarePlan> carePlans,
         List<QuestionnaireResponse> questionnaireResponseList, ReferralRequest referralRequest, List<PractitionerRole> practitionerRoles) {
@@ -119,14 +129,16 @@ public class CompositionMapper {
         if (sectionComponent5.isSetTitle()) {
             sectionComponent.setTitle(nodeUtil.getAllText(sectionComponent5.getTitle().getDomNode()));
         }
-        Narrative narrative = new Narrative();
-        narrative.setStatus(GENERATED);
-        String divText = sectionComponent5.getText().xmlText();
-        XhtmlNode xhtmlNode = new XhtmlNode();
-        xhtmlNode.setNodeType(Document);
-        xhtmlNode.addText(divText);
-        narrative.setDiv(xhtmlNode);
-        sectionComponent.setText(narrative);
+        String content = extractSectionText(sectionComponent5);
+        if (StringUtils.isNotEmpty(content)) {
+            Narrative narrative = new Narrative();
+            narrative.setStatus(GENERATED);
+            XhtmlNode xhtmlNode = new XhtmlNode();
+            xhtmlNode.setNodeType(NodeType.Document);
+            xhtmlNode.addText(content);
+            narrative.setDiv(xhtmlNode);
+            sectionComponent.setText(narrative);
+        }
 
         return sectionComponent;
     }
@@ -149,6 +161,18 @@ public class CompositionMapper {
             sectionComponent.addEntry(resourceUtil.createReference(questionnaireResponse));
             sectionComponent.setTitle(questionnaireResponseTitle);
             composition.addSection(sectionComponent);
+        }
+    }
+
+    @SneakyThrows
+    private String extractSectionText(XmlObject section) {
+        Document document = DocumentBuilderUtil.parseDocument(xmlUtils.serialize(section.getDomNode()));
+        String textElement = xmlUtils.serialize(xmlUtils.getSingleNode(document, "//text"));
+        if (StringUtils.isNotEmpty(textElement) && textElement.indexOf(TAG_END) < textElement.lastIndexOf(TAG_START)) {
+            String textContent = textElement.substring(textElement.indexOf(TAG_END) + 1, textElement.lastIndexOf(TAG_START));
+            return textContent.trim();
+        } else {
+            return EMPTY;
         }
     }
 }
