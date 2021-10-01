@@ -19,7 +19,7 @@ Each release has its own folder, use the scripts for specific release
 
 ### Start it up
 
-`integration-adaptor-111/test-scripts/0.10.0$ ./run.sh`
+`integration-adaptor-111/test-scripts/0.11.0$ ./run.sh`
 
 This will build the application container locally and start it along with ActiveMQ
 The services will listen on following ports
