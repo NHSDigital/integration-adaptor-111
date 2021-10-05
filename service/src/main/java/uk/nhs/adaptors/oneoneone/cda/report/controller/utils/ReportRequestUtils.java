@@ -11,8 +11,6 @@ import java.util.stream.IntStream;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlTokenSource;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -65,7 +63,6 @@ public class ReportRequestUtils {
         return getNodes(nodeListsList);
     }
 
-    @Nullable
     private static List<Node> getNodes(List<NodeList> nodeListList) {
         return nodeListList.stream()
             .map(nodeList -> getNodeListItem(nodeList))
@@ -74,7 +71,6 @@ public class ReportRequestUtils {
             .collect(Collectors.toList());
     }
 
-    @NotNull
     private static List<Node> getNodeListItem(NodeList nodeList) {
         return IntStream.range(0, nodeList.getLength())
             .mapToObj(i -> nodeList.item(i)).collect(Collectors.toList());
