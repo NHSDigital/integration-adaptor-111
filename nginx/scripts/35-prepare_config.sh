@@ -3,6 +3,9 @@
 rm -f /etc/nginx/conf.d/default.conf
 # Get the CN from certificate file:
 CERTS_DIR=/etc/ssl
+
+sed -i 's/CipherString = DEFAULT@SECLEVEL=2/CipherString = DEFAULT@SECLEVEL=0/g' "${CERTS_DIR}/openssl.cnf"
+
 SERVER_SSL_CN=`openssl x509 -noout -in ${CERTS_DIR}/server_public.crt -subject | awk -F= '{print $NF}' | sed -e 's/^[ \t]*//'`
 
 # Check if the server ssl has expired - if so, the page will always return 403
