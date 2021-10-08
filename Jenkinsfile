@@ -88,7 +88,7 @@ pipeline {
               stage('Deploy using Terraform') {
                 steps {
                   script {
-                    String tfCodeBranch  = "develop"
+                    String tfCodeBranch  = "NIAD-1765-fix-111-deployment"
                     String tfCodeRepo    = "https://github.com/nhsconnect/integration-adaptors"
                     String tfRegion      = TF_STATE_BUCKET_REGION
 
