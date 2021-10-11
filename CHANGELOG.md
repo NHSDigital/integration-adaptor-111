@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [1.0.0] - 2021-10-11
+- NGINX support for SHA-1 certificates
 ## [0.11.0] - 2021-10-01
 - Simplified mapping of `component/section/text` to `Composition.section.text.div` - preserving original content as escaped XML embedded in `div`
 ## [0.10.0] - 2021-09-21
