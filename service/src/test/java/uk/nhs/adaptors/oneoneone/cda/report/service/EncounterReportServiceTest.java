@@ -3,15 +3,19 @@ package uk.nhs.adaptors.oneoneone.cda.report.service;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 
+import org.apache.qpid.jms.JmsQueue;
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
@@ -19,9 +23,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
 import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
-import javax.jms.JMSException;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+import javax.jms.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -46,6 +48,9 @@ public class EncounterReportServiceTest {
     private AmqpProperties amqpProperties;
 
     @Mock
+    private Destination destination;
+
+    @Mock
     private JmsTemplate jmsTemplate;
 
     @Mock
@@ -56,11 +61,6 @@ public class EncounterReportServiceTest {
 
     @Mock
     private TextMessage textMessage;
-
-    @BeforeEach
-    public void setUp() {
-        when(amqpProperties.getQueueName()).thenReturn(QUEUE_NAME);
-    }
 
     @Test
     public void shouldTransformAndPopulateToGP() throws JMSException, XmlException {
@@ -78,11 +78,11 @@ public class EncounterReportServiceTest {
         Session session = mock(Session.class);
         when(session.createTextMessage(any())).thenReturn(textMessage);
 
-
         encounterReportService.transformAndPopulateToGP(clinicalDoc, MESSAGE_ID, header);
 
         ArgumentCaptor<MessageCreator> argumentCaptor = ArgumentCaptor.forClass(MessageCreator.class);
-        verify(jmsTemplate).send(eq(QUEUE_NAME), argumentCaptor.capture());
+
+        verify(jmsTemplate).send(any(Destination.class), argumentCaptor.capture());
         argumentCaptor.getValue().createMessage(session);
         verify(session).createTextMessage(ENCOUNTER_REPORT_MAPPING);
     }
