@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.jms.Destination;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,7 +31,11 @@ public class IntegrationTestsExtension implements BeforeAllCallback, BeforeEachC
     public void beforeEach(ExtensionContext context) {
         var applicationContext = SpringExtension.getApplicationContext(context);
 
+        var destination = applicationContext.getBean(Destination.class);
+
         var jmsTemplate = applicationContext.getBean(JmsTemplate.class);
+
+        jmsTemplate.setDefaultDestination(destination);
 
         var queueName = Objects.requireNonNull(
             applicationContext.getEnvironment().getProperty("amqp.queueName"));
