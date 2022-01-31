@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Stream;
 
+import javax.jms.Destination;
 import javax.jms.IllegalStateException;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -131,7 +132,7 @@ public class ReportControllerIT {
     private JmsTemplate jmsTemplate;
 
     @Autowired
-    private AmqpProperties amqpProperties;
+    private Destination destination;
 
     @Autowired
     private ResponseParserUtil responseParserUtil;
@@ -256,7 +257,7 @@ public class ReportControllerIT {
         assertThat(responseElementsMap.get(ACTION)).isEqualTo(EXPECTED_ACTION);
         assertThat(responseElementsMap.get(BODY)).isEqualTo(String.format(EXPECTED_BODY, messageIdValue));
 
-        Message jmsMessage = jmsTemplate.receive(amqpProperties.getQueueName());
+        Message jmsMessage = jmsTemplate.receive();
         if (jmsMessage == null) {
             throw new IllegalStateException("Message must not be null");
         }
