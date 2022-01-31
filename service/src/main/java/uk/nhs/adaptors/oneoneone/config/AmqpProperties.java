@@ -15,4 +15,6 @@ public class AmqpProperties {
     private String username;
     private String password;
     private String queueName;
+    private String protocol;
+    private int port;
 }
