@@ -17,4 +17,5 @@ public class AmqpProperties {
     private String queueName;
     private String protocol;
     private int port;
+    private boolean sslEnabled;
 }
