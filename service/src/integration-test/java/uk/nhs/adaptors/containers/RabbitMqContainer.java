@@ -28,5 +28,6 @@ public final class RabbitMqContainer extends GenericContainer<RabbitMqContainer>
         System.setProperty("PEM111_AMQP_PORT", String.valueOf(getMappedPort(ACTIVEMQ_PORT)));
         System.setProperty("PEM111_AMQP_PROTOCOL", "0-9-1");
         System.setProperty("PEM111_AMQP_SSL_ENABLED", "false");
+        System.setProperty("PEM111_AMQP_EXCHANGE", "");
     }
 }
