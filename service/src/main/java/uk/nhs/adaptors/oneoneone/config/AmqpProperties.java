@@ -18,4 +18,5 @@ public class AmqpProperties {
     private String protocol;
     private int port;
     private boolean sslEnabled;
+    private String exchange;
 }
