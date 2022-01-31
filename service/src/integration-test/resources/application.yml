@@ -4,6 +4,9 @@ amqp:
   exchange: amq.direct
   username: ${PEM111_AMQP_USERNAME:}
   password: ${PEM111_AMQP_PASSWORD:}
+  protocol: ${PEM111_AMQP_PROTOCOL:1.0}
+  port: ${PEM111_AMQP_PORT:5672}
+  sslEnabled: ${PEM111_AMQP_SSL_ENABLED:false}
 
 soap:
   validationEnabled: ${PEM111_SOAP_VALIDATION_ENABLED:false}
