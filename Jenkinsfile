@@ -56,8 +56,8 @@ pipeline {
                 stage('Build Docker Images') {
                     steps {
                         script {
-                            if (sh(label: 'Running 111 docker build', script: 'docker build -t ${DOCKER_IMAGE} -f Dockerfile.111 .', returnStatus: true) != 0) {error("Failed to build 111 Docker image")}
-                            if (sh(label: 'Running nginx docker buid', script: 'docker build -t ${DOCKER_NGINX_IMAGE} -f Dockerfile.nginx .', returnStatus: true) != 0) {error("Failed to build Nginx Docker image")}
+                            if (sh(label: 'Running 111 adaptor docker build', script: 'docker build -f docker/service/Dockerfile -t ${DOCKER_IMAGE} .', returnStatus: true) != 0) {error("Failed to build 111 adaptor Docker image")}
+                            if (sh(label: 'Running 111 nginx docker build', script: 'docker build -f docker/nginx/Dockerfile -t ${DOCKER_NGINX_IMAGE} .', returnStatus: true) != 0) {error("Failed to build 111 nginx Docker image")}
                         }
                     }
                 }
