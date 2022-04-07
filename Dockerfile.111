@@ -1,9 +1,9 @@
-FROM gradle:jdk14 AS build
+FROM gradle:jdk17 AS build
 COPY --chown=gradle:gradle ./service /home/gradle/service
 WORKDIR /home/gradle/service
 RUN ./gradlew test --build-cache bootJar
 
-FROM adoptopenjdk/openjdk14:jre
+FROM openjdk:17
 
 EXPOSE 8080
 

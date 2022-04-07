@@ -104,7 +104,7 @@ Even though the adaptor removes this complexity, the FHIR field mappings have be
 ## Running the Adaptor
 
 ### Pre requisites for running the Adaptor:
-1. JDK 14
+1. JDK 17
 2. Docker
 
 ### How to run service:
