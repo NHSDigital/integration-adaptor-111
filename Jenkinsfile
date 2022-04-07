@@ -79,7 +79,9 @@ pipeline {
         }
         stage('Deploy') {
             when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+                //Stage disabled until NIAD-2098 is fixed
+                //expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+                expression { false }
             }
             options {
               lock("${tfProject}-${tfEnvironment}-${tfComponent}")
