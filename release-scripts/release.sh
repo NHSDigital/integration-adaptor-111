@@ -2,11 +2,11 @@
 
 set -e
 
-export RELEASE_VERSION=1.0.0
+export RELEASE_VERSION=1.0.1
 cd ..
 
-docker build -t local/111:${RELEASE_VERSION} -f Dockerfile.111 .
-docker build -t local/111-nginx:${RELEASE_VERSION} -f Dockerfile.nginx .
+docker build -t local/111:${RELEASE_VERSION} -f docker/service/Dockerfile .
+docker build -t local/111-nginx:${RELEASE_VERSION} -f docker/nginx/Dockerfile .
 
 docker tag local/111:${RELEASE_VERSION} nhsdev/nia-111-adaptor:${RELEASE_VERSION}
 docker tag local/111-nginx:${RELEASE_VERSION} nhsdev/nia-111-nginx-adaptor:${RELEASE_VERSION}

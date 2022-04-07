@@ -47,17 +47,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.xml.sax.SAXException;
-
-import com.github.tomakehurst.wiremock.WireMockServer;
 
 import junitparams.JUnitParamsRunner;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import uk.nhs.adaptors.WireMockInitializer;
-import uk.nhs.adaptors.containers.IntegrationTestsExtension;
 import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
 import uk.nhs.adaptors.oneoneone.config.ItkProperties;
 import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
@@ -65,12 +60,11 @@ import uk.nhs.adaptors.oneoneone.utils.ResponseElement;
 import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-@ExtendWith({SpringExtension.class, IntegrationTestsExtension.class})
+@ExtendWith({SpringExtension.class})
 @AutoConfigureMockMvc
 @DirtiesContext
 @Slf4j
 @RunWith(JUnitParamsRunner.class)
-@ContextConfiguration(initializers = WireMockInitializer.class)
 public class ReportControllerIT {
 
     private static final String APPLICATION_XML_UTF_8 = APPLICATION_XML_VALUE + ";charset=UTF-8";
@@ -136,8 +130,8 @@ public class ReportControllerIT {
     @Autowired
     private ResponseParserUtil responseParserUtil;
 
-    @Autowired
-    private WireMockServer wireMockServer;
+//    @Autowired
+//    private WireMockServer wireMockServer;
 
     @Autowired
     private ItkProperties itkProperties;

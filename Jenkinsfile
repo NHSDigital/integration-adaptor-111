@@ -28,26 +28,26 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    if (sh(label: 'Build image for tests', script: 'docker build -t local/111-tests:${BUILD_TAG} -f Dockerfile.tests .', returnStatus: true) != 0) {error("Failed to build docker image for tests")}
-                    if (sh(label: 'Running docker tests container', script: 'docker run -v /var/run/docker.sock:/var/run/docker.sock --name 111-tests-${BUILD_TAG} local/111-tests:${BUILD_TAG} ./gradlew check -i --continue --rerun-tasks', returnStatus: true) != 0) {error("Failed to run docker tests container")}
+                    sh '''
+                        docker network create 111network || true
+                        docker-compose -f docker/docker-compose.yml -f docker/docker-compose-checks.yml build integration-adaptor-111 activemq wiremock
+                        docker-compose -f docker/docker-compose.yml -f docker/docker-compose-checks.yml up --exit-code-from integration-adaptor-111 integration-adaptor-111
+                    '''
                 }
             }
-            post {
-                always {
-                    sh label: 'Create logs and reports directories', script: 'mkdir -p logs build/reports'
-                    sh label: 'Copy 111-tests container logs', script: 'docker logs 111-tests-${BUILD_TAG} > logs/111-tests.log'
-                    archiveArtifacts artifacts: 'logs/*.log', fingerprint: true
-                    sh label: 'Copy 111-tests container reports', script: 'docker cp 111-tests-${BUILD_TAG}:/home/gradle/service/build/reports/. ./build/reports'
-                    archiveArtifacts artifacts: 'build/reports/**/*.*', fingerprint: true
-                    sh label: 'Stop docker container', script: 'docker stop 111-tests-${BUILD_TAG}'
-                    sh label: 'Remove docker container', script: 'docker rm 111-tests-${BUILD_TAG}'
-                    recordIssues(
-                        enabledForFailure: true,
-                        tools: [
-                            checkStyle(pattern: 'build/reports/checkstyle/*.xml'),
-                            spotBugs(pattern: 'build/reports/spotbugs/*.xml')
-                        ]
-                    )
+                post {
+                    always {
+                        sh "docker cp integration-adaptor-111_tests:/home/gradle/service/build integration-adaptor-111-build"
+                        archiveArtifacts artifacts: 'integration-adaptor-111-build/reports/**/*.*', fingerprint: true
+                        junit '**/integration-adaptor-111-build/test-results/**/*.xml'
+                        recordIssues(
+                            enabledForFailure: true,
+                            tools: [
+                                checkStyle(pattern: '**/reports/checkstyle/*.xml'),
+                                spotBugs(pattern: '**/reports/spotbugs/*.xml')
+                            ]
+                        )
+                        sh label: 'Remove exited containers', script: 'docker system prune --force'
                 }
             }
         }
@@ -56,8 +56,8 @@ pipeline {
                 stage('Build Docker Images') {
                     steps {
                         script {
-                            if (sh(label: 'Running 111 docker build', script: 'docker build -t ${DOCKER_IMAGE} -f Dockerfile.111 .', returnStatus: true) != 0) {error("Failed to build 111 Docker image")}
-                            if (sh(label: 'Running nginx docker buid', script: 'docker build -t ${DOCKER_NGINX_IMAGE} -f Dockerfile.nginx .', returnStatus: true) != 0) {error("Failed to build Nginx Docker image")}
+                            if (sh(label: 'Running 111 adaptor docker build', script: 'docker build -f docker/service/Dockerfile -t ${DOCKER_IMAGE} .', returnStatus: true) != 0) {error("Failed to build 111 adaptor Docker image")}
+                            if (sh(label: 'Running 111 nginx docker build', script: 'docker build -f docker/nginx/Dockerfile -t ${DOCKER_NGINX_IMAGE} .', returnStatus: true) != 0) {error("Failed to build 111 nginx Docker image")}
                         }
                     }
                 }
@@ -79,7 +79,9 @@ pipeline {
         }
         stage('Deploy') {
             when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+                //Stage disabled until NIAD-2098 is fixed
+                //expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+                expression { false }
             }
             options {
               lock("${tfProject}-${tfEnvironment}-${tfComponent}")
