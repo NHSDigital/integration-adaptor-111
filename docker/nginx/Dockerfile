@@ -1,4 +1,4 @@
-FROM nginx:1.21.3
+FROM nginx:1.21.6
 
 RUN apt-get update && apt-get install -y ruby wget
 COPY nginx/conf/default-ssl.conf.erb /etc/nginx/conf.d/default-ssl.conf.erb
