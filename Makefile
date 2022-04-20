@@ -5,19 +5,16 @@ build: build-adapter build-tests build-nginx
 build-run: build run-all
 
 build-nginx:
-	sh -c 'docker build -t local/111-nginx -f Dockerfile.nginx .'
+	sh -c 'docker build -t local/111-nginx -f docker/nginx/Dockerfile .'
 
 build-adapter:
-	sh -c 'docker build -t local/111-adapter -f Dockerfile.111 .'
-
-build-tests:
-	sh -c 'docker build -t local/111-tests -f Dockerfile.tests .'
+	sh -c 'docker build -t local/111-adapter -f docker/service/Dockerfile .'
 
 build-crl:
-	sh -c 'cp nginx/certs/nhs_certs/test_111_3.crl nginx/crl_server_content/revocation_list.crl && docker build -t local/111-crl -f Dockerfile.crl . && rm nginx/crl_server_content/revocation_list.crl'
+	sh -c 'cp nginx/certs/nhs_certs/test_111_3.crl nginx/crl_server_content/revocation_list.crl && docker build -t local/111-crl -f docker/crl/Dockerfile . && rm nginx/crl_server_content/revocation_list.crl'
 
 run-all:
-	sh -c '. ./nginx/scripts/export_cert_values.sh && docker-compose -f docker-compose.yml up -d nginx'
+	sh -c '. ./nginx/scripts/export_cert_values.sh && docker-compose -f ./docker/docker-compose.yml up -d nginx'
 
 stop-all:
 	sh -c 'docker stop $$(docker ps -a -q)'
@@ -51,7 +48,7 @@ run-curl6:
 	sh -c 'curl --cert nginx/certs/client_pkcs.p12 --cert-type p12 --pass password --cacert nginx/certs/ca.cer --request POST https://test02.oneoneone.nhs.uk:8443/report --resolve test02.oneoneone.nhs.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/primary-emergency-itk-request.xml" -H "Content-Type: application/xml"'
 
 run-curl61:
-	sh -c 'curl --cert nginx/certs/client_pkcs.p12 --cert-type p12 --pass password --cacert nginx/certs/ca.cer --request POST https://test02.oneoneone.nhs.uk:8443/auth_test --resolve test02.oneoneone.nhs.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/primary-emergency-itk-request.xml" -H "Content-Type: application/xml"'
+	sh -c 'curl --cert nginx/certs/client_pkcs.p12 --cert-type p12 --pass password --cacert nginx/certs/ca.cer --request POST https://test02.oneoneone.nhs.uk:8443/auth_test --resolve test02.oneoneone.nhs.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/primary-emergency-itk-request.xml" -H "Content-Type: application/xml" -k'
 
 run-curl7:
 	sh -c 'curl --cert nginx/certs/nhs_certs/test05.pkcs12 --cert-type p12 --pass password --cacert nginx/certs/nhs_certs/test05_cert_chain.txt --request POST https://test02.oneoneone.nhs.uk:8443/report --resolve test02.oneoneone.nhs.uk:8443:127.0.0.1 --data "@service/src/integration-test/resources/xml/primary-emergency-itk-request.xml" -H "Content-Type: application/xml"'
