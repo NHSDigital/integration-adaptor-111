@@ -24,7 +24,7 @@ The 111 application by itself does not offer TLS termination. If there is a need
 
   > `openssl x509 -req -in server.csr -CA ca.cer -CAkey ca.key -set_serial 100 -extensions server -days 1460 -outform PEM -out server_public.cer -sha256`
 
-5. Client the client private key
+5. Create the client private key
 
   > `openssl genrsa -out client_private.key 4096`
 
