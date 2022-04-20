@@ -1,11 +1,11 @@
-FROM gradle:jdk17 AS build
+FROM gradle:jdk17-alpine AS build
 COPY --chown=gradle:gradle service /home/gradle/service
 
 WORKDIR /home/gradle/service
 
 RUN ./gradlew --build-cache bootJar
 
-FROM openjdk:17
+FROM openjdk:17-jdk-slim
 
 EXPOSE 8081
 
