@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.comparator.ResourceDateComparator;
+import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -62,7 +63,7 @@ public class ListMapper {
             .setSourceTarget(encounter.getSubjectTarget())
             .setEncounter(resourceUtil.createReference(encounter))
             .setEncounterTarget(encounter)
-            .setDate(new Date())
+            .setDateElement(DateUtil.parse(clinicalDocument.getEffectiveTime().getValue()))
             .setSource(deviceRef)
             .setOrderedBy(createOrderByConcept());
 

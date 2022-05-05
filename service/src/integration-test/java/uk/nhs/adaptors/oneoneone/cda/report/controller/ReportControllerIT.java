@@ -130,9 +130,6 @@ public class ReportControllerIT {
     @Autowired
     private ResponseParserUtil responseParserUtil;
 
-//    @Autowired
-//    private WireMockServer wireMockServer;
-
     @Autowired
     private ItkProperties itkProperties;
 

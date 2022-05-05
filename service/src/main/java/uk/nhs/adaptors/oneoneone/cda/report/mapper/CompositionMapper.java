@@ -32,6 +32,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.DocumentBuilderUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
+import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -69,7 +70,7 @@ public class CompositionMapper {
             .setStatus(FINAL)
             .setEncounter(resourceUtil.createReference(encounter))
             .setSubject(encounter.getSubject())
-            .setDate(new Date())
+            .setDateElement(DateUtil.parse(clinicalDocument.getEffectiveTime().getValue()))
             .setIdentifier(docIdentifier);
 
         if (clinicalDocument.getConfidentialityCode().isSetCode()) {
