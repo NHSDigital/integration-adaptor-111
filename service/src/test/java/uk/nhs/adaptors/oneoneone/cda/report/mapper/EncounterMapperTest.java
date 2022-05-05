@@ -1,9 +1,9 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.util.Lists.emptyList;
 import static org.assertj.core.util.Lists.newArrayList;
 import static org.hl7.fhir.dstu3.model.Encounter.EncounterStatus.FINISHED;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,6 +40,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.ED;
 import uk.nhs.connect.iucds.cda.ucr.II;
+import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component2;
@@ -55,7 +56,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RecordTarget;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
-import uk.nhs.connect.iucds.cda.ucr.TS;
 
 @ExtendWith(MockitoExtension.class)
 public class EncounterMapperTest {
@@ -146,7 +146,7 @@ public class EncounterMapperTest {
         mockEncompassingEncounter();
         mockParticipant(clinicalDocument);
         mockLocation();
-        mockPeriod(clinicalDocument);
+        mockPeriod();
         mockServiceProvider();
         mockAppointment();
         mockSubject();
@@ -155,10 +155,12 @@ public class EncounterMapperTest {
     }
 
     private void mockEncompassingEncounter() {
+        IVLTS effectiveTime = mock(IVLTS.class);
         when(component1.getEncompassingEncounter()).thenReturn(encompassingEncounter);
         when(identifier.getRoot()).thenReturn(ID_ROOT);
         when(identifier.getExtension()).thenReturn(ID_EXTENSION);
         when(encompassingEncounter.getIdArray()).thenReturn(new II[] {identifier});
+        when(encompassingEncounter.getEffectiveTime()).thenReturn(effectiveTime);
     }
 
     private void mockClinicalDocument(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
@@ -179,11 +181,8 @@ public class EncounterMapperTest {
         when(locationMapper.mapOrganizationToLocationComponent(any())).thenReturn(locationComponent);
     }
 
-    private void mockPeriod(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        TS effectiveTime = mock(TS.class);
-
-        when(clinicalDocument.getEffectiveTime()).thenReturn(effectiveTime);
-        when(periodMapper.mapPeriod(ArgumentMatchers.isA(TS.class))).thenReturn(period);
+    private void mockPeriod() {
+        when(periodMapper.mapPeriod(ArgumentMatchers.isA(IVLTS.class))).thenReturn(period);
     }
 
     private void mockServiceProvider() {

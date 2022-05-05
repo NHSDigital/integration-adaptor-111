@@ -143,7 +143,7 @@ public class EncounterReportBundleService {
 
     private void addPractitionerRoles(Bundle bundle, List<PractitionerRole> authorPractitionerRoles,
         Optional<PractitionerRole> responsibleParty) {
-        authorPractitionerRoles.stream()
+        authorPractitionerRoles
             .forEach(it -> {
                 addEntry(bundle, it);
                 addEntry(bundle, it.getOrganizationTarget());

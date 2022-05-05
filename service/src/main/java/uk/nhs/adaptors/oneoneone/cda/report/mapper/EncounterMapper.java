@@ -33,6 +33,7 @@ import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.service.AppointmentService;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
+import uk.nhs.connect.iucds.cda.ucr.IVLTS;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component3;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Encounter;
@@ -130,7 +131,7 @@ public class EncounterMapper {
     }
 
     private Period getPeriod(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
-        TS effectiveTime = clinicalDocument.getEffectiveTime();
+        IVLTS effectiveTime = clinicalDocument.getComponentOf().getEncompassingEncounter().getEffectiveTime();
 
         return periodMapper.mapPeriod(effectiveTime);
     }

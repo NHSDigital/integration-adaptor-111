@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hl7.fhir.dstu3.model.IdType;
@@ -23,6 +24,7 @@ import uk.nhs.connect.iucds.cda.ucr.CE;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Component1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01EncompassingEncounter;
+import uk.nhs.connect.iucds.cda.ucr.TS;
 
 @ExtendWith(MockitoExtension.class)
 public class ProcedureRequestMapperTest {
@@ -31,7 +33,8 @@ public class ProcedureRequestMapperTest {
     private static final String CODESYSTEM = "2.16.840.1.113883.2.1.3.2.4.17.325";
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
 
-    private List<Reference> reasonReferenceList = new ArrayList<>();
+    private final List<Reference> reasonReferenceList = new ArrayList<>();
+    private final Period occurrence = new Period().setStart(new Date());
 
     @InjectMocks
     private ProcedureRequestMapper procedureRequestMapper;
@@ -50,16 +53,19 @@ public class ProcedureRequestMapperTest {
     @Mock
     private Reference reasonReference;
     @Mock
-    private Period occurence;
-    @Mock
     private ResourceUtil resourceUtil;
+    @Mock
+    private PeriodMapper periodMapper;
 
     @BeforeEach
     public void setUp() {
+        TS effectiveTime = TS.Factory.newInstance();
+        effectiveTime.setValue("20220304");
         reasonReferenceList.add(reasonReference);
 
         when(clinicalDocument1.isSetComponentOf()).thenReturn(true);
         when(clinicalDocument1.getComponentOf()).thenReturn(component1);
+        when(clinicalDocument1.getEffectiveTime()).thenReturn(effectiveTime);
         when(component1.getEncompassingEncounter()).thenReturn(encompassingEncounter);
         when(encompassingEncounter.isSetDischargeDispositionCode()).thenReturn(true);
         when(encompassingEncounter.getDischargeDispositionCode()).thenReturn(ce);
@@ -69,9 +75,9 @@ public class ProcedureRequestMapperTest {
         when(ce.getCode()).thenReturn(CODE);
         when(ce.isSetCodeSystem()).thenReturn(true);
         when(ce.getCodeSystem()).thenReturn(CODESYSTEM);
-        when(referralRequest.getOccurrence()).thenReturn(occurence);
         when(referralRequest.getReasonReference()).thenReturn(reasonReferenceList);
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+        when(periodMapper.mapPeriod(effectiveTime)).thenReturn(occurrence);
     }
 
     @Test
@@ -87,7 +93,7 @@ public class ProcedureRequestMapperTest {
         assertThat(procedureRequest.getCode().getCoding().get(0).getSystem()).isEqualTo(CODESYSTEM);
         assertThat(procedureRequest.getSubject()).isEqualTo(patient);
         assertThat(procedureRequest.getDoNotPerform()).isEqualTo(false);
-        assertThat(procedureRequest.getOccurrence()).isEqualTo(occurence);
+        assertThat(procedureRequest.getOccurrence()).isEqualTo(occurrence);
         assertThat(procedureRequest.getReasonReference()).isEqualTo(reasonReferenceList);
         assertThat(procedureRequest.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
     }
