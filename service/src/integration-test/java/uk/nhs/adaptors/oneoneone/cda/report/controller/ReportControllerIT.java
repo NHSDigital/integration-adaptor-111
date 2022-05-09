@@ -54,7 +54,6 @@ import junitparams.JUnitParamsRunner;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
-import uk.nhs.adaptors.oneoneone.config.ItkProperties;
 import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
 import uk.nhs.adaptors.oneoneone.utils.ResponseElement;
 import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
@@ -130,9 +129,6 @@ public class ReportControllerIT {
     @Autowired
     private ResponseParserUtil responseParserUtil;
 
-    @Autowired
-    private ItkProperties itkProperties;
-
     private static Stream<Arguments> validItkReportAndExpectedJsonValues() {
         return Stream.of(
             Arguments.of(
@@ -199,6 +195,11 @@ public class ReportControllerIT {
                 "/xml/repeat-caller-exampleV1-itk-request.xml",
                 "/json/repeat-caller-exampleV1-fhir-result.json",
                 "A12F527F-3808-44BC-9272-8C8A92884A37"
+            ),
+            Arguments.of(
+                "/xml/tpp-ooh-T6-skillset.xml",
+                "/json/tpp-ooh-T6-skillset.json",
+                "2AD60661-A532-11EC-B262-B908B3B2B1B6"
             )
         );
     }

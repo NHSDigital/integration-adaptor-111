@@ -29,6 +29,7 @@ import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.Pa
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 
@@ -37,6 +38,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 public class QuestionnaireMapper {
     private static final String NOT_APPLICABLE = "N/A";
     private final ResourceUtil resourceUtil;
+    private final XmlUtils xmlUtils;
 
     public Questionnaire mapQuestionnaire(PathwaysCase pathwaysCase, TriageLine triageLine) {
         Questionnaire questionnaire = new Questionnaire();
@@ -80,14 +82,19 @@ public class QuestionnaireMapper {
         if (user.getName() != null) {
             value += String.format("User name: '%s' ", user.getName());
         }
-        if (user.getSkillSet() != null) {
-            value += String.format("User skill set: '%s'", user.getSkillSet());
+        String skillSet = extractUserSkillSet(user);
+        if (skillSet != null) {
+            value += String.format("User skill set: '%s'", skillSet);
         }
         if (value.isBlank()) {
             return NOT_APPLICABLE;
         }
 
         return value;
+    }
+
+    private String extractUserSkillSet(User user) {
+        return xmlUtils.getSingleNodeAsString(user.xgetSkillSet().getDomNode(), ".");
     }
 
     private Date getLatestDate(PathwaysCase pathwaysCase) {
