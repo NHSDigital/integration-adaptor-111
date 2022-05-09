@@ -33,6 +33,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.w3c.dom.Node;
 
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
+import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
@@ -46,6 +47,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01RelatedDocument1;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01StructuredBody;
 import uk.nhs.connect.iucds.cda.ucr.ST;
+import uk.nhs.connect.iucds.cda.ucr.TS;
 
 @ExtendWith(MockitoExtension.class)
 public class CompositionMapperTest {
@@ -54,8 +56,10 @@ public class CompositionMapperTest {
     private static final String ITK_SECTION_TEXT = readResourceAsString("/xml/itkSectionText.xml");
     private static final String COMPOSITION_SECTION_DIV = readResourceAsString("/xml/compositionSectionDiv.xml");
     private static final String NESTED_SECTION_TITLE = "THE TITLE";
+    private static final String EFFECTIVE_DATE = "20220505";
     private final CarePlan carePlan = new CarePlan();
     private final List<CarePlan> carePlans = Collections.singletonList(carePlan);
+    private final TS effectiveTime = TS.Factory.newInstance();
 
     @InjectMocks
     private CompositionMapper compositionMapper;
@@ -89,6 +93,7 @@ public class CompositionMapperTest {
 
     @BeforeEach
     public void setUp() {
+        effectiveTime.setValue(EFFECTIVE_DATE);
         questionnaireResponseList = new ArrayList<>();
         questionnaireResponseList.add(questionnaireResponse);
         POCDMT000002UK01RelatedDocument1[] relatedDocsArray = {mock(POCDMT000002UK01RelatedDocument1.class)};
@@ -97,6 +102,7 @@ public class CompositionMapperTest {
         when(relatedDocument1.getParentDocument()).thenReturn(parentDocument1);
         when(parentDocument1.getIdArray(0)).thenReturn(ii);
         when(clinicalDocument.getSetId()).thenReturn(ii);
+        when(clinicalDocument.getEffectiveTime()).thenReturn(effectiveTime);
         when(ii.getRoot()).thenReturn("411910CF-1A76-4330-98FE-C345DDEE5553");
         when(clinicalDocument.getConfidentialityCode()).thenReturn(ce);
         when(ce.getCode()).thenReturn("V");
@@ -164,5 +170,6 @@ public class CompositionMapperTest {
         assertThat(composition.getSection().get(3).getEntry().get(0).getResource()).isEqualTo(questionnaireResponse);
         assertThat(composition.getSection().get(3).getTitle()).isEqualTo(questionnaireResponseTitle);
         assertThat(composition.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
+        assertThat(composition.getDateElement().getValue()).isEqualTo(DateUtil.parse(effectiveTime.getValue()).getValue());
     }
 }

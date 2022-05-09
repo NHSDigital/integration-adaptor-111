@@ -114,7 +114,8 @@ public class ReportControllerIT {
         "entry[*].resource.subject.reference",
         "entry[*].resource.supportingInfo[*].reference",
         "entry[*].resource.practitioner.reference",
-        "entry[*].resource.organization.reference");
+        "entry[*].resource.organization.reference",
+        "entry[0].response.lastModified");
 
     @Autowired
     private FhirJsonValidator validator;
@@ -129,9 +130,6 @@ public class ReportControllerIT {
 
     @Autowired
     private ResponseParserUtil responseParserUtil;
-
-//    @Autowired
-//    private WireMockServer wireMockServer;
 
     @Autowired
     private ItkProperties itkProperties;

@@ -6,7 +6,6 @@ import static org.hl7.fhir.dstu3.model.Composition.CompositionStatus.FINAL;
 import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +31,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.DocumentBuilderUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
+import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -69,7 +69,7 @@ public class CompositionMapper {
             .setStatus(FINAL)
             .setEncounter(resourceUtil.createReference(encounter))
             .setSubject(encounter.getSubject())
-            .setDate(new Date())
+            .setDateElement(DateUtil.parse(clinicalDocument.getEffectiveTime().getValue()))
             .setIdentifier(docIdentifier);
 
         if (clinicalDocument.getConfidentialityCode().isSetCode()) {
