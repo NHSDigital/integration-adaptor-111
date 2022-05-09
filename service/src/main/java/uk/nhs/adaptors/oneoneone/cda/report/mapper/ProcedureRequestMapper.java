@@ -18,6 +18,7 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 public class ProcedureRequestMapper {
 
     private final ResourceUtil resourceUtil;
+    private final PeriodMapper periodMapper;
 
     public ProcedureRequest mapProcedureRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Reference patient,
         ReferralRequest referralRequest) {
@@ -46,7 +47,7 @@ public class ProcedureRequestMapper {
                             .setCode(new CodeableConcept().addCoding(coding))
                             .setSubject(patient)
                             .setDoNotPerform(false)
-                            .setOccurrence(referralRequest.getOccurrence())
+                            .setOccurrence(periodMapper.mapPeriod(clinicalDocument.getEffectiveTime()))
                             .setReasonReference(referralRequest.getReasonReference());
                     }
                 }

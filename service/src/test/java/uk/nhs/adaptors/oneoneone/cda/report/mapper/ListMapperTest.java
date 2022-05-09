@@ -1,5 +1,14 @@
 package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
+import static java.util.Arrays.asList;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hl7.fhir.dstu3.model.ListResource.ListMode.WORKING;
+import static org.hl7.fhir.dstu3.model.ListResource.ListStatus.CURRENT;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HealthcareService;
@@ -16,22 +25,19 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.comparator.ResourceDateComparator;
+import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
-
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hl7.fhir.dstu3.model.ListResource.ListMode.WORKING;
-import static org.hl7.fhir.dstu3.model.ListResource.ListStatus.CURRENT;
-import static org.mockito.Mockito.when;
+import uk.nhs.connect.iucds.cda.ucr.TS;
 
 @ExtendWith(MockitoExtension.class)
 public class ListMapperTest {
 
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
+    private static final String EFFECTIVE_DATE = "20220505";
+
+    private final TS effectiveTime = TS.Factory.newInstance();
 
     @InjectMocks
     private ListMapper listMapper;
@@ -58,6 +64,7 @@ public class ListMapperTest {
 
     @BeforeEach
     public void setUp() {
+        effectiveTime.setValue(EFFECTIVE_DATE);
         HealthcareService healthcareService = new HealthcareService();
         healthcareService.setId("123456");
         QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse();
@@ -66,6 +73,7 @@ public class ListMapperTest {
         when(clinicalDocument.getSetId()).thenReturn(ii);
         when(ii.getRoot()).thenReturn("411910CF-1A76-4330-98FE-C345DDEE5553");
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
+        when(clinicalDocument.getEffectiveTime()).thenReturn(effectiveTime);
     }
 
     @Test
@@ -86,5 +94,6 @@ public class ListMapperTest {
         assertThat(listResource.getEntry().size()).isEqualTo(1);
         assertThat(listResource.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(deviceRef).isEqualTo(listResource.getSource());
+        assertThat(listResource.getDateElement().getValue()).isEqualTo(DateUtil.parse(effectiveTime.getValue()).getValue());
     }
 }

@@ -1,10 +1,15 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
+import static java.time.ZoneOffset.UTC;
+import static java.util.TimeZone.getTimeZone;
 import static java.util.stream.Collectors.toSet;
 
 import static org.hl7.fhir.dstu3.model.Bundle.BundleType.MESSAGE;
 
+import static ca.uhn.fhir.model.api.TemporalPrecisionEnum.MILLI;
+
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +26,7 @@ import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.Group;
 import org.hl7.fhir.dstu3.model.HealthcareService;
 import org.hl7.fhir.dstu3.model.Identifier;
+import org.hl7.fhir.dstu3.model.InstantType;
 import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.MessageHeader;
@@ -79,7 +85,7 @@ public class EncounterReportBundleService {
 
     private static void addEntry(Bundle bundle, Resource resource) {
         bundle.addEntry()
-            .setFullUrl(resource.getIdElement().getValue() == null ? null : "urn:uuid:" + resource.getIdElement().getValue())
+            .setFullUrl(createFullUrl(resource))
             .setResource(resource);
     }
 
@@ -107,7 +113,7 @@ public class EncounterReportBundleService {
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
         RelatedPerson relatedPerson = relatedPersonMapper.createEmergencyContactRelatedPerson(clinicalDocument, encounter);
 
-        addEntry(bundle, messageHeader);
+        addMessageHeader(bundle, messageHeader);
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
@@ -143,7 +149,7 @@ public class EncounterReportBundleService {
 
     private void addPractitionerRoles(Bundle bundle, List<PractitionerRole> authorPractitionerRoles,
         Optional<PractitionerRole> responsibleParty) {
-        authorPractitionerRoles.stream()
+        authorPractitionerRoles
             .forEach(it -> {
                 addEntry(bundle, it);
                 addEntry(bundle, it.getOrganizationTarget());
@@ -158,6 +164,17 @@ public class EncounterReportBundleService {
         Encounter encounter, Device device) {
         Collection<Resource> resourcesCreated = bundle.getEntry().stream().map(it -> it.getResource()).collect(toSet());
         return listMapper.mapList(clinicalDocument, encounter, resourcesCreated, resourceUtil.createReference(device));
+    }
+
+    private void addMessageHeader(Bundle bundle, MessageHeader messageHeader) {
+        Bundle.BundleEntryResponseComponent responseComponent = new Bundle.BundleEntryResponseComponent()
+            .setStatus("success")
+            .setLastModifiedElement(new InstantType(new Date(), MILLI, getTimeZone(UTC)));
+
+        bundle.addEntry()
+            .setFullUrl(createFullUrl(messageHeader))
+            .setResource(messageHeader)
+            .setResponse(responseComponent);
     }
 
     private void addEncounter(Bundle bundle, Encounter encounter) {
@@ -288,5 +305,9 @@ public class EncounterReportBundleService {
         if (relatedPerson != null) {
             addEntry(bundle, relatedPerson);
         }
+    }
+
+    private static String createFullUrl(Resource resource) {
+        return resource.getIdElement().getValue() == null ? null : "urn:uuid:" + resource.getIdElement().getValue();
     }
 }

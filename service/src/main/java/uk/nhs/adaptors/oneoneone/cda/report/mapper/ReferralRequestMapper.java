@@ -6,14 +6,12 @@ import static org.hl7.fhir.dstu3.model.ReferralRequest.ReferralCategory.PLAN;
 import static org.hl7.fhir.dstu3.model.ReferralRequest.ReferralPriority.ROUTINE;
 import static org.hl7.fhir.dstu3.model.ReferralRequest.ReferralRequestStatus.ACTIVE;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.Encounter;
 import org.hl7.fhir.dstu3.model.HealthcareService;
-import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.ReferralRequest;
@@ -30,11 +28,11 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Participant1;
 public class ReferralRequestMapper {
 
     private static final String REFT_TYPE_CODE = "REFT";
-    private static final int SECONDS_IN_HOUR = 60 * 60;
     private static final String AUTHOR_TYPE_CODE = "AUT";
     private final ProcedureRequestMapper procedureRequestMapper;
     private final ResourceUtil resourceUtil;
     private final PractitionerMapper practitionerMapper;
+    private final PeriodMapper periodMapper;
 
     public ReferralRequest mapReferralRequest(POCDMT000002UK01ClinicalDocument1 clinicalDocument, Encounter encounter,
         List<HealthcareService> healthcareServiceList, Reference condition, Reference deviceReference) {
@@ -42,7 +40,6 @@ public class ReferralRequestMapper {
         ReferralRequest referralRequest = new ReferralRequest();
         referralRequest.setIdElement(resourceUtil.newRandomUuid());
 
-        Date now = new Date();
         referralRequest
             .setStatus(ACTIVE)
             .setIntent(PLAN)
@@ -51,9 +48,7 @@ public class ReferralRequestMapper {
             .setSubject(encounter.getSubject())
             .setContextTarget(encounter)
             .setContext(resourceUtil.createReference(encounter))
-            .setOccurrence(new Period()
-                .setStart(now)
-                .setEnd(Date.from(now.toInstant().plusSeconds(SECONDS_IN_HOUR))))
+            .setOccurrence(periodMapper.mapPeriod(clinicalDocument.getEffectiveTime()))
             .setAuthoredOnElement(getAuthoredOn(clinicalDocument))
             .setRequester(new ReferralRequest.ReferralRequestRequesterComponent()
                 .setAgent(deviceReference)

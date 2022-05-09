@@ -6,7 +6,6 @@ import static org.hl7.fhir.dstu3.model.Composition.CompositionStatus.FINAL;
 import static org.hl7.fhir.dstu3.model.Identifier.IdentifierUse.USUAL;
 import static org.hl7.fhir.dstu3.model.Narrative.NarrativeStatus.GENERATED;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
