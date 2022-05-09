@@ -41,7 +41,6 @@ import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Entry;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Informant12;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01PatientRole;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01Section;
-import uk.nhs.connect.iucds.cda.ucr.TS;
 
 @Component
 @AllArgsConstructor

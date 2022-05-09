@@ -5,7 +5,6 @@ import static org.hl7.fhir.dstu3.model.ListResource.ListMode.WORKING;
 import static org.hl7.fhir.dstu3.model.ListResource.ListStatus.CURRENT;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
