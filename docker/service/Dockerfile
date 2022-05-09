@@ -1,4 +1,4 @@
-FROM gradle:jdk17-alpine AS build
+FROM gradle:jdk17 AS build
 COPY --chown=gradle:gradle service /home/gradle/service
 
 WORKDIR /home/gradle/service
