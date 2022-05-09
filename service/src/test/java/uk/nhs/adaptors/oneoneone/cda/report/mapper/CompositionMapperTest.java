@@ -33,6 +33,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.w3c.dom.Node;
 
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
+import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.NodeUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.CE;
@@ -55,10 +56,10 @@ public class CompositionMapperTest {
     private static final String ITK_SECTION_TEXT = readResourceAsString("/xml/itkSectionText.xml");
     private static final String COMPOSITION_SECTION_DIV = readResourceAsString("/xml/compositionSectionDiv.xml");
     private static final String NESTED_SECTION_TITLE = "THE TITLE";
-    private static final String EXPECTED_DATE = "Thu May 05 02:00:00 CEST 2022";
     private static final String EFFECTIVE_DATE = "20220505";
     private final CarePlan carePlan = new CarePlan();
     private final List<CarePlan> carePlans = Collections.singletonList(carePlan);
+    private final TS effectiveTime = TS.Factory.newInstance();
 
     @InjectMocks
     private CompositionMapper compositionMapper;
@@ -92,7 +93,6 @@ public class CompositionMapperTest {
 
     @BeforeEach
     public void setUp() {
-        TS effectiveTime = TS.Factory.newInstance();
         effectiveTime.setValue(EFFECTIVE_DATE);
         questionnaireResponseList = new ArrayList<>();
         questionnaireResponseList.add(questionnaireResponse);
@@ -170,6 +170,6 @@ public class CompositionMapperTest {
         assertThat(composition.getSection().get(3).getEntry().get(0).getResource()).isEqualTo(questionnaireResponse);
         assertThat(composition.getSection().get(3).getTitle()).isEqualTo(questionnaireResponseTitle);
         assertThat(composition.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
-        assertThat(composition.getDateElement().getValue().toString()).isEqualTo(EXPECTED_DATE);
+        assertThat(composition.getDateElement().getValue()).isEqualTo(DateUtil.parse(effectiveTime.getValue()).getValue());
     }
 }

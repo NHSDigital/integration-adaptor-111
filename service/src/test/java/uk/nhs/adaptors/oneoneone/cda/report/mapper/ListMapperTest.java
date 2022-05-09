@@ -25,6 +25,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.nhs.adaptors.oneoneone.cda.report.comparator.ResourceDateComparator;
+import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.II;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -34,8 +35,9 @@ import uk.nhs.connect.iucds.cda.ucr.TS;
 public class ListMapperTest {
 
     private static final String RANDOM_UUID = "12345678:ABCD:ABCD:ABCD:ABCD1234EFGH";
-    private static final String EXPECTED_DATE = "Thu May 05 02:00:00 CEST 2022";
     private static final String EFFECTIVE_DATE = "20220505";
+
+    private final TS effectiveTime = TS.Factory.newInstance();
 
     @InjectMocks
     private ListMapper listMapper;
@@ -62,7 +64,6 @@ public class ListMapperTest {
 
     @BeforeEach
     public void setUp() {
-        TS effectiveTime = TS.Factory.newInstance();
         effectiveTime.setValue(EFFECTIVE_DATE);
         HealthcareService healthcareService = new HealthcareService();
         healthcareService.setId("123456");
@@ -93,6 +94,6 @@ public class ListMapperTest {
         assertThat(listResource.getEntry().size()).isEqualTo(1);
         assertThat(listResource.getIdElement().getValue()).isEqualTo(RANDOM_UUID);
         assertThat(deviceRef).isEqualTo(listResource.getSource());
-        assertThat(listResource.getDateElement().getValue().toString()).isEqualTo(EXPECTED_DATE);
+        assertThat(listResource.getDateElement().getValue()).isEqualTo(DateUtil.parse(effectiveTime.getValue()).getValue());
     }
 }
