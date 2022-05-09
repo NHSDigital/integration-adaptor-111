@@ -6,7 +6,6 @@ import static org.hl7.fhir.dstu3.model.ReferralRequest.ReferralCategory.PLAN;
 import static org.hl7.fhir.dstu3.model.ReferralRequest.ReferralPriority.ROUTINE;
 import static org.hl7.fhir.dstu3.model.ReferralRequest.ReferralRequestStatus.ACTIVE;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +40,6 @@ public class ReferralRequestMapper {
         ReferralRequest referralRequest = new ReferralRequest();
         referralRequest.setIdElement(resourceUtil.newRandomUuid());
 
-        Date now = new Date();
         referralRequest
             .setStatus(ACTIVE)
             .setIntent(PLAN)
