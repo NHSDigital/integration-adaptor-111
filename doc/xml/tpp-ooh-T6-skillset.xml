@@ -1,0 +1,275 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:itk="urn:nhs-:ns:201005">
+    <soap:Header>
+        <wsa:MessageID>2AD60661-A532-11EC-B262-B908B3B2B1B6</wsa:MessageID>
+        <wsa:Action>urn:nhs-itk:services:201005:SendNHS111Report-v2-0</wsa:Action>
+        <wsa:To>https://ygm17.oneoneone.nhs.uk/report</wsa:To>
+        <wsa:From>
+            <wsa:Address>http://www.w3.org/2005/08/addressing/anonymous</wsa:Address>
+        </wsa:From>
+    </soap:Header>
+    <soap:Body>
+        <itk:DistributionEnvelope xmlns:itk="urn:nhs-itk:ns:201005" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <itk:header service="urn:nhs-itk:services:201005:SendNHS111Report-v2-0" trackingid="2AD60660-A532-11EC-B262-B908B3B2B1B6">
+                <itk:addresslist>
+                    <itk:address uri="urn:nhs-uk:addressing:ods:EM396"/>
+                    <itk:address uri="2000082139" type="2.16.840.1.113883.2.1.3.2.4.18.44"/>
+                </itk:addresslist>
+                <itk:auditIdentity>
+                    <itk:id uri="urn:nhs-uk:identity:ods:G1Q2R"/>
+                </itk:auditIdentity>
+                <itk:manifest count="1">
+                    <itk:manifestitem mimetype="text/xml" id="uuid_2AC2F390-A532-11EC-B262-B908B3B2B1B6" profileid="urn:nhs-en:profile:nhs111CDADocument-v2-0"/>
+                </itk:manifest>
+                <itk:senderAddress uri="urn:nhs-uk:addressing:ods:G1Q2R:562090462100"/>
+                <itk:handlingSpecification>
+                    <itk:spec value="urn:nhs-itk:interaction:primaryOutofHourRecipientNHS111CDADocument-v2-0" key="urn:nhs-itk:ns:201005:interaction"/>
+                </itk:handlingSpecification>
+            </itk:header>
+            <itk:payloads count="1">
+                <itk:payload id="uuid_2AC2F390-A532-11EC-B262-B908B3B2B1B6">
+                    <ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:npfitlc="NPFIT:HL7:Localisation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" classCode="DOCCLIN" moodCode="EVN">
+                        <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
+                        <npfitlc:messageType root="2.16.840.1.113883.2.1.3.2.4.18.17" extension="POCD_MT200001GB02"/>
+                        <id root="2AC2F390-A532-11EC-B262-B908B3B2B1B6"/>
+                        <code code="000000000000000" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+                        <title>NHS 111 Report</title>
+                        <effectiveTime value="20220316140542"/>
+                        <confidentialityCode code="V" displayName="very restricted" codeSystem="2.16.840.1.113883.5.25"/>
+                        <setId root="2AC2F391-A532-11EC-B262-B908B3B2B1B6"/>
+                        <versionNumber value="1"/>
+                        <recordTarget typeCode="RCT" contextControlCode="OP">
+                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145201GB01#PatientRole"/>
+                            <patientRole classCode="PAT">
+                                <templateId extension="COCD_TP145201GB01#PatientRole" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                <id extension="9990556512" root="2.16.840.1.113883.2.1.4.1"/>
+                                <addr use="H">
+                                    <streetAddressLine>C/o Nhs Digital Test Data Manager</streetAddressLine>
+                                    <streetAddressLine>Solution Assurance 1 Trevelyan Sq.</streetAddressLine>
+                                    <streetAddressLine>Boar Lane</streetAddressLine>
+                                    <streetAddressLine>Leeds</streetAddressLine>
+                                    <streetAddressLine>West Yorkshire</streetAddressLine>
+                                    <postalCode>LS1 6AE</postalCode>
+                                </addr>
+                                <addr use="PHYS">
+                                    <streetAddressLine>421 Locomotive Way</streetAddressLine>
+                                    <streetAddressLine>Pride Park</streetAddressLine>
+                                    <streetAddressLine>Derby</streetAddressLine>
+                                    <streetAddressLine/>
+                                    <postalCode>DE24 8PU</postalCode>
+                                </addr>
+                                <telecom use="EC" value="tel:03003690004"/>
+                                <patient classCode="PSN" determinerCode="INSTANCE">
+                                    <templateId extension="COCD_TP145201GB01#patientPatient" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                    <name>
+                                        <prefix>Mrs</prefix>
+                                        <given>Donotuse</given>
+                                        <family>Xxtestpatient-Thpg</family>
+                                    </name>
+                                    <administrativeGenderCode codeSystem="2.16.840.1.113883.2.1.3.2.4.16.25" displayName="Female" code="2"/>
+                                    <birthTime value="19440115"/>
+                                </patient>
+                                <providerOrganization classCode="ORG" determinerCode="INSTANCE">
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145201GB01#providerOrganization"/>
+                                    <id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="B86055"/>
+                                    <name>Ashfield Medical Centre</name>
+                                    <telecom use="WP" value="tel:01132951828"/>
+                                    <addr use="WP">
+                                        <streetAddressLine>Ashfield Medical Centre</streetAddressLine>
+                                        <streetAddressLine>15 Austhorpe Road</streetAddressLine>
+                                        <streetAddressLine>Leeds</streetAddressLine>
+                                        <streetAddressLine>West Yorkshire</streetAddressLine>
+                                        <postalCode>LS15 8BA</postalCode>
+                                    </addr>
+                                    <standardIndustryClassCode code="001" displayName="GP Practice" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.289"/>
+                                </providerOrganization>
+                            </patientRole>
+                        </recordTarget>
+                        <author typeCode="AUT" contextControlCode="OP">
+                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145200GB01#AssignedAuthor"/>
+                            <functionCode code="OA" displayName="Originating Author" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.178"/>
+                            <time value="20220316140542"/>
+                            <assignedAuthor classCode="ASSIGNED">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145200GB01#AssignedAuthor"/>
+                                <id root="1.2.826.0.1285.0.2.0.65" extension="562090462100"/>
+                                <code code="NR1070" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.124" displayName="Paramedic"/>
+                                <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145200GB01#assignedPerson"/>
+                                    <name>
+                                        <given>Andrew</given>
+                                        <family>Nairn</family>
+                                    </name>
+                                </assignedPerson>
+                                <representedOrganization classCode="ORG" determinerCode="INSTANCE">
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145200GB01#representedOrganization"/>
+                                    <id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="G1Q2R"/>
+                                    <name>Dorset CAS &amp; IUC</name>
+                                </representedOrganization>
+                            </assignedAuthor>
+                        </author>
+                        <custodian typeCode="CST">
+                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145018UK03#AssignedCustodian"/>
+                            <assignedCustodian classCode="ASSIGNED">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145018UK03#AssignedCustodian"/>
+                                <representedCustodianOrganization classCode="ORG" determinerCode="INSTANCE">
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145018UK03#representedCustodianOrganization"/>
+                                    <id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="G1Q2R"/>
+                                    <name>Dorset CAS &amp; IUC</name>
+                                </representedCustodianOrganization>
+                            </assignedCustodian>
+                        </custodian>
+                        <informationRecipient typeCode="PRCP">
+                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145203GB03#IntendedRecipient"/>
+                            <intendedRecipient classCode="ASSIGNED">
+                                <templateId extension="COCD_TP145203GB03#IntendedRecipient" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                <receivedOrganization classCode="ORG" determinerCode="INSTANCE">
+                                    <templateId extension="COCD_TP145203GB03#representedOrganization" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                    <id extension="EM396" root="2.16.840.1.113883.2.1.3.2.4.19.1"/>
+                                    <name>CPCS: Pharmacy 1 Test Profile Positive Solutions</name>
+                                </receivedOrganization>
+                            </intendedRecipient>
+                        </informationRecipient>
+                        <componentOf typeCode="COMP">
+                            <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146232GB01#EncompassingEncounter"/>
+                            <encompassingEncounter classCode="ENC" moodCode="EVN">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146232GB01#EncompassingEncounter"/>
+                                <id root="2.16.840.1.113883.2.1.3.2.4.18.34" extension="TPP73778331"/>
+                                <id root="2.16.840.1.113883.2.1.3.2.4.18.35" extension="73778331"/>
+                                <code code="NHS111Encounter" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.326" displayName="NHS111Encounter"/>
+                                <effectiveTime>
+                                    <low value="20220316135640"/>
+                                    <high value="20220316140515"/>
+                                </effectiveTime>
+                                <dischargeDispositionCode code="Dx09" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.325" displayName="For persistent or recurrent symptoms: get in touch with a local service for a Non-Urgent Appointment"/>
+                                <location typeCode="LOC">
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146232GB01#location"/>
+                                    <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145222GB02#HealthCareFacility"/>
+                                    <healthCareFacility classCode="ISDLOC">
+                                        <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145222GB02#HealthCareFacility"/>
+                                        <id nullFlavor="NA"/>
+                                        <location classCode="PLC" determinerCode="INSTANCE">
+                                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145222GB02#location"/>
+                                            <name nullFlavor="NA"/>
+                                            <addr use="PHYS">
+                                                <streetAddressLine>421 Locomotive Way</streetAddressLine>
+                                                <streetAddressLine>Pride Park</streetAddressLine>
+                                                <streetAddressLine>Derby</streetAddressLine>
+                                                <streetAddressLine/>
+                                                <postalCode>DE24 8PU</postalCode>
+                                            </addr>
+                                        </location>
+                                    </healthCareFacility>
+                                </location>
+                            </encompassingEncounter>
+                        </componentOf>
+                        <component typeCode="COMP" contextConductionInd="true">
+                            <structuredBody classCode="DOCBODY" moodCode="EVN">
+                                <component typeCode="COMP" contextConductionInd="true">
+                                    <section classCode="DOCSECT" moodCode="EVN">
+                                        <id root="2ACA1F81-A532-11EC-B262-B908B3B2B1B6"/>
+                                        <entry typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId extension="COCD_TP146002GB01#ObservationMedia" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                                            <observationMedia classCode="OBS" moodCode="EVN">
+                                                <templateId extension="COCD_TP146002GB01#ObservationMedia" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                                <id root="2ACA1F80-A532-11EC-B262-B908B3B2B1B6"/>
+                                                <value representation="B64" mediaType="text/xml">PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiID8+PFBhdGh3YXlzQ2FzZSB4bWxucz0iaHR0cDovL25oc3BhdGh3YXlzLm9yZy93ZWJzZXJ2aWNlcy9wYXRod2F5cy9wYXRod2F5c0Nhc2UiPjxzZXJ2aWNlRGVzdGluYXRpb24+PG5hbWU+Q1BDUzogUGhhcm1hY3kgMSBUZXN0IFByb2ZpbGUgUG9zaXRpdmUgU29sdXRpb25zPC9uYW1lPjxjb2RlPjIwMDAwODIxMzk8L2NvZGU+PC9zZXJ2aWNlRGVzdGluYXRpb24+PG1lc3NhZ2VTdGF0dXM+Q29tcGxldGU8L21lc3NhZ2VTdGF0dXM+PGNhc2VSZWNlaXZlU3RhcnQ+MjAyMi0wMy0xNlQxMzo1Njo0MFo8L2Nhc2VSZWNlaXZlU3RhcnQ+PGNhc2VSZWNlaXZlRW5kPjIwMjItMDMtMTZUMTQ6MDU6MTVaPC9jYXNlUmVjZWl2ZUVuZD48b3V0Y29tZT48dGl0bGU+Rm9yIHBlcnNpc3RlbnQgb3IgcmVjdXJyZW50IHN5bXB0b21zOiBnZXQgaW4gdG91Y2ggd2l0aCBhIGxvY2FsIHNlcnZpY2UgZm9yIGEgTm9uLVVyZ2VudCBBcHBvaW50bWVudDwvdGl0bGU+PGNvZGU+RHgwOTwvY29kZT48L291dGNvbWU+PGNhc2VEZXRhaWxzPjxjYXNlUmVmPjczNzc4MzMxPC9jYXNlUmVmPjxjYXNlSWQ+NzM3NzgzMzE8L2Nhc2VJZD48YWRkcmVzcz48YnVpbGRpbmc+NDIxPC9idWlsZGluZz48c3RyZWV0PkxvY29tb3RpdmUgV2F5PC9zdHJlZXQ+PGxvY2FsaXR5PlByaWRlIFBhcms8L2xvY2FsaXR5Pjx0b3duPkRlcmJ5PC90b3duPjxjb3VudHkvPjxwb3N0Y29kZT5ERTI0IDhQVTwvcG9zdGNvZGU+PGRpcmVjdGlvbnMvPjwvYWRkcmVzcz48Y29uZGl0aW9uLz48Y29udGFjdERldGFpbHM+PGNhbGxlcj48bmFtZT5Eb25vdHVzZSBYeHRlc3RwYXRpZW50LVRocGc8L25hbWU+PHBob25lPjxudW1iZXI+MDMwMDMgNjkwMDA0PC9udW1iZXI+PGV4dGVuc2lvbi8+PC9waG9uZT48L2NhbGxlcj48L2NvbnRhY3REZXRhaWxzPjwvY2FzZURldGFpbHM+PHBhdGllbnQ+PGZvcmVuYW1lPkRvbm90dXNlPC9mb3JlbmFtZT48c3VybmFtZT5YeHRlc3RwYXRpZW50LVRocGc8L3N1cm5hbWU+PGFkZHJlc3M+PGJ1aWxkaW5nPkMvbyBOaHMgRGlnaXRhbCBUZXN0IERhdGEgTWFuYWdlcjwvYnVpbGRpbmc+PHN0cmVldD5Tb2x1dGlvbiBBc3N1cmFuY2UgMSBUcmV2ZWx5YW4gU3EuPC9zdHJlZXQ+PGxvY2FsaXR5PkJvYXIgTGFuZTwvbG9jYWxpdHk+PHRvd24+TGVlZHM8L3Rvd24+PGNvdW50eT5XZXN0IFlvcmtzaGlyZTwvY291bnR5Pjxwb3N0Y29kZT5MUzEgNkFFPC9wb3N0Y29kZT48ZGlyZWN0aW9ucy8+PC9hZGRyZXNzPjxwaG9uZT48bnVtYmVyPjAzMDAzIDY5MDAwNDwvbnVtYmVyPjxleHRlbnNpb24vPjwvcGhvbmU+PGdlbmRlcj5GZW1hbGU8L2dlbmRlcj48bmF0aW9uYWxOdW1iZXI+OTk5MDU1NjUxMjwvbmF0aW9uYWxOdW1iZXI+PHByb3ZpZGVyRGV0YWlscyB0eXBlPSJET0NUT1IiPjxwcm92aWRlckdyb3VwPjxuYW1lPkFzaGZpZWxkIE1lZGljYWwgQ2VudHJlPC9uYW1lPjxpZD5CODYwNTU8L2lkPjwvcHJvdmlkZXJHcm91cD48L3Byb3ZpZGVyRGV0YWlscz48ZGF0ZU9mQmlydGg+PGRvYj4xOTQ0LTAxLTE1PC9kb2I+PC9kYXRlT2ZCaXJ0aD48bW9iaWxlUGhvbmUvPjwvcGF0aWVudD48cmV0dXJuUGhvbmU+PG51bWJlcj4wMzAwMyA2OTAwMDQ8L251bWJlcj48ZXh0ZW5zaW9uLz48L3JldHVyblBob25lPjxwYXRod2F5RGV0YWlscz48cGF0aHdheVRyaWFnZURldGFpbHM+PHBhdGh3YXlUcmlhZ2U+PHN0YXJ0PjIwMjItMDMtMTZUMTM6NTg6MjRaPC9zdGFydD48ZmluaXNoPjIwMjItMDMtMTZUMTQ6MDU6MTNaPC9maW5pc2g+PHRyaWFnZURpc3Bvc2l0aW9uPjxpbml0aWFsRGlzcENvZGU+RHg3ODwvaW5pdGlhbERpc3BDb2RlPjxpbml0aWFsRGlzcFRleHQ+UmVjZWl2ZSByZXBvcnQgb2YgcmVzdWx0cyBvciB0ZXN0cyBmcm9tIGxhYm9yYXRvcnk8L2luaXRpYWxEaXNwVGV4dD48dGltZVJlYWNoZWQ+MjAyMi0wMy0xNlQxNDowNTowOVo8L3RpbWVSZWFjaGVkPjwvdHJpYWdlRGlzcG9zaXRpb24+PGZpbmFsRGlzcG9zaXRpb24+PGZpbmFsRGlzcENvZGU+RHgwOTwvZmluYWxEaXNwQ29kZT48ZmluYWxEaXNwdGV4dD5Gb3IgcGVyc2lzdGVudCBvciByZWN1cnJlbnQgc3ltcHRvbXM6IGdldCBpbiB0b3VjaCB3aXRoIGEgbG9jYWwgc2VydmljZSBmb3IgYSBOb24tVXJnZW50IEFwcG9pbnRtZW50PC9maW5hbERpc3B0ZXh0PjwvZmluYWxEaXNwb3NpdGlvbj48dXNlcj48aWQ+NTYyMDkwNDYyMTAwPC9pZD48bmFtZT5OQUlSTiwgQW5kcmV3PC9uYW1lPjxza2lsbFNldD5UNjwvc2tpbGxTZXQ+PC91c2VyPjx0cmlhZ2VMaW5lRGV0YWlscz48dHJpYWdlTGluZT48c3RhcnQ+MjAyMi0wMy0xNlQxMzo1ODoyNFo8L3N0YXJ0PjxmaW5pc2g+MjAyMi0wMy0xNlQxMzo1ODo0Mlo8L2ZpbmlzaD48cXVlc3Rpb25UeXBlPlNpbmdsZUFuc3dlcjwvcXVlc3Rpb25UeXBlPjxxdWVzdGlvbj48dHJpYWdlTG9naWNJZD48cGF0aHdheVZlcnNpb24+PG1ham9yPjMwPC9tYWpvcj48bWlub3I+MjwvbWlub3I+PHN1YlJldmlzaW9uPjA8L3N1YlJldmlzaW9uPjwvcGF0aHdheVZlcnNpb24+PHBhdGh3YXlJZD5QRkExPC9wYXRod2F5SWQ+PHBhdGh3YXlPcmRlck5vPjU8L3BhdGh3YXlPcmRlck5vPjwvdHJpYWdlTG9naWNJZD48cXVlc3Rpb25JZD5UeDIyMDA3NDwvcXVlc3Rpb25JZD48cXVlc3Rpb25UZXh0PldoYXQgaXMgdGhlIHJlYXNvbiBmb3IgdGhlIGNvbnRhY3Q/PC9xdWVzdGlvblRleHQ+PHF1ZXN0aW9uUmF0aW9uYWxlLz48YW5zd2Vycz48YW5zd2VyIHNlbGVjdGVkPSJmYWxzZSI+PHRleHQ+YW4gaW5qdXJ5LCBpbGxuZXNzIG9yIG90aGVyIGhlYWx0aCBwcm9ibGVtPC90ZXh0PjxyYXRpb25hbGU+VGhpcyBtZWFuczotIEFueSBuZXcgb3Igd29yc2VuaW5nIHN5bXB0b21zLiYjMTA7LSBPciB0aGV5IGhhdmUgc3dhbGxvd2VkL2JyZWF0aGVkIGluIHNvbWV0aGluZyB0aGF0IGNvdWxkIGJlIGhhcm1mdWwsIGJ1dCBhcmUgc3ltcHRvbS1mcmVlLiYjMTA7LSBPciB1c2Ugb2YgbWVkaWNhdGlvbiBmb3IgYSB3b3JzZW5pbmcgcHJvYmxlbS4mIzEwO0RvZXMgbm90IG1lYW4gaW5mb3JtYXRpb24gcmVxdWVzdHMgd2hlcmUgdGhleSBhcmUgc3ltcHRvbS1mcmVlLjwvcmF0aW9uYWxlPjwvYW5zd2VyPjxhbnN3ZXIgc2VsZWN0ZWQ9ImZhbHNlIj48dGV4dD5sYWJvdXIgb3IgY2hpbGRiaXJ0aDwvdGV4dD48cmF0aW9uYWxlPlRoaXMgbWVhbnM6ICYjMTA7LSBXYXRlcnMgYnJlYWtpbmcsIGluY3JlYXNpbmdseSBmcmVxdWVudCBjb250cmFjdGlvbnMuJiMxMDstIE9yIHNlZWluZyBvciBmZWVsaW5nIHRoZSBiYWJ5IGNvbWluZywgb3IgaGFzIGp1c3QgYmVlbiBib3JuLiYjMTA7RG9lcyBub3QgbWVhbiBnb2luZyBpbnRvIGxhYm91ciBhZnRlciBhbnkgaW5qdXJ5IHRvIHRoZSBhYmRvbWVuLCBsb3dlciBiYWNrLCBncm9pbiBvciBnZW5pdGFsIGFyZWEgKFRSSUFHRSBUSEUgSU5KVVJZKS48L3JhdGlvbmFsZT48L2Fuc3dlcj48YW5zd2VyIHNlbGVjdGVkPSJmYWxzZSI+PHRleHQ+YSBjb21tdW5pdHkgc2VydmljZTwvdGV4dD48cmF0aW9uYWxlPlRoaXMgb25seSBtZWFuczogJiMxMDstIEEgcGFsbGlhdGl2ZSBjYXJlIHRlYW0uJiMxMDstIE9yIGNvbW11bml0eSAoZGlzdHJpY3QpIG51cnNlcyBvciBtaWR3aXZlcy4mIzEwOy0gT3IgYSBmYWxscy9yYXBpZCByZXNwb25zZSB0ZWFtLjwvcmF0aW9uYWxlPjwvYW5zd2VyPjxhbnN3ZXIgc2VsZWN0ZWQ9ImZhbHNlIj48dGV4dD5hIGhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIHJlcXVlc3RpbmcgY29udGFjdCB3aXRoIGFub3RoZXIgY2xpbmljaWFuPC90ZXh0PjxyYXRpb25hbGUvPjwvYW5zd2VyPjxhbnN3ZXIgc2VsZWN0ZWQ9InRydWUiPjx0ZXh0PmEgcmVwb3J0IG9mIHJlc3VsdHMgb3IgdGVzdHM8L3RleHQ+PHJhdGlvbmFsZT5Gb3IgZXhhbXBsZSBibG9vZCBvciB1cmluZSB0ZXN0cywgRUNHcywgWC1yYXlzLiYjMTA7RG9lcyBub3QgbWVhbiBzb21lb25lIHdpdGggc3ltcHRvbXMuPC9yYXRpb25hbGU+PC9hbnN3ZXI+PGFuc3dlciBzZWxlY3RlZD0iZmFsc2UiPjx0ZXh0PmEgcG9zc2libGUgZmFpbHVyZSBvZiBjb250cmFjZXB0aW9uPC90ZXh0PjxyYXRpb25hbGU+VGhpcyBtZWFuczogLSBDb25jZXJucyBhYm91dCB1bnBsYW5uZWQgcHJlZ25hbmN5LCBvciBhbiBlbWVyZ2VuY3kgY29udHJhY2VwdGlvbiByZXF1ZXN0LiYjMTA7LSBPciBhIHByb2JsZW0gd2l0aCBjb250cmFjZXB0aXZlIGRldmljZXMgKHN1Y2ggYXMgY29pbHMsIGltcGxhbnRzKSBvciBydW4gb3V0IG9mL29yIG1pc3NlZCBwaWxscy4mIzEwOy0gT3IgYSBjb25kb20gdGhhdCBoYXMgc3BsaXQgb3IgY29tZSBvZmYuJiMxMDtEb2VzIG5vdCBtZWFuIHNvbWVvbmUgd2l0aCBzeW1wdG9tcyAoVFJJQUdFIFRIRSBJTkpVUlkgT1IgSUxMTkVTUykuPC9yYXRpb25hbGU+PC9hbnN3ZXI+PGFuc3dlciBzZWxlY3RlZD0iZmFsc2UiPjx0ZXh0Pm1vcmU8L3RleHQ+PHJhdGlvbmFsZT5UaGlzIHdpbGwgdGFrZSB5b3UgdG8gYSBmdXJ0aGVyIG1lbnU6IC0gQ2hpbGQgcHJvdGVjdGlvbiBvciB2dWxuZXJhYmxlIGFkdWx0IGNvbmNlcm4uJiMxMDstIFNvY2lhbCBvciBkb21lc3RpYyBlbWVyZ2VuY3kuJiMxMDstIFByZXNjcmlwdGlvbiBvciBhcHBvaW50bWVudCByZXF1ZXN0LiYjMTA7LSBSZXF1ZXN0IGZvciBoZWFsdGggb3IgbWVkaWNhdGlvbiBpbmZvcm1hdGlvbi48L3JhdGlvbmFsZT48L2Fuc3dlcj48L2Fuc3dlcnM+PC9xdWVzdGlvbj48Y2FyZUFkdmljZUtleXdvcmREZXRhaWxzPjxjYXJlQWR2aWNlS2V5d29yZC8+PC9jYXJlQWR2aWNlS2V5d29yZERldGFpbHM+PGNsaW5pY2FsQXJlYS8+PHJlcG9ydFRleHQ+PHRleHQ+QSByZXBvcnQgb2YgcmVzdWx0cyBvciB0ZXN0cyB3YXMgdGhlIHJlYXNvbiBmb3IgdGhlIGNvbnRhY3QuPC90ZXh0Pjxwb3NpdGl2ZT50cnVlPC9wb3NpdGl2ZT48L3JlcG9ydFRleHQ+PHVzZXJDb21tZW50Lz48YWN0aW9uPkNoYW5nZTwvYWN0aW9uPjxpbmNsdWRlSW5SZXBvcnQ+dHJ1ZTwvaW5jbHVkZUluUmVwb3J0PjwvdHJpYWdlTGluZT48dHJpYWdlTGluZT48c3RhcnQ+MjAyMi0wMy0xNlQxMzo1ODo0Mlo8L3N0YXJ0PjxmaW5pc2g+MjAyMi0wMy0xNlQxMzo1ODo0Mlo8L2ZpbmlzaD48cXVlc3Rpb25UeXBlPlNldFZhcmlhYmxlPC9xdWVzdGlvblR5cGU+PHF1ZXN0aW9uPjx0cmlhZ2VMb2dpY0lkPjxwYXRod2F5VmVyc2lvbj48bWFqb3I+MzA8L21ham9yPjxtaW5vcj4yPC9taW5vcj48c3ViUmV2aXNpb24+MDwvc3ViUmV2aXNpb24+PC9wYXRod2F5VmVyc2lvbj48cGF0aHdheUlkPlBGQTE8L3BhdGh3YXlJZD48cGF0aHdheU9yZGVyTm8+NTAwPC9wYXRod2F5T3JkZXJObz48L3RyaWFnZUxvZ2ljSWQ+PHF1ZXN0aW9uSWQ+VHgyMjE3OTE8L3F1ZXN0aW9uSWQ+PHF1ZXN0aW9uVGV4dD5TVFJJTkc6dG8mYXBvcztTb2NpYWwmYW1wO2luZm9ybWF0aW9uJmFwb3M7LUR4NzgmYXBvcztSZXBvcnRvZnJlc3VsdHMmYXBvczs8L3F1ZXN0aW9uVGV4dD48cXVlc3Rpb25SYXRpb25hbGUvPjxhbnN3ZXJzPjxhbnN3ZXIgc2VsZWN0ZWQ9InRydWUiPjx0ZXh0PiZxdW90O3ByZXNlbnQmcXVvdDs8L3RleHQ+PHJhdGlvbmFsZS8+PC9hbnN3ZXI+PC9hbnN3ZXJzPjwvcXVlc3Rpb24+PGNhcmVBZHZpY2VLZXl3b3JkRGV0YWlscz48Y2FyZUFkdmljZUtleXdvcmQvPjwvY2FyZUFkdmljZUtleXdvcmREZXRhaWxzPjxjbGluaWNhbEFyZWEvPjxyZXBvcnRUZXh0Pjx0ZXh0Lz48cG9zaXRpdmU+ZmFsc2U8L3Bvc2l0aXZlPjwvcmVwb3J0VGV4dD48dXNlckNvbW1lbnQvPjxhY3Rpb24+QmFjazwvYWN0aW9uPjxpbmNsdWRlSW5SZXBvcnQ+ZmFsc2U8L2luY2x1ZGVJblJlcG9ydD48L3RyaWFnZUxpbmU+PHRyaWFnZUxpbmU+PHN0YXJ0PjIwMjItMDMtMTZUMTM6NTg6NDJaPC9zdGFydD48ZmluaXNoPjIwMjItMDMtMTZUMTM6NTg6NDNaPC9maW5pc2g+PHF1ZXN0aW9uVHlwZT5TZXRWYXJpYWJsZTwvcXVlc3Rpb25UeXBlPjxxdWVzdGlvbj48dHJpYWdlTG9naWNJZD48cGF0aHdheVZlcnNpb24+PG1ham9yPjMwPC9tYWpvcj48bWlub3I+MjwvbWlub3I+PHN1YlJldmlzaW9uPjA8L3N1YlJldmlzaW9uPjwvcGF0aHdheVZlcnNpb24+PHBhdGh3YXlJZD5QQTExMDwvcGF0aHdheUlkPjxwYXRod2F5T3JkZXJObz4yMTwvcGF0aHdheU9yZGVyTm8+PC90cmlhZ2VMb2dpY0lkPjxxdWVzdGlvbklkPlR4MjIxODAyPC9xdWVzdGlvbklkPjxxdWVzdGlvblRleHQ+U1RSSU5HOnJlcG9ydG9mcmVzdWx0c29ydGVzdHNlc3RhYmxpc2hlZGluRW50cnlGbG93PC9xdWVzdGlvblRleHQ+PHF1ZXN0aW9uUmF0aW9uYWxlLz48YW5zd2Vycz48YW5zd2VyIHNlbGVjdGVkPSJ0cnVlIj48dGV4dD4mcXVvdDtwcmVzZW50JnF1b3Q7PC90ZXh0PjxyYXRpb25hbGUvPjwvYW5zd2VyPjwvYW5zd2Vycz48L3F1ZXN0aW9uPjxjYXJlQWR2aWNlS2V5d29yZERldGFpbHM+PGNhcmVBZHZpY2VLZXl3b3JkLz48L2NhcmVBZHZpY2VLZXl3b3JkRGV0YWlscz48Y2xpbmljYWxBcmVhLz48cmVwb3J0VGV4dD48dGV4dC8+PHBvc2l0aXZlPmZhbHNlPC9wb3NpdGl2ZT48L3JlcG9ydFRleHQ+PHVzZXJDb21tZW50Lz48YWN0aW9uPkJhY2s8L2FjdGlvbj48aW5jbHVkZUluUmVwb3J0PmZhbHNlPC9pbmNsdWRlSW5SZXBvcnQ+PC90cmlhZ2VMaW5lPjx0cmlhZ2VMaW5lPjxzdGFydD4yMDIyLTAzLTE2VDEzOjU4OjQzWjwvc3RhcnQ+PGZpbmlzaD4yMDIyLTAzLTE2VDEzOjU4OjQzWjwvZmluaXNoPjxxdWVzdGlvblR5cGU+U2V0VmFyaWFibGU8L3F1ZXN0aW9uVHlwZT48cXVlc3Rpb24+PHRyaWFnZUxvZ2ljSWQ+PHBhdGh3YXlWZXJzaW9uPjxtYWpvcj4zMDwvbWFqb3I+PG1pbm9yPjI8L21pbm9yPjxzdWJSZXZpc2lvbj4wPC9zdWJSZXZpc2lvbj48L3BhdGh3YXlWZXJzaW9uPjxwYXRod2F5SWQ+UEExMTA8L3BhdGh3YXlJZD48cGF0aHdheU9yZGVyTm8+NDAwPC9wYXRod2F5T3JkZXJObz48L3RyaWFnZUxvZ2ljSWQ+PHF1ZXN0aW9uSWQ+VHgyMjI4MzA8L3F1ZXN0aW9uSWQ+PHF1ZXN0aW9uVGV4dD5TVFJJTkc6U0RQQ3JlY2VpdmVyZXBvcnRvZnJlc3VsdHNvcnRlc3RzPC9xdWVzdGlvblRleHQ+PHF1ZXN0aW9uUmF0aW9uYWxlLz48YW5zd2Vycz48YW5zd2VyIHNlbGVjdGVkPSJ0cnVlIj48dGV4dD4mcXVvdDtQQyBSZWNlaXZlIHJlcG9ydCBvZiByZXN1bHRzIG9yIHRlc3RzJnF1b3Q7PC90ZXh0PjxyYXRpb25hbGUvPjwvYW5zd2VyPjwvYW5zd2Vycz48L3F1ZXN0aW9uPjxjYXJlQWR2aWNlS2V5d29yZERldGFpbHM+PGNhcmVBZHZpY2VLZXl3b3JkLz48L2NhcmVBZHZpY2VLZXl3b3JkRGV0YWlscz48Y2xpbmljYWxBcmVhLz48cmVwb3J0VGV4dD48dGV4dC8+PHBvc2l0aXZlPmZhbHNlPC9wb3NpdGl2ZT48L3JlcG9ydFRleHQ+PHVzZXJDb21tZW50Lz48YWN0aW9uPkJhY2s8L2FjdGlvbj48aW5jbHVkZUluUmVwb3J0PmZhbHNlPC9pbmNsdWRlSW5SZXBvcnQ+PC90cmlhZ2VMaW5lPjx0cmlhZ2VMaW5lPjxzdGFydD4yMDIyLTAzLTE2VDEzOjU4OjQzWjwvc3RhcnQ+PGZpbmlzaD4yMDIyLTAzLTE2VDE0OjAwOjIyWjwvZmluaXNoPjxxdWVzdGlvblR5cGU+RGlzcG9zaXRpb248L3F1ZXN0aW9uVHlwZT48Y2FyZUFkdmljZUtleXdvcmREZXRhaWxzPjxjYXJlQWR2aWNlS2V5d29yZC8+PC9jYXJlQWR2aWNlS2V5d29yZERldGFpbHM+PGNsaW5pY2FsQXJlYS8+PHJlcG9ydFRleHQ+PHRleHQvPjxwb3NpdGl2ZT5mYWxzZTwvcG9zaXRpdmU+PC9yZXBvcnRUZXh0Pjx1c2VyQ29tbWVudC8+PGFjdGlvbj5SZXN0YXJ0PC9hY3Rpb24+PGluY2x1ZGVJblJlcG9ydD5mYWxzZTwvaW5jbHVkZUluUmVwb3J0PjwvdHJpYWdlTGluZT48dHJpYWdlTGluZT48c3RhcnQ+MjAyMi0wMy0xNlQxNDowMDoyMlo8L3N0YXJ0PjxmaW5pc2g+MjAyMi0wMy0xNlQxNDowMDoyNlo8L2ZpbmlzaD48cXVlc3Rpb25UeXBlPlNpbmdsZUFuc3dlcjwvcXVlc3Rpb25UeXBlPjxxdWVzdGlvbj48dHJpYWdlTG9naWNJZD48cGF0aHdheVZlcnNpb24+PG1ham9yPjMwPC9tYWpvcj48bWlub3I+MjwvbWlub3I+PHN1YlJldmlzaW9uPjA8L3N1YlJldmlzaW9uPjwvcGF0aHdheVZlcnNpb24+PHBhdGh3YXlJZD5QRkExPC9wYXRod2F5SWQ+PHBhdGh3YXlPcmRlck5vPjU8L3BhdGh3YXlPcmRlck5vPjwvdHJpYWdlTG9naWNJZD48cXVlc3Rpb25JZD5UeDIyMDA3NDwvcXVlc3Rpb25JZD48cXVlc3Rpb25UZXh0PldoYXQgaXMgdGhlIHJlYXNvbiBmb3IgdGhlIGNvbnRhY3Q/PC9xdWVzdGlvblRleHQ+PHF1ZXN0aW9uUmF0aW9uYWxlLz48YW5zd2Vycz48YW5zd2VyIHNlbGVjdGVkPSJmYWxzZSI+PHRleHQ+YW4gaW5qdXJ5LCBpbGxuZXNzIG9yIG90aGVyIGhlYWx0aCBwcm9ibGVtPC90ZXh0PjxyYXRpb25hbGU+VGhpcyBtZWFuczotIEFueSBuZXcgb3Igd29yc2VuaW5nIHN5bXB0b21zLiYjMTA7LSBPciB0aGV5IGhhdmUgc3dhbGxvd2VkL2JyZWF0aGVkIGluIHNvbWV0aGluZyB0aGF0IGNvdWxkIGJlIGhhcm1mdWwsIGJ1dCBhcmUgc3ltcHRvbS1mcmVlLiYjMTA7LSBPciB1c2Ugb2YgbWVkaWNhdGlvbiBmb3IgYSB3b3JzZW5pbmcgcHJvYmxlbS4mIzEwO0RvZXMgbm90IG1lYW4gaW5mb3JtYXRpb24gcmVxdWVzdHMgd2hlcmUgdGhleSBhcmUgc3ltcHRvbS1mcmVlLjwvcmF0aW9uYWxlPjwvYW5zd2VyPjxhbnN3ZXIgc2VsZWN0ZWQ9ImZhbHNlIj48dGV4dD5sYWJvdXIgb3IgY2hpbGRiaXJ0aDwvdGV4dD48cmF0aW9uYWxlPlRoaXMgbWVhbnM6ICYjMTA7LSBXYXRlcnMgYnJlYWtpbmcsIGluY3JlYXNpbmdseSBmcmVxdWVudCBjb250cmFjdGlvbnMuJiMxMDstIE9yIHNlZWluZyBvciBmZWVsaW5nIHRoZSBiYWJ5IGNvbWluZywgb3IgaGFzIGp1c3QgYmVlbiBib3JuLiYjMTA7RG9lcyBub3QgbWVhbiBnb2luZyBpbnRvIGxhYm91ciBhZnRlciBhbnkgaW5qdXJ5IHRvIHRoZSBhYmRvbWVuLCBsb3dlciBiYWNrLCBncm9pbiBvciBnZW5pdGFsIGFyZWEgKFRSSUFHRSBUSEUgSU5KVVJZKS48L3JhdGlvbmFsZT48L2Fuc3dlcj48YW5zd2VyIHNlbGVjdGVkPSJmYWxzZSI+PHRleHQ+YSBjb21tdW5pdHkgc2VydmljZTwvdGV4dD48cmF0aW9uYWxlPlRoaXMgb25seSBtZWFuczogJiMxMDstIEEgcGFsbGlhdGl2ZSBjYXJlIHRlYW0uJiMxMDstIE9yIGNvbW11bml0eSAoZGlzdHJpY3QpIG51cnNlcyBvciBtaWR3aXZlcy4mIzEwOy0gT3IgYSBmYWxscy9yYXBpZCByZXNwb25zZSB0ZWFtLjwvcmF0aW9uYWxlPjwvYW5zd2VyPjxhbnN3ZXIgc2VsZWN0ZWQ9ImZhbHNlIj48dGV4dD5hIGhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIHJlcXVlc3RpbmcgY29udGFjdCB3aXRoIGFub3RoZXIgY2xpbmljaWFuPC90ZXh0PjxyYXRpb25hbGUvPjwvYW5zd2VyPjxhbnN3ZXIgc2VsZWN0ZWQ9InRydWUiPjx0ZXh0PmEgcmVwb3J0IG9mIHJlc3VsdHMgb3IgdGVzdHM8L3RleHQ+PHJhdGlvbmFsZT5Gb3IgZXhhbXBsZSBibG9vZCBvciB1cmluZSB0ZXN0cywgRUNHcywgWC1yYXlzLiYjMTA7RG9lcyBub3QgbWVhbiBzb21lb25lIHdpdGggc3ltcHRvbXMuPC9yYXRpb25hbGU+PC9hbnN3ZXI+PGFuc3dlciBzZWxlY3RlZD0iZmFsc2UiPjx0ZXh0PmEgcG9zc2libGUgZmFpbHVyZSBvZiBjb250cmFjZXB0aW9uPC90ZXh0PjxyYXRpb25hbGU+VGhpcyBtZWFuczogLSBDb25jZXJucyBhYm91dCB1bnBsYW5uZWQgcHJlZ25hbmN5LCBvciBhbiBlbWVyZ2VuY3kgY29udHJhY2VwdGlvbiByZXF1ZXN0LiYjMTA7LSBPciBhIHByb2JsZW0gd2l0aCBjb250cmFjZXB0aXZlIGRldmljZXMgKHN1Y2ggYXMgY29pbHMsIGltcGxhbnRzKSBvciBydW4gb3V0IG9mL29yIG1pc3NlZCBwaWxscy4mIzEwOy0gT3IgYSBjb25kb20gdGhhdCBoYXMgc3BsaXQgb3IgY29tZSBvZmYuJiMxMDtEb2VzIG5vdCBtZWFuIHNvbWVvbmUgd2l0aCBzeW1wdG9tcyAoVFJJQUdFIFRIRSBJTkpVUlkgT1IgSUxMTkVTUykuPC9yYXRpb25hbGU+PC9hbnN3ZXI+PGFuc3dlciBzZWxlY3RlZD0iZmFsc2UiPjx0ZXh0Pm1vcmU8L3RleHQ+PHJhdGlvbmFsZT5UaGlzIHdpbGwgdGFrZSB5b3UgdG8gYSBmdXJ0aGVyIG1lbnU6IC0gQ2hpbGQgcHJvdGVjdGlvbiBvciB2dWxuZXJhYmxlIGFkdWx0IGNvbmNlcm4uJiMxMDstIFNvY2lhbCBvciBkb21lc3RpYyBlbWVyZ2VuY3kuJiMxMDstIFByZXNjcmlwdGlvbiBvciBhcHBvaW50bWVudCByZXF1ZXN0LiYjMTA7LSBSZXF1ZXN0IGZvciBoZWFsdGggb3IgbWVkaWNhdGlvbiBpbmZvcm1hdGlvbi48L3JhdGlvbmFsZT48L2Fuc3dlcj48L2Fuc3dlcnM+PC9xdWVzdGlvbj48Y2FyZUFkdmljZUtleXdvcmREZXRhaWxzPjxjYXJlQWR2aWNlS2V5d29yZC8+PC9jYXJlQWR2aWNlS2V5d29yZERldGFpbHM+PGNsaW5pY2FsQXJlYS8+PHJlcG9ydFRleHQ+PHRleHQ+QSByZXBvcnQgb2YgcmVzdWx0cyBvciB0ZXN0cyB3YXMgdGhlIHJlYXNvbiBmb3IgdGhlIGNvbnRhY3QuPC90ZXh0Pjxwb3NpdGl2ZT50cnVlPC9wb3NpdGl2ZT48L3JlcG9ydFRleHQ+PHVzZXJDb21tZW50Lz48YWN0aW9uPkJhY2s8L2FjdGlvbj48aW5jbHVkZUluUmVwb3J0PnRydWU8L2luY2x1ZGVJblJlcG9ydD48L3RyaWFnZUxpbmU+PHRyaWFnZUxpbmU+PHN0YXJ0PjIwMjItMDMtMTZUMTQ6MDA6MjZaPC9zdGFydD48ZmluaXNoPjIwMjItMDMtMTZUMTQ6MDA6MjZaPC9maW5pc2g+PHF1ZXN0aW9uVHlwZT5TZXRWYXJpYWJsZTwvcXVlc3Rpb25UeXBlPjxxdWVzdGlvbj48dHJpYWdlTG9naWNJZD48cGF0aHdheVZlcnNpb24+PG1ham9yPjMwPC9tYWpvcj48bWlub3I+MjwvbWlub3I+PHN1YlJldmlzaW9uPjA8L3N1YlJldmlzaW9uPjwvcGF0aHdheVZlcnNpb24+PHBhdGh3YXlJZD5QRkExPC9wYXRod2F5SWQ+PHBhdGh3YXlPcmRlck5vPjUwMDwvcGF0aHdheU9yZGVyTm8+PC90cmlhZ2VMb2dpY0lkPjxxdWVzdGlvbklkPlR4MjIxNzkxPC9xdWVzdGlvbklkPjxxdWVzdGlvblRleHQ+U1RSSU5HOnRvJmFwb3M7U29jaWFsJmFtcDtpbmZvcm1hdGlvbiZhcG9zOy1EeDc4JmFwb3M7UmVwb3J0b2ZyZXN1bHRzJmFwb3M7PC9xdWVzdGlvblRleHQ+PHF1ZXN0aW9uUmF0aW9uYWxlLz48YW5zd2Vycz48YW5zd2VyIHNlbGVjdGVkPSJ0cnVlIj48dGV4dD4mcXVvdDtwcmVzZW50JnF1b3Q7PC90ZXh0PjxyYXRpb25hbGUvPjwvYW5zd2VyPjwvYW5zd2Vycz48L3F1ZXN0aW9uPjxjYXJlQWR2aWNlS2V5d29yZERldGFpbHM+PGNhcmVBZHZpY2VLZXl3b3JkLz48L2NhcmVBZHZpY2VLZXl3b3JkRGV0YWlscz48Y2xpbmljYWxBcmVhLz48cmVwb3J0VGV4dD48dGV4dC8+PHBvc2l0aXZlPmZhbHNlPC9wb3NpdGl2ZT48L3JlcG9ydFRleHQ+PHVzZXJDb21tZW50Lz48YWN0aW9uPkJhY2s8L2FjdGlvbj48aW5jbHVkZUluUmVwb3J0PmZhbHNlPC9pbmNsdWRlSW5SZXBvcnQ+PC90cmlhZ2VMaW5lPjx0cmlhZ2VMaW5lPjxzdGFydD4yMDIyLTAzLTE2VDE0OjAwOjI2Wjwvc3RhcnQ+PGZpbmlzaD4yMDIyLTAzLTE2VDE0OjAwOjI2WjwvZmluaXNoPjxxdWVzdGlvblR5cGU+U2V0VmFyaWFibGU8L3F1ZXN0aW9uVHlwZT48cXVlc3Rpb24+PHRyaWFnZUxvZ2ljSWQ+PHBhdGh3YXlWZXJzaW9uPjxtYWpvcj4zMDwvbWFqb3I+PG1pbm9yPjI8L21pbm9yPjxzdWJSZXZpc2lvbj4wPC9zdWJSZXZpc2lvbj48L3BhdGh3YXlWZXJzaW9uPjxwYXRod2F5SWQ+UEExMTA8L3BhdGh3YXlJZD48cGF0aHdheU9yZGVyTm8+MjE8L3BhdGh3YXlPcmRlck5vPjwvdHJpYWdlTG9naWNJZD48cXVlc3Rpb25JZD5UeDIyMTgwMjwvcXVlc3Rpb25JZD48cXVlc3Rpb25UZXh0PlNUUklORzpyZXBvcnRvZnJlc3VsdHNvcnRlc3RzZXN0YWJsaXNoZWRpbkVudHJ5RmxvdzwvcXVlc3Rpb25UZXh0PjxxdWVzdGlvblJhdGlvbmFsZS8+PGFuc3dlcnM+PGFuc3dlciBzZWxlY3RlZD0idHJ1ZSI+PHRleHQ+JnF1b3Q7cHJlc2VudCZxdW90OzwvdGV4dD48cmF0aW9uYWxlLz48L2Fuc3dlcj48L2Fuc3dlcnM+PC9xdWVzdGlvbj48Y2FyZUFkdmljZUtleXdvcmREZXRhaWxzPjxjYXJlQWR2aWNlS2V5d29yZC8+PC9jYXJlQWR2aWNlS2V5d29yZERldGFpbHM+PGNsaW5pY2FsQXJlYS8+PHJlcG9ydFRleHQ+PHRleHQvPjxwb3NpdGl2ZT5mYWxzZTwvcG9zaXRpdmU+PC9yZXBvcnRUZXh0Pjx1c2VyQ29tbWVudC8+PGFjdGlvbj5CYWNrPC9hY3Rpb24+PGluY2x1ZGVJblJlcG9ydD5mYWxzZTwvaW5jbHVkZUluUmVwb3J0PjwvdHJpYWdlTGluZT48dHJpYWdlTGluZT48c3RhcnQ+MjAyMi0wMy0xNlQxNDowMDoyNlo8L3N0YXJ0PjxmaW5pc2g+MjAyMi0wMy0xNlQxNDowMDoyNlo8L2ZpbmlzaD48cXVlc3Rpb25UeXBlPlNldFZhcmlhYmxlPC9xdWVzdGlvblR5cGU+PHF1ZXN0aW9uPjx0cmlhZ2VMb2dpY0lkPjxwYXRod2F5VmVyc2lvbj48bWFqb3I+MzA8L21ham9yPjxtaW5vcj4yPC9taW5vcj48c3ViUmV2aXNpb24+MDwvc3ViUmV2aXNpb24+PC9wYXRod2F5VmVyc2lvbj48cGF0aHdheUlkPlBBMTEwPC9wYXRod2F5SWQ+PHBhdGh3YXlPcmRlck5vPjQwMDwvcGF0aHdheU9yZGVyTm8+PC90cmlhZ2VMb2dpY0lkPjxxdWVzdGlvbklkPlR4MjIyODMwPC9xdWVzdGlvbklkPjxxdWVzdGlvblRleHQ+U1RSSU5HOlNEUENyZWNlaXZlcmVwb3J0b2ZyZXN1bHRzb3J0ZXN0czwvcXVlc3Rpb25UZXh0PjxxdWVzdGlvblJhdGlvbmFsZS8+PGFuc3dlcnM+PGFuc3dlciBzZWxlY3RlZD0idHJ1ZSI+PHRleHQ+JnF1b3Q7UEMgUmVjZWl2ZSByZXBvcnQgb2YgcmVzdWx0cyBvciB0ZXN0cyZxdW90OzwvdGV4dD48cmF0aW9uYWxlLz48L2Fuc3dlcj48L2Fuc3dlcnM+PC9xdWVzdGlvbj48Y2FyZUFkdmljZUtleXdvcmREZXRhaWxzPjxjYXJlQWR2aWNlS2V5d29yZC8+PC9jYXJlQWR2aWNlS2V5d29yZERldGFpbHM+PGNsaW5pY2FsQXJlYS8+PHJlcG9ydFRleHQ+PHRleHQvPjxwb3NpdGl2ZT5mYWxzZTwvcG9zaXRpdmU+PC9yZXBvcnRUZXh0Pjx1c2VyQ29tbWVudC8+PGFjdGlvbj5CYWNrPC9hY3Rpb24+PGluY2x1ZGVJblJlcG9ydD5mYWxzZTwvaW5jbHVkZUluUmVwb3J0PjwvdHJpYWdlTGluZT48dHJpYWdlTGluZT48c3RhcnQ+MjAyMi0wMy0xNlQxNDowMDoyNlo8L3N0YXJ0PjxmaW5pc2g+MjAyMi0wMy0xNlQxNDowMzowN1o8L2ZpbmlzaD48cXVlc3Rpb25UeXBlPkRpc3Bvc2l0aW9uPC9xdWVzdGlvblR5cGU+PGNhcmVBZHZpY2VLZXl3b3JkRGV0YWlscz48Y2FyZUFkdmljZUtleXdvcmQvPjwvY2FyZUFkdmljZUtleXdvcmREZXRhaWxzPjxjbGluaWNhbEFyZWEvPjxyZXBvcnRUZXh0Pjx0ZXh0Lz48cG9zaXRpdmU+ZmFsc2U8L3Bvc2l0aXZlPjwvcmVwb3J0VGV4dD48dXNlckNvbW1lbnQvPjxhY3Rpb24+QmFjazwvYWN0aW9uPjxpbmNsdWRlSW5SZXBvcnQ+ZmFsc2U8L2luY2x1ZGVJblJlcG9ydD48L3RyaWFnZUxpbmU+PHRyaWFnZUxpbmU+PHN0YXJ0PjIwMjItMDMtMTZUMTQ6MDM6MDdaPC9zdGFydD48ZmluaXNoPjIwMjItMDMtMTZUMTQ6MDM6MjVaPC9maW5pc2g+PHF1ZXN0aW9uVHlwZT5TaW5nbGVBbnN3ZXI8L3F1ZXN0aW9uVHlwZT48cXVlc3Rpb24+PHRyaWFnZUxvZ2ljSWQ+PHBhdGh3YXlWZXJzaW9uPjxtYWpvcj4zMDwvbWFqb3I+PG1pbm9yPjI8L21pbm9yPjxzdWJSZXZpc2lvbj4wPC9zdWJSZXZpc2lvbj48L3BhdGh3YXlWZXJzaW9uPjxwYXRod2F5SWQ+UEZBMTwvcGF0aHdheUlkPjxwYXRod2F5T3JkZXJObz41PC9wYXRod2F5T3JkZXJObz48L3RyaWFnZUxvZ2ljSWQ+PHF1ZXN0aW9uSWQ+VHgyMjAwNzQ8L3F1ZXN0aW9uSWQ+PHF1ZXN0aW9uVGV4dD5XaGF0IGlzIHRoZSByZWFzb24gZm9yIHRoZSBjb250YWN0PzwvcXVlc3Rpb25UZXh0PjxxdWVzdGlvblJhdGlvbmFsZS8+PGFuc3dlcnM+PGFuc3dlciBzZWxlY3RlZD0iZmFsc2UiPjx0ZXh0PmFuIGluanVyeSwgaWxsbmVzcyBvciBvdGhlciBoZWFsdGggcHJvYmxlbTwvdGV4dD48cmF0aW9uYWxlPlRoaXMgbWVhbnM6LSBBbnkgbmV3IG9yIHdvcnNlbmluZyBzeW1wdG9tcy4mIzEwOy0gT3IgdGhleSBoYXZlIHN3YWxsb3dlZC9icmVhdGhlZCBpbiBzb21ldGhpbmcgdGhhdCBjb3VsZCBiZSBoYXJtZnVsLCBidXQgYXJlIHN5bXB0b20tZnJlZS4mIzEwOy0gT3IgdXNlIG9mIG1lZGljYXRpb24gZm9yIGEgd29yc2VuaW5nIHByb2JsZW0uJiMxMDtEb2VzIG5vdCBtZWFuIGluZm9ybWF0aW9uIHJlcXVlc3RzIHdoZXJlIHRoZXkgYXJlIHN5bXB0b20tZnJlZS48L3JhdGlvbmFsZT48L2Fuc3dlcj48YW5zd2VyIHNlbGVjdGVkPSJmYWxzZSI+PHRleHQ+bGFib3VyIG9yIGNoaWxkYmlydGg8L3RleHQ+PHJhdGlvbmFsZT5UaGlzIG1lYW5zOiAmIzEwOy0gV2F0ZXJzIGJyZWFraW5nLCBpbmNyZWFzaW5nbHkgZnJlcXVlbnQgY29udHJhY3Rpb25zLiYjMTA7LSBPciBzZWVpbmcgb3IgZmVlbGluZyB0aGUgYmFieSBjb21pbmcsIG9yIGhhcyBqdXN0IGJlZW4gYm9ybi4mIzEwO0RvZXMgbm90IG1lYW4gZ29pbmcgaW50byBsYWJvdXIgYWZ0ZXIgYW55IGluanVyeSB0byB0aGUgYWJkb21lbiwgbG93ZXIgYmFjaywgZ3JvaW4gb3IgZ2VuaXRhbCBhcmVhIChUUklBR0UgVEhFIElOSlVSWSkuPC9yYXRpb25hbGU+PC9hbnN3ZXI+PGFuc3dlciBzZWxlY3RlZD0iZmFsc2UiPjx0ZXh0PmEgY29tbXVuaXR5IHNlcnZpY2U8L3RleHQ+PHJhdGlvbmFsZT5UaGlzIG9ubHkgbWVhbnM6ICYjMTA7LSBBIHBhbGxpYXRpdmUgY2FyZSB0ZWFtLiYjMTA7LSBPciBjb21tdW5pdHkgKGRpc3RyaWN0KSBudXJzZXMgb3IgbWlkd2l2ZXMuJiMxMDstIE9yIGEgZmFsbHMvcmFwaWQgcmVzcG9uc2UgdGVhbS48L3JhdGlvbmFsZT48L2Fuc3dlcj48YW5zd2VyIHNlbGVjdGVkPSJmYWxzZSI+PHRleHQ+YSBoZWFsdGhjYXJlIHByb2Zlc3Npb25hbCByZXF1ZXN0aW5nIGNvbnRhY3Qgd2l0aCBhbm90aGVyIGNsaW5pY2lhbjwvdGV4dD48cmF0aW9uYWxlLz48L2Fuc3dlcj48YW5zd2VyIHNlbGVjdGVkPSJ0cnVlIj48dGV4dD5hIHJlcG9ydCBvZiByZXN1bHRzIG9yIHRlc3RzPC90ZXh0PjxyYXRpb25hbGU+Rm9yIGV4YW1wbGUgYmxvb2Qgb3IgdXJpbmUgdGVzdHMsIEVDR3MsIFgtcmF5cy4mIzEwO0RvZXMgbm90IG1lYW4gc29tZW9uZSB3aXRoIHN5bXB0b21zLjwvcmF0aW9uYWxlPjwvYW5zd2VyPjxhbnN3ZXIgc2VsZWN0ZWQ9ImZhbHNlIj48dGV4dD5hIHBvc3NpYmxlIGZhaWx1cmUgb2YgY29udHJhY2VwdGlvbjwvdGV4dD48cmF0aW9uYWxlPlRoaXMgbWVhbnM6IC0gQ29uY2VybnMgYWJvdXQgdW5wbGFubmVkIHByZWduYW5jeSwgb3IgYW4gZW1lcmdlbmN5IGNvbnRyYWNlcHRpb24gcmVxdWVzdC4mIzEwOy0gT3IgYSBwcm9ibGVtIHdpdGggY29udHJhY2VwdGl2ZSBkZXZpY2VzIChzdWNoIGFzIGNvaWxzLCBpbXBsYW50cykgb3IgcnVuIG91dCBvZi9vciBtaXNzZWQgcGlsbHMuJiMxMDstIE9yIGEgY29uZG9tIHRoYXQgaGFzIHNwbGl0IG9yIGNvbWUgb2ZmLiYjMTA7RG9lcyBub3QgbWVhbiBzb21lb25lIHdpdGggc3ltcHRvbXMgKFRSSUFHRSBUSEUgSU5KVVJZIE9SIElMTE5FU1MpLjwvcmF0aW9uYWxlPjwvYW5zd2VyPjxhbnN3ZXIgc2VsZWN0ZWQ9ImZhbHNlIj48dGV4dD5tb3JlPC90ZXh0PjxyYXRpb25hbGU+VGhpcyB3aWxsIHRha2UgeW91IHRvIGEgZnVydGhlciBtZW51OiAtIENoaWxkIHByb3RlY3Rpb24gb3IgdnVsbmVyYWJsZSBhZHVsdCBjb25jZXJuLiYjMTA7LSBTb2NpYWwgb3IgZG9tZXN0aWMgZW1lcmdlbmN5LiYjMTA7LSBQcmVzY3JpcHRpb24gb3IgYXBwb2ludG1lbnQgcmVxdWVzdC4mIzEwOy0gUmVxdWVzdCBmb3IgaGVhbHRoIG9yIG1lZGljYXRpb24gaW5mb3JtYXRpb24uPC9yYXRpb25hbGU+PC9hbnN3ZXI+PC9hbnN3ZXJzPjwvcXVlc3Rpb24+PGNhcmVBZHZpY2VLZXl3b3JkRGV0YWlscz48Y2FyZUFkdmljZUtleXdvcmQvPjwvY2FyZUFkdmljZUtleXdvcmREZXRhaWxzPjxjbGluaWNhbEFyZWEvPjxyZXBvcnRUZXh0Pjx0ZXh0PkEgcmVwb3J0IG9mIHJlc3VsdHMgb3IgdGVzdHMgd2FzIHRoZSByZWFzb24gZm9yIHRoZSBjb250YWN0LjwvdGV4dD48cG9zaXRpdmU+dHJ1ZTwvcG9zaXRpdmU+PC9yZXBvcnRUZXh0Pjx1c2VyQ29tbWVudC8+PGFjdGlvbj5OZXh0PC9hY3Rpb24+PGluY2x1ZGVJblJlcG9ydD50cnVlPC9pbmNsdWRlSW5SZXBvcnQ+PC90cmlhZ2VMaW5lPjx0cmlhZ2VMaW5lPjxzdGFydD4yMDIyLTAzLTE2VDE0OjAzOjI1Wjwvc3RhcnQ+PGZpbmlzaD4yMDIyLTAzLTE2VDE0OjAzOjI1WjwvZmluaXNoPjxxdWVzdGlvblR5cGU+U2V0VmFyaWFibGU8L3F1ZXN0aW9uVHlwZT48cXVlc3Rpb24+PHRyaWFnZUxvZ2ljSWQ+PHBhdGh3YXlWZXJzaW9uPjxtYWpvcj4zMDwvbWFqb3I+PG1pbm9yPjI8L21pbm9yPjxzdWJSZXZpc2lvbj4wPC9zdWJSZXZpc2lvbj48L3BhdGh3YXlWZXJzaW9uPjxwYXRod2F5SWQ+UEZBMTwvcGF0aHdheUlkPjxwYXRod2F5T3JkZXJObz41MDA8L3BhdGh3YXlPcmRlck5vPjwvdHJpYWdlTG9naWNJZD48cXVlc3Rpb25JZD5UeDIyMTc5MTwvcXVlc3Rpb25JZD48cXVlc3Rpb25UZXh0PlNUUklORzp0byZhcG9zO1NvY2lhbCZhbXA7aW5mb3JtYXRpb24mYXBvczstRHg3OCZhcG9zO1JlcG9ydG9mcmVzdWx0cyZhcG9zOzwvcXVlc3Rpb25UZXh0PjxxdWVzdGlvblJhdGlvbmFsZS8+PGFuc3dlcnM+PGFuc3dlciBzZWxlY3RlZD0idHJ1ZSI+PHRleHQ+JnF1b3Q7cHJlc2VudCZxdW90OzwvdGV4dD48cmF0aW9uYWxlLz48L2Fuc3dlcj48L2Fuc3dlcnM+PC9xdWVzdGlvbj48Y2FyZUFkdmljZUtleXdvcmREZXRhaWxzPjxjYXJlQWR2aWNlS2V5d29yZC8+PC9jYXJlQWR2aWNlS2V5d29yZERldGFpbHM+PGNsaW5pY2FsQXJlYS8+PHJlcG9ydFRleHQ+PHRleHQvPjxwb3NpdGl2ZT5mYWxzZTwvcG9zaXRpdmU+PC9yZXBvcnRUZXh0Pjx1c2VyQ29tbWVudC8+PGFjdGlvbj5OZXh0PC9hY3Rpb24+PGluY2x1ZGVJblJlcG9ydD5mYWxzZTwvaW5jbHVkZUluUmVwb3J0PjwvdHJpYWdlTGluZT48dHJpYWdlTGluZT48c3RhcnQ+MjAyMi0wMy0xNlQxNDowMzoyNVo8L3N0YXJ0PjxmaW5pc2g+MjAyMi0wMy0xNlQxNDowMzoyNVo8L2ZpbmlzaD48cXVlc3Rpb25UeXBlPlNldFZhcmlhYmxlPC9xdWVzdGlvblR5cGU+PHF1ZXN0aW9uPjx0cmlhZ2VMb2dpY0lkPjxwYXRod2F5VmVyc2lvbj48bWFqb3I+MzA8L21ham9yPjxtaW5vcj4yPC9taW5vcj48c3ViUmV2aXNpb24+MDwvc3ViUmV2aXNpb24+PC9wYXRod2F5VmVyc2lvbj48cGF0aHdheUlkPlBBMTEwPC9wYXRod2F5SWQ+PHBhdGh3YXlPcmRlck5vPjIxPC9wYXRod2F5T3JkZXJObz48L3RyaWFnZUxvZ2ljSWQ+PHF1ZXN0aW9uSWQ+VHgyMjE4MDI8L3F1ZXN0aW9uSWQ+PHF1ZXN0aW9uVGV4dD5TVFJJTkc6cmVwb3J0b2ZyZXN1bHRzb3J0ZXN0c2VzdGFibGlzaGVkaW5FbnRyeUZsb3c8L3F1ZXN0aW9uVGV4dD48cXVlc3Rpb25SYXRpb25hbGUvPjxhbnN3ZXJzPjxhbnN3ZXIgc2VsZWN0ZWQ9InRydWUiPjx0ZXh0PiZxdW90O3ByZXNlbnQmcXVvdDs8L3RleHQ+PHJhdGlvbmFsZS8+PC9hbnN3ZXI+PC9hbnN3ZXJzPjwvcXVlc3Rpb24+PGNhcmVBZHZpY2VLZXl3b3JkRGV0YWlscz48Y2FyZUFkdmljZUtleXdvcmQvPjwvY2FyZUFkdmljZUtleXdvcmREZXRhaWxzPjxjbGluaWNhbEFyZWEvPjxyZXBvcnRUZXh0Pjx0ZXh0Lz48cG9zaXRpdmU+ZmFsc2U8L3Bvc2l0aXZlPjwvcmVwb3J0VGV4dD48dXNlckNvbW1lbnQvPjxhY3Rpb24+TmV4dDwvYWN0aW9uPjxpbmNsdWRlSW5SZXBvcnQ+ZmFsc2U8L2luY2x1ZGVJblJlcG9ydD48L3RyaWFnZUxpbmU+PHRyaWFnZUxpbmU+PHN0YXJ0PjIwMjItMDMtMTZUMTQ6MDM6MjVaPC9zdGFydD48ZmluaXNoPjIwMjItMDMtMTZUMTQ6MDM6MjVaPC9maW5pc2g+PHF1ZXN0aW9uVHlwZT5TZXRWYXJpYWJsZTwvcXVlc3Rpb25UeXBlPjxxdWVzdGlvbj48dHJpYWdlTG9naWNJZD48cGF0aHdheVZlcnNpb24+PG1ham9yPjMwPC9tYWpvcj48bWlub3I+MjwvbWlub3I+PHN1YlJldmlzaW9uPjA8L3N1YlJldmlzaW9uPjwvcGF0aHdheVZlcnNpb24+PHBhdGh3YXlJZD5QQTExMDwvcGF0aHdheUlkPjxwYXRod2F5T3JkZXJObz40MDA8L3BhdGh3YXlPcmRlck5vPjwvdHJpYWdlTG9naWNJZD48cXVlc3Rpb25JZD5UeDIyMjgzMDwvcXVlc3Rpb25JZD48cXVlc3Rpb25UZXh0PlNUUklORzpTRFBDcmVjZWl2ZXJlcG9ydG9mcmVzdWx0c29ydGVzdHM8L3F1ZXN0aW9uVGV4dD48cXVlc3Rpb25SYXRpb25hbGUvPjxhbnN3ZXJzPjxhbnN3ZXIgc2VsZWN0ZWQ9InRydWUiPjx0ZXh0PiZxdW90O1BDIFJlY2VpdmUgcmVwb3J0IG9mIHJlc3VsdHMgb3IgdGVzdHMmcXVvdDs8L3RleHQ+PHJhdGlvbmFsZS8+PC9hbnN3ZXI+PC9hbnN3ZXJzPjwvcXVlc3Rpb24+PGNhcmVBZHZpY2VLZXl3b3JkRGV0YWlscz48Y2FyZUFkdmljZUtleXdvcmQvPjwvY2FyZUFkdmljZUtleXdvcmREZXRhaWxzPjxjbGluaWNhbEFyZWEvPjxyZXBvcnRUZXh0Pjx0ZXh0Lz48cG9zaXRpdmU+ZmFsc2U8L3Bvc2l0aXZlPjwvcmVwb3J0VGV4dD48dXNlckNvbW1lbnQvPjxhY3Rpb24+TmV4dDwvYWN0aW9uPjxpbmNsdWRlSW5SZXBvcnQ+ZmFsc2U8L2luY2x1ZGVJblJlcG9ydD48L3RyaWFnZUxpbmU+PHRyaWFnZUxpbmU+PHN0YXJ0PjIwMjItMDMtMTZUMTQ6MDM6MjVaPC9zdGFydD48ZmluaXNoPjIwMjItMDMtMTZUMTQ6MDU6MDlaPC9maW5pc2g+PHF1ZXN0aW9uVHlwZT5EaXNwb3NpdGlvbjwvcXVlc3Rpb25UeXBlPjxjYXJlQWR2aWNlS2V5d29yZERldGFpbHM+PGNhcmVBZHZpY2VLZXl3b3JkLz48L2NhcmVBZHZpY2VLZXl3b3JkRGV0YWlscz48ZGlzcG9zaXRpb25JbnN0cnVjdGlvbj48aWQ+Q3g1NzU4PC9pZD48aXRlbURldGFpbHM+PGl0ZW0+PGlkPjI8L2lkPjx0ZXh0PkJlZm9yZSB5b3UgZ28sIEkgd2lsbCBqdXN0IGNoZWNrIHdoZXRoZXIgSSBuZWVkIHRvIGdpdmUgeW91IGFueSBmdXJ0aGVyIGluc3RydWN0aW9ucyBvciBhZHZpY2UuPC90ZXh0PjwvaXRlbT48L2l0ZW1EZXRhaWxzPjwvZGlzcG9zaXRpb25JbnN0cnVjdGlvbj48Y2xpbmljYWxBcmVhLz48cmVwb3J0VGV4dD48dGV4dD5JbnN0cnVjdGlvbnMgZ2l2ZW4gd2VyZTogSWYgc3ltcHRvbXMgZG9uJmFwb3M7dCBpbXByb3ZlLCBvciBnbyBhd2F5IGFuZCBjb21lIGJhY2ssIGdldCBpbiB0b3VjaCB3aXRoIGEgbG9jYWwgc2VydmljZSBmb3IgYSBub24tdXJnZW50IGFwcG9pbnRtZW50PC90ZXh0Pjxwb3NpdGl2ZT5mYWxzZTwvcG9zaXRpdmU+PC9yZXBvcnRUZXh0Pjx1c2VyQ29tbWVudD50ZXN0PC91c2VyQ29tbWVudD48YWN0aW9uPk5leHQ8L2FjdGlvbj48aW5jbHVkZUluUmVwb3J0PnRydWU8L2luY2x1ZGVJblJlcG9ydD48L3RyaWFnZUxpbmU+PHRyaWFnZUxpbmU+PHN0YXJ0PjIwMjItMDMtMTZUMTQ6MDU6MDlaPC9zdGFydD48ZmluaXNoPjIwMjItMDMtMTZUMTQ6MDU6MTNaPC9maW5pc2g+PHF1ZXN0aW9uVHlwZT5JbnRlcmltQ2FyZUFkdmljZTwvcXVlc3Rpb25UeXBlPjxjYXJlQWR2aWNlS2V5d29yZERldGFpbHM+PGNhcmVBZHZpY2VLZXl3b3JkLz48L2NhcmVBZHZpY2VLZXl3b3JkRGV0YWlscz48Y2FyZUFkdmljZURldGFpbHM+PGNhcmVBZHZpY2U+PGlkPkN4MTkxMDwvaWQ+PHRvcGljPldvcnNlbmluZzwvdG9waWM+PGl0ZW1EZXRhaWxzPjxpdGVtPjxpZD4yPC9pZD48dGV4dD5JZiB0aGVyZSBhcmUgYW55IG5ldyBzeW1wdG9tcywgb3IgaWYgdGhlIGNvbmRpdGlvbiBnZXRzIHdvcnNlLCBjaGFuZ2VzIG9yIHlvdSBoYXZlIGFueSBvdGhlciBjb25jZXJucywgY2FsbCB1cyBiYWNrLjwvdGV4dD48L2l0ZW0+PC9pdGVtRGV0YWlscz48L2NhcmVBZHZpY2U+PC9jYXJlQWR2aWNlRGV0YWlscz48Y2xpbmljYWxBcmVhLz48cmVwb3J0VGV4dD48dGV4dD5BZHZpY2UgR2l2ZW46IFdvcnNlbmluZzwvdGV4dD48cG9zaXRpdmU+ZmFsc2U8L3Bvc2l0aXZlPjwvcmVwb3J0VGV4dD48dXNlckNvbW1lbnQvPjxhY3Rpb24+RW5kPC9hY3Rpb24+PGluY2x1ZGVJblJlcG9ydD50cnVlPC9pbmNsdWRlSW5SZXBvcnQ+PC90cmlhZ2VMaW5lPjwvdHJpYWdlTGluZURldGFpbHM+PG9yaWdTaXRlPjxzaXRlSWQ+RzFRMlI8L3NpdGVJZD48c2l0ZU5hbWU+RG9yc2V0IENBUyAmYW1wOyBJVUM8L3NpdGVOYW1lPjxjYXNlSWQ+NzM3NzgzMzE8L2Nhc2VJZD48cGF0aHdheXNDb250ZW50VmVyc2lvbj4zMC4yLjA8L3BhdGh3YXlzQ29udGVudFZlcnNpb24+PHNvZnR3YXJlPjxwcm9kdWN0TmFtZT5TeXN0bU9uZTwvcHJvZHVjdE5hbWU+PHZlcnNpb24+MTwvdmVyc2lvbj48L3NvZnR3YXJlPjwvb3JpZ1NpdGU+PGNhbGxlcklzUGF0aWVudD50cnVlPC9jYWxsZXJJc1BhdGllbnQ+PC9wYXRod2F5VHJpYWdlPjwvcGF0aHdheVRyaWFnZURldGFpbHM+PGRlbW9ncmFwaGljcz48Z2VuZGVyPkZlbWFsZTwvZ2VuZGVyPjxhZ2VHcm91cD5BZHVsdDwvYWdlR3JvdXA+PC9kZW1vZ3JhcGhpY3M+PHNoYXJlZENhc2VJZC8+PC9wYXRod2F5RGV0YWlscz48c2l0ZT48aWQ+RzFRMlI8L2lkPjxuYW1lPkRvcnNldCBDQVMgJmFtcDsgSVVDPC9uYW1lPjwvc2l0ZT48L1BhdGh3YXlzQ2FzZT4=</value>
+                                                <participant typeCode="DEV" contextControlCode="OP">
+                                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146002GB01#participant"/>
+                                                    <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145000GB01#ParticipantRole"/>
+                                                    <participantRole classCode="ROL">
+                                                        <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145000GB01#ParticipantRole"/>
+                                                        <code code="TS" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.418"/>
+                                                        <playingDevice classCode="DEV" determinerCode="INSTANCE">
+                                                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145000GB01#playingDevice"/>
+                                                            <manufacturerModelName displayName="Pathways"/>
+                                                            <softwareName displayName="2.4"/>
+                                                        </playingDevice>
+                                                    </participantRole>
+                                                </participant>
+                                            </observationMedia>
+                                        </entry>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                                            <section classCode="DOCSECT" moodCode="EVN">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                                <id root="2A8EEB46-A532-11EC-B027-48DF37DF6378"/>
+                                                <title>Patient&apos;s Reported Condition</title>
+                                                <text>
+                                                    <content>Test</content>
+                                                    <br/>
+                                                    <content>&#10;</content>
+                                                    <br/>
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                                            <section classCode="DOCSECT" moodCode="EVN">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                                <id root="2A8EEB47-A532-11EC-B027-48DF37DF6378"/>
+                                                <title>Pathways Disposition</title>
+                                                <text>
+                                                    <content>For persistent or recurrent symptoms: get in touch with a local service for a Non-Urgent Appointment (Dx09)</content>
+                                                    <br/>
+                                                    <content>Selected service: CPCS: Pharmacy 1 Test Profile Positive Solutions</content>
+                                                    <br/>
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                                            <section classCode="DOCSECT" moodCode="EVN">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                                <id root="2A8EEB48-A532-11EC-B027-48DF37DF6378"/>
+                                                <title>Consultation Summary</title>
+                                                <text>
+                                                    <content>The consultation has identified:</content>
+                                                    <br/>
+                                                    <content>Test/results request</content>
+                                                    <br/>
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                                            <section classCode="DOCSECT" moodCode="EVN">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                                <id root="2A8EEB49-A532-11EC-B027-48DF37DF6378"/>
+                                                <title>Pathways Assessment</title>
+                                                <text>
+                                                    <content>Pathway: Calling About Self</content>
+                                                    <br/>
+                                                    <content>A report of results or tests was the reason for the contact.</content>
+                                                    <br/>
+                                                    <content>Instructions given were: If symptoms don&apos;t improve, or go away and come back, get in touch with a local service for a non-urgent appointment User Comment: test</content>
+                                                    <br/>
+                                                    <content>Advice Given: Worsening</content>
+                                                    <br/>
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component typeCode="COMP" contextConductionInd="true">
+                                            <npfitlc:contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                                            <section classCode="DOCSECT" moodCode="EVN">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                                <id root="2A8EEB4A-A532-11EC-B027-48DF37DF6378"/>
+                                                <title>Advice Given</title>
+                                                <text>
+                                                    <content>Before you go, I will just check whether I need to give you any further instructions or advice.</content>
+                                                    <br/>
+                                                    <content>If there are any new symptoms, or if the condition gets worse, changes or you have any other concerns, call us back.</content>
+                                                    <br/>
+                                                    <content>&#10;</content>
+                                                    <br/>
+                                                </text>
+                                            </section>
+                                        </component>
+                                    </section>
+                                </component>
+                            </structuredBody>
+                        </component>
+                    </ClinicalDocument>
+                </itk:payload>
+            </itk:payloads>
+        </itk:DistributionEnvelope>
+    </soap:Body>
+</soap:Envelope>

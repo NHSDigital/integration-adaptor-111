@@ -20,6 +20,8 @@ public class OdsCodeDosIdsScheduledTask {
     public void updateOdsCodeDosIdConfiguration() {
         LOGGER.info("Fetching ODS codes and DOS IDs from {}", itkProperties.getExternalConfigurationServiceUrl());
         OdsCodesDosIds odsCodesDosIds = odsDosService.fetchOdsCodeAndDosIds();
+        LOGGER.info("ODS codes fetched: " + odsCodesDosIds.getOdsCodes());
+        LOGGER.info("DOS IDs fetched: " + odsCodesDosIds.getDosIds());
         itkProperties.setOdsCodesDosIds(odsCodesDosIds);
     }
 }

@@ -2,6 +2,9 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem.PHONE;
+import static org.mockito.Answers.RETURNS_DEEP_STUBS;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import static uk.nhs.adaptors.oneoneone.cda.report.util.IsoDateTimeFormatter.toIsoDateTimeString;
@@ -12,14 +15,16 @@ import org.hl7.fhir.dstu3.model.Questionnaire;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase;
+import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.CaseDetails;
+import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.CaseDetails.ContactDetails.Caller;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.TriageLineDetails.TriageLine;
+import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.User;
 
+import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,18 +38,20 @@ public class QuestionnaireMapperTest {
 
     @InjectMocks
     private QuestionnaireMapper questionnaireMapper;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    @Mock(answer = RETURNS_DEEP_STUBS)
     private PathwaysCase pathwaysCase;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    @Mock(answer = RETURNS_DEEP_STUBS)
     private TriageLine triageLine;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private PathwaysCase.CaseDetails caseDetails;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.User user;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private PathwaysCaseDocument.PathwaysCase.CaseDetails.ContactDetails.Caller caller;
+    @Mock(answer = RETURNS_DEEP_STUBS)
+    private CaseDetails caseDetails;
+    @Mock(answer = RETURNS_DEEP_STUBS)
+    private User user;
+    @Mock(answer = RETURNS_DEEP_STUBS)
+    private Caller caller;
     @Mock
     private ResourceUtil resourceUtil;
+    @Mock
+    private XmlUtils xmlUtils;
 
     @BeforeEach
     public void setUpMocks() {
@@ -56,7 +63,7 @@ public class QuestionnaireMapperTest {
         when(triageLine.getQuestion().getTriageLogicId().getPathwayOrderNo()).thenReturn(ORDER_NUMBER);
         when(caseDetails.isSetCaseId()).thenReturn(true);
         when(caseDetails.getContactDetails().getCallerArray())
-            .thenReturn(new PathwaysCaseDocument.PathwaysCase.CaseDetails.ContactDetails.Caller[] {caller});
+            .thenReturn(new Caller[] {caller});
         when(caller.getPhone().getNumber()).thenReturn(PHONE_NUMBER);
         when(resourceUtil.newRandomUuid()).thenReturn(new IdType(RANDOM_UUID));
     }
@@ -101,9 +108,8 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapQuestionnairePublisherSkillSet() {
-        var skillSet = PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.User.SkillSet.Enum.forInt(1);
-        when(pathwaysCase.getPathwayDetails().getPathwayTriageDetails().getPathwayTriageArray(0).getUser().getSkillSet())
-            .thenReturn(skillSet);
+        String skillSet = "T6";
+        when(xmlUtils.getSingleNodeAsString(any(), anyString())).thenReturn(skillSet);
 
         Questionnaire questionnaire = questionnaireMapper.mapQuestionnaire(pathwaysCase, triageLine);
 

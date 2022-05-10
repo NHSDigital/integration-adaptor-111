@@ -30,7 +30,7 @@ pipeline {
                 script {
                     sh '''
                         docker network create 111network || true
-                        docker-compose -f docker/docker-compose.yml -f docker/docker-compose-checks.yml build integration-adaptor-111 activemq wiremock
+                        docker-compose -f docker/docker-compose.yml -f docker/docker-compose-checks.yml build --no-cache integration-adaptor-111 activemq wiremock
                         docker-compose -f docker/docker-compose.yml -f docker/docker-compose-checks.yml up --exit-code-from integration-adaptor-111 integration-adaptor-111
                     '''
                 }
@@ -47,7 +47,7 @@ pipeline {
                                 spotBugs(pattern: '**/reports/spotbugs/*.xml')
                             ]
                         )
-                        sh label: 'Remove exited containers', script: 'docker system prune --force'
+                        sh label: 'Remove exited containers', script: 'docker system prune -fa'
                 }
             }
         }
