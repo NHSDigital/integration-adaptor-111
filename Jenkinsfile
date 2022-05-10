@@ -47,7 +47,7 @@ pipeline {
                                 spotBugs(pattern: '**/reports/spotbugs/*.xml')
                             ]
                         )
-                        sh label: 'Remove exited containers', script: 'docker system prune --force'
+                        sh label: 'Remove exited containers', script: 'docker system prune -fa'
                 }
             }
         }
