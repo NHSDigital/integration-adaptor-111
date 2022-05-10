@@ -29,9 +29,8 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        docker/clear-docker.sh
                         docker network create 111network || true
-                        docker-compose -f docker/docker-compose.yml -f docker/docker-compose-checks.yml build integration-adaptor-111 activemq wiremock
+                        docker-compose -f docker/docker-compose.yml -f docker/docker-compose-checks.yml build --no-cache integration-adaptor-111 activemq wiremock
                         docker-compose -f docker/docker-compose.yml -f docker/docker-compose-checks.yml up --exit-code-from integration-adaptor-111 integration-adaptor-111
                     '''
                 }
