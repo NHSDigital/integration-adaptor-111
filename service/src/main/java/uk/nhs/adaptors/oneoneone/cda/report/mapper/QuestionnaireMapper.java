@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.ContactDetail;
 import org.hl7.fhir.dstu3.model.ContactPoint;
@@ -26,10 +27,10 @@ import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.Pa
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.TriageLineDetails.TriageLine.Question;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.TriageLineDetails.TriageLine.Question.Answers.Answer;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.User;
+import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.User.SkillSet;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
-import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 
@@ -38,7 +39,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 public class QuestionnaireMapper {
     private static final String NOT_APPLICABLE = "N/A";
     private final ResourceUtil resourceUtil;
-    private final XmlUtils xmlUtils;
 
     public Questionnaire mapQuestionnaire(PathwaysCase pathwaysCase, TriageLine triageLine) {
         Questionnaire questionnaire = new Questionnaire();
@@ -94,7 +94,12 @@ public class QuestionnaireMapper {
     }
 
     private String extractUserSkillSet(User user) {
-        return xmlUtils.getSingleNodeAsString(user.xgetSkillSet().getDomNode(), ".");
+        try {
+            SkillSet.Enum skillSet = user.getSkillSet();
+            return skillSet != null ? skillSet.toString() : null;
+        } catch (XmlValueOutOfRangeException exc) {
+            return "Unknown";
+        }
     }
 
     private Date getLatestDate(PathwaysCase pathwaysCase) {
