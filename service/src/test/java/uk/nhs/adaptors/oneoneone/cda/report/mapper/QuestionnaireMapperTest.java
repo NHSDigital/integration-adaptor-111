@@ -3,12 +3,11 @@ package uk.nhs.adaptors.oneoneone.cda.report.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem.PHONE;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import static uk.nhs.adaptors.oneoneone.cda.report.util.IsoDateTimeFormatter.toIsoDateTimeString;
 
+import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 import org.hl7.fhir.dstu3.model.Enumerations;
 import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Questionnaire;
@@ -24,7 +23,6 @@ import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.Pa
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.TriageLineDetails.TriageLine;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.User;
 
-import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.XmlUtils;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,8 +48,6 @@ public class QuestionnaireMapperTest {
     private Caller caller;
     @Mock
     private ResourceUtil resourceUtil;
-    @Mock
-    private XmlUtils xmlUtils;
 
     @BeforeEach
     public void setUpMocks() {
@@ -108,11 +104,11 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapQuestionnairePublisherSkillSet() {
-        String skillSet = "T6";
-        when(xmlUtils.getSingleNodeAsString(any(), anyString())).thenReturn(skillSet);
+        when(pathwaysCase.getPathwayDetails().getPathwayTriageDetails().getPathwayTriageArray(0).getUser().getSkillSet())
+            .thenThrow(XmlValueOutOfRangeException.class);
 
         Questionnaire questionnaire = questionnaireMapper.mapQuestionnaire(pathwaysCase, triageLine);
 
-        assertThat(questionnaire.getPublisher()).isEqualTo(String.format("User skill set: '%s'", skillSet));
+        assertThat(questionnaire.getPublisher()).isEqualTo("User skill set: 'Unknown'");
     }
 }
