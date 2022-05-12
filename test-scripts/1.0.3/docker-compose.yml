@@ -2,7 +2,7 @@ version: '3'
 
 services:
   integration-adaptor-111:
-    image: nhsdev/nia-111-adaptor:1.0.1
+    image: nhsdev/nia-111-adaptor:1.0.3
     ports:
       - "8080:8080"
     environment:
@@ -14,10 +14,10 @@ services:
       - PEM111_ITK_DOS_ID_LIST
       - PEM111_ITK_EXTERNAL_CONFIGURATION_URL=
       - PEM111_ITK_FETCH_INTERVAL_MIN
-      - PEM111_VERSION=1.0.1
+      - PEM111_VERSION=1.0.3
 
   nginx:
-    image: nhsdev/nia-111-nginx-adaptor:1.0.1
+    image: nhsdev/nia-111-nginx-adaptor:1.0.3
     ports:
       - "8443:443"
       - "8480:80"
