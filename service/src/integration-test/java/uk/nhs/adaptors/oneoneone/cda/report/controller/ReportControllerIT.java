@@ -74,6 +74,7 @@ public class ReportControllerIT {
     private static final String EXPECTED_BODY = "<itk:SimpleMessageResponse xmlns:itk=\"urn:nhs-itk:ns:201005\">OK:%s</itk"
         + ":SimpleMessageResponse>";
     private static final List<String> IGNORED_JSON_PATHS = List.of(
+        "meta.lastUpdated",
         "entry[*].fullUrl",
         "entry[*].resource.addresses[*].reference",
         "entry[*].resource.appointment.reference",
@@ -113,8 +114,7 @@ public class ReportControllerIT {
         "entry[*].resource.subject.reference",
         "entry[*].resource.supportingInfo[*].reference",
         "entry[*].resource.practitioner.reference",
-        "entry[*].resource.organization.reference",
-        "entry[0].response.lastModified");
+        "entry[*].resource.organization.reference");
 
     @Autowired
     private FhirJsonValidator validator;
