@@ -30,6 +30,7 @@ import org.hl7.fhir.dstu3.model.InstantType;
 import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Location;
 import org.hl7.fhir.dstu3.model.MessageHeader;
+import org.hl7.fhir.dstu3.model.Meta;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -83,12 +84,6 @@ public class EncounterReportBundleService {
     private final ResourceUtil resourceUtil;
     private final DeviceMapper deviceMapper;
 
-    private static void addEntry(Bundle bundle, Resource resource) {
-        bundle.addEntry()
-            .setFullUrl(createFullUrl(resource))
-            .setResource(resource);
-    }
-
     public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header, String messageId)
         throws XmlException {
         Bundle bundle = createBundle(clinicalDocument);
@@ -113,7 +108,7 @@ public class EncounterReportBundleService {
         List<Observation> observations = observationMapper.mapObservations(clinicalDocument, encounter);
         RelatedPerson relatedPerson = relatedPersonMapper.createEmergencyContactRelatedPerson(clinicalDocument, encounter);
 
-        addMessageHeader(bundle, messageHeader);
+        addEntry(bundle, messageHeader);
         addEncounter(bundle, encounter);
         addServiceProvider(bundle, encounter);
         addParticipants(bundle, encounter);
@@ -138,12 +133,20 @@ public class EncounterReportBundleService {
         return bundle;
     }
 
+    private static void addEntry(Bundle bundle, Resource resource) {
+        bundle.addEntry()
+            .setFullUrl(createFullUrl(resource))
+            .setResource(resource);
+    }
+
     private Bundle createBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument) {
         Bundle bundle = new Bundle();
         bundle.setType(MESSAGE);
         bundle.setIdentifier(new Identifier()
             .setType(new CodeableConcept().setText(BUNDLE_IDENTIFIER_TYPE))
             .setValue(clinicalDocument.getVersionNumber().getValue().toString()));
+        bundle.setMeta(new Meta()
+            .setLastUpdatedElement(new InstantType(new Date(), MILLI, getTimeZone(UTC))));
         return bundle;
     }
 
@@ -162,19 +165,8 @@ public class EncounterReportBundleService {
 
     private ListResource getReferenceFromBundle(Bundle bundle, POCDMT000002UK01ClinicalDocument1 clinicalDocument,
         Encounter encounter, Device device) {
-        Collection<Resource> resourcesCreated = bundle.getEntry().stream().map(it -> it.getResource()).collect(toSet());
+        Collection<Resource> resourcesCreated = bundle.getEntry().stream().map(Bundle.BundleEntryComponent::getResource).collect(toSet());
         return listMapper.mapList(clinicalDocument, encounter, resourcesCreated, resourceUtil.createReference(device));
-    }
-
-    private void addMessageHeader(Bundle bundle, MessageHeader messageHeader) {
-        Bundle.BundleEntryResponseComponent responseComponent = new Bundle.BundleEntryResponseComponent()
-            .setStatus("success")
-            .setLastModifiedElement(new InstantType(new Date(), MILLI, getTimeZone(UTC)));
-
-        bundle.addEntry()
-            .setFullUrl(createFullUrl(messageHeader))
-            .setResource(messageHeader)
-            .setResponse(responseComponent);
     }
 
     private void addEncounter(Bundle bundle, Encounter encounter) {
@@ -228,8 +220,7 @@ public class EncounterReportBundleService {
     }
 
     private void addSubject(Bundle bundle, Encounter encounter) {
-        if (encounter.getSubjectTarget() instanceof Patient) {
-            Patient patient = (Patient) encounter.getSubjectTarget();
+        if (encounter.getSubjectTarget() instanceof Patient patient) {
             addEntry(bundle, patient);
 
             if (patient.hasGeneralPractitioner()) {
@@ -239,8 +230,7 @@ public class EncounterReportBundleService {
                 }
             }
         }
-        if (encounter.getSubjectTarget() instanceof Group) {
-            Group group = (Group) encounter.getSubjectTarget();
+        if (encounter.getSubjectTarget() instanceof Group group) {
             addEntry(bundle, group);
             for (Group.GroupMemberComponent groupMemberComponent : group.getMember()) {
                 bundle.addEntry()
@@ -269,7 +259,7 @@ public class EncounterReportBundleService {
     }
 
     private void addCarePlan(Bundle bundle, List<CarePlan> carePlans) {
-        carePlans.stream().forEach(carePlan -> addEntry(bundle, carePlan));
+        carePlans.forEach(carePlan -> addEntry(bundle, carePlan));
     }
 
     private void addHealthcareService(Bundle bundle, List<HealthcareService> healthcareServiceList) {
