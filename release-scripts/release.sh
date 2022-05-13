@@ -2,7 +2,7 @@
 
 set -e
 
-export RELEASE_VERSION=1.0.2
+export RELEASE_VERSION=1.0.3
 cd ..
 
 docker build -t local/111:${RELEASE_VERSION} -f docker/service/Dockerfile .
