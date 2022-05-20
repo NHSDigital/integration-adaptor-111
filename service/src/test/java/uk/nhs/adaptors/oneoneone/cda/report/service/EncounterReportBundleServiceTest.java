@@ -13,7 +13,6 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -65,7 +64,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.RelatedPersonMapper;
-import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.INT;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
@@ -232,7 +230,7 @@ public class EncounterReportBundleServiceTest {
     @Mock
     private ConsentMapper consentMapper;
     @Mock
-    private PathwayUtil pathwayUtil;
+    private PathwayService pathwayService;
     @Mock
     private MessageHeaderService messageHeaderService;
     @Mock
@@ -273,10 +271,10 @@ public class EncounterReportBundleServiceTest {
         when(carePlanMapper.mapCarePlan(any(), any(), any())).thenReturn(singletonList(CAREPLAN));
         when(healthcareServiceMapper.mapHealthcareService(any())).thenReturn(singletonList(HEALTHCARE_SERVICE));
         when(consentMapper.mapConsent(any(), any())).thenReturn(CONSENT);
-        when(pathwayUtil.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
+        when(pathwayService.getQuestionnaireResponses(any(), any(), any())).thenReturn(questionnaireResponseList);
         when(messageHeaderService.createMessageHeader(any(), any(), eq(EFFECTIVE_TIME))).thenReturn(MESSAGE_HEADER);
         when(referralRequestMapper.mapReferralRequest(any(), any(), any(), any(), any())).thenReturn(REFERRAL_REQUEST);
-        when(observationMapper.mapObservations(any(), eq(ENCOUNTER))).thenReturn(Arrays.asList(OBSERVATION));
+        when(observationMapper.mapObservations(any(), eq(ENCOUNTER))).thenReturn(List.of(OBSERVATION));
         when(practitionerRoleMapper.mapAuthorRoles(any())).thenReturn(singletonList(AUTHOR_ROLE));
         when(practitionerRoleMapper.mapResponsibleParty(any())).thenReturn(Optional.of(PRACTITIONER_ROLE));
         when(relatedPersonMapper.createEmergencyContactRelatedPerson(eq(document), eq(ENCOUNTER))).thenReturn(RELATED_PERSON);
@@ -291,7 +289,7 @@ public class EncounterReportBundleServiceTest {
 
     @Test
     @SuppressWarnings("MagicNumber")
-    public void shouldCreateEncounterBundle() throws XmlException {
+    public void shouldCreateEncounterBundle() {
         ItkReportHeader itkReportHeader = new ItkReportHeader();
         itkReportHeader.setSpecKey(SPECIFICATION_KEY);
         itkReportHeader.setSpecVal(SPECIFICATION_VALUE);
@@ -329,7 +327,7 @@ public class EncounterReportBundleServiceTest {
 
     @Test
     @SuppressWarnings("MagicNumber")
-    public void shouldMapIncomingReferralWithPractitioners() throws XmlException {
+    public void shouldMapIncomingReferralWithPractitioners() {
         ItkReportHeader itkReportHeader = new ItkReportHeader();
         List<Reference> recipients = new ArrayList<>();
 

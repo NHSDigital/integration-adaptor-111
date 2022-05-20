@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 
 @Component
@@ -39,26 +40,30 @@ import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 public class QuestionnaireMapper {
     private static final String NOT_APPLICABLE = "N/A";
     private final ResourceUtil resourceUtil;
+    private final PathwayUtil pathwayUtil;
 
     public Questionnaire mapQuestionnaire(PathwaysCase pathwaysCase, TriageLine triageLine) {
         Questionnaire questionnaire = new Questionnaire();
         String publisher = getPublisher(pathwaysCase.getPathwayDetails().getPathwayTriageDetails().getPathwayTriageArray(0).getUser());
-        Date latestDate = getLatestDate(pathwaysCase);
+        Optional<Date> latestDateOptional = getLatestDate(pathwaysCase);
 
         questionnaire.setIdElement(resourceUtil.newRandomUuid());
         questionnaire.addIdentifier(new Identifier().setValue(getCaseID(pathwaysCase)))
-            .setVersion(toIsoDateTimeString(latestDate))
             .setStatus(Enumerations.PublicationStatus.ACTIVE)
             .setExperimental(false)
             .addSubjectType("Patient")
-            .setDate(latestDate)
             .setPublisher(publisher)
-            .setLastReviewDate(latestDate)
             .setJurisdiction(Collections.singletonList(
                 new CodeableConcept().setText(
                     getCountry(pathwaysCase))))
             .addItem(getItem(triageLine.getQuestion(), getCaseID(pathwaysCase)));
         setContact(pathwaysCase, questionnaire);
+
+        latestDateOptional.ifPresent(latestDate -> {
+            questionnaire.setVersion(toIsoDateTimeString(latestDate))
+                .setDate(latestDate)
+                .setLastReviewDate(latestDate);
+        });
 
         return questionnaire;
     }
@@ -102,12 +107,12 @@ public class QuestionnaireMapper {
         }
     }
 
-    private Date getLatestDate(PathwaysCase pathwaysCase) {
-        if (pathwaysCase.isSetCaseReceiveEnd()) {
-            return DateUtil.parsePathwaysDate(pathwaysCase.getCaseReceiveEnd().toString());
+    private Optional<Date> getLatestDate(PathwaysCase pathwaysCase) {
+        if (pathwayUtil.isSetCaseReceiveEnd(pathwaysCase)) {
+            return Optional.of(DateUtil.parsePathwaysDate(pathwaysCase.getCaseReceiveEnd().toString()));
         }
 
-        return null;
+        return Optional.empty();
     }
 
     private String getCaseID(PathwaysCase pathwaysCase) {

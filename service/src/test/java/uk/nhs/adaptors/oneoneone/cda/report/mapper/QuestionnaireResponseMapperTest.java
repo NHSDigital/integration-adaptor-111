@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.TriageLineDetails.TriageLine;
 
+import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,6 +53,9 @@ public class QuestionnaireResponseMapperTest {
     @Mock
     private ResourceUtil resourceUtil;
 
+    @Mock
+    private PathwayUtil pathwayUtil;
+
     @Test
     public void shouldMapQuestionnaireResponseFromPathways() {
         TriageLine.Question.Answers.Answer[] answerArray = new TriageLine.Question.Answers.Answer[] {answer};
@@ -61,7 +65,7 @@ public class QuestionnaireResponseMapperTest {
         when(pathwaysCase.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseId()).thenReturn(caseId);
         when(caseDetails.isSetCaseId()).thenReturn(true);
-        when(pathwaysCase.isSetCaseReceiveEnd()).thenReturn(true);
+        when(pathwayUtil.isSetCaseReceiveEnd(pathwaysCase)).thenReturn(true);
         when(pathwaysCase.getCaseReceiveEnd()).thenReturn(calendar);
         when(calendar.toString()).thenReturn("2011-02-17T17:31:14.313Z");
         when(triageLine.getQuestion()).thenReturn(question);
