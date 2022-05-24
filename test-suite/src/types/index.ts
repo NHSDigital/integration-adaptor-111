@@ -30,6 +30,7 @@ export type TestRequestField = {
   label: string;
   defaultValue: string;
   validators?: Array<Validator>;
+  value?: string;
 };
 
 export type AppRoute = {

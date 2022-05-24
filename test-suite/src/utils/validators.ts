@@ -40,19 +40,20 @@ export const regexMatch = (
   message: message,
 });
 
-export const isLocalUrl = () =>
-  regexMatch(
-    /((http|https)(:\/\/)(localhost|127.0.0.1)(([:])[\0-9]{4,6})){1}/g,
-    "Field must be a local URL",
-    "localMatch" as const
-  );
-
 export const isReportUrl = () =>
   regexMatch(
     /((\/){1}(report)){1}/g,
     "Field must use the /report subdirectory",
     "reportMatch" as const,
     2
+  );
+
+  export const isUrl = () =>
+  regexMatch(
+    /^https?:\/\/\w+(\.\w+)*(:[0-9]+)?(\/.*)?$/g,
+    "Field must be a URL",
+    "reportMatch" as const,
+    1
   );
 
 export const isAlpha = () =>

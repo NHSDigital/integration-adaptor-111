@@ -17,17 +17,20 @@ type Props = {
   name: string;
   specs: TestSpecs;
   template: string;
+  globals: Array<TestRequestField>;
 };
 
-const RequestForm = ({ name, specs, template }: Props) => {
-  const [form, setForm] = useState<AdaptorRequest>(createDefaultRequest(specs));
+const RequestForm = ({ name, specs, template, globals }: Props) => {
+  const [form, setForm] = useState<AdaptorRequest>(
+    createDefaultRequest(specs, globals)
+  );
   const [errors, setErrors] = useState<FormErrors>(createFormErrors(specs));
   const [response, setResponse] = useState<AdaptorResponse | null>(null);
 
   const specEntries = Object.entries(specs);
 
   const onReset = () => {
-    setForm(createDefaultRequest(specs));
+    setForm(createDefaultRequest(specs, globals));
     setErrors(createFormErrors(specs));
     setResponse(null);
   };
