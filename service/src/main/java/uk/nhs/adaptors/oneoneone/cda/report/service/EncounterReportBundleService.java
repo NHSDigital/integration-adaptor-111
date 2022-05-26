@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Appointment;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.CarePlan;
@@ -59,7 +58,6 @@ import uk.nhs.adaptors.oneoneone.cda.report.mapper.ObservationMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.PractitionerRoleMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.ReferralRequestMapper;
 import uk.nhs.adaptors.oneoneone.cda.report.mapper.RelatedPersonMapper;
-import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
@@ -74,7 +72,7 @@ public class EncounterReportBundleService {
     private final CarePlanMapper carePlanMapper;
     private final ConsentMapper consentMapper;
     private final HealthcareServiceMapper healthcareServiceMapper;
-    private final PathwayUtil pathwayUtil;
+    private final PathwayService pathwayService;
     private final MessageHeaderService messageHeaderService;
     private final ConditionMapper conditionMapper;
     private final ReferralRequestMapper referralRequestMapper;
@@ -84,8 +82,7 @@ public class EncounterReportBundleService {
     private final ResourceUtil resourceUtil;
     private final DeviceMapper deviceMapper;
 
-    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header, String messageId)
-        throws XmlException {
+    public Bundle createEncounterBundle(POCDMT000002UK01ClinicalDocument1 clinicalDocument, ItkReportHeader header, String messageId) {
         Bundle bundle = createBundle(clinicalDocument);
 
         MessageHeader messageHeader = messageHeaderService
@@ -96,7 +93,7 @@ public class EncounterReportBundleService {
         Encounter encounter = encounterMapper.mapEncounter(clinicalDocument, authorPractitionerRoles, responsibleParty,
             messageHeader.getEvent());
         Consent consent = consentMapper.mapConsent(clinicalDocument, encounter);
-        List<QuestionnaireResponse> questionnaireResponseList = pathwayUtil.getQuestionnaireResponses(clinicalDocument,
+        List<QuestionnaireResponse> questionnaireResponseList = pathwayService.getQuestionnaireResponses(clinicalDocument,
             encounter.getSubject(), resourceUtil.createReference(encounter));
         Condition condition = conditionMapper.mapCondition(clinicalDocument, encounter, questionnaireResponseList);
         List<CarePlan> carePlans = carePlanMapper.mapCarePlan(clinicalDocument, encounter, condition);

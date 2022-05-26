@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
+import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 
 @Component
@@ -25,6 +26,7 @@ public class QuestionnaireResponseMapper {
     private static final String NOT_APPLICABLE = "N/A";
     private final QuestionnaireMapper questionnaireMapper;
     private final ResourceUtil resourceUtil;
+    private final PathwayUtil pathwayUtil;
 
     public QuestionnaireResponse mapQuestionnaireResponse(PathwaysCase pathwaysCase, Reference patient, Reference encounter,
         TriageLine triageLine) {
@@ -45,7 +47,7 @@ public class QuestionnaireResponseMapper {
                 questionnaireResponse.setIdentifier(new Identifier().setValue(pathwaysCase.getCaseDetails().getCaseId()));
             }
         }
-        if (pathwaysCase.isSetCaseReceiveEnd()) {
+        if (pathwayUtil.isSetCaseReceiveEnd(pathwaysCase)) {
             questionnaireResponse.setAuthored(DateUtil.parsePathwaysDate(pathwaysCase.getCaseReceiveEnd().toString()));
         }
         if (triageLine.getQuestion() != null) {
