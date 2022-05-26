@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,6 +71,18 @@ public class PathwayServiceTest {
             .getQuestionnaireResponses(clinicalDocument, patient, encounter);
 
         assertFalse(questionnaireResponseList.isEmpty());
+    }
+
+    @Test
+    public void shouldNotFailWhenPathwayMappingFails() {
+        when(nodeUtil.getNodeValueString(any())).thenReturn(pathwaysEncoded);
+        when(questionnaireResponseMapper.mapQuestionnaireResponse(any(), any(), any(), any()))
+            .thenThrow(XmlValueOutOfRangeException.class);
+
+        List<QuestionnaireResponse> questionnaireResponseList = pathwayService
+            .getQuestionnaireResponses(clinicalDocument, patient, encounter);
+
+        assertNull(questionnaireResponseList);
     }
 
     @Test
