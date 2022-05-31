@@ -115,6 +115,95 @@ const schema: Schema = {
             ],
           },
         },
+        {
+          testName: "Safeguarding referral",
+          testDescription: "This test will attempt to send notification of safeguarding referral to Social Services.",
+          template: require("./safeguarding-request.xml"),
+          testSpecifications: {
+            [RequestHeaderProps.Header]: [
+              {
+                label: "url",
+                id: "url",
+                defaultValue: "http://localhost:8081/report",
+                validators: [isLocalUrl(), isReportUrl()]
+              },
+              {
+                label: "Content Type",
+                id: "content-type",
+                defaultValue: "application/xml",
+                validators: [notNull(), minLength(7)]
+              }
+            ],
+            [RequestHeaderProps.Body]: [
+              {
+                label: "ODS Code",
+                id: "ods-code",
+                defaultValue: "EM396",
+                validators: [notNull()]
+              },
+              {
+                label: "DOS Code",
+                id: "dos-code",
+                defaultValue: "26428",
+                validators: []
+              },
+              {
+                label: "NHS Number",
+                id: "nhs-number",
+                defaultValue: "1717636608",
+                validators: [notNull(), isNumeric(), isLength(10)]
+              },
+              {
+                label: "Recipient Name",
+                id: "recipient-name",
+                defaultValue: "John Stones",
+                validators: [notNull()]
+              },
+              {
+                label: "Recipient Address Line 1",
+                id: "recipient-street-address-line-1",
+                defaultValue: "1 Albion Place",
+                validators: [notNull()]
+              },
+              {
+                label: "Recipient Address Line 2",
+                id: "recipient-street-address-line-2",
+                defaultValue: "Leeds City Centre",
+                validators: [notNull()]
+              },
+              {
+                label: "Recipient Town",
+                id: "recipient-street-address-town",
+                defaultValue: "",
+                validators: []
+              },
+              {
+                label: "Recipient City",
+                id: "recipient-street-address-city",
+                defaultValue: "Leeds",
+                validators: []
+              },
+              {
+                label: "Recipient Postcode",
+                id: "recipient-street-address-postcode",
+                defaultValue: "LS1 6LJ",
+                validators: []
+              },
+              {
+                label: "Encounter Start Datetime",
+                id: "nhs111-encounter-date-time-start",
+                defaultValue: "202205311539",
+                validators: [notNull(), isNumeric()]
+              },
+              {
+                label: "Encounter End Datetime",
+                id: "nhs111-encounter-date-time-end",
+                defaultValue: "202205311615",
+                validators: [notNull(), isNumeric()]
+              }
+            ]
+          }
+        }
       ],
     },
   ],

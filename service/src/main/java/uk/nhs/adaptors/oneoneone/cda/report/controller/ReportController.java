@@ -12,6 +12,7 @@ import static uk.nhs.adaptors.oneoneone.xml.XmlValidator.validate;
 
 import org.apache.xmlbeans.XmlException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -57,6 +58,7 @@ public class ReportController {
     private final ReportParserUtil reportParserUtil;
     private final ReportRequestUtils reportRequestUtils;
 
+    @CrossOrigin("http://localhost:3000")
     @PostMapping(value = "/report",
         consumes = {APPLICATION_XML_VALUE, TEXT_XML_VALUE},
         produces = TEXT_XML_VALUE
