@@ -15,10 +15,9 @@ const sendXmlRequest = async (
   return new Promise((resolve) => {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", form.requestHeaderFields.url, true);
-    xhr.setRequestHeader(
-      "Content-Type",
-      form.requestHeaderFields["content-type"]
-    );
+    Object.entries(form.requestHeaderFields).forEach(([k, v]) => {
+      xhr.setRequestHeader(k, v);
+    });
     xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
     const xmlPayload = Object.entries(form.requestPayloadFields).reduce(
       (acc, [k, v]) => {
