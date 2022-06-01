@@ -23,6 +23,7 @@ import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.Pa
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.TriageLineDetails.TriageLine;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.User;
 
+import uk.nhs.adaptors.oneoneone.cda.report.util.PathwayUtil;
 import uk.nhs.adaptors.oneoneone.cda.report.util.ResourceUtil;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,6 +49,8 @@ public class QuestionnaireMapperTest {
     private Caller caller;
     @Mock
     private ResourceUtil resourceUtil;
+    @Mock
+    private PathwayUtil pathwayUtil;
 
     @BeforeEach
     public void setUpMocks() {
@@ -55,7 +58,7 @@ public class QuestionnaireMapperTest {
         when(caseDetails.getCaseId()).thenReturn(CASE_ID);
         when(pathwaysCase.getPathwayDetails().getPathwayTriageDetails().getPathwayTriageArray(0).getUser()).thenReturn(user);
         when(pathwaysCase.getCaseReceiveEnd().toString()).thenReturn(DATE);
-        when(pathwaysCase.isSetCaseReceiveEnd()).thenReturn(true);
+        when(pathwayUtil.isSetCaseReceiveEnd(pathwaysCase)).thenReturn(true);
         when(triageLine.getQuestion().getTriageLogicId().getPathwayOrderNo()).thenReturn(ORDER_NUMBER);
         when(caseDetails.isSetCaseId()).thenReturn(true);
         when(caseDetails.getContactDetails().getCallerArray())
