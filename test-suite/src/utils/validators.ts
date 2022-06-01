@@ -66,6 +66,13 @@ export const isAlpha = () =>
 export const isNumeric = () =>
   regexMatch(/^[0-9 ]*$/, "Field must be numeric", "numericMatch" as const);
 
+export const isAlphanumeric = () =>
+    regexMatch(
+        /^[A-Za-z0-9 ]*$/,
+        "Field must be alphanumeric",
+        "alphaNumericMatch" as const
+    );
+
 export const validateField = (fieldValidation: FormError, value: string) =>
   Object.entries(fieldValidation).reduce((acc, [k, v]) => {
     let isError = false;
