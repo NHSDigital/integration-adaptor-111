@@ -84,7 +84,8 @@ export type ValidatorKeys =
   | "reportMatch"
   | "regexMatch"
   | "isLength"
-  | "numericMatch";
+  | "numericMatch"
+  | "alphaNumericMatch";
 
 export type FormErrors = {
   [key: string]: FormError | null;
