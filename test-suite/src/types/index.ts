@@ -30,6 +30,7 @@ export type TestRequestField = {
   label: string;
   defaultValue: string;
   validators?: Array<Validator>;
+  value?: string;
 };
 
 export type AppRoute = {
@@ -41,25 +42,24 @@ export type AppRoute = {
 
 export type AppRoutes = Array<AppRoute>;
 
-export type RequestBody = CreateReportRequestBody | UpdateReportRequestBody;
-
 export type AdaptorRequest = {
-  requestHeaderFields: RequestHeaders;
-  requestPayloadFields: RequestBody;
+  requestHeaderFields: MappedStrings;
+  requestPayloadFields: MappedStrings;
 };
 
-export interface CreateReportRequestBody {
-  name: "";
-}
-
-export interface UpdateReportRequestBody {
-  name: "";
-}
+export type MappedStrings = {
+  [key: string]: string;
+};
 
 export type RequestHeaders = {
   "content-type": string;
   url: string;
 };
+
+export interface RequestBody2 {
+  [key: string]: string;
+  url: string;
+}
 
 export enum RequestHeaderProps {
   Header = "requestHeaderFields",

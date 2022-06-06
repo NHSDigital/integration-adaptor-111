@@ -1,13 +1,14 @@
 import React from "react";
 import { Card, Details } from "nhsuk-react-components";
 import RequestForm from "./RequestForm";
-import { Test } from "../types";
+import { TestRequestField, Test } from "../types";
 
 interface Props {
   test: Test;
+  globals: Array<TestRequestField>;
 }
 
-const TestCard = ({ test }: Props) => {
+const TestCard = ({ test, globals }: Props) => {
   return (
     <Card feature>
       <Card.Content>
@@ -20,6 +21,7 @@ const TestCard = ({ test }: Props) => {
               specs={test.testSpecifications}
               name={test.testName}
               template={test.template}
+              globals={globals}
             />
           </Details.Text>
         </Details>

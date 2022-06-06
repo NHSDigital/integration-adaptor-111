@@ -1,6 +1,12 @@
-import { FormError, FormErrors, RequestHeaderProps, TestSpecs } from "../types";
+import {
+  FormError,
+  FormErrors,
+  RequestHeaderProps,
+  TestRequestField,
+  TestSpecs,
+} from "../types";
 
-const createFormErrors = (specs: TestSpecs): FormErrors => {
+export const createRequestErrors = (specs: TestSpecs): FormErrors => {
   return [RequestHeaderProps.Body, RequestHeaderProps.Header].reduce(
     // Flatten Header & Body fields into one object
     (acc, key) => ({
@@ -26,4 +32,24 @@ const createFormErrors = (specs: TestSpecs): FormErrors => {
     {} as FormErrors
   );
 };
-export default createFormErrors;
+
+export const createGlobalErrors = (
+  globals: Array<TestRequestField>
+): FormErrors =>
+  globals.reduce(
+    // Assign each input field a FormError object
+    (accu, valu) => ({
+      ...accu,
+      [valu.id]: valu.validators
+        ? valu.validators.reduce(
+            // Convert Validator array into key:value FormError pairs
+            (accum, value) => ({
+              ...accum,
+              [value.id]: { ...value, error: false },
+            }),
+            {} as FormError
+          )
+        : null,
+    }),
+    {} as FormErrors
+  );
