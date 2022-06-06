@@ -112,17 +112,18 @@ const RequestForm = ({ name, specs, template, globals }: Props) => {
                 {v.map((field: TestRequestField) => {
                   const key = k as keyof AdaptorRequest;
                   return (
-                      <div key={"K-" + name + key + field.id}>
+                      <Col width="one-half" key={"K-" + name + key + field.id}>
                         {field.date ? (
-                            <Col width="one-half">
-                              {dateInputElement(field, key)}
-                            </Col>
-                        ) : (
-                            <Col width="one-half">
-                              {textInputElement(field, key)}
-                            </Col>
+                          <React.Fragment>
+                            {dateInputElement(field, key)}
+                          </React.Fragment>
+                          )
+                          : (
+                          <React.Fragment>
+                            {textInputElement(field, key)}
+                          </React.Fragment>
                         )}
-                      </div>
+                      </Col>
                   );
                 })}
                 {i === specEntries.length - 1 && (
