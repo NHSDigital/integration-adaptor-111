@@ -11,8 +11,8 @@
             <wsu:Timestamp
                     xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
                     wsu:Id="D6CD5232-14CF-11DF-9423-1F9A910D4703">
-                <wsu:Created>%certficate-created-date-time%Z</wsu:Created>
-                <wsu:Expires>%certificate-expires-date-time%Z</wsu:Expires>
+                <wsu:Created>@@certficate-created-date-time@@Z</wsu:Created>
+                <wsu:Expires>@@certificate-expires-date-time@@Z</wsu:Expires>
             </wsu:Timestamp>
             <wsse:UsernameToken>
                 <wsse:Username>TKS Server test</wsse:Username>
@@ -27,8 +27,8 @@
             <itk:header service="urn:nhs-itk:services:201005:SendNHS111Report-v2-0_DMS"
                         trackingid="7D6F23E0-AE1A-11DB-9808-B18E1E0994CD">
                 <itk:addresslist>
-                    <itk:address uri="urn:nhs-uk:addressing:ods:%ODS-CODE%"/>
-                    <itk:address type="2.16.840.1.113883.2.1.3.2.4.18.44" uri="%DOS-CODE%" />
+                    <itk:address uri="urn:nhs-uk:addressing:ods:@@ods-code@@"/>
+                    <itk:address type="2.16.840.1.113883.2.1.3.2.4.18.44" uri="@@dos-code@@" />
                 </itk:addresslist>
                 <itk:auditIdentity>
                     <itk:id uri="urn:nhs-uk:identity:ods:5L399"/>
@@ -67,7 +67,7 @@
                                 <id extension="K12345" root="2.16.840.1.113883.2.1.3.2.4.18.24"
                                     assigningAuthorityName="Medway NHS Foundation Trust"/>
                                 <id extension="993254128" root="2.16.840.1.113883.2.1.3.2.4.18.23"/>
-                                <id extension="%NHS-NUMBER%" root="2.16.840.1.113883.2.1.4.1" xmlns:npfitlc="NPFIT:HL7:Localisation" />
+                                <id extension="@@nhs-number@@" root="2.16.840.1.113883.2.1.4.1" xmlns:npfitlc="NPFIT:HL7:Localisation" />
                                 <addr use="H">
                                     <streetAddressLine>17, County Avenue</streetAddressLine>
                                     <streetAddressLine>Woodtown</streetAddressLine>
@@ -185,18 +185,18 @@
                                 <templateId extension="COCD_TP145203GB03#IntendedRecipient"
                                             root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
                                 <addr use="WP">
-                                    <streetAddressLine>%RECIPIENT-STREET-ADDRESS-LINE-1%</streetAddressLine>
-                                    <streetAddressLine>%RECIPIENT-STREET-ADDRESS-LINE-2%</streetAddressLine>
-                                    <streetAddressLine>%RECIPIENT-STREET-ADDRESS-TOWN%</streetAddressLine>
-                                    <streetAddressLine>%RECIPIENT-STREET-ADDRESS-CITY%</streetAddressLine>
-                                    <postalCode>%RECIPIENT-STREET-ADDRESS-POSTCODE%</postalCode>
+                                    <streetAddressLine>@@recipient-street-address-line-1@@</streetAddressLine>
+                                    <streetAddressLine>@@recipient-street-address-line-2@@</streetAddressLine>
+                                    <streetAddressLine>@@recipient-street-address-town@@</streetAddressLine>
+                                    <streetAddressLine>@@recipient-street-address-city@@</streetAddressLine>
+                                    <postalCode>@@recipient-street-address-postcode@@</postalCode>
                                 </addr>
                                 <telecom use="WP" value="tel:0123476895"/>
                                 <receivedOrganization classCode="ORG" determinerCode="INSTANCE">
                                     <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
                                                 extension="COCD_TP145203GB03#representedOrganization"/>
                                     <id root="2.16.840.1.113883.2.1.3.2.4.19.2" extension="PRA123"/>
-                                    <name>%RECIPIENT-NAME%</name>
+                                    <name>@@recipient-name@@</name>
                                 </receivedOrganization>
                             </intendedRecipient>
                         </informationRecipient>
@@ -283,8 +283,8 @@
                                 <code code="NHS111Encounter" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.326"
                                       displayName="NHS111 Encounter"/>
                                 <effectiveTime>
-                                    <low value="%NHS111-ENCOUNTER-DATE-TIME-START%+00"/>
-                                    <high value="%NHS111-ENCOUNTER-DATE-TIME-END%+00"/>
+                                    <low value="@@nhs111-encounter-date-time-start@@"/>
+                                    <high value="@@nhs111-encounter-date-time-end@@"/>
                                 </effectiveTime>
                                 <dischargeDispositionCode code="Dx42" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.325"
                                                           displayName="Child protection / Vulnerable adult immediate referral
