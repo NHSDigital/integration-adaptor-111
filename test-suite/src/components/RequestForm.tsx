@@ -24,6 +24,7 @@ const RequestForm = ({ name, specs, template, globals }: Props) => {
   );
   const [errors, setErrors] = useState<FormErrors>(createRequestErrors(specs));
   const [response, setResponse] = useState<AdaptorResponse | null>(null);
+  const datePlaceholder: string = "YYYYMMDDhhmm"
 
   const specEntries = Object.entries(specs);
 
@@ -60,6 +61,47 @@ const RequestForm = ({ name, specs, template, globals }: Props) => {
     return errorMessage;
   };
 
+  const textInputElement = (field: TestRequestField, key: keyof AdaptorRequest) => (
+      <Input
+          id={field.id}
+          name={field.id}
+          label={field.label}
+          value={form[key][field.id]}
+          error={inputError(field.id)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            onValidate(field.id, e.target.value);
+            setForm({
+              ...form,
+              [key]: {
+                ...form[key],
+                [field.id]: e.target.value,
+              },
+            });
+          }}
+      />
+  );
+
+  const dateInputElement = (field: TestRequestField, key: keyof AdaptorRequest) => (
+      <Input
+          id={field.id}
+          name={field.id}
+          label={field.label}
+          placeholder={datePlaceholder}
+          value={form[key][field.id]}
+          error={inputError(field.id)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            onValidate(field.id, e.target.value);
+            setForm({
+              ...form,
+              [key]: {
+                ...form[key],
+                [field.id]: e.target.value,
+              },
+            });
+          }}
+      />
+  )
+
   return (
     <Card>
       <Card.Content>
@@ -70,25 +112,17 @@ const RequestForm = ({ name, specs, template, globals }: Props) => {
                 {v.map((field: TestRequestField) => {
                   const key = k as keyof AdaptorRequest;
                   return (
-                    <Col width="one-half" key={"K-" + name + key + field.id}>
-                      <Input
-                        id={field.id}
-                        name={field.id}
-                        label={field.label}
-                        value={form[key][field.id]}
-                        error={inputError(field.id)}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                          onValidate(field.id, e.target.value);
-                          setForm({
-                            ...form,
-                            [key]: {
-                              ...form[key],
-                              [field.id]: e.target.value,
-                            },
-                          });
-                        }}
-                      />
-                    </Col>
+                      <div key={"K-" + name + key + field.id}>
+                        {field.date ? (
+                            <Col width="one-half">
+                              {dateInputElement(field, key)}
+                            </Col>
+                        ) : (
+                            <Col width="one-half">
+                              {textInputElement(field, key)}
+                            </Col>
+                        )}
+                      </div>
                   );
                 })}
                 {i === specEntries.length - 1 && (
