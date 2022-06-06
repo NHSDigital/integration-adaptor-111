@@ -30,7 +30,7 @@ export type TestRequestField = {
   label: string;
   defaultValue: string;
   validators?: Array<Validator>;
-  date?: boolean;
+  placeholder?: string;
   value?: string;
 };
 
