@@ -126,7 +126,7 @@ const schema: Schema = {
                 label: "Url",
                 id: "url",
                 defaultValue: "http://localhost:8081/report",
-                validators: [isLocalUrl(), isReportUrl()],
+                validators: [isUrl(), isReportUrl()],
               },
               {
                 label: "Content Type",
