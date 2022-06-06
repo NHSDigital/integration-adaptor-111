@@ -296,13 +296,15 @@ const schema: Schema = {
                 label: "Encounter Start Datetime",
                 id: "nhs111-encounter-date-time-start",
                 defaultValue: "202205311539",
-                validators: [notNull(), isNumeric(), isLength(12)]
+                validators: [notNull(), isNumeric(), isLength(12)],
+                date: true
               },
               {
                 label: "Encounter End Datetime",
                 id: "nhs111-encounter-date-time-end",
                 defaultValue: "202205311615",
-                validators: [notNull(), isNumeric(), isLength(12)]
+                validators: [notNull(), isNumeric(), isLength(12)],
+                date: true
               }
             ]
           }
