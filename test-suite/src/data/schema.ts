@@ -10,6 +10,8 @@ import {
   isAlphanumeric
 } from "../utils/validators";
 
+const datePlaceholder = "YYYYMMDDhhmm";
+
 /**
  * Ensure the id of the testSpecifications field matches the
  * placeholder in the XML template file, for example 'first-name'
@@ -297,14 +299,14 @@ const schema: Schema = {
                 id: "nhs111-encounter-date-time-start",
                 defaultValue: "202205311539",
                 validators: [notNull(), isNumeric(), isLength(12)],
-                date: true
+                placeholder: datePlaceholder
               },
               {
                 label: "Encounter End Datetime",
                 id: "nhs111-encounter-date-time-end",
                 defaultValue: "202205311615",
                 validators: [notNull(), isNumeric(), isLength(12)],
-                date: true
+                placeholder: datePlaceholder
               }
             ]
           }
