@@ -1,4 +1,4 @@
-import { Validator, ValidatorKeys } from "../types";
+import { FormError, Validator, ValidatorKeys } from "../types";
 
 export const notNull = (): Validator => ({
   precedence: 0,
@@ -40,19 +40,20 @@ export const regexMatch = (
   message: message,
 });
 
-export const isLocalUrl = () =>
-  regexMatch(
-    /((http|https)(:\/\/)(localhost|127.0.0.1)(([:])[\0-9]{4,6})){1}/g,
-    "Field must be a local URL",
-    "localMatch" as const
-  );
-
 export const isReportUrl = () =>
   regexMatch(
     /((\/){1}(report)){1}/g,
     "Field must use the /report subdirectory",
     "reportMatch" as const,
     2
+  );
+
+export const isUrl = () =>
+  regexMatch(
+    /^https?:\/\/\w+(\.\w+)*(:[0-9]+)?(\/.*)?$/g,
+    "Field must be a URL",
+    "reportMatch" as const,
+    1
   );
 
 export const isAlpha = () =>
@@ -64,3 +65,26 @@ export const isAlpha = () =>
 
 export const isNumeric = () =>
   regexMatch(/^[0-9 ]*$/, "Field must be numeric", "numericMatch" as const);
+
+export const validateField = (fieldValidation: FormError, value: string) =>
+  Object.entries(fieldValidation).reduce((acc, [k, v]) => {
+    let isError = false;
+    if (k === "notNull") {
+      isError = value === null || value === "";
+    } else if (k === "maxLength") {
+      isError = typeof v.match === "number" && value.length > v.match;
+    } else if (k === "minLength") {
+      isError = typeof v.match === "number" && value.length < v.match;
+    } else if (k === "hasLength") {
+      isError = typeof v.match === "number" && value.length === v.match;
+    } else {
+      isError = v.match instanceof RegExp && !new RegExp(v.match).test(value);
+    }
+    return {
+      ...acc,
+      [k]: {
+        ...v,
+        error: isError,
+      },
+    };
+  }, {} as FormError);

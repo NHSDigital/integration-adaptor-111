@@ -1,7 +1,7 @@
 <s:Envelope xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
     <s:Header>
         <a:Action s:mustUnderstand="1">urn:nhs-itk:services:201005:SendNHS111Report-v2-0</a:Action>
-        <a:MessageID>%MESSAGEID%</a:MessageID>
+        <a:MessageID>@@message-id@@</a:MessageID>
         <a:ReplyTo>
             <a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>
         </a:ReplyTo>
@@ -56,8 +56,8 @@
                                 <patient determinerCode="INSTANCE" classCode="PSN">
                                     <templateId extension="COCD_TP145201GB01#patientPatient" root="2.16.840.1.113883.2.1.3.2.4.18.2" />
                                     <name>
-                                        <given>%FIRSTNAME%</given>
-                                        <family>%LASTNAME%</family>
+                                        <given>@@first-name@@</given>
+                                        <family>@@last-name@@</family>
                                     </name>
                                     <administrativeGenderCode code="1" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.25" displayName="Male" />
                                     <birthTime value="19960325" />

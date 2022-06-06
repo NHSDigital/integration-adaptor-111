@@ -2,13 +2,18 @@ import { RequestHeaderProps, Schema } from "../types";
 import {
   isLength,
   isAlpha,
-  isLocalUrl,
   isNumeric,
   isReportUrl,
   minLength,
   notNull,
+  isUrl,
 } from "../utils/validators";
 
+/**
+ * Ensure the id of the testSpecifications field matches the
+ * placeholder in the XML template file, for example 'first-name'
+ * would be templated with '@@first-name@@' in the XML file.
+ */
 const schema: Schema = {
   testGroups: [
     {
@@ -17,7 +22,7 @@ const schema: Schema = {
         {
           testName: "Create Report",
           testDescription:
-            "This test will attempt to update an emergency request with adaptor... lorumlorumlorum",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a porta sem, at posuere velit. Donec tempor non ligula et congue. Donec faucibus lobortis lorem, et luctus lacus efficitur at. ",
           template: require("./create-report-request.xml"),
           testSpecifications: {
             [RequestHeaderProps.Header]: [
@@ -25,7 +30,7 @@ const schema: Schema = {
                 label: "Url",
                 id: "url",
                 defaultValue: "http://localhost:8081/report",
-                validators: [isLocalUrl(), isReportUrl()],
+                validators: [isUrl()],
               },
               {
                 label: "Content Type",
@@ -37,25 +42,25 @@ const schema: Schema = {
             [RequestHeaderProps.Body]: [
               {
                 label: "First Name",
-                id: "firstName",
+                id: "first-name",
                 defaultValue: "John",
                 validators: [notNull(), isAlpha()],
               },
               {
                 label: "Last Name",
-                id: "lastName",
+                id: "last-name",
                 defaultValue: "Stones",
                 validators: [notNull(), isAlpha()],
               },
               {
                 label: "NHS Number",
-                id: "nhsNumber",
+                id: "nhs-number",
                 defaultValue: "1112223344",
                 validators: [notNull(), isNumeric(), isLength(10)],
               },
               {
                 label: "Message ID",
-                id: "messageId",
+                id: "message-id",
                 defaultValue: "F7916D36-4D5F-4A64-BD08-644E8A23AAAA",
                 validators: [notNull(), isNumeric()],
               },
@@ -65,7 +70,7 @@ const schema: Schema = {
         {
           testName: "Update Report",
           testDescription:
-            "This test will attempt to update an emergency request with adaptor... lorumlorumlorum",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a porta sem, at posuere velit. Donec tempor non ligula et congue. Donec faucibus lobortis lorem, et luctus lacus efficitur at. ",
           template: require("./create-report-request.xml"),
           testSpecifications: {
             [RequestHeaderProps.Header]: [
@@ -73,7 +78,7 @@ const schema: Schema = {
                 label: "Url",
                 id: "url",
                 defaultValue: "http://localhost:8081/report",
-                validators: [isLocalUrl(), isReportUrl()],
+                validators: [isUrl(), isReportUrl()],
               },
               {
                 label: "Content Type",
@@ -85,25 +90,25 @@ const schema: Schema = {
             [RequestHeaderProps.Body]: [
               {
                 label: "First Name",
-                id: "firstName",
+                id: "first-name",
                 defaultValue: "John",
                 validators: [notNull(), isAlpha()],
               },
               {
                 label: "Last Name",
-                id: "lastName",
+                id: "last-name",
                 defaultValue: "Stones",
                 validators: [notNull(), isAlpha()],
               },
               {
                 label: "NHS Number",
-                id: "nhsNumber",
+                id: "nhs-number",
                 defaultValue: "1112223344",
                 validators: [notNull(), isNumeric(), isLength(10)],
               },
               {
                 label: "Message ID",
-                id: "messageId",
+                id: "message-id",
                 defaultValue: "F7916D36-4D5F-4A64-BD08-644E8A23AAAA",
                 validators: [notNull(), isNumeric()],
               },

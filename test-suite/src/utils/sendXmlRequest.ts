@@ -12,18 +12,16 @@ const sendXmlRequest = async (
 ): Promise<AdaptorResponse> => {
   const reportReq = await fetch(template);
   const xml = await reportReq.text();
-  return new Promise((res) => {
+  return new Promise((resolve) => {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", form.requestHeaderFields.url, true);
-    xhr.setRequestHeader(
-      "Content-Type",
-      form.requestHeaderFields["content-type"]
-    );
+    Object.entries(form.requestHeaderFields).forEach(([k, v]) => {
+      xhr.setRequestHeader(k, v);
+    });
     xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
     const xmlPayload = Object.entries(form.requestPayloadFields).reduce(
       (acc, [k, v]) => {
-        const templateKey = `%${k.toUpperCase()}%`;
-        console.log(templateKey);
+        const templateKey = `@@${k}@@`;
         const newXml = acc.replace(templateKey, v);
         return newXml;
       },
@@ -31,13 +29,12 @@ const sendXmlRequest = async (
     );
     xhr.onreadystatechange = function () {
       if (this.readyState === XMLHttpRequest.DONE) {
-        res({
+        resolve({
           xml: beautify(this.response),
           status: this.status,
         });
       }
     };
-    console.log(xmlPayload);
     xhr.send(xmlPayload);
   });
 };
