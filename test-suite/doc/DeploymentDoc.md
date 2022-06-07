@@ -13,9 +13,7 @@
 2. Click on “Create” which can be found in the top left and go ahead and fill in the details (create your resource group and storage account name).
     - For the “Redundancy” option, change to “Locally redundant storage” (LRS). Then go ahead and click “Review + Create”. ![image of creating a storage account](./azure/create-storage-account.png)
 3. Once your storage account has been created, go ahead and click into it. On the left of the screen will be a column, select “Static website” under the Data management section. 
-
 ![image of select option static website](./azure/static-website-select.png)
-
     - Here we want to change “Static website” to Enabled, and in the “Index document name” and “Error document path”, simply enter Index.html. 
     - Once done, click on Save and this should now generate your primary endpoint.
 ![image of select option static website](./azure/enable-static-website.png)
@@ -38,7 +36,7 @@ You should see a container named $web, click into this and here is where we are 
 ### Deployment Steps (via AWS Console)
 1. To get started with deploying to AWS, the first thing you will need is an AWS account already set up. Navigate to the AWS Console Home and in the search bar type in “S3” and click on it.
 
-2. Once you have been redirected to the S3  console, on the right of the page click on “Create bucket”. This is where we will be deploying our application.
+2. Once you have been redirected to the S3 console, on the right of the page click on “Create bucket”. This is where we will be deploying our application.
 ![image of of select option containers](./aws/s3-bucket-select.png)
     - You will now see a form, fill this in with the relevant information. Name your bucket (of your choice) and set the region to one closest to you (in this case EU (London) eu-west-2).
     - Untick “Block all public access” and tick the box confirming and acknowledging this choice.

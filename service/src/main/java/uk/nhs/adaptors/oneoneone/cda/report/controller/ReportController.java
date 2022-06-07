@@ -35,6 +35,7 @@ import uk.nhs.adaptors.oneoneone.cda.report.validation.ItkValidator;
 import uk.nhs.adaptors.oneoneone.cda.report.validation.SoapValidator;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 import uk.nhs.itk.envelope.DistributionEnvelopeDocument;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @AllArgsConstructor
@@ -57,6 +58,7 @@ public class ReportController {
     private final ReportParserUtil reportParserUtil;
     private final ReportRequestUtils reportRequestUtils;
 
+    @CrossOrigin("http://localhost:3000")
     @PostMapping(value = "/report",
         consumes = {APPLICATION_XML_VALUE, TEXT_XML_VALUE},
         produces = TEXT_XML_VALUE
