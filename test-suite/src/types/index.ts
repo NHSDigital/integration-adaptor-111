@@ -30,6 +30,7 @@ export type TestRequestField = {
   label: string;
   defaultValue: string;
   validators?: Array<Validator>;
+  placeholder?: string;
   value?: string;
 };
 
@@ -84,7 +85,8 @@ export type ValidatorKeys =
   | "reportMatch"
   | "regexMatch"
   | "isLength"
-  | "numericMatch";
+  | "numericMatch"
+  | "alphaNumericMatch";
 
 export type FormErrors = {
   [key: string]: FormError | null;
