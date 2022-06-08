@@ -102,3 +102,18 @@ export const validateField = (fieldValidation: FormError, value: string) =>
       },
     };
   }, {} as FormError);
+
+export const validateForm = (form: AdaptorRequest, errors: FormErrors) => {
+  let validatedErrors = errors;
+  Object.entries(validatedErrors).forEach(([fieldName, rules]) => {
+    if (rules) {
+      const fields = Object.entries(form).reduce(
+        (acc, [k, v]) => ({ ...acc, ...v }),
+        {} as MappedStrings
+      );
+      const value = fields[fieldName];
+      validatedErrors[fieldName] = validateField(rules, value);
+    }
+  });
+  return validatedErrors;
+};

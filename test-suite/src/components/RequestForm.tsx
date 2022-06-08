@@ -9,7 +9,7 @@ import {
 import createDefaultRequest from "../utils/createDefaultRequest";
 import { createRequestErrors } from "../utils/createFormErrors";
 import sendXmlRequest, { AdaptorResponse } from "../utils/sendXmlRequest";
-import { validateField } from "../utils/validators";
+import { validateField, validateForm } from "../utils/validators";
 
 type Props = {
   name: string;
@@ -19,17 +19,16 @@ type Props = {
 };
 
 const RequestForm = ({ name, specs, template, globals }: Props) => {
-  const [form, setForm] = useState<AdaptorRequest>(
-    createDefaultRequest(specs, globals)
-  );
-  const [errors, setErrors] = useState<FormErrors>(createRequestErrors(specs));
+  const defaultForm = createDefaultRequest(specs, globals);
+  const defaultErrors = validateForm(defaultForm, createRequestErrors(specs));
+  const [form, setForm] = useState<AdaptorRequest>(defaultForm);
+  const [errors, setErrors] = useState<FormErrors>(defaultErrors);
   const [response, setResponse] = useState<AdaptorResponse | null>(null);
-
   const specEntries = Object.entries(specs);
 
   const onReset = () => {
-    setForm(createDefaultRequest(specs, globals));
-    setErrors(createRequestErrors(specs));
+    setForm(defaultForm);
+    setErrors(defaultErrors);
     setResponse(null);
   };
 
@@ -38,14 +37,18 @@ const RequestForm = ({ name, specs, template, globals }: Props) => {
     setResponse(response);
   };
 
-  const onValidate = (field: string, value: string) => {
+  const onValidate = (fieldName: string, value: string) => {
     let validatedErrors = errors;
-    const fieldValidation = validatedErrors[field];
-    if (fieldValidation) {
-      validatedErrors[field] = validateField(fieldValidation, value);
+    const rules = validatedErrors[fieldName];
+    if (rules) {
+      validatedErrors[fieldName] = validateField(rules, value);
       setErrors(validatedErrors);
     }
   };
+
+  const isDisabled = Object.entries(errors).some(([key, rules]) =>
+    rules ? Object.entries(rules).some(([k, rule]) => rule.error) : false
+  );
 
   const inputError = (field: string) => {
     const fieldValidation = errors[field];
@@ -108,7 +111,9 @@ const RequestForm = ({ name, specs, template, globals }: Props) => {
                     >
                       Reset
                     </Button>
-                    <Button onClick={onSubmit}>Send</Button>
+                    <Button disabled={isDisabled} onClick={onSubmit}>
+                      Send
+                    </Button>
                   </Col>
                 )}
               </Row>
