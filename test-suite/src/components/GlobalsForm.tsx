@@ -57,16 +57,14 @@ const GlobalsForm = ({ setGlobals, globals }: Props) => {
                     value={field.value}
                     error={inputError(field.id)}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      if (field) {
-                        onValidate(field.id, e.target.value);
-                        setGlobals([
-                          ...globals.map((gbl) => ({
-                            ...gbl,
-                            value:
-                              gbl.id === field.id ? e.target.value : gbl.value,
-                          })),
-                        ]);
-                      }
+                      onValidate(field.id, e.target.value);
+                      setGlobals([
+                        ...globals.map((gbl) => ({
+                          ...gbl,
+                          value:
+                            gbl.id === field.id ? e.target.value : gbl.value,
+                        })),
+                      ]);
                     }}
                   />
                 </Col>

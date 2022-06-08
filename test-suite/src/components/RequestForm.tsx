@@ -70,26 +70,26 @@ const RequestForm = ({ name, specs, template, globals }: Props) => {
                 {v.map((field: TestRequestField) => {
                   const key = k as keyof AdaptorRequest;
                   return (
-                      <Col width="one-half" key={"K-" + name + key + field.id}>
-                        <Input
-                            id={field.id}
-                            name={field.id}
-                            label={field.label}
-                            placeholder={field.placeholder}
-                            value={form[key][field.id]}
-                            error={inputError(field.id)}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                              onValidate(field.id, e.target.value);
-                              setForm({
-                                ...form,
-                                [key]: {
-                                  ...form[key],
-                                  [field.id]: e.target.value,
-                                },
-                              });
-                            }}
-                        />
-                      </Col>
+                    <Col width="one-half" key={"K-" + name + key + field.id}>
+                      <Input
+                        id={field.id}
+                        name={field.id}
+                        label={field.label}
+                        placeholder={field.placeholder}
+                        value={form[key][field.id]}
+                        error={inputError(field.id)}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          onValidate(field.id, e.target.value);
+                          setForm({
+                            ...form,
+                            [key]: {
+                              ...form[key],
+                              [field.id]: e.target.value,
+                            },
+                          });
+                        }}
+                      />
+                    </Col>
                   );
                 })}
                 {i === specEntries.length - 1 && (

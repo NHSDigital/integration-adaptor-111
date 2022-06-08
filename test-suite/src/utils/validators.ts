@@ -1,4 +1,11 @@
-import { FormError, Validator, ValidatorKeys } from "../types";
+import {
+  AdaptorRequest,
+  FormError,
+  FormErrors,
+  MappedStrings,
+  Validator,
+  ValidatorKeys,
+} from "../types";
 
 export const notNull = (): Validator => ({
   precedence: 0,
@@ -67,11 +74,11 @@ export const isNumeric = () =>
   regexMatch(/^[0-9 ]*$/, "Field must be numeric", "numericMatch" as const);
 
 export const isAlphanumeric = () =>
-    regexMatch(
-        /^[A-Za-z0-9 ]*$/,
-        "Field must be alphanumeric",
-        "alphaNumericMatch" as const
-    );
+  regexMatch(
+    /^[A-Za-z0-9 ]*$/,
+    "Field must be alphanumeric",
+    "alphaNumericMatch" as const
+  );
 
 export const validateField = (fieldValidation: FormError, value: string) =>
   Object.entries(fieldValidation).reduce((acc, [k, v]) => {
