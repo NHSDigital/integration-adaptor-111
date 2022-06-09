@@ -3,6 +3,8 @@ import Layout from "../components/layout";
 import schema from "../data/schema";
 import { ListPanel } from "nhsuk-react-components";
 import { Test, TestIndex } from "../types";
+import replaceSpaces from "../utils/replaceSpaces";
+import { HashLink as Link } from "react-router-hash-link";
 
 const testList = schema.testGroups.reduce(
   (acc, { testList }) => [...acc, ...testList],
@@ -31,12 +33,16 @@ const TestsIndex = () => {
             backToTopLink="#"
           >
             {v.map((name) => (
-              <ListPanel.LinkItem
-                key={"K-" + name}
-                href="/conditions/abdominal-aortic-aneurysm/"
+              <Link
+                style={{
+                  textDecoration: "none",
+                }}
+                to={`/#${replaceSpaces(name)}`}
               >
-                {name}
-              </ListPanel.LinkItem>
+                <ListPanel.LinkItem key={"K-" + name}>
+                  {name}
+                </ListPanel.LinkItem>
+              </Link>
             ))}
           </ListPanel.Panel>
         ))}

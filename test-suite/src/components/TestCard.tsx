@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Details } from "nhsuk-react-components";
 import RequestForm from "./RequestForm";
 import { TestRequestField, Test } from "../types";
+import replaceSpaces from "../utils/replaceSpaces";
 
 interface Props {
   test: Test;
@@ -10,7 +11,7 @@ interface Props {
 
 const TestCard = ({ test, globals }: Props) => {
   return (
-    <Card feature>
+    <Card feature id={replaceSpaces(test.testName)}>
       <Card.Content>
         <Card.Heading>{test.testName}</Card.Heading>
         <Card.Description>{test.testDescription}</Card.Description>
