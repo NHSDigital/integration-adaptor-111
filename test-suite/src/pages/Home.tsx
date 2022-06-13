@@ -4,7 +4,7 @@ import Layout from "../components/layout";
 import TestCard from "../components/TestCard";
 import schema from "../data/schema";
 import gbl from "../data/globals";
-import { TestRequestField, Test, Certificate } from "../types";
+import { TestRequestField, Test, Certificate, SslCerts } from "../types";
 import GlobalsForm from "../components/GlobalsForm";
 const defaultGlobals = gbl.map((g) => ({
   ...g,
@@ -15,8 +15,12 @@ const Home = () => {
   const [globals, setGlobals] =
     useState<Array<TestRequestField>>(defaultGlobals);
 
-  const [sslCert, setSslCert] = useState<File | null>(null);
-  const [p12Cert, setP12Cert] = useState<File | null>(null);
+  const [sslCerts, setSslCerts] = useState<SslCerts>({
+    ca: null,
+    key: null,
+    p12: null,
+    password: "",
+  });
 
   return (
     <Layout>
@@ -24,15 +28,15 @@ const Home = () => {
         setGlobals={setGlobals}
         globals={globals}
         defaultGlobals={defaultGlobals}
-        sslCert={sslCert}
-        setSslCert={setSslCert}
+        sslCerts={sslCerts}
+        setSslCerts={setSslCerts}
       />
       {schema.testGroups.map(({ testList, groupName }) => (
         <Row key={"K-" + groupName}>
           {testList.map((t: Test) => {
             return (
               <Col key={"K-" + t.testName} width="full">
-                <TestCard test={t} globals={globals} sslCert={sslCert} />
+                <TestCard test={t} globals={globals} sslCerts={sslCerts} />
               </Col>
             );
           })}

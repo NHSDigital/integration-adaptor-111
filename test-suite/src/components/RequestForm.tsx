@@ -4,6 +4,7 @@ import {
   AdaptorRequest,
   AdaptorResponse,
   FormErrors,
+  SslCerts,
   TestRequestField,
   TestSpecs,
 } from "../types";
@@ -18,10 +19,10 @@ type Props = {
   specs: TestSpecs;
   template: string;
   globals: Array<TestRequestField>;
-  sslCert: File | null;
+  sslCerts: SslCerts;
 };
 
-const RequestForm = ({ name, specs, template, globals, sslCert }: Props) => {
+const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
   const defaultForm = createDefaultRequest(specs, globals);
   const defaultErrors = validateForm(defaultForm, createRequestErrors(specs));
   const [form, setForm] = useState<AdaptorRequest>(defaultForm);
@@ -37,19 +38,18 @@ const RequestForm = ({ name, specs, template, globals, sslCert }: Props) => {
 
   const onSubmit = async () => {
     try {
-      console.log(sslCert);
+      const formData = new FormData(); // number 123456 is immediately converted to a string "123456"
       const reportReq = await fetch(template);
       const xml = await reportReq.text();
+      Object.entries(sslCerts).forEach(([key, file]) => {
+        if (file) formData.append(key, file);
+      });
+      formData.append("form", JSON.stringify(form));
+      formData.append("template", xml);
+
       const response = await fetch(serverUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          form,
-          template: xml,
-          sslCert,
-        }),
+        body: formData,
       }).then((r) => r.json());
       setResponse(response);
     } catch (e) {

@@ -9,7 +9,7 @@ const globals: Array<TestRequestField> = [
   {
     label: "Url",
     id: "url",
-    defaultValue: "http://localhost:8081/report",
+    defaultValue: "https://localhost:8443/report",
     validators: [isUrl()],
   },
   {

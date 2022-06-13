@@ -7,7 +7,7 @@ import {
 import { routes } from "./routes";
 import { AppRoute } from "./types";
 
-function App() {
+const App = () => {
   return (
     <div
       style={{
@@ -25,6 +25,6 @@ function App() {
       </Router>
     </div>
   );
-}
+};
 
 export default App;

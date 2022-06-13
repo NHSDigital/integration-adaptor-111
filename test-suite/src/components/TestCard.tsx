@@ -1,16 +1,16 @@
 import React from "react";
 import { Card, Details } from "nhsuk-react-components";
 import RequestForm from "./RequestForm";
-import { TestRequestField, Test } from "../types";
+import { TestRequestField, Test, SslCerts } from "../types";
 import replaceSpaces from "../utils/replaceSpaces";
 
 interface Props {
   test: Test;
   globals: Array<TestRequestField>;
-  sslCert: File | null;
+  sslCerts: SslCerts;
 }
 
-const TestCard = ({ test, globals, sslCert }: Props) => {
+const TestCard = ({ test, globals, sslCerts }: Props) => {
   return (
     <Card feature id={replaceSpaces(test.testName)}>
       <Card.Content>
@@ -24,7 +24,7 @@ const TestCard = ({ test, globals, sslCert }: Props) => {
               name={test.testName}
               template={test.template}
               globals={globals}
-              sslCert={sslCert}
+              sslCerts={sslCerts}
             />
           </Details.Text>
         </Details>

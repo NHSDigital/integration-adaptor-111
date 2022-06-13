@@ -1,30 +1,29 @@
 import React, { ChangeEvent, useState } from "react";
 import { Button, Card, Col, Details, Input, Row } from "nhsuk-react-components";
-import { Certificate, FormErrors, TestRequestField } from "../types";
+import {
+  CertificateTypes,
+  FormErrors,
+  SslCerts,
+  TestRequestField,
+} from "../types";
 import globalVars from "../data/globals";
 import { createGlobalErrors } from "../utils/createFormErrors";
 import { validateField } from "../utils/validators";
-import readTextFile from "../utils/readTextFile";
 
 type Props = {
   setGlobals: (state: Array<TestRequestField>) => void;
   globals: Array<TestRequestField>;
   defaultGlobals: Array<TestRequestField>;
-  sslCert: File | null;
-  setSslCert: (cert: File | null) => void;
+  sslCerts: SslCerts;
+  setSslCerts: (certs: SslCerts) => void;
 };
-
-enum CertificateTypes {
-  CER = ".cer",
-  P12 = ".p12",
-}
 
 const GlobalsForm = ({
   setGlobals,
   globals,
   defaultGlobals,
-  sslCert,
-  setSslCert,
+  sslCerts,
+  setSslCerts,
 }: Props) => {
   const [errors, setErrors] = useState<FormErrors>(
     createGlobalErrors(globalVars)
@@ -33,7 +32,12 @@ const GlobalsForm = ({
   const onReset = () => {
     setErrors(createGlobalErrors(globalVars));
     setGlobals(defaultGlobals);
-    setSslCert(null);
+    setSslCerts({
+      ca: null,
+      key: null,
+      p12: null,
+      password: "",
+    });
     // setP12Cert(null);
   };
 
@@ -50,7 +54,23 @@ const GlobalsForm = ({
     const { files } = e.target;
     if (files && files.length) {
       const file = files[0];
-      setSslCert(file);
+      const fileType = e.target.getAttribute("accept");
+      if (fileType === CertificateTypes.KEY) {
+        setSslCerts({
+          ...sslCerts,
+          key: file,
+        });
+      } else if (fileType === CertificateTypes.P12) {
+        setSslCerts({
+          ...sslCerts,
+          p12: file,
+        });
+      } else if (fileType === CertificateTypes.CA) {
+        setSslCerts({
+          ...sslCerts,
+          ca: file,
+        });
+      }
     }
     e.target.value = "";
     e.target.files = null;
@@ -103,25 +123,31 @@ const GlobalsForm = ({
                     <Input
                       name="CA Certificate"
                       label="CA Certificate"
-                      defaultValue={sslCert ? sslCert.name : ""}
+                      defaultValue={sslCerts.ca ? sslCerts.ca.name : ""}
                       disabled
                     />
                   </Col>
                   <Col width="one-third">
                     <input
                       type="file"
-                      accept={CertificateTypes.CER}
+                      accept={CertificateTypes.CA}
                       style={{ display: "none" }}
                       id="cer-file-input"
+                      name="sslCert"
                       onChange={onFileAdd}
                     />
-                    {sslCert ? (
+                    {sslCerts.ca ? (
                       <Button
                         style={{
                           margin: "12px 0 0 0",
                           background: "rgba(153, 0, 0, 0.7)",
                         }}
-                        onClick={() => setSslCert(null)}
+                        onClick={() =>
+                          setSslCerts({
+                            ...sslCerts,
+                            ca: null,
+                          })
+                        }
                       >
                         X
                       </Button>
@@ -140,13 +166,62 @@ const GlobalsForm = ({
                   </Col>
                 </Row>
               </Col>
-              {/* <Col width="one-half">
+              <Col width="one-half">
+                <Row>
+                  <Col width="two-thirds">
+                    <Input
+                      name="CA Key"
+                      label="CA Key"
+                      defaultValue={sslCerts.key ? sslCerts.key.name : ""}
+                      disabled
+                    />
+                  </Col>
+                  <Col width="one-third">
+                    <input
+                      type="file"
+                      accept={CertificateTypes.KEY}
+                      style={{ display: "none" }}
+                      id="key-file-input"
+                      name="sslKey"
+                      onChange={onFileAdd}
+                    />
+                    {sslCerts.key ? (
+                      <Button
+                        style={{
+                          margin: "12px 0 0 0",
+                          background: "rgba(153, 0, 0, 0.7)",
+                        }}
+                        onClick={() =>
+                          setSslCerts({
+                            ...sslCerts,
+                            key: null,
+                          })
+                        }
+                      >
+                        X
+                      </Button>
+                    ) : (
+                      <label htmlFor="key-file-input">
+                        <Button
+                          as="a"
+                          style={{
+                            margin: "12px 0 0 0",
+                          }}
+                        >
+                          Attach
+                        </Button>
+                      </label>
+                    )}
+                  </Col>
+                </Row>
+              </Col>
+              <Col width="one-half">
                 <Row>
                   <Col width="two-thirds">
                     <Input
                       name="P12 Certificate"
                       label="P12 Certificate"
-                      defaultValue={p12Cert ? p12Cert.name : ""}
+                      defaultValue={sslCerts.p12 ? sslCerts.p12.name : ""}
                       disabled
                     />
                   </Col>
@@ -156,15 +231,21 @@ const GlobalsForm = ({
                       accept={CertificateTypes.P12}
                       style={{ display: "none" }}
                       id="p12-file-input"
+                      name="p12Cert"
                       onChange={onFileAdd}
                     />
-                    {p12Cert ? (
+                    {sslCerts.p12 ? (
                       <Button
                         style={{
                           margin: "12px 0 0 0",
                           background: "rgba(153, 0, 0, 0.7)",
                         }}
-                        onClick={() => setP12Cert(null)}
+                        onClick={() =>
+                          setSslCerts({
+                            ...sslCerts,
+                            p12: null,
+                          })
+                        }
                       >
                         X
                       </Button>
@@ -182,7 +263,7 @@ const GlobalsForm = ({
                     )}
                   </Col>
                 </Row>
-              </Col> */}
+              </Col>
               <Col
                 width="full"
                 style={{

@@ -102,3 +102,15 @@ export type FormErrors = {
 export type FormError = {
   [key in ValidatorKeys]: Validator & { error: boolean };
 };
+export type SslCerts = {
+  ca: File | null;
+  key: File | null;
+  p12: File | null;
+  password: string;
+};
+
+export enum CertificateTypes {
+  CA = ".cer",
+  KEY = ".key",
+  P12 = ".p12",
+}
