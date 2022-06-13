@@ -22,7 +22,7 @@ const sendXmlRequest = async (
     const xmlPayload = Object.entries(form.requestPayloadFields).reduce(
       (acc, [k, v]) => {
         const templateKey = `@@${k}@@`;
-        const newXml = acc.replace(templateKey, v);
+        const newXml = acc.replaceAll(templateKey, v);
         return newXml;
       },
       xml
