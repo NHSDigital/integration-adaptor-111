@@ -18,6 +18,7 @@ const datePlaceholder = "YYYYMMDDhhmm";
  * would be templated with '@@first-name@@' in the XML file.
  */
 const schema: Schema = {
+  serverUrl: "http://localhost:7070/api",
   testGroups: [
     {
       groupName: "Report",
@@ -268,5 +269,5 @@ const schema: Schema = {
     },
   ],
 };
-
 export default schema;
+export const { serverUrl } = schema;

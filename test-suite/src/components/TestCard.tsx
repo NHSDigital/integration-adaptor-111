@@ -7,9 +7,10 @@ import replaceSpaces from "../utils/replaceSpaces";
 interface Props {
   test: Test;
   globals: Array<TestRequestField>;
+  sslCert: File | null;
 }
 
-const TestCard = ({ test, globals }: Props) => {
+const TestCard = ({ test, globals, sslCert }: Props) => {
   return (
     <Card feature id={replaceSpaces(test.testName)}>
       <Card.Content>
@@ -23,6 +24,7 @@ const TestCard = ({ test, globals }: Props) => {
               name={test.testName}
               template={test.template}
               globals={globals}
+              sslCert={sslCert}
             />
           </Details.Text>
         </Details>

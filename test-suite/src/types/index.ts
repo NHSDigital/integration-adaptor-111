@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 export type Schema = {
+  serverUrl: string;
   testGroups: Array<TestGroup>;
 };
 
@@ -48,6 +49,12 @@ export type AdaptorRequest = {
   requestPayloadFields: MappedStrings;
 };
 
+export type AdaptorResponse = {
+  apiStatus: number;
+  adaptorStatus: number;
+  adaptorResponse: string;
+};
+
 export type MappedStrings = {
   [key: string]: string;
 };
@@ -57,10 +64,10 @@ export type RequestHeaders = {
   url: string;
 };
 
-export interface RequestBody2 {
-  [key: string]: string;
-  url: string;
-}
+export type Certificate = {
+  name: string;
+  key: string;
+};
 
 export enum RequestHeaderProps {
   Header = "requestHeaderFields",

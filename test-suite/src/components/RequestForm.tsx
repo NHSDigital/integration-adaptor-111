@@ -2,23 +2,26 @@ import React, { ChangeEvent, useState } from "react";
 import { Button, Card, Col, Input, Row } from "nhsuk-react-components";
 import {
   AdaptorRequest,
+  AdaptorResponse,
   FormErrors,
   TestRequestField,
   TestSpecs,
 } from "../types";
 import createDefaultRequest from "../utils/createDefaultRequest";
 import { createRequestErrors } from "../utils/createFormErrors";
-import sendXmlRequest, { AdaptorResponse } from "../utils/sendXmlRequest";
 import { validateField, validateForm } from "../utils/validators";
+import { serverUrl } from "../data/schema";
+const beautify = require("xml-beautifier");
 
 type Props = {
   name: string;
   specs: TestSpecs;
   template: string;
   globals: Array<TestRequestField>;
+  sslCert: File | null;
 };
 
-const RequestForm = ({ name, specs, template, globals }: Props) => {
+const RequestForm = ({ name, specs, template, globals, sslCert }: Props) => {
   const defaultForm = createDefaultRequest(specs, globals);
   const defaultErrors = validateForm(defaultForm, createRequestErrors(specs));
   const [form, setForm] = useState<AdaptorRequest>(defaultForm);
@@ -33,8 +36,25 @@ const RequestForm = ({ name, specs, template, globals }: Props) => {
   };
 
   const onSubmit = async () => {
-    const response = await sendXmlRequest(form, template);
-    setResponse(response);
+    try {
+      console.log(sslCert);
+      const reportReq = await fetch(template);
+      const xml = await reportReq.text();
+      const response = await fetch(serverUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          form,
+          template: xml,
+          sslCert,
+        }),
+      }).then((r) => r.json());
+      setResponse(response);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const onValidate = (fieldName: string, value: string) => {
@@ -122,14 +142,14 @@ const RequestForm = ({ name, specs, template, globals }: Props) => {
         {response && (
           <Card>
             <Card.Content>
-              <pre>Response Status: {response.status}</pre>
+              <pre>Response Status: {response.adaptorStatus}</pre>
               <pre
                 style={{
                   overflow: "scroll",
                   maxHeight: "450px",
                 }}
               >
-                {response.xml}
+                {beautify(response.adaptorResponse)}
               </pre>
             </Card.Content>
           </Card>
