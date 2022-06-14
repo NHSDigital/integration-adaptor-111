@@ -4,7 +4,7 @@ import {
   CertificateTypes,
   FormErrors,
   SslCerts,
-  TestRequestField,
+  TestRequestField
 } from "../types";
 import globalVars from "../data/globals";
 import { createGlobalErrors } from "../utils/createFormErrors";
@@ -23,7 +23,7 @@ const GlobalsForm = ({
   globals,
   defaultGlobals,
   sslCerts,
-  setSslCerts,
+  setSslCerts
 }: Props) => {
   const [errors, setErrors] = useState<FormErrors>(
     createGlobalErrors(globalVars)
@@ -36,7 +36,7 @@ const GlobalsForm = ({
       ca: null,
       key: null,
       p12: null,
-      password: "",
+      password: ""
     });
     // setP12Cert(null);
   };
@@ -58,17 +58,17 @@ const GlobalsForm = ({
       if (fileType === CertificateTypes.KEY) {
         setSslCerts({
           ...sslCerts,
-          key: file,
+          key: file
         });
       } else if (fileType === CertificateTypes.P12) {
         setSslCerts({
           ...sslCerts,
-          p12: file,
+          p12: file
         });
       } else if (fileType === CertificateTypes.CA) {
         setSslCerts({
           ...sslCerts,
-          ca: file,
+          ca: file
         });
       }
     }
@@ -110,8 +110,8 @@ const GlobalsForm = ({
                         ...globals.map((gbl) => ({
                           ...gbl,
                           value:
-                            gbl.id === field.id ? e.target.value : gbl.value,
-                        })),
+                            gbl.id === field.id ? e.target.value : gbl.value
+                        }))
                       ]);
                     }}
                   />
@@ -140,12 +140,12 @@ const GlobalsForm = ({
                       <Button
                         style={{
                           margin: "12px 0 0 0",
-                          background: "rgba(153, 0, 0, 0.7)",
+                          background: "rgba(153, 0, 0, 0.7)"
                         }}
                         onClick={() =>
                           setSslCerts({
                             ...sslCerts,
-                            ca: null,
+                            ca: null
                           })
                         }
                       >
@@ -156,7 +156,7 @@ const GlobalsForm = ({
                         <Button
                           as="a"
                           style={{
-                            margin: "12px 0 0 0",
+                            margin: "12px 0 0 0"
                           }}
                         >
                           Attach
@@ -189,12 +189,12 @@ const GlobalsForm = ({
                       <Button
                         style={{
                           margin: "12px 0 0 0",
-                          background: "rgba(153, 0, 0, 0.7)",
+                          background: "rgba(153, 0, 0, 0.7)"
                         }}
                         onClick={() =>
                           setSslCerts({
                             ...sslCerts,
-                            key: null,
+                            key: null
                           })
                         }
                       >
@@ -205,7 +205,7 @@ const GlobalsForm = ({
                         <Button
                           as="a"
                           style={{
-                            margin: "12px 0 0 0",
+                            margin: "12px 0 0 0"
                           }}
                         >
                           Attach
@@ -238,12 +238,12 @@ const GlobalsForm = ({
                       <Button
                         style={{
                           margin: "12px 0 0 0",
-                          background: "rgba(153, 0, 0, 0.7)",
+                          background: "rgba(153, 0, 0, 0.7)"
                         }}
                         onClick={() =>
                           setSslCerts({
                             ...sslCerts,
-                            p12: null,
+                            p12: null
                           })
                         }
                       >
@@ -254,7 +254,7 @@ const GlobalsForm = ({
                         <Button
                           as="a"
                           style={{
-                            margin: "12px 0 0 0",
+                            margin: "12px 0 0 0"
                           }}
                         >
                           Attach
@@ -269,7 +269,7 @@ const GlobalsForm = ({
                 style={{
                   display: "flex",
                   alignItems: "end",
-                  justifyContent: "space-between",
+                  justifyContent: "space-between"
                 }}
               >
                 <Button

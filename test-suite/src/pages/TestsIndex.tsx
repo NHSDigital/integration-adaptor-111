@@ -15,7 +15,7 @@ const testIndex: TestIndex = testList.reduce((acc: TestIndex, val: Test) => {
   const key: string = val.testName.substring(0, 1);
   acc = {
     ...acc,
-    [key]: key in acc ? [...acc[key], val.testName] : [val.testName],
+    [key]: key in acc ? [...acc[key], val.testName] : [val.testName]
   };
   return acc;
 }, {} as TestIndex);

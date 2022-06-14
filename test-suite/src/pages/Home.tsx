@@ -4,11 +4,11 @@ import Layout from "../components/layout";
 import TestCard from "../components/TestCard";
 import schema from "../data/schema";
 import gbl from "../data/globals";
-import { TestRequestField, Test, Certificate, SslCerts } from "../types";
+import { TestRequestField, Test, SslCerts } from "../types";
 import GlobalsForm from "../components/GlobalsForm";
 const defaultGlobals = gbl.map((g) => ({
   ...g,
-  value: g.defaultValue,
+  value: g.defaultValue
 }));
 
 const Home = () => {
@@ -19,7 +19,7 @@ const Home = () => {
     ca: null,
     key: null,
     p12: null,
-    password: "",
+    password: ""
   });
 
   return (

@@ -10,14 +10,14 @@ const globals: Array<TestRequestField> = [
     label: "Url",
     id: "url",
     defaultValue: "https://localhost:8443/report",
-    validators: [isUrl()],
+    validators: [isUrl()]
   },
   {
     label: "Content Type",
     id: "content-type",
     defaultValue: "application/xml",
-    validators: [notNull(), minLength(7)],
-  },
+    validators: [notNull(), minLength(7)]
+  }
 ];
 
 export default globals;

@@ -4,14 +4,14 @@ import {
   AdaptorRequest,
   AdaptorResponse,
   Form,
-  RequestHeaders,
+  RequestHeaders
 } from "@server/types";
 import {
   FormErrors,
   SpecTuple,
   SslCerts,
   TestRequestField,
-  TestSpecs,
+  TestSpecs
 } from "../types";
 import createDefaultRequest from "../utils/createDefaultRequest";
 import { createRequestErrors } from "../utils/createFormErrors";
@@ -56,7 +56,7 @@ const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
 
       const response = await fetch(serverUrl + "/report", {
         method: "POST",
-        body: formData,
+        body: formData
       }).then((r) => r.json());
       setResponse(response);
     } catch (e) {
@@ -125,8 +125,8 @@ const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
                             ...form,
                             [headerKey]: {
                               ...form[headerKey],
-                              [field.id]: e.target.value,
-                            },
+                              [field.id]: e.target.value
+                            }
                           });
                         }}
                       />
@@ -139,7 +139,7 @@ const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
                     style={{
                       display: "flex",
                       alignItems: "end",
-                      justifyContent: "space-between",
+                      justifyContent: "space-between"
                     }}
                   >
                     <Button
@@ -166,7 +166,7 @@ const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
               <pre
                 style={{
                   overflow: "scroll",
-                  maxHeight: "450px",
+                  maxHeight: "450px"
                 }}
               >
                 {beautify(response.message)}

@@ -53,7 +53,7 @@ export type Certificate = {
 
 export enum RequestHeaderProps {
   Header = "requestHeaderFields",
-  Body = "requestPayloadFields",
+  Body = "requestPayloadFields"
 }
 
 export type Validator = {
@@ -94,5 +94,5 @@ export type SslCerts = {
 export enum CertificateTypes {
   CA = ".cer",
   KEY = ".key",
-  P12 = ".p12",
+  P12 = ".p12"
 }

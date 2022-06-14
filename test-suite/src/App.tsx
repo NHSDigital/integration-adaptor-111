@@ -2,7 +2,7 @@ import React from "react";
 import {
   Route,
   BrowserRouter as Router,
-  Routes as Switch,
+  Routes as Switch
 } from "react-router-dom";
 import { routes } from "./routes";
 import { AppRoute } from "./types";
@@ -13,7 +13,7 @@ const App = () => {
       style={{
         height: "100%",
         width: "100%",
-        background: "#f0f4f5",
+        background: "#f0f4f5"
       }}
     >
       <Router>
