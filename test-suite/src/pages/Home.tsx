@@ -11,7 +11,7 @@ const Home = () => {
   const [globals, setGlobals] = useState<Array<TestRequestField>>(
     defaultGlobals.map((g) => ({
       ...g,
-      value: g.defaultValue,
+      value: g.defaultValue
     }))
   );
 

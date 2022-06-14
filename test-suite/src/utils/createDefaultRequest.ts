@@ -3,7 +3,7 @@ import {
   MappedStrings,
   RequestHeaderProps,
   TestRequestField,
-  TestSpecs,
+  TestSpecs
 } from "../types";
 
 const createDefaultRequest = (
@@ -19,9 +19,9 @@ const createDefaultRequest = (
         const global = globals.find((g) => g.id === valu.id);
         return {
           ...acc,
-          [valu.id]: global && global.value ? global.value : valu.defaultValue,
+          [valu.id]: global && global.value ? global.value : valu.defaultValue
         };
-      }, {} as MappedStrings),
+      }, {} as MappedStrings)
     };
   }, {} as AdaptorRequest);
 

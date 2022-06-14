@@ -8,17 +8,17 @@ export const routes: AppRoutes = [
     path: "/",
     element: <Home />,
     name: "Home",
-    nav: true,
+    nav: true
   },
   {
     path: "/tests",
     element: <TestsIndex />,
     name: "Tests A - Z",
-    nav: true,
+    nav: true
   },
   {
     path: "*",
     element: <NotFound />,
-    name: "Page not found",
-  },
+    name: "Page not found"
+  }
 ];

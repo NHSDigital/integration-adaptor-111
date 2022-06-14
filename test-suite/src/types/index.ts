@@ -59,12 +59,13 @@ export type RequestHeaders = {
 
 export interface RequestBody2 {
   [key: string]: string;
+
   url: string;
 }
 
 export enum RequestHeaderProps {
   Header = "requestHeaderFields",
-  Body = "requestPayloadFields",
+  Body = "requestPayloadFields"
 }
 
 export type Validator = {

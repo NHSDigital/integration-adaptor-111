@@ -63,8 +63,8 @@ const GlobalsForm = ({ setGlobals, globals }: Props) => {
                           ...globals.map((gbl) => ({
                             ...gbl,
                             value:
-                              gbl.id === field.id ? e.target.value : gbl.value,
-                          })),
+                              gbl.id === field.id ? e.target.value : gbl.value
+                          }))
                         ]);
                       }
                     }}
@@ -76,7 +76,7 @@ const GlobalsForm = ({ setGlobals, globals }: Props) => {
                 style={{
                   display: "flex",
                   alignItems: "end",
-                  justifyContent: "space-between",
+                  justifyContent: "space-between"
                 }}
               >
                 <Button
