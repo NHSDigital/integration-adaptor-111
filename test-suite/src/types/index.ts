@@ -64,7 +64,7 @@ export interface RequestBody2 {
 
 export enum RequestHeaderProps {
   Header = "requestHeaderFields",
-  Body = "requestPayloadFields",
+  Body = "requestPayloadFields"
 }
 
 export type Validator = {
