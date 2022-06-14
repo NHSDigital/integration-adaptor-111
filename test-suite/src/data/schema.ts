@@ -299,14 +299,14 @@ const schema: Schema = {
                 label: "Encounter Start Datetime",
                 id: "nhs111-encounter-date-time-start",
                 defaultValue: "202205311539",
-                validators: [notNull(), isNumeric(), isLength(12)],
+                validators: [notNull(), isNumeric()],
                 placeholder: datePlaceholder
               },
               {
                 label: "Encounter End Datetime",
                 id: "nhs111-encounter-date-time-end",
                 defaultValue: "202205311615",
-                validators: [notNull(), isNumeric(), isLength(12)],
+                validators: [notNull(), isNumeric()],
                 placeholder: datePlaceholder
               }
             ]
@@ -400,6 +400,140 @@ const schema: Schema = {
                 defaultValue: "2022010613",
                 validators: [notNull(), isNumeric()],
                 placeholder: datePlaceholder
+              }
+            ]
+          }
+        },
+        {
+          testName: "Structured FHIR Messages - Scenario 1",
+          testDescription:
+            "This test will attempt to refer a patient to primary care, the PEM should contain the correct sections and headings",
+          template: require("./fhir-structure-itk-request.xml"),
+          testSpecifications: {
+            [RequestHeaderProps.Header]: [
+              {
+                label: "url",
+                id: "url",
+                defaultValue: "http://localhost:8081/report",
+                validators: [isUrl(), isReportUrl()]
+              },
+              {
+                label: "Content Type",
+                id: "content-type",
+                defaultValue: "application/xml",
+                validators: [notNull(), minLength(7)]
+              }
+            ],
+            [RequestHeaderProps.Body]: [
+              {
+                label: "ODS Code",
+                id: "ods-code",
+                defaultValue: "EM396",
+                validators: [notNull(), isAlphanumeric()]
+              },
+              {
+                label: "DOS Code",
+                id: "dos-code",
+                defaultValue: "26428",
+                validators: [isAlphanumeric()]
+              },
+              {
+                label: "NHS Number",
+                id: "nhs-number",
+                defaultValue: "1717636608",
+                validators: [notNull(), isNumeric(), isLength(10)]
+              },
+              {
+                label: "Recipient Name",
+                id: "recipient-name",
+                defaultValue: "John Stones",
+                validators: [notNull(), isAlpha()]
+              },
+              {
+                label: "Recipient Address Line 1",
+                id: "recipient-street-address-line-1",
+                defaultValue: "1 Albion Place",
+                validators: [notNull(), isAlphanumeric()]
+              },
+              {
+                label: "Recipient Address Line 2",
+                id: "recipient-street-address-line-2",
+                defaultValue: "Leeds City Centre",
+                validators: [notNull(), isAlphanumeric()]
+              },
+              {
+                label: "Recipient Town",
+                id: "recipient-street-address-town",
+                defaultValue: "",
+                validators: [isAlpha()]
+              },
+              {
+                label: "Recipient City",
+                id: "recipient-street-address-city",
+                defaultValue: "Leeds",
+                validators: [isAlpha()]
+              },
+              {
+                label: "Recipient Postcode",
+                id: "recipient-street-address-postcode",
+                defaultValue: "LS1 6LJ",
+                validators: [isAlphanumeric()]
+              },
+              {
+                label: "Encounter Start Datetime",
+                id: "nhs111-encounter-date-time-start",
+                defaultValue: "202205311539",
+                validators: [notNull(), isNumeric()],
+                placeholder: datePlaceholder
+              },
+              {
+                label: "Encounter End Datetime",
+                id: "nhs111-encounter-date-time-end",
+                defaultValue: "202205311615",
+                validators: [notNull(), isNumeric()],
+                placeholder: datePlaceholder
+              },
+              {
+                label: "Reported Conditions",
+                id: "patients_reported_condition",
+                defaultValue: "TEST CONDITION",
+                validators: [notNull()]
+              },
+              {
+                label: "Pathways Disposition",
+                id: "pathways_disposition",
+                defaultValue: "TEST DISPOSITION",
+                validators: [notNull()]
+              },
+              {
+                label: "Selected Service",
+                id: "selected_service",
+                defaultValue: "TEST SELECTED SERVICE",
+                validators: [notNull()]
+              },
+              {
+                label: "Consultation Summary",
+                id: "consultation_summary",
+                defaultValue: "TEST CONSULTATION SUMMARY",
+                validators: [notNull()]
+              },
+              {
+                label: "Pathways Assessment",
+                id: "pathways_assessment",
+                defaultValue: "TEST PATHWAYS ASSESSMENT",
+                validators: [notNull()]
+              },
+              {
+                label: "Advice Given",
+                id: "advice_given",
+                defaultValue: "TEST ADVICE GIVEN",
+                validators: [notNull()]
+              },
+              {
+                label: "Special Patient Notes",
+                id: "special_patient_notes",
+                defaultValue: "TEST SPECIAL PATIENT NOTES",
+                validators: [notNull()]
               }
             ]
           }
