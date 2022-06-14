@@ -1,11 +1,5 @@
-import {
-  AdaptorRequest,
-  FormError,
-  FormErrors,
-  MappedStrings,
-  Validator,
-  ValidatorKeys,
-} from "../types";
+import { AdaptorRequest, Form } from "@server/types";
+import { FormError, FormErrors, Validator, ValidatorKeys } from "../types";
 
 export const notNull = (): Validator => ({
   precedence: 0,
@@ -109,7 +103,7 @@ export const validateForm = (form: AdaptorRequest, errors: FormErrors) => {
     if (rules) {
       const fields = Object.entries(form).reduce(
         (acc, [k, v]) => ({ ...acc, ...v }),
-        {} as MappedStrings
+        {} as Form
       );
       const value = fields[fieldName];
       validatedErrors[fieldName] = validateField(rules, value);

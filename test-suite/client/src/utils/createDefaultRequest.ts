@@ -1,10 +1,5 @@
-import {
-  AdaptorRequest,
-  MappedStrings,
-  RequestHeaderProps,
-  TestRequestField,
-  TestSpecs,
-} from "../types";
+import { AdaptorRequest, Form } from "@server/types";
+import { RequestHeaderProps, TestRequestField, TestSpecs } from "../types";
 
 const createDefaultRequest = (
   specs: TestSpecs,
@@ -21,7 +16,7 @@ const createDefaultRequest = (
           ...acc,
           [valu.id]: global && global.value ? global.value : valu.defaultValue,
         };
-      }, {} as MappedStrings),
+      }, {} as Form),
     };
   }, {} as AdaptorRequest);
 

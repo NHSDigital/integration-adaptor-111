@@ -26,6 +26,8 @@ export interface TestSpecs {
   requestPayloadFields: Array<TestRequestField>;
 }
 
+export type SpecTuple = [string, Array<TestRequestField>];
+
 export type TestRequestField = {
   id: string;
   label: string;
@@ -43,26 +45,6 @@ export type AppRoute = {
 };
 
 export type AppRoutes = Array<AppRoute>;
-
-export type AdaptorRequest = {
-  requestHeaderFields: MappedStrings;
-  requestPayloadFields: MappedStrings;
-};
-
-export type AdaptorResponse = {
-  apiStatus: number;
-  adaptorStatus: number;
-  adaptorResponse: string;
-};
-
-export type MappedStrings = {
-  [key: string]: string;
-};
-
-export type RequestHeaders = {
-  "content-type": string;
-  url: string;
-};
 
 export type Certificate = {
   name: string;

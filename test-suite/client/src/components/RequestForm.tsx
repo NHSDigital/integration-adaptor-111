@@ -3,7 +3,12 @@ import { Button, Card, Col, Input, Row } from "nhsuk-react-components";
 import {
   AdaptorRequest,
   AdaptorResponse,
+  Form,
+  RequestHeaders,
+} from "@server/types";
+import {
   FormErrors,
+  SpecTuple,
   SslCerts,
   TestRequestField,
   TestSpecs,
@@ -12,6 +17,7 @@ import createDefaultRequest from "../utils/createDefaultRequest";
 import { createRequestErrors } from "../utils/createFormErrors";
 import { validateField, validateForm } from "../utils/validators";
 import { serverUrl } from "../data/schema";
+
 const beautify = require("xml-beautifier");
 
 type Props = {
@@ -25,10 +31,10 @@ type Props = {
 const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
   const defaultForm = createDefaultRequest(specs, globals);
   const defaultErrors = validateForm(defaultForm, createRequestErrors(specs));
-  const [form, setForm] = useState<AdaptorRequest>(defaultForm);
   const [errors, setErrors] = useState<FormErrors>(defaultErrors);
+  const [form, setForm] = useState<AdaptorRequest>(defaultForm);
   const [response, setResponse] = useState<AdaptorResponse | null>(null);
-  const specEntries = Object.entries(specs);
+  const specEntries: Array<SpecTuple> = Object.entries(specs);
 
   const onReset = () => {
     setForm(defaultForm);
@@ -38,7 +44,7 @@ const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
 
   const onSubmit = async () => {
     try {
-      const formData = new FormData(); // number 123456 is immediately converted to a string "123456"
+      const formData = new FormData();
       const reportReq = await fetch(template);
       const xml = await reportReq.text();
       Object.entries(sslCerts).forEach(([key, file]) => {
@@ -66,10 +72,6 @@ const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
     }
   };
 
-  const isDisabled = Object.entries(errors).some(([key, rules]) =>
-    rules ? Object.entries(rules).some(([k, rule]) => rule.error) : false
-  );
-
   const inputError = (field: string) => {
     const fieldValidation = errors[field];
     const errorMessage =
@@ -83,30 +85,45 @@ const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
     return errorMessage;
   };
 
+  const isDisabled = Object.entries(errors).some(([key, rules]) =>
+    rules ? Object.entries(rules).some(([k, rule]) => rule.error) : false
+  );
+
+  const isHeaderFields = (
+    fields: RequestHeaders | Form
+  ): fields is RequestHeaders => (fields as RequestHeaders).url !== undefined;
+
   return (
     <Card>
       <Card.Content>
         {specEntries.map(
-          ([k, v]: [string, Array<TestRequestField>], i) =>
+          ([k, v], i) =>
             Array.isArray(v) && (
               <Row key={"K-" + name + k}>
                 {v.map((field: TestRequestField) => {
-                  const key = k as keyof AdaptorRequest;
+                  const headerKey = k as keyof AdaptorRequest;
+                  const fields = form[headerKey];
+                  const value = isHeaderFields(fields)
+                    ? fields[field.id as keyof RequestHeaders]
+                    : fields[field.id];
                   return (
-                    <Col width="one-half" key={"K-" + name + key + field.id}>
+                    <Col
+                      width="one-half"
+                      key={"K-" + name + field.id + field.id}
+                    >
                       <Input
                         id={field.id}
                         name={field.id}
                         label={field.label}
                         placeholder={field.placeholder}
-                        value={form[key][field.id]}
+                        value={value}
                         error={inputError(field.id)}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => {
                           onValidate(field.id, e.target.value);
                           setForm({
                             ...form,
-                            [key]: {
-                              ...form[key],
+                            [headerKey]: {
+                              ...form[headerKey],
                               [field.id]: e.target.value,
                             },
                           });

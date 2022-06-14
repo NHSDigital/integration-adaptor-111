@@ -1,0 +1,42 @@
+{
+  "name": "111-adaptor-test-server",
+  "version": "1.0.0",
+  "description": "A Node server to handle SSL requests and dynamically update certificates.",
+  "scripts": {
+    "prod": "node dist/index.js",
+    "start": "nodemon src/index.ts",
+    "build": "tsc -p ."
+  },
+  "author": "Rio Knightley",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "consola": "^2.15.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "fs": "^0.0.1-security",
+    "multiparty": "^4.2.3",
+    "path": "^0.12.7",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.2",
+    "@types/consola": "^2.2.5",
+    "@types/cors": "^2.8.12",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.13",
+    "@types/multiparty": "^0.0.33",
+    "@types/node": "^17.0.42",
+    "@types/request": "^2.48.8",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.16",
+    "prettier": "^2.7.0",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.3"
+  }
+}
