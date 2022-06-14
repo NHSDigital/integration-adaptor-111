@@ -12,6 +12,7 @@ import {
   MultiPartForm,
   FileTuple,
 } from "../types";
+import { AgentOptions } from "https";
 
 const api = (router: Router) => {
   router.post("/report", async (req: Request, res: Response) => {
@@ -38,13 +39,26 @@ const api = (router: Router) => {
     const caCert = getAgentKey(ca);
     const caKey = getAgentKey(key);
     const p12Key = getAgentKey(p12);
-    if (requiresCert && (!caCert || !caKey || !p12Key)) {
-      const rejectResponse: AdaptorResponse = {
-        apiStatus: 400,
-        adaptorStatus: 400,
-        message: "API_MISSING_CERTS",
-      };
-      res.json(rejectResponse).end();
+    let agentOptions: AgentOptions = {};
+    if (requiresCert) {
+      if (!caCert || !caKey || !p12Key) {
+        const rejectResponse: AdaptorResponse = {
+          apiStatus: 400,
+          adaptorStatus: 400,
+          message: "API_MISSING_CERTS",
+        };
+        res.json(rejectResponse).end();
+        return;
+      } else {
+        agentOptions = {
+          ca: getAgentKey(ca),
+          key: getAgentKey(key),
+          // Or use `pfx` property replacing `cert` and `key` when using private key, certificate and CA certs in PFX or PKCS12 format:
+          pfx: getAgentKey(p12),
+          passphrase: "logitech",
+          rejectUnauthorized: false,
+        };
+      }
     }
 
     const options: ReqOptions = {
@@ -53,14 +67,7 @@ const api = (router: Router) => {
         "Content-Type": form.requestHeaderFields["content-type"],
         "Content-Length": xmlPayload.length,
       },
-      agentOptions: {
-        ca: getAgentKey(ca),
-        key: getAgentKey(key),
-        // Or use `pfx` property replacing `cert` and `key` when using private key, certificate and CA certs in PFX or PKCS12 format:
-        pfx: getAgentKey(p12),
-        passphrase: "logitech",
-        rejectUnauthorized: false,
-      },
+      agentOptions,
       body: xmlPayload,
     };
     request.post(
