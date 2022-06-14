@@ -415,14 +415,14 @@ const schema: Schema = {
                 label: "url",
                 id: "url",
                 defaultValue: "http://localhost:8081/report",
-                validators: [isUrl(), isReportUrl()],
+                validators: [isUrl(), isReportUrl()]
               },
               {
                 label: "Content Type",
                 id: "content-type",
                 defaultValue: "application/xml",
                 validators: [notNull(), minLength(7)]
-              },
+              }
             ],
             [RequestHeaderProps.Body]: [
               {

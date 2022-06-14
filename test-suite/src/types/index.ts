@@ -59,6 +59,7 @@ export type RequestHeaders = {
 
 export interface RequestBody2 {
   [key: string]: string;
+
   url: string;
 }
 
