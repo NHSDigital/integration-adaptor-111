@@ -3,7 +3,7 @@ import {
   FormErrors,
   RequestHeaderProps,
   TestRequestField,
-  TestSpecs,
+  TestSpecs
 } from "../types";
 
 export const createRequestErrors = (specs: TestSpecs): FormErrors => {
@@ -20,14 +20,14 @@ export const createRequestErrors = (specs: TestSpecs): FormErrors => {
                 // Convert Validator array into key:value FormError pairs
                 (accum, value) => ({
                   ...accum,
-                  [value.id]: { ...value, error: false },
+                  [value.id]: { ...value, error: false }
                 }),
                 {} as FormError
               )
-            : null,
+            : null
         }),
         {} as FormErrors
-      ),
+      )
     }),
     {} as FormErrors
   );
@@ -45,11 +45,11 @@ export const createGlobalErrors = (
             // Convert Validator array into key:value FormError pairs
             (accum, value) => ({
               ...accum,
-              [value.id]: { ...value, error: false },
+              [value.id]: { ...value, error: false }
             }),
             {} as FormError
           )
-        : null,
+        : null
     }),
     {} as FormErrors
   );

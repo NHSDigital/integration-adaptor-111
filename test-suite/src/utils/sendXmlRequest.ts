@@ -1,4 +1,5 @@
 import { AdaptorRequest } from "../types";
+
 const beautify = require("xml-beautifier");
 
 export type AdaptorResponse = {
@@ -31,7 +32,7 @@ const sendXmlRequest = async (
       if (this.readyState === XMLHttpRequest.DONE) {
         resolve({
           xml: beautify(this.response),
-          status: this.status,
+          status: this.status
         });
       }
     };
