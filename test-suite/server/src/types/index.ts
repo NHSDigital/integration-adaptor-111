@@ -1,13 +1,13 @@
 import { File } from "multiparty";
 import { Options, Response, Request } from "request";
 
-export type ReqBody = Response["body"];
+export type ReqBody = Response["body"] | undefined;
 export type ReqOptions = Options;
-export type ReqResponse = Response;
+export type ReqResponse = Response | undefined;
 export type ReqRequest = Request;
-export type ReqError = { code: string };
+export type ReqError = { code: string } | null;
 
-type FileTuple = [File];
+export type FileTuple = [File];
 type StringTuple = [string];
 type FormFields = {
   form: string;
@@ -15,9 +15,9 @@ type FormFields = {
 };
 
 type FormFiles = {
-  ca: FileTuple;
-  key: FileTuple;
-  p12: FileTuple;
+  ca?: FileTuple;
+  key?: FileTuple;
+  p12?: FileTuple;
 };
 
 export type Form = {
@@ -39,5 +39,5 @@ export type AdaptorRequest = {
 export type AdaptorResponse = {
   apiStatus: number;
   adaptorStatus: number;
-  adaptorResponse: string;
+  message: string;
 };

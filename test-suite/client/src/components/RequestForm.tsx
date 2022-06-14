@@ -47,13 +47,14 @@ const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
       const formData = new FormData();
       const reportReq = await fetch(template);
       const xml = await reportReq.text();
+      console.log(sslCerts);
       Object.entries(sslCerts).forEach(([key, file]) => {
         if (file) formData.append(key, file);
       });
       formData.append("form", JSON.stringify(form));
       formData.append("template", xml);
 
-      const response = await fetch(serverUrl, {
+      const response = await fetch(serverUrl + "/report", {
         method: "POST",
         body: formData,
       }).then((r) => r.json());
@@ -159,14 +160,16 @@ const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
         {response && (
           <Card>
             <Card.Content>
-              <pre>Response Status: {response.adaptorStatus}</pre>
+              <pre>API Status: {response.apiStatus}</pre>
+              <pre>Adaptor Status: {response.adaptorStatus}</pre>
+
               <pre
                 style={{
                   overflow: "scroll",
                   maxHeight: "450px",
                 }}
               >
-                {beautify(response.adaptorResponse)}
+                {beautify(response.message)}
               </pre>
             </Card.Content>
           </Card>

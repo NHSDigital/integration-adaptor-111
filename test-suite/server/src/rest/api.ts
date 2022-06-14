@@ -10,10 +10,11 @@ import {
   ReqResponse,
   AdaptorResponse,
   MultiPartForm,
+  FileTuple,
 } from "../types";
 
 const api = (router: Router) => {
-  router.post("/api", async (req: Request, res: Response) => {
+  router.post("/report", async (req: Request, res: Response) => {
     const formPromise: Promise<MultiPartForm> = new Promise((resolve) => {
       const multipartForm = new multiparty.Form();
       multipartForm.parse(req, (_err, fields, files) => {
@@ -31,34 +32,62 @@ const api = (router: Router) => {
       (acc, [k, v]) => acc.replace(`@@${k}@@`, v),
       template[0]
     );
+
+    const { url } = form.requestHeaderFields;
+    const requiresCert = url.includes("https");
+    const caCert = getAgentKey(ca);
+    const caKey = getAgentKey(key);
+    const p12Key = getAgentKey(p12);
+    if (requiresCert && (!caCert || !caKey || !p12Key)) {
+      const rejectResponse: AdaptorResponse = {
+        apiStatus: 400,
+        adaptorStatus: 400,
+        message: "API_MISSING_CERTS",
+      };
+      res.json(rejectResponse).end();
+    }
+
     const options: ReqOptions = {
-      url: form.requestHeaderFields.url,
+      url,
       headers: {
         "Content-Type": form.requestHeaderFields["content-type"],
+        "Content-Length": xmlPayload.length,
       },
       agentOptions: {
-        ca: fs.readFileSync(ca[0].path),
-        key: fs.readFileSync(key[0].path),
+        ca: getAgentKey(ca),
+        key: getAgentKey(key),
         // Or use `pfx` property replacing `cert` and `key` when using private key, certificate and CA certs in PFX or PKCS12 format:
-        pfx: fs.readFileSync(p12[0].path),
+        pfx: getAgentKey(p12),
         passphrase: "logitech",
+        rejectUnauthorized: false,
       },
       body: xmlPayload,
     };
-
     request.post(
       options,
       (error: ReqError, response: ReqResponse, body: ReqBody) => {
-        const clientResponse: AdaptorResponse = {
+        let adaptorResponse: AdaptorResponse = {
           apiStatus: 200,
-          adaptorStatus: response ? response.statusCode : 400,
-          adaptorResponse: error ? error.code : body,
+          adaptorStatus: 400,
+          message: error ? error.code : "UNKNOWN_ERROR",
         };
-        res.json(clientResponse).end();
+        if (response && body) {
+          adaptorResponse = {
+            apiStatus: 200,
+            adaptorStatus: response.statusCode,
+            message: body,
+          };
+        }
+        res.json(adaptorResponse).end();
       }
     );
   });
   return router;
 };
+
+const getAgentKey = (file: FileTuple | undefined) =>
+  file && Array.isArray(file) && file.length && file[0].path
+    ? fs.readFileSync(file[0].path)
+    : undefined;
 
 export default api;
