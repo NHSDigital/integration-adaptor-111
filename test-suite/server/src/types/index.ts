@@ -20,24 +20,11 @@ type FormFiles = {
   p12?: FileTuple;
 };
 
-export type Form = {
-  [key: string]: string;
-};
-
 export type MultiPartForm = { fields: FormFields; files: FormFiles };
 
-export type RequestHeaders = {
-  "content-type": string;
-  url: string;
-};
-
-export type AdaptorRequest = {
-  requestHeaderFields: RequestHeaders;
-  requestPayloadFields: Form;
-};
-
-export type AdaptorResponse = {
-  apiStatus: number;
-  adaptorStatus: number;
-  message: string;
-};
+export {
+  Form,
+  RequestHeaders,
+  AdaptorRequest,
+  AdaptorResponse,
+} from "./shared";
