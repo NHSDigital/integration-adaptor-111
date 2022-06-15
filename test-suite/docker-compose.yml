@@ -18,10 +18,7 @@ services:
       - "3000:3000"
     volumes:
       - "./client:/app/client"
-
-      - type: bind
-        source: ./server/src/types/shared.ts
-        target: /app/server/src/types/shared.ts
+      - "./server/src/types/shared.ts:/app/server/src/types/shared.ts"
     depends_on:
       - test-server
 

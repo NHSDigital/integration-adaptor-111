@@ -45,14 +45,11 @@ const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
   const onSubmit = async () => {
     try {
       const formData = new FormData();
-      const reportReq = await fetch(template);
-      const xml = await reportReq.text();
-      console.log(sslCerts);
       Object.entries(sslCerts).forEach(([key, file]) => {
         if (file) formData.append(key, file);
       });
       formData.append("form", JSON.stringify(form));
-      formData.append("template", xml);
+      formData.append("template", template);
 
       const response = await fetch(serverUrl + "/report", {
         method: "POST",
