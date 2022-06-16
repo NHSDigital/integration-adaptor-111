@@ -688,113 +688,109 @@ const schema: Schema = {
                 validators: [notNull()]
               }
             ]
+        }
+      },
+      {
+         testName: "Patient with no NHS no.",
+         testDescription:
+           "NHS 111 referral message sent to a GP practice treating patients who do not have an NHS number e.g. GP Practices in holiday areas act as a sort of urgent treatment service for non-registered patients (who don’t have their NHS number to hand) or in rural places where they do urgent care work for the homeless (who do not have an NHS number)",
+         template: require("./no-nhs-number-itk-request.xml"),
+         testSpecifications: {
+           [RequestHeaderProps.Header]: [
+             {
+               label: "Url",
+               id: "url",
+               defaultValue: "http://localhost:8081/report",
+               validators: [isUrl(), isReportUrl()],
+             },
+             {
+               label: "Content Type",
+               id: "content-type",
+               defaultValue: "application/xml",
+               validators: [notNull(), minLength(7)],
+             },
+           ],
+           [RequestHeaderProps.Body]: [
+             {
+               label: "ODS Code",
+               id: "ods-code",
+               defaultValue: "EM396",
+               validators: [notNull(), isAlpha()],
+             },
+             {
+               label: "DOS Code",
+               id: "dos-code",
+               defaultValue: "26428",
+               validators: [isAlpha()],
+             },
+             {
+               label: "ODS Name",
+               id: "ods-name",
+               defaultValue: "EM396",
+               validators: [notNull(), isAlpha()],
+             },
+             {
+               label: "Local Patient Identifier",
+               id: "local-patient-identifier",
+               defaultValue: "1112223344",
+               validators: [notNull(), isAlpha()],
+             },
+             {
+               label: "Recipient Name",
+               id: "recipent-name",
+               defaultValue: "John Stones",
+               validators: [notNull(), isAlpha()],
+             },
+             {
+               label: "Recipient Address Line 1",
+               id: "recipent-street-address-line-1",
+               defaultValue: "99 Made up Address",
+               validators: [notNull(), isAlpha()],
+             },
+             {
+               label: "Recipient Address Line 2",
+               id: "recipent-street-address-line-2",
+               defaultValue: "Made up Street",
+               validators: [notNull(), isAlpha()],
+             },
+             {
+               label: "Recipient Town",
+               id: "recipent-street-address-town",
+               defaultValue: "Made up Town",
+               validators: [isAlpha()],
+             },
+             {
+               label: "Recipient City",
+               id: "recipent-street-address-city",
+               defaultValue: "Made up City",
+               validators: [isAlpha()],
+             },
+             {
+               label: "Recipient Postcode",
+               id: "recipent-street-address-postcode",
+               defaultValue: "M27 1XR",
+               validators: [isAlpha()],
+             },
+             {
+               label: "Encounter Start Datetime",
+               id: "nhs111-encounter-date-time-start",
+               defaultValue: "202201061200",
+               validators: [notNull()],
+               placeholder: datePlaceholder
+             },
+             {
+               label: "Encounter End Datetime",
+               id: "nhs111-encounter-date-time-end",
+               defaultValue: "2022010613",
+               validators: [notNull()],
+               placeholder: datePlaceholder
+             }
+           ]
           }
         }
       ]
     }
   ]
-        },
-        {
-          testName: "Patient with no NHS no.",
-          testDescription:
-            "NHS 111 referral message sent to a GP practice treating patients who do not have an NHS number e.g. GP Practices in holiday areas act as a sort of urgent treatment service for non-registered patients (who don’t have their NHS number to hand) or in rural places where they do urgent care work for the homeless (who do not have an NHS number)",
-          template: require("./no-nhs-number-itk-request.xml"),
-          testSpecifications: {
-            [RequestHeaderProps.Header]: [
-              {
-                label: "Url",
-                id: "url",
-                defaultValue: "http://localhost:8081/report",
-                validators: [isUrl(), isReportUrl()],
-              },
-              {
-                label: "Content Type",
-                id: "content-type",
-                defaultValue: "application/xml",
-                validators: [notNull(), minLength(7)],
-              },
-            ],
-            [RequestHeaderProps.Body]: [
-              {
-                label: "ODS Code",
-                id: "ods-code",
-                defaultValue: "EM396",
-                validators: [notNull(), isAlpha()],
-              },
-              {
-                label: "DOS Code",
-                id: "dos-code",
-                defaultValue: "26428",
-                validators: [isAlpha()],
-              },
-              {
-                label: "ODS Name",
-                id: "ods-name",
-                defaultValue: "EM396",
-                validators: [notNull(), isAlpha()],
-              },
-              {
-                label: "Local Patient Identifier",
-                id: "local-patient-identifier",
-                defaultValue: "1112223344",
-                validators: [notNull(), isAlpha()],
-              },
-              {
-                label: "Recipient Name",
-                id: "recipent-name",
-                defaultValue: "John Stones",
-                validators: [notNull(), isAlpha()],
-              },
-              {
-                label: "Recipient Address Line 1",
-                id: "recipent-street-address-line-1",
-                defaultValue: "99 Made up Address",
-                validators: [notNull(), isAlpha()],
-              },
-              {
-                label: "Recipient Address Line 2",
-                id: "recipent-street-address-line-2",
-                defaultValue: "Made up Street",
-                validators: [notNull(), isAlpha()],
-              },
-              {
-                label: "Recipient Town",
-                id: "recipent-street-address-town",
-                defaultValue: "Made up Town",
-                validators: [isAlpha()],
-              },
-              {
-                label: "Recipient City",
-                id: "recipent-street-address-city",
-                defaultValue: "Made up City",
-                validators: [isAlpha()],
-              },
-              {
-                label: "Recipient Postcode",
-                id: "recipent-street-address-postcode",
-                defaultValue: "M27 1XR",
-                validators: [isAlpha()],
-              },
-              {
-                label: "Encounter Start Datetime",
-                id: "nhs111-encounter-date-time-start",
-                defaultValue: "202201061200",
-                validators: [notNull()],
-                placeholder: datePlaceholder,
-              },
-              {
-                label: "Encounter End Datetime",
-                id: "nhs111-encounter-date-time-end",
-                defaultValue: "2022010613",
-                validators: [notNull()],
-                placeholder: datePlaceholder,
-              },
-            ],
-          },
-        },
-      ],
-    },
-  ],
 };
 
 export default schema;
