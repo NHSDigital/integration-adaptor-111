@@ -11,7 +11,7 @@
             <wsu:Timestamp
                     xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
                     wsu:Id="D6CD5232-14CF-11DF-9423-1F9A910D4703">
-                <wsu:Created>@@certficate-created-date-time@@Z</wsu:Created>
+                <wsu:Created>@@certificate-created-date-time@@Z</wsu:Created>
                 <wsu:Expires>@@certificate-expires-date-time@@Z</wsu:Expires>
             </wsu:Timestamp>
             <wsse:UsernameToken>
@@ -29,6 +29,8 @@
                 <itk:addresslist>
                     <itk:address uri="urn:nhs-uk:addressing:ods:@@ods-code@@"/>
                     <itk:address type="2.16.840.1.113883.2.1.3.2.4.18.44" uri="@@dos-code@@" />
+                    <itk:address uri="urn:nhs-uk:addressing:ods:@@ods-code-2@@"/>
+                    <itk:address type="2.16.840.1.113883.2.1.3.2.4.18.44" uri="@@dos-code-2@@" />
                 </itk:addresslist>
                 <itk:auditIdentity>
                     <itk:id uri="urn:nhs-uk:identity:ods:5L399"/>
@@ -38,7 +40,7 @@
                 </itk:manifest>
                 <itk:senderAddress uri="urn:nhs-uk:addressing:ods:5L399:445510770"/>
                 <itk:handlingSpecification>
-                    <itk:spec value="urn:nhs-itk:interaction:copyRecipientNHS111CDADocument-v2-0" key="urn:nhs-itk:ns:201005:interaction"/>
+                    <itk:spec value="urn:nhs-itk:interaction:primaryGeneralPractitionerRecipientNHS111CDADocument-v2-0" key="urn:nhs-itk:ns:201005:interaction"/>
                 </itk:handlingSpecification>
             </itk:header>
             <itk:payloads count="1">
@@ -193,9 +195,9 @@
                                 </addr>
                                 <telecom use="WP" value="tel:0123476895"/>
                                 <receivedOrganization classCode="ORG" determinerCode="INSTANCE">
-                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.1"
                                                 extension="COCD_TP145203GB03#representedOrganization"/>
-                                    <id root="2.16.840.1.113883.2.1.3.2.4.19.2" extension="PRA123"/>
+                                    <id root="2.16.840.1.113883.2.1.3.2.4.19.2" extension="@@ods-code@@"/>
                                     <name>@@recipient-name@@</name>
                                 </receivedOrganization>
                             </intendedRecipient>
@@ -206,11 +208,18 @@
                             <intendedRecipient classCode="ASSIGNED">
                                 <templateId extension="COCD_TP145203GB03#IntendedRecipient"
                                             root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                <addr use="WP">
+                                    <streetAddressLine>@@recipient-street-address-line-1-2@@</streetAddressLine>
+                                    <streetAddressLine> @@recipient-street-address-line-2-2@@</streetAddressLine>
+                                    <streetAddressLine>@@recipient-street-address-town-2@@</streetAddressLine>
+                                    <streetAddressLine>@@recipient-street-address-city-2@@</streetAddressLine>
+                                    <postalCode>@@recipient-street-address-postcode-2@@</postalCode>
+                                </addr>
                                 <receivedOrganization classCode="ORG" determinerCode="INSTANCE">
                                     <templateId extension="COCD_TP145203GB03#representedOrganization"
                                                 root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
-                                    <id extension="EM396" root="2.16.840.1.113883.2.1.3.2.4.19.1"/>
-                                    <name>Medway Kent Out of Hours Clinic</name>
+                                    <id extension="@@ods-code-2@@" root="2.16.840.1.113883.2.1.3.2.4.19.2"/>
+                                    <name>@@recipient-name-2@@</name>
                                 </receivedOrganization>
                             </intendedRecipient>
                         </informationRecipient>
@@ -286,9 +295,8 @@
                                     <low value="@@nhs111-encounter-date-time-start@@+00"/>
                                     <high value="@@nhs111-encounter-date-time-end@@+00"/>
                                 </effectiveTime>
-                                <dischargeDispositionCode code="Dx42" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.325"
-                                                          displayName="Child protection / Vulnerable adult immediate referral
-"/>
+                                <dischargeDispositionCode code="@@disposition-code@@" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.325"
+                                                          displayName="@@disposition-text@@"/>
                                 <responsibleParty typeCode="RESP">
                                     <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
                                                 extension="COCD_TP146232GB01#responsibleParty"/>

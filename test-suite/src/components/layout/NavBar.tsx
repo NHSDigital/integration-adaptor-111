@@ -17,7 +17,7 @@ const NavBar = () => {
             onMouseEnter={() => setNavItemHovered(r.path)}
             onMouseLeave={() => setNavItemHovered(null)}
             style={{
-              textDecoration: navItemHovered === r.path ? "none" : "underline",
+              textDecoration: navItemHovered === r.path ? "none" : "underline"
             }}
           >
             {r.name}

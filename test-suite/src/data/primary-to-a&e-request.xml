@@ -185,18 +185,18 @@
                                 <templateId extension="COCD_TP145203GB03#IntendedRecipient"
                                             root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
                                 <addr use="WP">
-                                    <streetAddressLine>@@recipient-street-address-line-1@@</streetAddressLine>
-                                    <streetAddressLine>@@recipient-street-address-line-2@@</streetAddressLine>
-                                    <streetAddressLine>@@recipient-street-address-town@@</streetAddressLine>
-                                    <streetAddressLine>@@recipient-street-address-city@@</streetAddressLine>
-                                    <postalCode>@@recipient-street-address-postcode@@</postalCode>
+                                    <streetAddressLine>@@recipent-street-address-line-1@@</streetAddressLine>
+                                    <streetAddressLine>@@recipent-street-address-line-2@@</streetAddressLine>
+                                    <streetAddressLine>@@recipent-street-address-town@@</streetAddressLine>
+                                    <streetAddressLine>@@recipent-street-address-city@@</streetAddressLine>
+                                    <postalCode>@@recipent-street-address-postcode@@</postalCode>
                                 </addr>
                                 <telecom use="WP" value="tel:0123476895"/>
                                 <receivedOrganization classCode="ORG" determinerCode="INSTANCE">
                                     <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
                                                 extension="COCD_TP145203GB03#representedOrganization"/>
                                     <id root="2.16.840.1.113883.2.1.3.2.4.19.2" extension="PRA123"/>
-                                    <name>@@recipient-name@@</name>
+                                    <name>@@recipent-name@@</name>
                                 </receivedOrganization>
                             </intendedRecipient>
                         </informationRecipient>
@@ -286,8 +286,8 @@
                                     <low value="@@nhs111-encounter-date-time-start@@+00"/>
                                     <high value="@@nhs111-encounter-date-time-end@@+00"/>
                                 </effectiveTime>
-                                <dischargeDispositionCode code="Dx42" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.325"
-                                                          displayName="Child protection / Vulnerable adult immediate referral
+                                <dischargeDispositionCode code="Dx02" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.325"
+                                                          displayName="Attend Emergency Treatment Centre within 1 hour
 "/>
                                 <responsibleParty typeCode="RESP">
                                     <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2"
@@ -537,6 +537,7 @@
                                                 <code code="887181000000106" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"
                                                       displayName="Clinical summary"/>
                                                 <title>Clinical Summary</title>
+                                                
                                                 <text>
                                                     <content>
                                                         Patient fels nausea and dizzy after waking up. Lasted 30

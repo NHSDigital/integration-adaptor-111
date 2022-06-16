@@ -1,4 +1,5 @@
 import { AdaptorRequest } from "../types";
+
 const beautify = require("xml-beautifier");
 
 export type AdaptorResponse = {
@@ -22,7 +23,7 @@ const sendXmlRequest = async (
     const xmlPayload = Object.entries(form.requestPayloadFields).reduce(
       (acc, [k, v]) => {
         const templateKey = `@@${k}@@`;
-        const newXml = acc.replace(templateKey, v);
+        const newXml = acc.replaceAll(templateKey, v);
         return newXml;
       },
       xml
@@ -31,7 +32,7 @@ const sendXmlRequest = async (
       if (this.readyState === XMLHttpRequest.DONE) {
         resolve({
           xml: beautify(this.response),
-          status: this.status,
+          status: this.status
         });
       }
     };
