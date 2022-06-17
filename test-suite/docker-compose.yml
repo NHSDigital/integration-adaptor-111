@@ -1,6 +1,8 @@
 version: '3.8'
 services:
   test-server:
+    networks:
+      - 111network
     image: 111-adaptor-test:server
     build:
       context: ./server
@@ -10,6 +12,8 @@ services:
     volumes:
       - "./server:/app/server"
   test-client:
+    networks:
+      - 111network
     image: 111-adaptor-test:client
     build:
       context: ./client
@@ -21,5 +25,8 @@ services:
       - "./server/src/types/shared.ts:/app/server/src/types/shared.ts"
     depends_on:
       - test-server
+networks:
+  111network:
+    external: true
 
 

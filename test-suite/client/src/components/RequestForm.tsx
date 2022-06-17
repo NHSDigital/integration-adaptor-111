@@ -23,7 +23,9 @@ const beautify = require("xml-beautifier");
 type Props = {
   name: string;
   specs: TestSpecs;
-  template: string;
+  template: {
+    default: string;
+  };
   globals: Array<TestRequestField>;
   sslCerts: SslCerts;
 };
@@ -49,7 +51,7 @@ const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
         if (file) formData.append(key, file);
       });
       formData.append("form", JSON.stringify(form));
-      formData.append("template", template);
+      formData.append("template", template.default);
 
       const response = await fetch(serverUrl + "/report", {
         method: "POST",

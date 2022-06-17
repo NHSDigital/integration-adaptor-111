@@ -5,12 +5,14 @@
   "scripts": {
     "prod": "node dist/index.js",
     "start": "nodemon src/index.ts",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "all": "concurrently --kill-others \"npm run start\" \"npm --prefix ../client/ run start\""
   },
   "author": "Rio Knightley",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.0",
+    "concurrently": "^7.2.1",
     "consola": "^2.15.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",

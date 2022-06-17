@@ -5,7 +5,13 @@ export type ReqBody = Response["body"] | undefined;
 export type ReqOptions = Options;
 export type ReqResponse = Response | undefined;
 export type ReqRequest = Request;
-export type ReqError = { code: string } | null;
+export type ReqError = {
+  errno?: number;
+  code?: string;
+  syscall?: string;
+  address?: string;
+  port: number;
+} | null;
 
 export type FileTuple = [File];
 type StringTuple = [string];
@@ -21,10 +27,3 @@ type FormFiles = {
 };
 
 export type MultiPartForm = { fields: FormFields; files: FormFiles };
-
-export {
-  Form,
-  RequestHeaders,
-  AdaptorRequest,
-  AdaptorResponse,
-} from "./shared";

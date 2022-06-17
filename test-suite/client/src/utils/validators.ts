@@ -79,13 +79,13 @@ export const validateField = (fieldValidation: FormError, value: string) =>
     let isError = false;
     if (k === "notNull") {
       isError = value === null || value === "";
-    } else if (k === "maxLength") {
+    } else if (k === "maxLength" && value) {
       isError = typeof v.match === "number" && value.length > v.match;
-    } else if (k === "minLength") {
+    } else if (k === "minLength" && value) {
       isError = typeof v.match === "number" && value.length < v.match;
-    } else if (k === "hasLength") {
+    } else if (k === "hasLength" && value) {
       isError = typeof v.match === "number" && value.length === v.match;
-    } else {
+    } else if (value) {
       isError = v.match instanceof RegExp && !new RegExp(v.match).test(value);
     }
     return {

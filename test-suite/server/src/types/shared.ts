@@ -1,3 +1,10 @@
+/**
+ * Shared Types
+ *
+ * Usage on both the client & server:
+ * import { Form } from "@server/types"
+ */
+
 export type Form = {
   [key: string]: string;
 };

@@ -3,15 +3,15 @@ import request from "request";
 import multiparty from "multiparty";
 import fs from "fs";
 import {
-  AdaptorRequest,
   ReqBody,
   ReqError,
   ReqOptions,
   ReqResponse,
-  AdaptorResponse,
   MultiPartForm,
   FileTuple,
 } from "../types";
+import { AdaptorRequest, AdaptorResponse } from "@server/types";
+
 import { AgentOptions } from "https";
 
 const api = (router: Router) => {
@@ -75,9 +75,10 @@ const api = (router: Router) => {
       (error: ReqError, response: ReqResponse, body: ReqBody) => {
         let adaptorResponse: AdaptorResponse = {
           apiStatus: 200,
-          adaptorStatus: 400,
-          message: error ? error.code : "UNKNOWN_ERROR",
+          adaptorStatus: error?.errno ?? 400,
+          message: error?.code ?? "UNKNOWN_ERROR",
         };
+        console.log(response);
         if (response && body) {
           adaptorResponse = {
             apiStatus: 200,

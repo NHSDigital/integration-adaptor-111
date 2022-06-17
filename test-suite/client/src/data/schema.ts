@@ -24,54 +24,6 @@ const schema: Schema = {
       groupName: "Report",
       testList: [
         {
-          testName: "Primary Care Test",
-          testDescription:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a porta sem, at posuere velit. Donec tempor non ligula et congue. Donec faucibus lobortis lorem, et luctus lacus efficitur at. ",
-          template: require("./create-report-request.xml"),
-          testSpecifications: {
-            [RequestHeaderProps.Header]: [
-              {
-                label: "Url",
-                id: "url",
-                defaultValue: "http://localhost:8081/report",
-                validators: [isUrl()]
-              },
-              {
-                label: "Content Type",
-                id: "content-type",
-                defaultValue: "application/xml",
-                validators: [notNull(), minLength(7)]
-              }
-            ],
-            [RequestHeaderProps.Body]: [
-              {
-                label: "First Name",
-                id: "first-name",
-                defaultValue: "John",
-                validators: [notNull(), isAlpha()]
-              },
-              {
-                label: "Last Name",
-                id: "last-name",
-                defaultValue: "Stones",
-                validators: [notNull(), isAlpha()]
-              },
-              {
-                label: "NHS Number",
-                id: "nhs-number",
-                defaultValue: "1112223344",
-                validators: [notNull(), isNumeric(), isLength(10)]
-              },
-              {
-                label: "Message ID",
-                id: "message-id",
-                defaultValue: "F7916D36-4D5F-4A64-BD08-644E8A23AAAA",
-                validators: [notNull()]
-              }
-            ]
-          }
-        },
-        {
           testName: "Patient Referred to Primary Care for Assessment",
           testDescription:
             "111 Report indicating that a call has resulted in the patient being referred to GP for assessment.",

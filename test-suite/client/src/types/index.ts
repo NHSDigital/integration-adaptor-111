@@ -13,7 +13,9 @@ type TestGroup = {
 export type Test = {
   testName: string;
   testDescription: string;
-  template: string;
+  template: {
+    default: string;
+  };
   testSpecifications: TestSpecs;
 };
 
