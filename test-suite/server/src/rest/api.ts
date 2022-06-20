@@ -45,7 +45,7 @@ const api = (router: Router) => {
         const rejectResponse: AdaptorResponse = {
           apiStatus: 400,
           adaptorStatus: 400,
-          message: "API_MISSING_CERTS",
+          message: "HTTPS_MISSING_CERTS",
         };
         res.json(rejectResponse).end();
         return;
@@ -78,7 +78,6 @@ const api = (router: Router) => {
           adaptorStatus: error?.errno ?? 400,
           message: error?.code ?? "UNKNOWN_ERROR",
         };
-        console.log(response);
         if (response && body) {
           adaptorResponse = {
             apiStatus: 200,

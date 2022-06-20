@@ -16,7 +16,7 @@ dotenv.config();
 const app: Application = express();
 const router: Router = express.Router();
 const PORT: string | undefined = process.env.PORT;
-router.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   consola.info({
     message: `${req.method} request from ${req.hostname} [${req.ip}] to ${req.path}`,
     badge: true,

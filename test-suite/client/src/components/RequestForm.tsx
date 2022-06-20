@@ -17,6 +17,7 @@ import createDefaultRequest from "../utils/createDefaultRequest";
 import { createRequestErrors } from "../utils/createFormErrors";
 import { validateField, validateForm } from "../utils/validators";
 import { serverUrl } from "../data/schema";
+import { dockerLocal, isDevelopment, localhost } from "../data/globals";
 
 const beautify = require("xml-beautifier");
 
@@ -50,7 +51,21 @@ const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
       Object.entries(sslCerts).forEach(([key, file]) => {
         if (file) formData.append(key, file);
       });
-      formData.append("form", JSON.stringify(form));
+      const { url } = form.requestHeaderFields;
+      const adaptorUrl =
+        isDevelopment && url.includes(localhost)
+          ? url.replace(localhost, dockerLocal)
+          : url;
+      formData.append(
+        "form",
+        JSON.stringify({
+          ...form,
+          requestHeaderFields: {
+            ...form.requestHeaderFields,
+            url: adaptorUrl
+          }
+        })
+      );
       formData.append("template", template.default);
 
       const response = await fetch(serverUrl + "/report", {

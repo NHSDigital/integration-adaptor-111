@@ -1,4 +1,4 @@
-const { HotModuleReplacementPlugin } = require("webpack");
+const { HotModuleReplacementPlugin, DefinePlugin } = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 const WatchExternalFilesPlugin = require("webpack-watch-external-files-plugin");
@@ -39,6 +39,9 @@ const config = {
     extensions: [".tsx", ".ts", ".js"]
   },
   plugins: [
+    new DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV)
+    }),
     new WatchExternalFilesPlugin({
       files: ["../server/src/types/shared.ts"]
     }),
