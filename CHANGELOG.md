@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [1.0.3] - 2022-06-23
+- Upgrade spring boot from 2.6.7 to 2.6.8 to fix vulnerabilities
+- Update FHIR date mapping
+- Update Pathways Triage mapping in the Questionnaire mapper
+- Add development scripts for Apple Silicon chips
+- Add timestamps to bundle.meta.lastUpdated in the Bundling mapper
+- Update release scripts
+- Hotfix Pathway utilities case mapping
 ## [1.0.2] - 2022-04-19
 - Security updates
 ## [1.0.1] - 2022-04-06
