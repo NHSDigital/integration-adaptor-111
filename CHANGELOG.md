@@ -5,12 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [1.0.3] - 2022-06-23
 - Upgrade spring boot from 2.6.7 to 2.6.8 to fix vulnerabilities
-- Update FHIR date mapping
-- Update Pathways Triage mapping in the Questionnaire mapper
-- Add development scripts for Apple Silicon chips
-- Add timestamps to bundle.meta.lastUpdated in the Bundling mapper
-- Update release scripts
-- Hotfix Pathway utilities case mapping
+- Fixed issue when sending a report with boolean attributes. Application was not responding to case sensitive booleans such as `value="True"`.
+- Compatibility issues when running the adaptor in development mode for Apple Silicon machines. Scripts have been updated to install correct Apple Silicon dependencies when running application on this architecture
+- Add new timestamping format to following FHIR response properties:
+  `Bundle.meta.lastUpdated`, `Encounter.period`, `ReferralRequest.occurrence`, `ProcedureRequest.occurrence`, `Composition.date` and `List.date`
+- Fixed base64 parsing error when mapping pathway's skill sets, will now default to `Unknown`
 ## [1.0.2] - 2022-04-19
 - Security updates
 ## [1.0.1] - 2022-04-06
@@ -30,10 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `HealthcareService.Location.ManagingOrganization`and in `HealthcareService.ProvidedBy` properties
 - Adding `Device` resource and referencing it in `ReferralRequest.Requester.Agent` and `List.Source` instead of hardcoded 'Device/1' value.
   `Device` resource is populated with:
-    FHIR | value
-    ---- | ---
-    model | 111 Adaptor
-    version | <current_version>
+  FHIR | value
+  ---- | ---
+  model | 111 Adaptor
+  version | <current_version>
 - Possibility to override supported ODS codes and DOS IDs set in yaml and retrieve them from endpoint configured in `PEM111_ITK_EXTERNAL_CONFIGURATION_URL` env var.
   Poll intervals can be set in `PEM111_ITK_FETCH_INTERVAL_MIN` env var.
 ## [0.8.0] - 2021-08-27
@@ -41,24 +40,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed issues with Date/Time parsing
 - Mapping `ClinicalDocument.effectiveTime` [ITK] to `MessageHeader.timestamp` [FHIR]
 - When mapping `EncompassingEncounter.ResponsibleParty` to `Encounter.Participant` then `type` is populated with:
-    FHIR | value
-    ---- | ---
-    Type.Coding.Code | ATND
-    Type.Coding.Display | Responsible Party
-    Type.Coding.System | http://hl7.org/fhir/ValueSet/encounter-participant-type
+  FHIR | value
+  ---- | ---
+  Type.Coding.Code | ATND
+  Type.Coding.Display | Responsible Party
+  Type.Coding.System | http://hl7.org/fhir/ValueSet/encounter-participant-type
 - When mapping `ClinicalDocument.Author` to `Encounter.Participant` then `type` is populated with:
-    FHIR | value
-    ---- | ---
-    Type.Coding.Code | PPRF
-    Type.Coding.Display | Author
-    Type.Coding.System | http://hl7.org/fhir/ValueSet/encounter-participant-type
+  FHIR | value
+  ---- | ---
+  Type.Coding.Code | PPRF
+  Type.Coding.Display | Author
+  Type.Coding.System | http://hl7.org/fhir/ValueSet/encounter-participant-type
 - Mapping `ITK ClinicalDocument.Informant.RelatedEntity.Code` to `RelatedPerson.Relationship`:
-    ITK | FHIR
-    ---- | ---
-    codeSystem | relationship.coding.system
-    code | relationship.coding.code
-    displayName | relationship.coding.display
-- Creating `RelatedPerson` resource where `relationship` is coded as emergency contact when mapping an entity with Telecom emergency use.    
+  ITK | FHIR
+  ---- | ---
+  codeSystem | relationship.coding.system
+  code | relationship.coding.code
+  displayName | relationship.coding.display
+- Creating `RelatedPerson` resource where `relationship` is coded as emergency contact when mapping an entity with Telecom emergency use.
 - Mapping `EncompassingEncounter.Location.HealthCareFacility.Location` [ITK] to `Encounter.location` [FHIR]
 - Including `typeCode` when mapping `informationRecipient`to `Organization`
 - Mapping `informationRecipient` only when `typeCode=PRCP`
@@ -68,40 +67,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.7.0] - 2021-08-11
 - DOS Service ID suffixed to ODS Code and mapped to FHIR MessageHeader/destination/endpoint according to pattern:
   ODS_code_value:DOSServiceID:DOS_Service_ID_value, where:
-    name | ITK field
-    ---- | ---
-    ODS_code_value | Header/AddressList/Address field with only uri attribute/Uri attribute
-    DOS_Service_ID_value | Header/AddressList/Address field with both uri and type attributes/Uri attribute
+  name | ITK field
+  ---- | ---
+  ODS_code_value | Header/AddressList/Address field with only uri attribute/Uri attribute
+  DOS_Service_ID_value | Header/AddressList/Address field with both uri and type attributes/Uri attribute
 - AdministrativeGenderCode code attribute mapped to FHIR Patient/gender
   based on guidance from 'Person Stated Gender Code NHS Data Model and Dictionary':
-    FHIR | ITK
-    ---- | ---
-    AdministrativeGenderCode code | FHIR Enumerations.AdministrativeGender
-    1 | MALE
-    2 | FEMALE
-    9 | OTHER
-    any other code | UNKNOWN
+  FHIR | ITK
+  ---- | ---
+  AdministrativeGenderCode code | FHIR Enumerations.AdministrativeGender
+  1 | MALE
+  2 | FEMALE
+  9 | OTHER
+  any other code | UNKNOWN
 - All present EncompassingEncounter/Id mapped to FHIR using following mapping:
-    FHIR | ITK
-    ---- | ---
-    Identifier[*].system | EncompassingEncounter/Id root attribute
-    Identifier[*].value | EncompassingEncounter/Id extension attribute
+  FHIR | ITK
+  ---- | ---
+  Identifier[*].system | EncompassingEncounter/Id root attribute
+  Identifier[*].value | EncompassingEncounter/Id extension attribute
 - All FHIR resources added id property, set to value from fullUrl property without 'urn:uuid:' prefix.
 - Header/A:MessageID mapped to FHIR MessageHeader/fullUrl prefixed with 'urn:uuid:'
   and to FHIR MessageHeader/id
 - Addr use="PHYS" attribute mapped to FHIR Address/type set to 'physical'
 - When HandlingSpecification is primary interaction it's mapped to FHIR using following mapping:
-    FHIR | value
-    ---- | ---
-    MessageHeader/event/code | referral-1
-    MessageHeader/event/display | Referral
-    Encounter.text | 111 Encounter Referral
+  FHIR | value
+  ---- | ---
+  MessageHeader/event/code | referral-1
+  MessageHeader/event/display | Referral
+  Encounter.text | 111 Encounter Referral
 - When HandlingSpecification is copy interaction it's mapped to FHIR using following mapping:
-    FHIR | value
-    ---- | ---
-    MessageHeader/event/code | discharge-details-1
-    MessageHeader/event/display | Discharge Details
-    Encounter.text | 111 Encounter Copy for Information
+  FHIR | value
+  ---- | ---
+  MessageHeader/event/code | discharge-details-1
+  MessageHeader/event/display | Discharge Details
+  Encounter.text | 111 Encounter Copy for Information
 ## [0.6.0] - 2021-06-25
 - Audit identity validation
 - POCD precompiled classes added to repo
@@ -111,29 +110,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.4.0] - 2020-11-23
 - TLS Mutual authentication
 - PractitionerRole resource is mapped to FHIR using following mapping:
-    FHIR | ITK
-    ---- | ---
-    PractitionerRole/code | ClinicalDocument/componentOf/encompassingEncounter/responsibleParty/assignedEntity/code
-    PractitionerRole/Practitioner | ClinicalDocument/componentOf/encompassingEncounter/responsibleParty/assignedEntity
-    PractitionerRole/Organization | ClinicalDocument/componentOf/encompassingEncounter/responsibleParty/representedOrganization
+  FHIR | ITK
+  ---- | ---
+  PractitionerRole/code | ClinicalDocument/componentOf/encompassingEncounter/responsibleParty/assignedEntity/code
+  PractitionerRole/Practitioner | ClinicalDocument/componentOf/encompassingEncounter/responsibleParty/assignedEntity
+  PractitionerRole/Organization | ClinicalDocument/componentOf/encompassingEncounter/responsibleParty/representedOrganization
 ## [0.3.0] - 2020-11-18
 - Populate interaction type in FHIR message
 - Author Organisation resource is mapped to FHIR using following mapping:
-    FHIR | ITK
-    ---- | ---
-    Organisation | author/representedOrganization
+  FHIR | ITK
+  ---- | ---
+  Organisation | author/representedOrganization
 - Author Organisation is linked to Composition → Author
 - Author PractitionerRole resource is mapped to FHIR using following mapping:
-    FHIR | ITK
-    ---- | ---
-    PractitionerRole.code.system | author/assignedAuthor/code/codeSystem
-    PractitionerRole.code.code | author/assignedAuthor/code/code
-    PractitionerRole.code.display | author/assignedAuthor/code/displayName
+  FHIR | ITK
+  ---- | ---
+  PractitionerRole.code.system | author/assignedAuthor/code/codeSystem
+  PractitionerRole.code.code | author/assignedAuthor/code/code
+  PractitionerRole.code.display | author/assignedAuthor/code/displayName
 - Author PractitionerRole is linked to Composition → Author
 - ITK address list is populated in FHIR MessageHeader using following mapping:
-    FHIR | ITK
-    ---- | ---
-    MessageHeader/destination/endpoint/ | DistributionEnvelope/header/addresslist
+  FHIR | ITK
+  ---- | ---
+  MessageHeader/destination/endpoint/ | DistributionEnvelope/header/addresslist
 
 ## [0.2.0] - 2020-10-26
 ### Added
