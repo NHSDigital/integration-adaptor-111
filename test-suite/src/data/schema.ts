@@ -721,7 +721,7 @@ const schema: Schema = {
                label: "DOS Code",
                id: "dos-code",
                defaultValue: "26428",
-               validators: [isAlpha()],
+               validators: [],
              },
              {
                label: "ODS Name",
@@ -757,19 +757,19 @@ const schema: Schema = {
                label: "Recipient Town",
                id: "recipent-street-address-town",
                defaultValue: "Made up Town",
-               validators: [isAlpha()],
+               validators: [],
              },
              {
                label: "Recipient City",
                id: "recipent-street-address-city",
                defaultValue: "Made up City",
-               validators: [isAlpha()],
+               validators: [],
              },
              {
                label: "Recipient Postcode",
                id: "recipent-street-address-postcode",
                defaultValue: "M27 1XR",
-               validators: [isAlpha()],
+               validators: [],
              },
              {
                label: "Encounter Start Datetime",
