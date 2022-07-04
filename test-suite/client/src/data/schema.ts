@@ -620,25 +620,25 @@ const schema: Schema = {
                label: "ODS Code",
                id: "ods-code",
                defaultValue: "EM396",
-               validators: [notNull(), isAlpha()]
+               validators: [notNull(), isAlphanumeric()]
              },
              {
                label: "DOS Code",
                id: "dos-code",
                defaultValue: "26428",
-               validators: [isAlpha()]
+               validators: [isAlphanumeric()]
              },
              {
                label: "ODS Name",
                id: "ods-name",
                defaultValue: "EM396",
-               validators: [notNull(), isAlpha()]
+               validators: [notNull(), isAlphanumeric()]
              },
              {
                label: "Local Patient Identifier",
                id: "local-patient-identifier",
                defaultValue: "1112223344",
-               validators: [notNull(), isAlpha()]
+               validators: [notNull(), isAlphanumeric()]
              },
              {
                label: "Recipient Name",
@@ -650,13 +650,13 @@ const schema: Schema = {
                label: "Recipient Address Line 1",
                id: "recipent-street-address-line-1",
                defaultValue: "99 Made up Address",
-               validators: [notNull(), isAlpha()]
+               validators: [notNull(), isAlphanumeric()]
              },
              {
                label: "Recipient Address Line 2",
                id: "recipent-street-address-line-2",
                defaultValue: "Made up Street",
-               validators: [notNull(), isAlpha()]
+               validators: [notNull(), isAlphanumeric()]
              },
              {
                label: "Recipient Town",
@@ -674,7 +674,7 @@ const schema: Schema = {
                label: "Recipient Postcode",
                id: "recipent-street-address-postcode",
                defaultValue: "M27 1XR",
-               validators: [isAlpha()],
+               validators: [isAlphanumeric()],
              },
              {
                label: "Encounter Start Datetime",
