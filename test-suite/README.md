@@ -6,6 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you should run the following to start the app:
 
+# test - remove
 ### `npm install`
 
 Runs the dependency installation process.\

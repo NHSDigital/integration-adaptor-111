@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.xml.sax.SAXException;
 
 import lombok.AllArgsConstructor;
@@ -57,6 +59,7 @@ public class ReportController {
     private final ReportParserUtil reportParserUtil;
     private final ReportRequestUtils reportRequestUtils;
 
+    @CrossOrigin("http://localhost:3000")
     @PostMapping(value = "/report",
         consumes = {APPLICATION_XML_VALUE, TEXT_XML_VALUE},
         produces = TEXT_XML_VALUE
