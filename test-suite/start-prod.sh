@@ -50,6 +50,7 @@ app_install()
       Done! Server running on port 7000.
       
       Remember to relocate html files to your web server html folder.
+      You can find them in the current directories ./html folder.
       
       Use 'npx pm2 ps' to see your server instance
       Use 'npx pm2 delete/stop/start TestSuiteServer' for running the instance
