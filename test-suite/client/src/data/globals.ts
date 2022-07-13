@@ -9,7 +9,7 @@ const globals: Array<TestRequestField> = [
   {
     label: "Url",
     id: "url",
-    defaultValue: "http://localhost:8081/report",
+    defaultValue: "https://13.40.139.175/report",
     validators: [isUrl()]
   },
   {
@@ -20,7 +20,7 @@ const globals: Array<TestRequestField> = [
   }
 ];
 
-export const isDevelopment = process.env.NODE_ENV === "development";
+export const isDocker = false;
 export const dockerLocal = "host.docker.internal";
 export const localhost = "localhost";
 export default globals;

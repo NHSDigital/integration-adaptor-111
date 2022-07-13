@@ -17,7 +17,7 @@ import createDefaultRequest from "../utils/createDefaultRequest";
 import { createRequestErrors } from "../utils/createFormErrors";
 import { validateField, validateForm } from "../utils/validators";
 import { serverUrl } from "../data/schema";
-import { dockerLocal, isDevelopment, localhost } from "../data/globals";
+import { dockerLocal, isDocker, localhost } from "../data/globals";
 
 const beautify = require("xml-beautifier");
 
@@ -48,12 +48,12 @@ const RequestForm = ({ name, specs, template, globals, sslCerts }: Props) => {
   const onSubmit = async () => {
     try {
       const formData = new FormData();
-      Object.entries(sslCerts).forEach(([key, file]) => {
-        if (file) formData.append(key, file);
+      Object.entries(sslCerts).forEach(([key, entry]) => {
+        if (entry) formData.append(key, entry);
       });
       const { url } = form.requestHeaderFields;
       const adaptorUrl =
-        isDevelopment && url.includes(localhost)
+        isDocker && url.includes(localhost)
           ? url.replace(localhost, dockerLocal)
           : url;
       formData.append(
