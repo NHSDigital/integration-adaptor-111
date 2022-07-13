@@ -4,13 +4,8 @@ LIGHT_GREEN='\033[1;32m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-if which node > /dev/null
-  then
-       if which pm2 > /dev/null
-        then
-          echo "\n${LIGHT_GREEN}pm2 not detected, installing...${NC}\n"
-          npm install --location=global pm2
-
+app_install()
+{
       echo "\n${LIGHT_GREEN}Installing client dependencies${NC}\n"
       npm --prefix client/ install
 
@@ -25,16 +20,22 @@ if which node > /dev/null
 
       echo "\n${LIGHT_GREEN}Outputing client html into html folder...${NC}\n"
       mkdir -p html
-      cp client/build/* html/
+      cp client/dist/* html/
       
       echo "\n${LIGHT_GREEN}Starting the test suite server...${NC}\n"
-      pm2 delete TestSuiteServer  2> /dev/null || true && pm2 start  server/dist/index.js --name TestSuiteServer
+      npx pm2 delete TestSuiteServer  2> /dev/null || true && npx pm2 start  server/dist/index.js --name TestSuiteServer
 
-      echo "\n${LIGHT_GREEN}Done! Server running on port 7000. \n Remember to relocate html files to your web server html folder. \n Use 'pm2 ps' to see your server instance${NC}\n"
-  else
-    echo : "\n${RED}Couldn't find npm or Node.
+      echo "\n${LIGHT_GREEN}Done! Server running on port 7000. \n Remember to relocate html files to your web server html folder. \n \n Use 'npx pm2 ps' to see your server instance\n Use 'npx pm2 delete/stop/start TestSuiteServer' for running the instance${NC}\n"
+}
+
+if ! command -v node &> /dev/null
+  then
+    echo "\n${RED}Couldn't find npm or Node.
     please install at https://nodejs.org/en/${NC}\n"
-    exit 1
+    exit 1  
+  else
+   app_install
+   exit 1
   fi
 
   exit 1
