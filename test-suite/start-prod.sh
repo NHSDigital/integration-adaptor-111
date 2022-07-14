@@ -47,7 +47,7 @@ app_install()
 
       echo "
       
-      Done! Server running on port 7000.
+      Done! Server running on port 7070.
       
       Remember to relocate html files to your web server html folder.
       You can find them in the current directories ./html folder.
