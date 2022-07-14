@@ -620,25 +620,25 @@ const schema: Schema = {
                 label: "ODS Code",
                 id: "ods-code",
                 defaultValue: "EM396",
-                validators: [notNull(), isAlpha()]
+                validators: [notNull(), isAlphanumeric()]
               },
               {
                 label: "DOS Code",
                 id: "dos-code",
                 defaultValue: "26428",
-                validators: [isAlpha()]
+                validators: [isAlphanumeric()]
               },
               {
                 label: "ODS Name",
                 id: "ods-name",
                 defaultValue: "EM396",
-                validators: [notNull(), isAlpha()]
+                validators: [notNull(), isAlphanumeric()]
               },
               {
                 label: "Local Patient Identifier",
                 id: "local-patient-identifier",
                 defaultValue: "1112223344",
-                validators: [notNull(), isAlpha()]
+                validators: [notNull(), isAlphanumeric()]
               },
               {
                 label: "Recipient Name",
@@ -650,13 +650,13 @@ const schema: Schema = {
                 label: "Recipient Address Line 1",
                 id: "recipent-street-address-line-1",
                 defaultValue: "99 Made up Address",
-                validators: [notNull(), isAlpha()]
+                validators: [notNull(), isAlphanumeric()]
               },
               {
                 label: "Recipient Address Line 2",
                 id: "recipent-street-address-line-2",
                 defaultValue: "Made up Street",
-                validators: [notNull(), isAlpha()]
+                validators: [notNull(), isAlphanumeric()]
               },
               {
                 label: "Recipient Town",
@@ -674,7 +674,7 @@ const schema: Schema = {
                 label: "Recipient Postcode",
                 id: "recipent-street-address-postcode",
                 defaultValue: "M27 1XR",
-                validators: [isAlpha()]
+                validators: [isAlphanumeric()]
               },
               {
                 label: "Encounter Start Datetime",
@@ -688,6 +688,92 @@ const schema: Schema = {
                 id: "nhs111-encounter-date-time-end",
                 defaultValue: "2022010613",
                 validators: [notNull()],
+                placeholder: datePlaceholder
+              }
+            ]
+          }
+        },
+        {
+          testName: "Ambulance input",
+          testDescription:
+            "This test is for an ambulance medic to supply input on transit",
+          template: require("./ambulance-itk-request.xml"),
+          testSpecifications: {
+            [RequestHeaderProps.Header]: [
+              {
+                label: "Url",
+                id: "url",
+                defaultValue: "http://localhost:8081/report",
+                validators: [isUrl(), isReportUrl()]
+              },
+              {
+                label: "Content Type",
+                id: "content-type",
+                defaultValue: "application/xml",
+                validators: [notNull(), minLength(7)]
+              }
+            ],
+            [RequestHeaderProps.Body]: [
+              {
+                label: "Recipient ODS Code",
+                id: "ods-code",
+                defaultValue: "E88122002",
+                validators: [notNull(), isAlphanumeric()]
+              },
+              {
+                label: "Recipient DOS Code",
+                id: "dos-code",
+                defaultValue: "159744",
+                validators: [isAlphanumeric()]
+              },
+              {
+                label: "Recipient Name",
+                id: "recipient-name",
+                defaultValue: "Bramley Road Surgery",
+                validators: [notNull(), isAlpha()]
+              },
+              {
+                label: "Recipient Address Line 1",
+                id: "recipient-street-address-line-1",
+                defaultValue: "Bramley Road Surgery",
+                validators: [notNull(), isAlphanumeric()]
+              },
+              {
+                label: "Recipient Address Line 2",
+                id: "recipient-street-address-line-2",
+                defaultValue: "2 Bramley Road",
+                validators: [notNull(), isAlphanumeric()]
+              },
+              {
+                label: "Recipient Town",
+                id: "recipient-street-address-town",
+                defaultValue: "Ealing",
+                validators: [isAlpha()]
+              },
+              {
+                label: "Recipient City",
+                id: "recipient-street-address-city",
+                defaultValue: "London",
+                validators: [isAlpha()]
+              },
+              {
+                label: "Recipient Postcode",
+                id: "recipient-street-address-postcode",
+                defaultValue: "W5 4SS",
+                validators: [isAlphanumeric()]
+              },
+              {
+                label: "Encounter Start Datetime",
+                id: "nhs111-encounter-date-time-start",
+                defaultValue: "202206101312",
+                validators: [notNull(), isNumeric()],
+                placeholder: datePlaceholder
+              },
+              {
+                label: "Encounter End Datetime",
+                id: "nhs111-encounter-date-time-end",
+                validators: [notNull(), isNumeric()],
+                defaultValue: "202206101430",
                 placeholder: datePlaceholder
               }
             ]

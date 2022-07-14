@@ -60,7 +60,6 @@ const api = (router: Router) => {
         };
       }
     }
-    console.log(agentOptions);
     const options: ReqOptions = {
       url,
       headers: {
