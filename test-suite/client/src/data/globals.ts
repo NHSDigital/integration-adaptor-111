@@ -20,7 +20,7 @@ const globals: Array<TestRequestField> = [
   }
 ];
 
-export const isDevelopment = process.env.NODE_ENV === "development";
+export const isDocker = false;
 export const dockerLocal = "host.docker.internal";
 export const localhost = "localhost";
 export default globals;

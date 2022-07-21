@@ -85,10 +85,6 @@ export const validateField = (fieldValidation: FormError, value: string) =>
       isError = typeof v.match === "number" && value.length < v.match;
     } else if (k === "hasLength" && value) {
       isError = typeof v.match === "number" && value.length === v.match;
-    } else if(k === "alphaMatch") {
-      isError = !(value === null || value === "") && (v.match instanceof RegExp && !new RegExp(v.match).test(value));
-    } else if(k === "alphaNumericMatch") {
-      isError = !(value === null || value === "") && (v.match instanceof RegExp && !new RegExp(v.match).test(value));
     } else if (value) {
       isError = v.match instanceof RegExp && !new RegExp(v.match).test(value);
     }

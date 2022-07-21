@@ -26,7 +26,7 @@ const api = (router: Router) => {
       });
     });
     const { fields, files } = await formPromise;
-    const { form: json, template } = fields;
+    const { form: json, template, password } = fields;
     const { ca, key, p12 } = files;
     const form: AdaptorRequest = JSON.parse(json);
     const xmlPayload = Object.entries(form.requestPayloadFields).reduce(
@@ -55,12 +55,11 @@ const api = (router: Router) => {
           key: getAgentKey(key),
           // Or use `pfx` property replacing `cert` and `key` when using private key, certificate and CA certs in PFX or PKCS12 format:
           pfx: getAgentKey(p12),
-          passphrase: "logitech",
-          rejectUnauthorized: false,
+          passphrase: password ? password[0] : undefined,
+          rejectUnauthorized: true,
         };
       }
     }
-
     const options: ReqOptions = {
       url,
       headers: {

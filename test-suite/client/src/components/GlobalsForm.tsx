@@ -28,6 +28,7 @@ const GlobalsForm = ({
   const [errors, setErrors] = useState<FormErrors>(
     createGlobalErrors(globalVars)
   );
+  const [showPassword, setShowPassword] = useState(false);
 
   const onReset = () => {
     setErrors(createGlobalErrors(globalVars));
@@ -261,6 +262,34 @@ const GlobalsForm = ({
                         </Button>
                       </label>
                     )}
+                  </Col>
+                </Row>
+              </Col>
+              <Col width="one-half">
+                <Row>
+                  <Col width="two-thirds">
+                    <Input
+                      name="Password"
+                      label="Password"
+                      type={showPassword ? "text" : "password"}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setSslCerts({
+                          ...sslCerts,
+                          password: e.target.value
+                        })
+                      }
+                      defaultValue={sslCerts.password ? sslCerts.password : ""}
+                    />
+                  </Col>
+                  <Col width="one-third">
+                    <Button
+                      onClick={() => setShowPassword(!showPassword)}
+                      style={{
+                        margin: "12px 0 0 0"
+                      }}
+                    >
+                      {showPassword ? "Hide" : "Show"}
+                    </Button>
                   </Col>
                 </Row>
               </Col>

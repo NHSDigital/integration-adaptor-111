@@ -5,7 +5,7 @@
   "scripts": {
     "prod": "node dist/index.js",
     "start": "nodemon src/index.ts",
-    "build": "tsc -p .",
+    "build": "rm -rf ./dist && tsc -p .",
     "all": "concurrently --kill-others \"npm run start\" \"npm --prefix ../client/ run start\""
   },
   "author": "Rio Knightley",
