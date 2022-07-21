@@ -1,0 +1,701 @@
+{
+    "resourceType": "Bundle",
+    "meta": {
+        "lastUpdated": "2022-07-21T12:20:23.958+00:00"
+    },
+    "identifier": {
+        "type": {
+            "text": "ClinicalDocument VersionNumber"
+        },
+        "value": "1"
+    },
+    "type": "message",
+    "entry": [
+        {
+            "fullUrl": "urn:uuid:B63C8671-F39B-451F-9E66-18C31C2FF465",
+            "resource": {
+                "resourceType": "MessageHeader",
+                "id": "B63C8671-F39B-451F-9E66-18C31C2FF465",
+                "event": {
+                    "system": "https://fhir.nhs.uk/STU3/CodeSystem/EventType-1",
+                    "code": "referral-1",
+                    "display": "Referral"
+                },
+                "destination": [
+                    {
+                        "endpoint": "urn:nhs-uk:addressing:ods:PS01RPX02:DOSServiceID:2000080724"
+                    }
+                ],
+                "timestamp": "2021-09-17T09:56:54.000+00:00",
+                "source": {
+                    "name": "NHS 111 Adaptor",
+                    "endpoint": "http://localhost:8080/report"
+                },
+                "reason": {
+                    "coding": [
+                        {
+                            "system": "urn:nhs-itk:ns:201005:interaction",
+                            "code": "urn:nhs-itk:interaction:primaryOutofHourRecipientNHS111CDADocument-v2-0"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:79c9566b-25b2-47fb-83ff-f1a32e26f4c9",
+            "resource": {
+                "resourceType": "Encounter",
+                "id": "79c9566b-25b2-47fb-83ff-f1a32e26f4c9",
+                "identifier": [
+                    {
+                        "system": "2.16.840.1.113883.2.1.3.2.4.18.34",
+                        "value": "b6cc9d67-fa66-47fc-a8e6-1925f7c4b947"
+                    },
+                    {
+                        "system": "2.16.840.1.113883.2.1.3.2.4.18.35",
+                        "value": "111-ONLINE-B6CC9"
+                    }
+                ],
+                "status": "finished",
+                "type": [
+                    {
+                        "text": "111 Encounter Referral"
+                    }
+                ],
+                "subject": {
+                    "reference": "urn:uuid:09a9c284-c42a-4405-9b51-4f82208a3e93"
+                },
+                "participant": [
+                    {
+                        "type": [
+                            {
+                                "coding": [
+                                    {
+                                        "system": "http://hl7.org/fhir/ValueSet/encounter-participant-type",
+                                        "code": "PPRF",
+                                        "display": "Author"
+                                    }
+                                ]
+                            }
+                        ],
+                        "individual": {
+                            "reference": "urn:uuid:7f74e506-6c3c-4e9c-adb5-5058c6f69593"
+                        }
+                    },
+                    {
+                        "type": [
+                            {
+                                "text": "Informant"
+                            }
+                        ],
+                        "individual": {
+                            "reference": "urn:uuid:0bb957af-927c-4919-b19f-f5a62ee42670"
+                        }
+                    }
+                ],
+                "period": {
+                    "start": "2021-09-17T09:56:54+00:00"
+                },
+                "location": [
+                    {
+                        "location": {
+                            "reference": "urn:uuid:c32ac486-fb84-4c35-998e-12a6dbb5c501"
+                        },
+                        "status": "completed"
+                    }
+                ],
+                "serviceProvider": {
+                    "reference": "urn:uuid:6915c2e6-ca21-4c22-9e5d-21ca3c905fd7"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:6915c2e6-ca21-4c22-9e5d-21ca3c905fd7",
+            "resource": {
+                "resourceType": "Organization",
+                "id": "6915c2e6-ca21-4c22-9e5d-21ca3c905fd7",
+                "active": true,
+                "type": [
+                    {
+                        "text": "CST"
+                    }
+                ],
+                "name": "NHS Digital Message Engine"
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:7f74e506-6c3c-4e9c-adb5-5058c6f69593",
+            "resource": {
+                "resourceType": "Practitioner",
+                "id": "7f74e506-6c3c-4e9c-adb5-5058c6f69593",
+                "active": true,
+                "name": [
+                    {
+                        "use": "official",
+                        "family": "User",
+                        "given": [
+                            "Online"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:0bb957af-927c-4919-b19f-f5a62ee42670",
+            "resource": {
+                "resourceType": "RelatedPerson",
+                "id": "0bb957af-927c-4919-b19f-f5a62ee42670",
+                "active": true,
+                "patient": {
+                    "reference": "urn:uuid:09a9c284-c42a-4405-9b51-4f82208a3e93"
+                },
+                "relationship": {
+                    "coding": [
+                        {
+                            "system": "2.16.840.1.113883.2.1.3.2.4.16.45",
+                            "code": "21",
+                            "display": "Self"
+                        },
+                        {
+                            "system": "http://hl7.org/fhir/v2/0131",
+                            "code": "C",
+                            "display": "Emergency Contact"
+                        }
+                    ]
+                },
+                "telecom": [
+                    {
+                        "system": "phone",
+                        "value": "tel:07812158661"
+                    }
+                ],
+                "gender": "unknown",
+                "address": [
+                    {
+                        "use": "home",
+                        "line": [
+                            "3 Sandyhurst Lane",
+                            "Ashford",
+                            "Kent"
+                        ],
+                        "postalCode": "TN25 4NS"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:c32ac486-fb84-4c35-998e-12a6dbb5c501",
+            "resource": {
+                "resourceType": "Location",
+                "id": "c32ac486-fb84-4c35-998e-12a6dbb5c501",
+                "address": {
+                    "type": "physical",
+                    "line": [
+                        "3 Sandyhurst Lane",
+                        "Ashford",
+                        "Kent"
+                    ],
+                    "postalCode": "TN25 4NS"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:09a9c284-c42a-4405-9b51-4f82208a3e93",
+            "resource": {
+                "resourceType": "Patient",
+                "id": "09a9c284-c42a-4405-9b51-4f82208a3e93",
+                "active": true,
+                "name": [
+                    {
+                        "use": "official",
+                        "family": "TEST",
+                        "given": [
+                            "John"
+                        ]
+                    }
+                ],
+                "telecom": [
+                    {
+                        "system": "phone",
+                        "value": "tel:07912358661"
+                    },
+                    {
+                        "system": "phone",
+                        "value": "tel:07912358661"
+                    }
+                ],
+                "gender": "male",
+                "birthDate": "1950-08-15",
+                "address": [
+                    {
+                        "use": "home",
+                        "line": [
+                            "3 Sandyhurst Lane",
+                            "Ashford",
+                            "Kent"
+                        ],
+                        "postalCode": "TN25 4NS"
+                    },
+                    {
+                        "type": "physical",
+                        "line": [
+                            "3 Sandyhurst Lane",
+                            "Ashford",
+                            "Kent"
+                        ],
+                        "postalCode": "TN25 4NS"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:58412ce4-977a-49ae-92c9-1d8d6503584c",
+            "resource": {
+                "resourceType": "HealthcareService",
+                "id": "58412ce4-977a-49ae-92c9-1d8d6503584c",
+                "active": true,
+                "providedBy": {
+                    "reference": "urn:uuid:e9df03b3-5a3f-4f5a-9cb4-8739e38104ee"
+                },
+                "location": [
+                    {
+                        "reference": "urn:uuid:3f945c04-5516-49ef-bdea-e39ddc30109f"
+                    }
+                ],
+                "name": "111 Online Rx Positive Solutions Test"
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:3f945c04-5516-49ef-bdea-e39ddc30109f",
+            "resource": {
+                "resourceType": "Location",
+                "id": "3f945c04-5516-49ef-bdea-e39ddc30109f",
+                "address": {
+                    "postalCode": "TN25 4NS"
+                },
+                "managingOrganization": {
+                    "reference": "urn:uuid:e9df03b3-5a3f-4f5a-9cb4-8739e38104ee"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:e9df03b3-5a3f-4f5a-9cb4-8739e38104ee",
+            "resource": {
+                "resourceType": "Organization",
+                "id": "e9df03b3-5a3f-4f5a-9cb4-8739e38104ee",
+                "identifier": [
+                    {
+                        "value": "PS01RPX02"
+                    }
+                ],
+                "type": [
+                    {
+                        "coding": [
+                            {
+                                "code": "PRCP",
+                                "display": "111 Online Rx Positive Solutions Test"
+                            }
+                        ]
+                    }
+                ],
+                "name": "111 Online Rx Positive Solutions Test"
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:a9f74d81-6a5a-41d8-8f14-73e23f98fcb4",
+            "resource": {
+                "resourceType": "ReferralRequest",
+                "id": "a9f74d81-6a5a-41d8-8f14-73e23f98fcb4",
+                "status": "active",
+                "intent": "plan",
+                "priority": "routine",
+                "subject": {
+                    "reference": "urn:uuid:09a9c284-c42a-4405-9b51-4f82208a3e93"
+                },
+                "context": {
+                    "reference": "urn:uuid:79c9566b-25b2-47fb-83ff-f1a32e26f4c9"
+                },
+                "occurrencePeriod": {
+                    "start": "2021-09-17T09:56:54+00:00"
+                },
+                "authoredOn": "2021-09-17T09:56:54+00:00",
+                "requester": {
+                    "agent": {
+                        "reference": "urn:uuid:4a085da5-7581-4be5-a4a0-7c1c5e1c28e1"
+                    },
+                    "onBehalfOf": {
+                        "reference": "urn:uuid:6915c2e6-ca21-4c22-9e5d-21ca3c905fd7"
+                    }
+                },
+                "recipient": [
+                    {
+                        "reference": "urn:uuid:58412ce4-977a-49ae-92c9-1d8d6503584c"
+                    }
+                ],
+                "reasonReference": [
+                    {
+                        "reference": "urn:uuid:71c499b0-47af-46cb-b1b2-12c834609d78"
+                    }
+                ],
+                "supportingInfo": [
+                    {
+                        "reference": "urn:uuid:562f504f-b81e-4084-92fb-7d757976c12b"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:562f504f-b81e-4084-92fb-7d757976c12b",
+            "resource": {
+                "resourceType": "ProcedureRequest",
+                "id": "562f504f-b81e-4084-92fb-7d757976c12b",
+                "status": "active",
+                "intent": "plan",
+                "priority": "routine",
+                "doNotPerform": false,
+                "code": {
+                    "coding": [
+                        {
+                            "system": "2.16.840.1.113883.2.1.3.2.4.17.325",
+                            "code": "Dx80",
+                            "display": "Repeat prescription required within 6 hours"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "urn:uuid:09a9c284-c42a-4405-9b51-4f82208a3e93"
+                },
+                "occurrencePeriod": {
+                    "start": "2021-09-17T09:56:54+00:00"
+                },
+                "reasonReference": [
+                    {
+                        "reference": "urn:uuid:71c499b0-47af-46cb-b1b2-12c834609d78"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:5a8aa9ab-6843-443f-a350-14399482de6c",
+            "resource": {
+                "resourceType": "Composition",
+                "id": "5a8aa9ab-6843-443f-a350-14399482de6c",
+                "identifier": {
+                    "use": "usual",
+                    "value": "4E2C03CB-4A46-4394-9126-C1794AD17E11"
+                },
+                "status": "final",
+                "type": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "371531000",
+                            "display": "Report of clinical encounter (record artifact)"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "urn:uuid:09a9c284-c42a-4405-9b51-4f82208a3e93"
+                },
+                "encounter": {
+                    "reference": "urn:uuid:79c9566b-25b2-47fb-83ff-f1a32e26f4c9"
+                },
+                "date": "2021-09-17T09:56:54+00:00",
+                "author": [
+                    {
+                        "reference": "urn:uuid:7f74e506-6c3c-4e9c-adb5-5058c6f69593"
+                    }
+                ],
+                "title": "111 Report",
+                "confidentiality": "N",
+                "section": [
+                    {
+                        "section": [
+                            {
+                                "title": "Patient's Reported Condition",
+                                "text": {
+                                    "status": "generated",
+                                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Emergency Prescription 111 online&lt;br/&gt;</div>"
+                                }
+                            },
+                            {
+                                "title": "Pathways Disposition",
+                                "text": {
+                                    "status": "generated",
+                                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;content styleCode=&quot;bold&quot;&gt;Disposition:&lt;br/&gt;\n                                                    &lt;/content&gt;\n                                                    &lt;content&gt;Repeat prescription required within 6 hours(Dx80)&lt;br/&gt;\n                                                    &lt;/content&gt;\n                                                    &lt;content styleCode=&quot;bold&quot;&gt;Selected care service:&lt;br/&gt;\n                                                    &lt;/content&gt;\n                                                    &lt;content&gt;111 Online RX Positive Solutions Test&lt;br/&gt;\n                                                    &lt;/content&gt;</div>"
+
+                                }
+                            },
+                            {
+                                "title": "Consultation Summary",
+                                "text": {
+                                    "status": "generated",
+                                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;content&gt;Unable to contact the gp or pharmacy.&lt;br/&gt;The next dose was due within 6 hours.&lt;br/&gt;\n                                                    &lt;/content&gt;</div>"
+
+                                }
+                            },
+                            {
+                                "title": "Pathways Assessment",
+                                "text": {
+                                    "status": "generated",
+                                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">&lt;content&gt;Unable to contact the gp or pharmacy.&lt;br/&gt;The next dose was due within 6 hours.&lt;br/&gt;\n                                                        &lt;br/&gt;\n                                                    &lt;/content&gt;</div>"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "title": "ReferralRequest",
+                        "entry": [
+                            {
+                                "reference": "urn:uuid:a9f74d81-6a5a-41d8-8f14-73e23f98fcb4"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:4049eed9-85a5-4ae2-bcef-4c1f06f4762b",
+            "resource": {
+                "resourceType": "Consent",
+                "id": "4049eed9-85a5-4ae2-bcef-4c1f06f4762b",
+                "identifier": {
+                    "use": "usual",
+                    "value": "4E2C03CB-4A46-4394-9126-C1794AD17E11"
+                },
+                "status": "active",
+                "patient": {
+                    "reference": "urn:uuid:09a9c284-c42a-4405-9b51-4f82208a3e93"
+                },
+                "period": {
+                    "start": "2021-09-17T09:56:54+00:00"
+                },
+                "consentingParty": [
+                    {
+                        "reference": "urn:uuid:09a9c284-c42a-4405-9b51-4f82208a3e93"
+                    }
+                ],
+                "action": [
+                    {
+                        "coding": [
+                            {
+                                "system": "http://snomed.info/sct",
+                                "code": "425691002",
+                                "display": "Consent given for electronic record sharing"
+                            }
+                        ],
+                        "text": "Consent given for electronic record sharing"
+                    }
+                ],
+                "organization": [
+                    {
+                        "reference": "urn:uuid:6915c2e6-ca21-4c22-9e5d-21ca3c905fd7"
+                    }
+                ],
+                "policyRule": "http://hl7.org/fhir/ConsentPolicy/opt-out",
+                "data": [
+                    {
+                        "meaning": "related",
+                        "reference": {
+                            "reference": "urn:uuid:79c9566b-25b2-47fb-83ff-f1a32e26f4c9"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:71c499b0-47af-46cb-b1b2-12c834609d78",
+            "resource": {
+                "resourceType": "Condition",
+                "id": "71c499b0-47af-46cb-b1b2-12c834609d78",
+                "clinicalStatus": "active",
+                "verificationStatus": "unknown",
+                "subject": {
+                    "reference": "urn:uuid:09a9c284-c42a-4405-9b51-4f82208a3e93"
+                },
+                "context": {
+                    "reference": "urn:uuid:79c9566b-25b2-47fb-83ff-f1a32e26f4c9"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:bea6bf5e-93bd-44a3-b60f-2834b306546a",
+            "resource": {
+                "resourceType": "Observation",
+                "id": "bea6bf5e-93bd-44a3-b60f-2834b306546a",
+                "status": "final",
+                "code": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "33962009",
+                            "display": "Presenting complaint"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "urn:uuid:09a9c284-c42a-4405-9b51-4f82208a3e93"
+                },
+                "context": {
+                    "reference": "urn:uuid:79c9566b-25b2-47fb-83ff-f1a32e26f4c9"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:45a77be3-461e-40e2-903f-134190d5ebc8",
+            "resource": {
+                "resourceType": "PractitionerRole",
+                "id": "45a77be3-461e-40e2-903f-134190d5ebc8",
+                "practitioner": {
+                    "reference": "urn:uuid:7f74e506-6c3c-4e9c-adb5-5058c6f69593"
+                },
+                "organization": {
+                    "reference": "urn:uuid:98d39eb0-1fcf-44ae-81db-6b35399b7572"
+                },
+                "code": [
+                    {
+                        "coding": [
+                            {
+                                "system": "2.16.840.1.113883.2.1.3.2.4.17.196",
+                                "code": "T1",
+                                "display": "OOH call handler"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:98d39eb0-1fcf-44ae-81db-6b35399b7572",
+            "resource": {
+                "resourceType": "Organization",
+                "id": "98d39eb0-1fcf-44ae-81db-6b35399b7572",
+                "identifier": [
+                    {
+                        "value": "YDDF4"
+                    }
+                ],
+                "name": "NHS Digital Message Engine"
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:e5e7478d-572e-4ca7-b67d-ed1a5de6136c",
+            "resource": {
+                "resourceType": "RelatedPerson",
+                "id": "e5e7478d-572e-4ca7-b67d-ed1a5de6136c",
+                "patient": {
+                    "reference": "urn:uuid:09a9c284-c42a-4405-9b51-4f82208a3e93"
+                },
+                "relationship": {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/v2/0131",
+                            "code": "C",
+                            "display": "Emergency Contact"
+                        }
+                    ]
+                },
+                "telecom": [
+                    {
+                        "system": "phone",
+                        "value": "tel:07912358661"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:4a085da5-7581-4be5-a4a0-7c1c5e1c28e1",
+            "resource": {
+                "resourceType": "Device",
+                "id": "4a085da5-7581-4be5-a4a0-7c1c5e1c28e1",
+                "model": "111 Adaptor",
+                "version": "1.0.3"
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:4e423cf2-f0b8-4974-af67-337f259c97e0",
+            "resource": {
+                "resourceType": "List",
+                "id": "4e423cf2-f0b8-4974-af67-337f259c97e0",
+                "status": "current",
+                "mode": "working",
+                "title": "111 Report List",
+                "code": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "225390008",
+                            "display": "Triage"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "urn:uuid:09a9c284-c42a-4405-9b51-4f82208a3e93"
+                },
+                "encounter": {
+                    "reference": "urn:uuid:79c9566b-25b2-47fb-83ff-f1a32e26f4c9"
+                },
+                "date": "2021-09-17T09:56:54+00:00",
+                "source": {
+                    "reference": "urn:uuid:4a085da5-7581-4be5-a4a0-7c1c5e1c28e1"
+                },
+                "orderedBy": {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/list-order",
+                            "code": "event-date",
+                            "display": "Sorted by Event Date"
+                        }
+                    ]
+                },
+                "entry": [
+                    {
+                        "item": {
+                            "reference": "urn:uuid:e5e7478d-572e-4ca7-b67d-ed1a5de6136c"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:0bb957af-927c-4919-b19f-f5a62ee42670"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:71c499b0-47af-46cb-b1b2-12c834609d78"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:bea6bf5e-93bd-44a3-b60f-2834b306546a"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:7f74e506-6c3c-4e9c-adb5-5058c6f69593"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:98d39eb0-1fcf-44ae-81db-6b35399b7572"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:e9df03b3-5a3f-4f5a-9cb4-8739e38104ee"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:6915c2e6-ca21-4c22-9e5d-21ca3c905fd7"
+                        }
+                    },
+                    {
+                        "item": {
+                            "reference": "urn:uuid:a9f74d81-6a5a-41d8-8f14-73e23f98fcb4"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

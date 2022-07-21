@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Header>
+        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsu:Timestamp xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="D6CD5232-14CF-11DF-9423-1F9A910D4703">
+                <wsu:Created>2021-09-17T09:56:54.022Z</wsu:Created>
+                <wsu:Expires>2021-09-17T10:01:54.022Z</wsu:Expires>
+            </wsu:Timestamp>
+            <wsse:UsernameToken>
+                <wsse:Username>none</wsse:Username>
+            </wsse:UsernameToken>
+        </wsse:Security>
+        <Action xmlns="http://www.w3.org/2005/08/addressing">urn:nhs-itk:services:201005:SendNHS111Report-v2-0</Action>
+        <MessageID xmlns="http://www.w3.org/2005/08/addressing">B63C8671-F39B-451F-9E66-18C31C2FF465</MessageID>
+        <To xmlns="http://www.w3.org/2005/08/addressing">https://ygm17-int.oneoneone.nhs.uk/report</To>
+        <ReplyTo xmlns="http://www.w3.org/2005/08/addressing">
+            <Address>http://www.w3.org/2005/08/addressing/anonymous</Address>
+        </ReplyTo>
+    </s:Header>
+    <s:Body>
+        <ns2:DistributionEnvelope xmlns="urn:hl7-org:v3" xmlns:ns2="urn:nhs-itk:ns:201005" xmlns:ns4="xhtml:NPfIT:PresentationText" xmlns:ns3="NPFIT:HL7:Localisation">
+            <ns2:header service="urn:nhs-itk:services:201005:SendNHS111Report-v2-0" trackingid="16C18A39-CF01-48AC-8913-E1360B3E179B">
+                <ns2:addresslist>
+                    <ns2:address uri="urn:nhs-uk:addressing:ods:PS01RPX02"/>
+                    <ns2:address uri="2000080724" type="2.16.840.1.113883.2.1.3.2.4.18.44"/>
+                </ns2:addresslist>
+                <ns2:auditIdentity>
+                    <ns2:id uri="urn:nhs-uk:identity:ods:YDDF4"/>
+                </ns2:auditIdentity>
+                <ns2:manifest count="1">
+                    <ns2:manifestitem profileid="urn:nhs-en:profile:nhs111CDADocument-v2-0" mimetype="text/xml" id="uuid_11AE40BF-7BCF-4414-B4F0-414CF46A1FBB"/>
+                </ns2:manifest>
+                <ns2:handlingSpecification>
+                    <ns2:spec value="urn:nhs-itk:interaction:primaryOutofHourRecipientNHS111CDADocument-v2-0" key="urn:nhs-itk:ns:201005:interaction"/>
+                </ns2:handlingSpecification>
+            </ns2:header>
+            <ns2:payloads count="1">
+                <ns2:payload id="uuid_11AE40BF-7BCF-4414-B4F0-414CF46A1FBB">
+                    <ClinicalDocument moodCode="EVN" classCode="DOCCLIN">
+                        <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+                        <ns3:messageType extension="POCD_MT200001GB02" root="2.16.840.1.113883.2.1.3.2.4.18.17"/>
+                        <id root="341F30DD-7C05-4589-BFF5-80375A4387CD"/>
+                        <code codeSystem="2.16.840.1.113883.2.1.3.2.4.15" code="819551000000100"/>
+                        <title>NHS 111 Report</title>
+                        <effectiveTime value="20210917095654+0000"/>
+                        <confidentialityCode displayName="normal" codeSystem="2.16.840.1.113883.1.11.16926" code="N"/>
+                        <setId root="4E2C03CB-4A46-4394-9126-C1794AD17E11"/>
+                        <versionNumber value="1"/>
+                        <recordTarget contextControlCode="OP" typeCode="RCT">
+                            <ns3:contentId extension="COCD_TP145201GB01#PatientRole" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                            <patientRole classCode="PAT">
+                                <templateId extension="COCD_TP145201GB01#PatientRole" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                <id assigningAuthorityName="YDDF4:NHS DIGITAL NHS TRUST" extension="111-ONLINE-B6CC9" root="2.16.840.1.113883.2.1.3.2.4.18.24"/>
+                                <addr use="HP">
+                                    <streetAddressLine>3 Sandyhurst Lane</streetAddressLine>
+                                    <streetAddressLine>Ashford</streetAddressLine>
+                                    <streetAddressLine>Kent</streetAddressLine>
+                                    <postalCode>TN25 4NS</postalCode>
+                                </addr>
+                                <addr use="PHYS">
+                                    <streetAddressLine>3 Sandyhurst Lane</streetAddressLine>
+                                    <streetAddressLine>Ashford</streetAddressLine>
+                                    <streetAddressLine>Kent</streetAddressLine>
+                                    <postalCode>TN25 4NS</postalCode>
+                                </addr>
+                                <telecom use="HP" value="tel:07912358661"/>
+                                <telecom use="EC" value="tel:07912358661"/>
+                                <patient determinerCode="INSTANCE" classCode="PSN">
+                                    <templateId extension="COCD_TP145201GB01#patientPatient" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                    <name>
+                                        <given>John</given>
+                                        <family>TEST</family>
+                                    </name>
+                                    <administrativeGenderCode displayName="Male" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.25" code="1"/>
+                                    <birthTime value="19500815"/>
+                                </patient>
+                            </patientRole>
+                        </recordTarget>
+                        <author contextControlCode="OP" typeCode="AUT">
+                            <ns3:contentId extension="COCD_TP145200GB01#AssignedAuthor" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                            <functionCode displayName="Originating Author" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.178" code="OA"/>
+                            <time value="20210917095654+0000"/>
+                            <assignedAuthor classCode="ASSIGNED">
+                                <templateId extension="COCD_TP145200GB01#AssignedAuthor" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                <id assigningAuthorityName="NHS Digital Message Engine" extension="NHS Digital Message Engine" root="2.16.840.1.113883.2.1.3.2.4.18.24"/>
+                                <code displayName="OOH call handler" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.196" code="T1"/>
+                                <assignedPerson determinerCode="INSTANCE" classCode="PSN">
+                                    <templateId extension="COCD_TP145200GB01#assignedPerson" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                    <name>
+                                        <given>Online</given>
+                                        <family>User</family>
+                                    </name>
+                                </assignedPerson>
+                                <representedOrganization determinerCode="INSTANCE" classCode="ORG">
+                                    <templateId extension="COCD_TP145200GB01#representedOrganization" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                    <id extension="YDDF4" root="2.16.840.1.113883.2.1.3.2.4.19.1"/>
+                                    <name>NHS Digital Message Engine</name>
+                                </representedOrganization>
+                            </assignedAuthor>
+                        </author>
+                        <informant contextControlCode="OP" typeCode="INF">
+                            <ns3:contentId extension="COCD_TP145007UK03#RelatedEntity" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                            <relatedEntity classCode="PRS">
+                                <templateId extension="COCD_TP145007UK03#RelatedEntity" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                <code displayName="Self" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.45" code="21"/>
+                                <addr use="HP">
+                                    <streetAddressLine>3 Sandyhurst Lane</streetAddressLine>
+                                    <streetAddressLine>Ashford</streetAddressLine>
+                                    <streetAddressLine>Kent</streetAddressLine>
+                                    <postalCode>TN25 4NS</postalCode>
+                                </addr>
+                                <telecom use="EC" value="tel:07812158661"/>
+                            </relatedEntity>
+                        </informant>
+                        <custodian typeCode="CST">
+                            <ns3:contentId extension="COCD_TP145018UK03#AssignedCustodian" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                            <assignedCustodian classCode="ASSIGNED">
+                                <templateId extension="COCD_TP145018UK03#AssignedCustodian" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                <representedCustodianOrganization determinerCode="INSTANCE" classCode="ORG">
+                                    <templateId extension="COCD_TP145018UK03#representedCustodianOrganization" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                    <id extension="YDDF4" root="2.16.840.1.113883.2.1.3.2.4.19.1"/>
+                                    <name>NHS Digital Message Engine</name>
+                                </representedCustodianOrganization>
+                            </assignedCustodian>
+                        </custodian>
+                        <informationRecipient typeCode="PRCP">
+                            <ns3:contentId extension="COCD_TP145203GB03#IntendedRecipient" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                            <intendedRecipient classCode="ASSIGNED">
+                                <templateId extension="COCD_TP145203GB03#IntendedRecipient" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                <addr>
+                                    <postalCode>TN25 4NS</postalCode>
+                                </addr>
+                                <receivedOrganization determinerCode="INSTANCE" classCode="ORG">
+                                    <templateId extension="COCD_TP145203GB03#representedOrganization" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                    <id extension="PS01RPX02" root="2.16.840.1.113883.2.1.3.2.4.19.1"/>
+                                    <name>111 Online Rx Positive Solutions Test</name>
+                                </receivedOrganization>
+                            </intendedRecipient>
+                        </informationRecipient>
+                        <authorization typeCode="AUTH">
+                            <ns3:contentId extension="COCD_TP146226GB02#Consent" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                            <consent moodCode="EVN" classCode="CONS">
+                                <templateId extension="COCD_TP146226GB02#Consent" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                <id root="A709A442-3CF4-476E-8377-377700E727C7"/>
+                                <code displayName="Consent given for electronic record sharing" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" code="425691002"/>
+                                <statusCode code="completed"/>
+                            </consent>
+                        </authorization>
+                        <componentOf typeCode="COMP">
+                            <ns3:contentId extension="COCD_TP146232GB01#EncompassingEncounter" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                            <encompassingEncounter moodCode="EVN" classCode="ENC">
+                                <templateId extension="COCD_TP146232GB01#EncompassingEncounter" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                <id extension="b6cc9d67-fa66-47fc-a8e6-1925f7c4b947" root="2.16.840.1.113883.2.1.3.2.4.18.34"/>
+                                <id extension="111-ONLINE-B6CC9" root="2.16.840.1.113883.2.1.3.2.4.18.35"/>
+                                <code displayName="NHS111 Encounter" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.326" code="NHS111Encounter"/>
+                                <effectiveTime>
+                                    <low value="20210917095654+0000"/>
+                                </effectiveTime>
+                                <dischargeDispositionCode displayName="Repeat prescription required within 6 hours" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.325" code="Dx80"/>
+                                <location typeCode="LOC">
+                                    <templateId extension="COCD_TP146232GB01#location" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                    <ns3:contentId extension="COCD_TP145222GB02#HealthCareFacility" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                                    <healthCareFacility classCode="ISDLOC">
+                                        <templateId extension="COCD_TP145222GB02#HealthCareFacility" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                        <id nullFlavor="NA"/>
+                                        <location determinerCode="INSTANCE" classCode="PLC">
+                                            <templateId extension="COCD_TP145222GB02#location" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                            <name nullFlavor="UNK"/>
+                                            <addr use="PHYS">
+                                                <streetAddressLine>3 Sandyhurst Lane</streetAddressLine>
+                                                <streetAddressLine>Ashford</streetAddressLine>
+                                                <streetAddressLine>Kent</streetAddressLine>
+                                                <postalCode>TN25 4NS</postalCode>
+                                            </addr>
+                                        </location>
+                                    </healthCareFacility>
+                                </location>
+                            </encompassingEncounter>
+                        </componentOf>
+                        <component contextConductionInd="true" typeCode="COMP">
+                            <structuredBody moodCode="EVN" classCode="DOCBODY">
+                                <component contextConductionInd="true" typeCode="COMP">
+                                    <section moodCode="EVN" classCode="DOCSECT">
+                                        <id root="35C1A5B7-1B16-41D2-BDA2-C66F7AAA1D76"/>
+                                        <component contextConductionInd="true" typeCode="COMP">
+                                            <ns3:contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                                            <section moodCode="EVN" classCode="DOCSECT">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                                <id root="72D0979D-D064-4793-935B-8D59A9DD5436"/>
+                                                <title>Patient's Reported Condition</title>
+                                                <text mediaType="text/x-hl7-text+xml">Emergency Prescription 111 online<br/>
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component contextConductionInd="true" typeCode="COMP">
+                                            <ns3:contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                                            <section moodCode="EVN" classCode="DOCSECT">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                                <id root="43CE384B-7BF8-44BF-8264-CA4936FA780C"/>
+                                                <title>Pathways Disposition</title>
+                                                <text mediaType="text/x-hl7-text+xml">
+                                                    <content styleCode="bold">Disposition:<br/>
+                                                    </content>
+                                                    <content>Repeat prescription required within 6 hours(Dx80)<br/>
+                                                    </content>
+                                                    <content styleCode="bold">Selected care service:<br/>
+                                                    </content>
+                                                    <content>111 Online RX Positive Solutions Test<br/>
+                                                    </content>
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component contextConductionInd="true" typeCode="COMP">
+                                            <ns3:contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                                            <section moodCode="EVN" classCode="DOCSECT">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                                <id root="B71E9B0A-6073-46FB-9F97-64F0106B08F6"/>
+                                                <title>Consultation Summary</title>
+                                                <text mediaType="text/x-hl7-text+xml">
+                                                    <content>Unable to contact the gp or pharmacy.<br/>The next dose was due within 6 hours.<br/>
+                                                    </content>
+                                                </text>
+                                            </section>
+                                        </component>
+                                        <component contextConductionInd="true" typeCode="COMP">
+                                            <ns3:contentId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.16"/>
+                                            <section moodCode="EVN" classCode="DOCSECT">
+                                                <templateId extension="COCD_TP146246GB01#Section1" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                                                <id root="475C0ED0-2542-4991-A8CE-811CC282087F"/>
+                                                <title>Pathways Assessment</title>
+                                                <text mediaType="text/x-hl7-text+xml">
+                                                    <content>Unable to contact the gp or pharmacy.<br/>The next dose was due within 6 hours.<br/>
+                                                        <br/>
+                                                    </content>
+                                                </text>
+                                            </section>
+                                        </component>
+                                    </section>
+                                </component>
+                            </structuredBody>
+                        </component>
+                    </ClinicalDocument>
+                </ns2:payload>
+            </ns2:payloads>
+        </ns2:DistributionEnvelope>
+    </s:Body>
+</s:Envelope>
