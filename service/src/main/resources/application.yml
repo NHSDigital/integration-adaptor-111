@@ -13,8 +13,8 @@ amqp:
   broker: ${PEM111_AMQP_BROKER:amqp://localhost:5672}
   queueName: ${PEM111_AMQP_QUEUE_NAME:encounter-report}
   exchange: amq.direct
-  username: ${PEM111_AMQP_USERNAME:admin}
-  password: ${PEM111_AMQP_PASSWORD:admin}
+  username: ${PEM111_AMQP_USERNAME:}
+  password: ${PEM111_AMQP_PASSWORD:}
 
 soap:
   validationEnabled: ${PEM111_SOAP_VALIDATION_ENABLED:false}
@@ -23,7 +23,7 @@ soap:
 itk:
   odsCodes: ${PEM111_ITK_ODS_CODE_LIST:}
   dosIds: ${PEM111_ITK_DOS_ID_LIST:}
-  externalConfigurationServiceUrl: ${PEM111_ITK_EXTERNAL_CONFIGURATION_URL:http://localhost:8110/configuration/ods-dos}
+  externalConfigurationServiceUrl: ${PEM111_ITK_EXTERNAL_CONFIGURATION_URL:}
   fetchIntervalMinutes: ${PEM111_ITK_FETCH_INTERVAL_MIN:5}
 
 version: ${PEM111_VERSION:1.0.3}
