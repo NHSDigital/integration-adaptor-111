@@ -201,6 +201,11 @@ public class ReportControllerIT {
                 "/xml/tpp-ooh-T6-skillset.xml",
                 "/json/tpp-ooh-T6-skillset.json",
                 "2AD60661-A532-11EC-B262-B908B3B2B1B6"
+            ),
+            Arguments.of(
+                "/xml/encompassing-encounter-effective-time-high-value-null-request.xml",
+                "/json/encompassing-encounter-effective-time-high-value-null-result.json",
+                "B63C8671-F39B-451F-9E66-18C31C2FF465"
             )
         );
     }

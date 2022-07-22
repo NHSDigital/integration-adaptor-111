@@ -6,14 +6,18 @@ import org.springframework.stereotype.Component;
 
 import uk.nhs.adaptors.oneoneone.cda.report.util.DateUtil;
 import uk.nhs.connect.iucds.cda.ucr.IVLTS;
+import uk.nhs.connect.iucds.cda.ucr.IVXBTS;
 import uk.nhs.connect.iucds.cda.ucr.TS;
 
 @Component
 public class PeriodMapper {
 
     public Period mapPeriod(IVLTS ivlts) {
-        DateTimeType high = DateUtil.parse(ivlts.getHigh().getValue());
-        DateTimeType low = DateUtil.parse(ivlts.getLow().getValue());
+        IVXBTS ivltsHigh = ivlts.getHigh();
+        IVXBTS ivltsLow = ivlts.getLow();
+
+        DateTimeType high = ivltsHigh != null ? DateUtil.parse(ivlts.getHigh().getValue()) : null;
+        DateTimeType low = ivltsLow != null ? DateUtil.parse(ivlts.getLow().getValue()) : null;
 
         return new Period()
             .setStartElement(low)
