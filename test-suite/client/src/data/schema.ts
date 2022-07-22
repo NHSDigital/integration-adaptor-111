@@ -34,7 +34,7 @@ const schema: Schema = {
                 label: "Url",
                 id: "url",
                 defaultValue: "http://localhost:8081/report",
-                validators: [isUrl(), isReportUrl()]
+                validators: [isUrl(), isReportUrl(), notNull()]
               },
               {
                 label: "Content Type",
@@ -133,10 +133,10 @@ const schema: Schema = {
           testSpecifications: {
             [RequestHeaderProps.Header]: [
               {
-                label: "url",
+                label: "Url",
                 id: "url",
                 defaultValue: "http://localhost:8081/report",
-                validators: [isUrl(), isReportUrl()]
+                validators: [isUrl(), isReportUrl(), notNull()]
               },
               {
                 label: "Content Type",
@@ -228,7 +228,7 @@ const schema: Schema = {
                 label: "Url",
                 id: "url",
                 defaultValue: "http://localhost:8081/report",
-                validators: [isUrl(), isReportUrl()]
+                validators: [isUrl(), isReportUrl(), notNull()]
               },
               {
                 label: "Content Type",
@@ -317,10 +317,10 @@ const schema: Schema = {
           testSpecifications: {
             [RequestHeaderProps.Header]: [
               {
-                label: "url",
+                label: "Url",
                 id: "url",
                 defaultValue: "http://localhost:8081/report",
-                validators: [isUrl(), isReportUrl()]
+                validators: [isUrl(), isReportUrl(), notNull()]
               },
               {
                 label: "Content Type",
@@ -454,7 +454,7 @@ const schema: Schema = {
                 label: "Url",
                 id: "url",
                 defaultValue: "http://localhost:8081/report",
-                validators: [isUrl(), isReportUrl()]
+                validators: [isUrl(), isReportUrl(), notNull()]
               },
               {
                 label: "Content Type",
@@ -606,7 +606,7 @@ const schema: Schema = {
                 label: "Url",
                 id: "url",
                 defaultValue: "http://localhost:8081/report",
-                validators: [isUrl(), isReportUrl()]
+                validators: [isUrl(), isReportUrl(), notNull()]
               },
               {
                 label: "Content Type",
@@ -704,7 +704,7 @@ const schema: Schema = {
                 label: "Url",
                 id: "url",
                 defaultValue: "http://localhost:8081/report",
-                validators: [isUrl(), isReportUrl()]
+                validators: [isUrl(), isReportUrl(), notNull()]
               },
               {
                 label: "Content Type",
@@ -725,6 +725,12 @@ const schema: Schema = {
                 id: "dos-code",
                 defaultValue: "159744",
                 validators: [isAlphanumeric()]
+              },
+              {
+                label: "NHS Number",
+                id: "nhs-number",
+                defaultValue: "1112223344",
+                validators: [notNull(), isNumeric(), isLength(10)]
               },
               {
                 label: "Recipient Name",
