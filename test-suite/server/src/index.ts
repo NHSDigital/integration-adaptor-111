@@ -15,7 +15,8 @@ import healthcheck from "./rest/healthcheck";
 dotenv.config();
 const app: Application = express();
 const router: Router = express.Router();
-const PORT: string | undefined = process.env.PORT;
+console.log("PORT ENV: " + process.env.PORT);
+const PORT: string = process.env.PORT || "7070";
 app.use((req: Request, res: Response, next: NextFunction) => {
   consola.info({
     message: `${req.method} request from ${req.hostname} [${req.ip}] to ${req.path}`,
