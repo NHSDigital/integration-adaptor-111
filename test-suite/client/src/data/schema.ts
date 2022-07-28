@@ -717,13 +717,13 @@ const schema: Schema = {
               {
                 label: "Recipient ODS Code",
                 id: "ods-code",
-                defaultValue: "E88122002",
+                defaultValue: "EM396",
                 validators: [notNull(), isAlphanumeric()]
               },
               {
                 label: "Recipient DOS Code",
                 id: "dos-code",
-                defaultValue: "159744",
+                defaultValue: "26428",
                 validators: [isAlphanumeric()]
               },
               {
