@@ -39,7 +39,6 @@ const GlobalsForm = ({
       p12: null,
       password: ""
     });
-    // setP12Cert(null);
   };
 
   const onValidate = (field: string, value: string) => {
@@ -278,7 +277,7 @@ const GlobalsForm = ({
                           password: e.target.value
                         })
                       }
-                      defaultValue={sslCerts.password ? sslCerts.password : ""}
+                      value={sslCerts.password ? sslCerts.password : ""}
                     />
                   </Col>
                   <Col width="one-third">
