@@ -18,7 +18,7 @@ import org.springframework.jms.support.converter.MessageConverter;
 @Configuration
 public class AmqpConfiguration {
 
-    private final static String rabbitMQVersion = "0-9-1";
+    private static final String RABBIT_MQ_VERSION_IDENTIFIER = "0-9-1";
 
     @Bean
     public MessageConverter jsonMessageConverter() {
@@ -28,7 +28,7 @@ public class AmqpConfiguration {
     @Bean
     public Destination jmsDestination(AmqpProperties properties) {
 
-        if (Objects.equals(properties.getProtocol(), rabbitMQVersion)) {
+        if (Objects.equals(properties.getProtocol(), RABBIT_MQ_VERSION_IDENTIFIER)) {
 
             RMQDestination jmsDestination = new RMQDestination();
             jmsDestination.setAmqpExchangeName(properties.getExchange());
@@ -44,7 +44,7 @@ public class AmqpConfiguration {
     @Bean
     public ConnectionFactory jmsConnectionFactory(AmqpProperties properties) {
 
-        if (Objects.equals(properties.getProtocol(), rabbitMQVersion)) {
+        if (Objects.equals(properties.getProtocol(), RABBIT_MQ_VERSION_IDENTIFIER)) {
 
             RMQConnectionFactory connectionFactory = new RMQConnectionFactory();
             connectionFactory.setUsername(properties.getUsername());
