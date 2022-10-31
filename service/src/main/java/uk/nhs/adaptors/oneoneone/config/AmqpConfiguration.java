@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import javax.jms.JMSConnectionFactory;
 
 import com.rabbitmq.jms.admin.RMQConnectionFactory;
 import com.rabbitmq.jms.admin.RMQDestination;
@@ -42,23 +43,24 @@ public class AmqpConfiguration {
     }
 
     @Bean
-    public ConnectionFactory jmsConnectionFactory(AmqpProperties properties) {
+    public JmsConnectionFactory jmsConnectionFactory(AmqpProperties properties) {
 
-        if (Objects.equals(properties.getProtocol(), RABBIT_MQ_VERSION_IDENTIFIER)) {
-
-            RMQConnectionFactory connectionFactory = new RMQConnectionFactory();
-            connectionFactory.setUsername(properties.getUsername());
-            connectionFactory.setPassword(properties.getPassword());
-            connectionFactory.setVirtualHost("/");
-            connectionFactory.setHost(properties.getBroker() + properties.getPort());
-            connectionFactory.setPort(properties.getPort());
-            connectionFactory.setSsl(properties.isSslEnabled());
-
-            return connectionFactory;
-        }
+//        if (Objects.equals(properties.getProtocol(), RABBIT_MQ_VERSION_IDENTIFIER)) {
+//
+//            RMQConnectionFactory connectionFactory = new RMQConnectionFactory();
+//            connectionFactory.setUsername(properties.getUsername());
+//            connectionFactory.setPassword(properties.getPassword());
+//            connectionFactory.setVirtualHost("/");
+//            connectionFactory.setHost(properties.getBroker() + properties.getPort());
+//            connectionFactory.setPort(properties.getPort());
+//            connectionFactory.setSsl(properties.isSslEnabled());
+//
+//            return connectionFactory;
+//        }
 
         JmsConnectionFactory factory = new JmsConnectionFactory();
-        factory.setRemoteURI(properties.getBroker() + properties.getPort());
+        var remoteURI = properties.getBroker() + properties.getPort();
+        factory.setRemoteURI(remoteURI);
 
         // These should never be null
         factory.setUsername(properties.getUsername());

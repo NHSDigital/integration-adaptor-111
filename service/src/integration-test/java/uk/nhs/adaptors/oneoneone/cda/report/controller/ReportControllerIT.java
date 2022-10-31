@@ -254,7 +254,7 @@ public class ReportControllerIT {
         assertThat(responseElementsMap.get(ACTION)).isEqualTo(EXPECTED_ACTION);
         assertThat(responseElementsMap.get(BODY)).isEqualTo(String.format(EXPECTED_BODY, messageIdValue));
 
-        Message jmsMessage = jmsTemplate.receive();
+        Message jmsMessage = jmsTemplate.receive(destination);
         if (jmsMessage == null) {
             throw new IllegalStateException("Message must not be null");
         }
