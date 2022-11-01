@@ -17,6 +17,7 @@ import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.BODY;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
@@ -44,11 +45,9 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.comparator.CustomComparator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -57,7 +56,6 @@ import org.xml.sax.SAXException;
 import junitparams.JUnitParamsRunner;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
 import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
 import uk.nhs.adaptors.oneoneone.utils.ResponseElement;
 import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
@@ -232,7 +230,9 @@ public class ReportControllerIT {
         postReportValidBody(itkReportRequestPath, expectedJsonPath, messageIdValue);
     }
 
-    // Since the AMPQ bean is a singleton, it cannot be recreated after the server has started so we cannot test AMPQ and RABBITMQ in the same test run
+    // Since the AMPQ bean is a singleton, it cannot be recreated after the server has
+    // started so we cannot test AMPQ and RABBITMQ in the same test run
+    //
     //    @ParameterizedTest(name = "postReportValidBody {0} - RABBITMQ")
     //    @MethodSource("validItkReportAndExpectedJsonValues")
     //    public void postReportValidBodyRabbitMQ910(String itkReportRequestPath, String expectedJsonPath, String messageIdValue)
@@ -290,13 +290,13 @@ public class ReportControllerIT {
         }
 
         String messageBody = "";
-        if (jmsMessage instanceof BytesMessage){
+        if (jmsMessage instanceof BytesMessage) {
             BytesMessage byteMessage = (BytesMessage) jmsMessage;
             byte[] byteData = null;
             byteData = new byte[(int) byteMessage.getBodyLength()];
             byteMessage.readBytes(byteData);
             byteMessage.reset();
-            messageBody =  new String(byteData);
+            messageBody =  new String(byteData, StandardCharsets.UTF_8);
 
         } else {
             messageBody = jmsMessage.getBody(String.class);
