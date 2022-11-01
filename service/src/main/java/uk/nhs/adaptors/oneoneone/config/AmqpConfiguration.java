@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
-import javax.jms.JMSConnectionFactory;
 
 import com.rabbitmq.jms.admin.RMQConnectionFactory;
 import com.rabbitmq.jms.admin.RMQDestination;
@@ -34,32 +33,35 @@ public class AmqpConfiguration {
             RMQDestination jmsDestination = new RMQDestination();
             jmsDestination.setAmqpExchangeName(properties.getExchange());
             jmsDestination.setAmqp(true);
-            jmsDestination.setAmqpRoutingKey(properties.getQueueName());
+            jmsDestination.setAmqpRoutingKey(properties.getAmqpRoutingKey());
+            jmsDestination.setAmqpQueueName(properties.getQueueName());
 
             return jmsDestination;
-        } else {
-            return new JmsQueue(properties.getQueueName());
         }
+
+        return new JmsQueue(properties.getQueueName());
+
     }
 
     @Bean
-    public JmsConnectionFactory jmsConnectionFactory(AmqpProperties properties) {
+    public ConnectionFactory jmsConnectionFactory(AmqpProperties properties) {
 
-//        if (Objects.equals(properties.getProtocol(), RABBIT_MQ_VERSION_IDENTIFIER)) {
-//
-//            RMQConnectionFactory connectionFactory = new RMQConnectionFactory();
-//            connectionFactory.setUsername(properties.getUsername());
-//            connectionFactory.setPassword(properties.getPassword());
-//            connectionFactory.setVirtualHost("/");
-//            connectionFactory.setHost(properties.getBroker() + properties.getPort());
-//            connectionFactory.setPort(properties.getPort());
-//            connectionFactory.setSsl(properties.isSslEnabled());
-//
-//            return connectionFactory;
-//        }
+        var remoteURI = "amqp://" + properties.getBroker() + ":" + properties.getPort();
+
+        if (Objects.equals(properties.getProtocol(), RABBIT_MQ_VERSION_IDENTIFIER)) {
+
+            RMQConnectionFactory connectionFactory = new RMQConnectionFactory();
+            connectionFactory.setUsername(properties.getUsername());
+            connectionFactory.setPassword(properties.getPassword());
+            connectionFactory.setVirtualHost("/");
+            connectionFactory.setHost(properties.getBroker());
+            connectionFactory.setPort(properties.getPort());
+            connectionFactory.setSsl(properties.isSslEnabled());
+
+            return connectionFactory;
+        }
 
         JmsConnectionFactory factory = new JmsConnectionFactory();
-        var remoteURI = properties.getBroker() + properties.getPort();
         factory.setRemoteURI(remoteURI);
 
         // These should never be null

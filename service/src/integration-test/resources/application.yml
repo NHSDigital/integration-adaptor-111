@@ -1,12 +1,13 @@
 amqp:
-  broker: ${PEM111_AMQP_BROKER:amqp://localhost:}
+  broker: ${PEM111_AMQP_BROKER:localhost}
   queueName: ${PEM111_AMQP_QUEUE_NAME:encounter-report-test}
   exchange: ${PEM111_AMQP_EXCHANGE:amq.direct}
   username: ${PEM111_AMQP_USERNAME:guest}
   password: ${PEM111_AMQP_PASSWORD:guest}
-  protocol: ${PEM111_AMQP_PROTOCOL:1.0}
-  port: ${PEM111_AMQP_PORT:5672}
+  protocol: ${PEM111_AMQP_PROTOCOL:0-9-1} # for Rabbit MQ set to 0-9-1
+  port: ${PEM111_AMQP_PORT:5673}
   sslEnabled: ${PEM111_AMQP_SSL_ENABLED:false}
+  amqpRoutingKey: ${PEM111_AMQP_ROUTING_KEY:1sD23FvBgT}
 
 soap:
   validationEnabled: ${PEM111_SOAP_VALIDATION_ENABLED:false}

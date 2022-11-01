@@ -19,5 +19,6 @@ public class AmqpProperties {
     private int port;
     private boolean sslEnabled;
     private String exchange;
+    private String amqpRoutingKey;
 
 }

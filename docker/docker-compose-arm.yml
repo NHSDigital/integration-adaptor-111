@@ -26,6 +26,14 @@ services:
     networks:
       - 111network
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5673:5672"
+      - "15672:15672"
+    networks:
+      - 111network
+
   wiremock:
     build: ./wiremock
     ports:
