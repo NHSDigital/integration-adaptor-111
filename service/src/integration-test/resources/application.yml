@@ -4,8 +4,8 @@ amqp:
   exchange: ${PEM111_AMQP_EXCHANGE:amq.direct}
   username: ${PEM111_AMQP_USERNAME:guest}
   password: ${PEM111_AMQP_PASSWORD:guest}
-  protocol: ${PEM111_AMQP_PROTOCOL:0-9-1} # for Rabbit MQ set to 0-9-1
-  port: ${PEM111_AMQP_PORT:5673}
+  protocol: ${PEM111_AMQP_PROTOCOL:1-0-0} # for Rabbit MQ set to 0-9-1
+  port: ${PEM111_AMQP_PORT:5672}
   sslEnabled: ${PEM111_AMQP_SSL_ENABLED:false}
   amqpRoutingKey: ${PEM111_AMQP_ROUTING_KEY:1sD23FvBgT}
 
