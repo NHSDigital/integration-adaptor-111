@@ -23,11 +23,22 @@ The adaptor reads its configuration from environment variables. The following se
 ### Inbound Queue Configuration
 The post event messages (PEM) handled by the adaptor are sent to the Active Message Queue within the GP supplier's own environment and are not stored within the NHS 111 adaptor itself.  
 
-You need to configure the following environment variables to enable this:
+You need to configure the following environment variables to enable the version 1-0-0 protocol this:
 * PEM111_AMQP_BROKER
 * PEM111_AMQP_QUEUE_NAME
 * PEM111_AMQP_USERNAME
 * PEM111_AMQP_PASSWORD
+
+If using RabbitMQ protocol 0-9-1 then the following variables need to be set:
+
+* PEM111_AMQP_BROKER - to prevent a breaking change, the full url should be given in the form of amqp://address:port. The address section will be extracted for configuration as long as your url conforms to containing :// and :. 
+* PEM111_AMQP_PORT
+* PEM111_AMQP_PROTOCOL - needs to be set to "0-9-1"
+* PEM111_AMQP_QUEUE_NAME
+* PEM111_AMQP_USERNAME
+* PEM111_AMQP_PASSWORD
+* PEM111_AMQP_ROUTING_KEY
+* PEM111_AMQP_SSL_ENABLED - defaults to false
 
 ### SOAP ITK
 
