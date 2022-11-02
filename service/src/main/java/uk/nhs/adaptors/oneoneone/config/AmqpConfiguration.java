@@ -5,9 +5,6 @@ import java.util.Objects;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 
-import com.rabbitmq.jms.admin.RMQConnectionFactory;
-import com.rabbitmq.jms.admin.RMQDestination;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.apache.qpid.jms.JmsQueue;
@@ -16,7 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 
-import ca.uhn.fhir.util.StringUtil;
+import com.rabbitmq.jms.admin.RMQConnectionFactory;
+import com.rabbitmq.jms.admin.RMQDestination;
 
 @Configuration
 public class AmqpConfiguration {
@@ -58,10 +56,11 @@ public class AmqpConfiguration {
 
             // However the broker in 0-9-1 requires the broker to be seperated from a url therefore we shall extract the part
             // between the // and : part sof the url.
-
-            var brokerSlashes = properties.getBroker().indexOf("://");
-            var brokerPortDivider = StringUtils.ordinalIndexOf(properties.getBroker(), ":", 2);
-            var brokerAddress = properties.getBroker().substring(brokerSlashes+3,brokerPortDivider);
+            var brokerPreAddressCharacters = "://";
+            var brokerPostAddressCharacters = ":";
+            var brokerSlashes = properties.getBroker().indexOf(brokerPreAddressCharacters);
+            var brokerPortDivider = StringUtils.ordinalIndexOf(properties.getBroker(), brokerPostAddressCharacters, 2);
+            var brokerAddress = properties.getBroker().substring(brokerSlashes + brokerPreAddressCharacters.length(), brokerPortDivider);
 
             RMQConnectionFactory connectionFactory = new RMQConnectionFactory();
             connectionFactory.setUsername(properties.getUsername());
