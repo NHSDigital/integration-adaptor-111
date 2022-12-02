@@ -17,12 +17,15 @@ import static uk.nhs.adaptors.oneoneone.utils.ResponseElement.BODY;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Stream;
 
+import javax.jms.BytesMessage;
+import javax.jms.Destination;
 import javax.jms.IllegalStateException;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -53,7 +56,6 @@ import org.xml.sax.SAXException;
 import junitparams.JUnitParamsRunner;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
 import uk.nhs.adaptors.oneoneone.utils.FhirJsonValidator;
 import uk.nhs.adaptors.oneoneone.utils.ResponseElement;
 import uk.nhs.adaptors.oneoneone.utils.ResponseParserUtil;
@@ -125,7 +127,7 @@ public class ReportControllerIT {
     private JmsTemplate jmsTemplate;
 
     @Autowired
-    private AmqpProperties amqpProperties;
+    private Destination destination;
 
     @Autowired
     private ResponseParserUtil responseParserUtil;
@@ -220,6 +222,34 @@ public class ReportControllerIT {
         TimeZone.setDefault(null);
     }
 
+    @ParameterizedTest(name = "postReportValidBody {0} - MQ")
+    @MethodSource("validItkReportAndExpectedJsonValues")
+    public void postReportValidBodyActiveMQ(String itkReportRequestPath, String expectedJsonPath, String messageIdValue)
+        throws JMSException, JSONException, ParserConfigurationException, SAXException, IOException {
+
+        postReportValidBody(itkReportRequestPath, expectedJsonPath, messageIdValue);
+    }
+
+    // Since the AMPQ bean is a singleton, it cannot be recreated after the server has
+    // started so we cannot test AMPQ and RABBITMQ in the same test run
+    //
+    //    @ParameterizedTest(name = "postReportValidBody {0} - RABBITMQ")
+    //    @MethodSource("validItkReportAndExpectedJsonValues")
+    //    public void postReportValidBodyRabbitMQ910(String itkReportRequestPath, String expectedJsonPath, String messageIdValue)
+    //        throws JMSException, JSONException, ParserConfigurationException, SAXException, IOException {
+    //
+    //        var mainAMPQport = amqpProperties.getPort();
+    //        var mainAMPQProtocol = amqpProperties.getProtocol();
+    //
+    //        amqpProperties.setPort(testRabbitAmqpProperties.getPort());
+    //        amqpProperties.setProtocol(testRabbitAmqpProperties.getProtocol());
+    //
+    //        postReportValidBody(itkReportRequestPath, expectedJsonPath, messageIdValue);
+    //
+    //        amqpProperties.setPort(mainAMPQport);
+    //        amqpProperties.setProtocol(mainAMPQProtocol);
+//    }
+
     @Test
     public void postReportInvalidBody() {
         given()
@@ -234,9 +264,9 @@ public class ReportControllerIT {
             .extract();
     }
 
-    @ParameterizedTest(name = "postReportValidBody {0}")
-    @MethodSource("validItkReportAndExpectedJsonValues")
-    public void postReportValidBody(String itkReportRequestPath, String expectedJsonPath, String messageIdValue)
+//    @ParameterizedTest(name = "postReportValidBody {0}")
+//    @MethodSource("validItkReportAndExpectedJsonValues")
+    private void postReportValidBody(String itkReportRequestPath, String expectedJsonPath, String messageIdValue)
         throws JMSException, JSONException, ParserConfigurationException, SAXException, IOException {
         String responseBody = given()
             .port(port)
@@ -254,16 +284,27 @@ public class ReportControllerIT {
         assertThat(responseElementsMap.get(ACTION)).isEqualTo(EXPECTED_ACTION);
         assertThat(responseElementsMap.get(BODY)).isEqualTo(String.format(EXPECTED_BODY, messageIdValue));
 
-        Message jmsMessage = jmsTemplate.receive(amqpProperties.getQueueName());
+        Message jmsMessage = jmsTemplate.receive(destination);
         if (jmsMessage == null) {
             throw new IllegalStateException("Message must not be null");
         }
-        String messageBody = jmsMessage.getBody(String.class);
-        overwriteJson(expectedJsonPath, messageBody);
 
+        String messageBody = "";
+        if (jmsMessage instanceof BytesMessage) {
+            BytesMessage byteMessage = (BytesMessage) jmsMessage;
+            byte[] byteData = null;
+            byteData = new byte[(int) byteMessage.getBodyLength()];
+            byteMessage.readBytes(byteData);
+            byteMessage.reset();
+            messageBody =  new String(byteData, StandardCharsets.UTF_8);
+
+        } else {
+            messageBody = jmsMessage.getBody(String.class);
+        }
+
+        overwriteJson(expectedJsonPath, messageBody);
         assertThat(validator.isValid(messageBody)).isEqualTo(true);
         assertThat(jmsMessage.getStringProperty(MESSAGE_ID)).isEqualTo(messageIdValue);
-
         assertMessageContent(messageBody, readResourceAsString(expectedJsonPath));
     }
 

@@ -1,5 +1,6 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
+import javax.jms.Destination;
 import javax.jms.TextMessage;
 
 import org.apache.xmlbeans.XmlException;
@@ -11,7 +12,6 @@ import ca.uhn.fhir.context.FhirContext;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.nhs.adaptors.oneoneone.cda.report.controller.utils.ItkReportHeader;
-import uk.nhs.adaptors.oneoneone.config.AmqpProperties;
 import uk.nhs.connect.iucds.cda.ucr.POCDMT000002UK01ClinicalDocument1;
 
 @Service
@@ -27,13 +27,13 @@ public class EncounterReportService {
 
     private final FhirContext fhirContext;
 
-    private final AmqpProperties amqpProperties;
+    private final Destination destination;
 
     public void transformAndPopulateToGP(POCDMT000002UK01ClinicalDocument1 clinicalDocumentDocument,
         String messageId, ItkReportHeader header) throws XmlException {
         Bundle encounterBundle = encounterReportBundleService.createEncounterBundle(clinicalDocumentDocument, header, messageId);
 
-        jmsTemplate.send(amqpProperties.getQueueName(), session -> {
+        jmsTemplate.send(destination, session -> {
             TextMessage message = session.createTextMessage(toJsonString(encounterBundle));
             message.setStringProperty(MESSAGE_ID, messageId);
             return message;
