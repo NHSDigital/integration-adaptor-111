@@ -143,3 +143,6 @@ The above script builds necessary docker images and starts the SpringBoot servic
 
 ## ITK Testbench
 The [ITK Testbench](https://digital.nhs.uk/services/interoperability-toolkit/developer-resources/itk-test-centre/itk-testbench) provided by NHS Digital has an essential tool for ITK interface development and conformance.  This tool provides resources that will allow you to adequately test the 111 adaptor within your own environment.
+
+## Test Pack
+Our testing pack as well our test harness can be found inside the test-suite directory [Test-Suite](./test-suite)
