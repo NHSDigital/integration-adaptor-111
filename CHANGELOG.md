@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.5-amd64 & 1.0.5-arm64]
+- Rabbit AMQP 0.9.1 support has been added to allow configuration with a different queue protocol. 
+- Readme has been updated to include the configuration details for AMQP 0.9.1
+## [1.0.4] - 2022-08-29
+- Bug fix: allow tranformations to occur even when encompassingEnounter.effectiveTime.high values are null. 
 ## [1.0.3] - 2022-06-23
 - Upgrade spring boot from 2.6.7 to 2.6.8 to fix vulnerabilities
 - Fixed issue when sending a report with boolean attributes. Application was not responding to case sensitive booleans such as `value="True"`.
