@@ -1,13 +1,63 @@
-#Local
+# Local
+
+## Running Test Harness
+### Pre-Requisites:
+* Install Java 17
+* Install Docker
+* Install a preferred IDE
 
 ### Installing
-
-Run the shell script for local development:
-
+1. Run Docker Desktop
+2. Navigate to project directory via IDE Terminal
+3. cd into `docker` folder
+4. run command: 
 ```shell
-sh start-local.sh
-```
+#For Windows
+./start-local-environment.sh
 
+#For Mac or Linux use
+./start-local-environment-arm.sh)
+````
+5. Wait for command to finish building
+6. Open Docker Desktop and the container structure :
+```shell
+docker
+- activemq-1
+- integration-adaptor-111-1
+- rabbitmq-1
+- wiremock-1
+````
+7. cd into test-suite folder
+8. run command (this will build the test harness)
+```shell
+./start-local.sh
+````
+9. Test harness will open in default browser
+
+### Using the test harness:
+- The test harness has data pre-populated in each form - clicking reset will undo any alternations
+- ODS Codes and NHS Numbers can be freely changed from each form
+- To predefine custom configurations such as ODS codes or DOS Ids, go to `integration-adaptor-111\docker\wiremock\stubs\_files\odsCodesDosIds.json`
+  (rebuild the docker containers after changing the JSON file).
+
+Example:
+```json
+{
+   "odsCodes": [
+      "EM396",
+      "5L399"
+   ],
+   "dosIds": [
+      "26428",
+      "96465",
+      "48583"
+   ]
+}
+```
+- Example certifications for the test harness can be found in `integration-adaptor-111\test-suite\certificates\certs.zip`
+- Upload customised certificates using `Global settings` section within the test harness
+
+### Troubleshooting:
 
 If you do not have nodejs installed as a CLI, you will get an error.
 
@@ -32,7 +82,7 @@ You can check if the backend instance is active by running:
 curl -v http://localhost:7070/healthcheck
 ```
 
-#Production
+# Production
 
 ### Installing
 
