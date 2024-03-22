@@ -11,16 +11,12 @@
 2. Navigate to project directory via IDE Terminal
 3. cd into `docker` folder
 4. run command: 
-```shell
-#For Windows
+```
 ./start-local-environment.sh
-
-#For Mac or Linux use
-./start-local-environment-arm.sh)
 ````
-5. Wait for command to finish building
-6. Open Docker Desktop and the container structure :
-```shell
+5. Open Docker Desktop 
+6. The container structure inside Docker Desktop should display the following:
+```
 docker
 - activemq-1
 - integration-adaptor-111-1
@@ -29,7 +25,7 @@ docker
 ````
 7. cd into test-suite folder
 8. run command (this will build the test harness)
-```shell
+```
 ./start-local.sh
 ````
 9. Test harness will open in default browser
@@ -56,6 +52,41 @@ Example:
 ```
 - Example certifications for the test harness can be found in `integration-adaptor-111\test-suite\certificates\certs.zip`
 - Upload customised certificates using `Global settings` section within the test harness
+
+### Configuring variables within the test-harness
+The ODS code, patient details, certificates, URL are all configurable. See attached screenshots for configurable features.
+
+#### 1. Set Globals
+
+![set-globals](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/4219fa64-5ed1-4d09-a939-916e7137d6e5)
+
+2. Patient Referred to Primary Care for Assignment
+
+![patient-referred-to-primary-care-for-assignment](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/1feb699d-e0c9-4517-8c82-e6cb3db81cf4)
+
+3. Safeguarding Referral
+
+![safeguarding-referral](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/9d158ec4-fd91-40d8-a3ec-2d5202faccaa)
+
+4. Patient sent to A&E
+
+![patient-sent-to-AnE](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/a8667076-5661-442e-a2e2-826b65b69158)
+
+5. Structured FHIR Messages - Scenario 01
+
+![structured-fhir-message-scenario-01](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/47cad87d-c803-4c95-8ddb-12fdba36177b)
+
+6. Primary care Referral: Two Locations - Scenario 02
+
+![primary-care-referral-two-locations-scenario-02](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/7c3f63db-f5d9-436e-a513-5f241d3e2a18)
+
+7. Patient with no NHS no.
+
+![patient-with-no-nhs-number](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/d3f5007c-5a2c-4e5e-b5f5-67fa46fcaeca)
+   
+8. Ambulance Input
+
+![ambulance-input](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/bc69fbc4-ba0b-4fc1-900e-c426c480da73)
 
 ### Troubleshooting:
 
