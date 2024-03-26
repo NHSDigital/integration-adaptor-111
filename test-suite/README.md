@@ -50,7 +50,7 @@ Example:
    ]
 }
 ```
-- Example certifications for the test harness can be found in `integration-adaptor-111\test-suite\certificates\certs.zip`
+- Example certifications for the test harness can be found in `integration-adaptor-111\test-suite\certificates\`
 - Upload customised certificates using `Global settings` section within the test harness
 
 ### Configuring variables within the test-harness
@@ -58,7 +58,8 @@ The ODS code, patient details, certificates, URL are all configurable. See attac
 
 #### 1. Set Globals
 
-![set-globals](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/4219fa64-5ed1-4d09-a939-916e7137d6e5)
+![set-globals](https://github.com/NHSDigital/integration-adaptor-111/assets/3241503/9c72a8e2-d0e7-4cc1-add4-c0a741c0ecb3)
+
 
 2. Patient Referred to Primary Care for Assignment
 

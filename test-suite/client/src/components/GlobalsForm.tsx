@@ -309,6 +309,7 @@ const GlobalsForm = ({
                 </Button>
               </Col>
             </Row>
+            <Card.Description>Certificates for SSL connection </Card.Description>
           </Card.Content>
         </Card>
       </Details.Text>
