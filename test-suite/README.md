@@ -1,13 +1,95 @@
-#Local
+# Local
+
+## Running Test Harness
+### Pre-Requisites:
+* Install Java 17
+* Install Docker
+* Install a preferred IDE
 
 ### Installing
-
-Run the shell script for local development:
-
-```shell
-sh start-local.sh
+1. Run Docker Desktop
+2. Navigate to project directory via IDE Terminal
+3. cd into `docker` folder
+4. run command: 
 ```
+./start-local-environment.sh
+````
+5. Open Docker Desktop 
+6. The container structure inside Docker Desktop should display the following:
+```
+docker
+- activemq-1
+- integration-adaptor-111-1
+- rabbitmq-1
+- wiremock-1
+````
+7. cd into test-suite folder
+8. run command (this will build the test harness)
+```
+./start-local.sh
+````
+9. Test harness will open in default browser
 
+### Using the test harness:
+- The test harness has data pre-populated in each form - clicking reset will undo any alternations
+- ODS Codes and NHS Numbers can be freely changed from each form
+- To predefine custom configurations such as ODS codes or DOS Ids, go to `integration-adaptor-111\docker\wiremock\stubs\_files\odsCodesDosIds.json`
+  (rebuild the docker containers after changing the JSON file).
+
+Example:
+```json
+{
+   "odsCodes": [
+      "EM396",
+      "5L399"
+   ],
+   "dosIds": [
+      "26428",
+      "96465",
+      "48583"
+   ]
+}
+```
+- Example certifications for the test harness can be found in `integration-adaptor-111\test-suite\certificates\`
+- Upload customised certificates using `Global settings` section within the test harness
+
+### Configuring variables within the test-harness
+The ODS code, patient details, certificates, URL are all configurable. See attached screenshots for configurable features.
+
+#### 1. Set Globals
+
+![set-globals](https://github.com/NHSDigital/integration-adaptor-111/assets/3241503/9c72a8e2-d0e7-4cc1-add4-c0a741c0ecb3)
+
+
+2. Patient Referred to Primary Care for Assignment
+
+![patient-referred-to-primary-care-for-assignment](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/1feb699d-e0c9-4517-8c82-e6cb3db81cf4)
+
+3. Safeguarding Referral
+
+![safeguarding-referral](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/9d158ec4-fd91-40d8-a3ec-2d5202faccaa)
+
+4. Patient sent to A&E
+
+![patient-sent-to-AnE](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/a8667076-5661-442e-a2e2-826b65b69158)
+
+5. Structured FHIR Messages - Scenario 01
+
+![structured-fhir-message-scenario-01](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/47cad87d-c803-4c95-8ddb-12fdba36177b)
+
+6. Primary care Referral: Two Locations - Scenario 02
+
+![primary-care-referral-two-locations-scenario-02](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/7c3f63db-f5d9-436e-a513-5f241d3e2a18)
+
+7. Patient with no NHS no.
+
+![patient-with-no-nhs-number](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/d3f5007c-5a2c-4e5e-b5f5-67fa46fcaeca)
+   
+8. Ambulance Input
+
+![ambulance-input](https://github.com/NHSDigital/integration-adaptor-111/assets/135852870/bc69fbc4-ba0b-4fc1-900e-c426c480da73)
+
+### Troubleshooting:
 
 If you do not have nodejs installed as a CLI, you will get an error.
 
@@ -32,7 +114,7 @@ You can check if the backend instance is active by running:
 curl -v http://localhost:7070/healthcheck
 ```
 
-#Production
+# Production
 
 ### Installing
 
