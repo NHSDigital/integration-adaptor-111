@@ -3,10 +3,11 @@ The 111 adaptor enables GP Practices to receive [NHS 111 Report messages](https:
 
 You can receive and route a “post event message” to their GP when NHS 111 requests:
 
-an ambulance call out
-a referral to a local emergency department
-a referral to an Out Of Hours service
-a referral to their GP
+* an ambulance call out
+* a referral to a local emergency department
+* a referral to an Out Of Hours service
+* a referral to their GP
+
 The NHS 111 Report adaptor can receive messages from the NHS 111 service and post them to the mailbox of the relevant GP practice.
 
 ## Adaptor Scope
