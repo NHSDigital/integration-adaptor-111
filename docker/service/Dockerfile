@@ -5,7 +5,7 @@ WORKDIR /home/gradle/service
 
 RUN ./gradlew --build-cache bootJar
 
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre-jammy
 
 EXPOSE 8081
 
