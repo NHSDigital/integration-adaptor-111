@@ -111,7 +111,7 @@ Nginx proxy is used to handle TLS MA. In order to configure it you need to set t
 * NGINX_CRL_URL - CRL URL - Nginx can download CRL on startup
 
 ## ITK to FHIR Mapping
-Even though the adaptor removes this complexity, the FHIR field mappings have been documented [here](doc/ITK_FHIR_mapping.docx) for information.
+Even though the adaptor removes this complexity, the [FHIR field mappings have been documented for information](doc/ITK_FHIR_mapping.md).
 
 ## Running the Adaptor
 
