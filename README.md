@@ -11,7 +11,8 @@ You can receive and route a “post event message” to their GP when NHS 111 re
 The NHS 111 Report adaptor can receive messages from the NHS 111 service and post them to the mailbox of the relevant GP practice.
 
 ## Adaptor Scope
-The main objective of the 111 Adaptor is to hide complex legacy standards and instead present a simple and consistent interface aligned to current NHSD national standards.  The adaptor receives ITK 2.2 wrapped Clinical Document Architecture (CDA) XML documents over web services, and converts them into structured FHIR messages before posting them onto the GP system's inbound event queue.
+The main objective of the 111 Adaptor is to hide complex legacy standards and instead present a simple and consistent interface aligned to current NHS England national standards.
+The adaptor receives ITK 2.2 wrapped Clinical Document Architecture (CDA) XML documents over web services, and converts them into structured FHIR messages before posting them onto the GP system's inbound event queue.
 
 The 111 adaptor consists of two docker images:[proxy](https://hub.docker.com/r/nhsdev/nia-111-nginx-adaptor) and [adaptor](https://hub.docker.com/r/nhsdev/nia-111-adaptor), you must deploy it within your own environment.
 
@@ -114,7 +115,10 @@ Nginx proxy is used to handle TLS MA. In order to configure it you need to set t
 Even though the adaptor removes this complexity, the [FHIR field mappings have been documented for information](doc/ITK_FHIR_mapping.md).
 
 ## ITK Testbench
-The [ITK Testbench](https://digital.nhs.uk/services/interoperability-toolkit/developer-resources/itk-test-centre/itk-testbench) provided by NHS Digital has an essential tool for ITK interface development and conformance.  This tool provides resources that will allow you to adequately test the 111 adaptor within your own environment.
+The [ITK Testbench] provided by NHS England has an essential tool for ITK interface development and conformance.
+This tool provides resources that will allow you to adequately test the 111 adaptor within your own environment.
+
+[ITK Testbench]: https://digital.nhs.uk/services/interoperability-toolkit/developer-resources/itk-test-centre/itk-testbench
 
 ## Test Pack
 Our testing pack as well our test harness can be found inside the test-suite directory [Test-Suite](./test-suite)
