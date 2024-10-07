@@ -309,7 +309,7 @@
 | No mapping |  | Source |
 | See ITK column of Questionnaire Response – Item mapping below |  | item |
 
-## QuestionnaireResponse – Item
+### QuestionnaireResponse.Item
 
 | ITK Mapping Element | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2 |
 | --- | --- | --- |
@@ -350,7 +350,7 @@
 | No mapping | Hardcoded to patient | subjectType |
 | See ITK column of Questionnaire – Item Mapping below |  | item |
 
-## Questionnaire - Item
+### Questionnaire.Item
 
 | ITK Mapping Element | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2 |
 | --- | --- | --- |
