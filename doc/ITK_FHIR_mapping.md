@@ -733,11 +733,11 @@ Mapped from `<healthCareFacility><location>`
 
 ## MessageHeader
 
-| ITK Mapping Element | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2 |
-| --- | --- | --- |
-| `<itk:header><itk:addresslist><itk:address uri="ODS_CODE" />`<br />`<itk:header><itk:addresslist><itk:address type="2.16.840.1.113883.2.1.3.2.4.18.44" uri="DOS_ID" />` |  | destination.ednpoint (two values concatenated ODS_CODE:DOSServiceID:DOS_ID) |
-| `<itk:header><a:MessageID>` |  | id |
-| `<itk:header><itk:handlingSpecification><itk:spec value>` |  | Event |
-| Code: `<itk:header><itk:handlingSpecification><itk:spec value>`<br />System: `<itk:header><itk:handlingSpecification><itk:spec key>` |  | Reason |
-| `<itk:header><itk:handlingSpecification><itk:senderAddress>` |  | Destination |
-| `<ClinicalDocument><effectiveTime>` |  | timestamp |
+| ITK Mapping Element                                                                                                                                                     | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2                                                 |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|-----------------------------------------------------------------------------|
+| `<itk:header><itk:addresslist><itk:address uri="ODS_CODE" />`<br />`<itk:header><itk:addresslist><itk:address type="2.16.840.1.113883.2.1.3.2.4.18.44" uri="DOS_ID" />` |                    | destination.ednpoint (two values concatenated ODS_CODE:DOSServiceID:DOS_ID) |
+| `<itk:header><a:MessageID>`                                                                                                                                             |                    | id                                                                          |
+| `<itk:header><itk:handlingSpecification><itk:spec value>`                                                                                                               |                    | Event                                                                       |
+| Code: `<itk:header><itk:handlingSpecification><itk:spec value>`<br />System: `<itk:header><itk:handlingSpecification><itk:spec key>`                                    |                    | Reason                                                                      |
+| `<itk:header><itk:handlingSpecification><itk:senderAddress>`                                                                                                            |                    | Destination                                                                 |
+| `<ClinicalDocument><effectiveTime>`                                                                                                                                     |                    | timestamp                                                                   |
