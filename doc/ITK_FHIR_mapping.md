@@ -1,4 +1,4 @@
-## Encounter mapping
+## Encounter
 
 | ITK Mapping Element | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2 |
 | --- | --- | --- |
@@ -119,7 +119,7 @@
 | Not populated |  | availabilityExceptions |
 | Not populated |  | Endpoints |
 
-## Consent mapping
+## Consent
 
 | ITK Mapping Element | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2 |
 | --- | --- | --- |
