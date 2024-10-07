@@ -733,11 +733,76 @@ Mapped from `<healthCareFacility><location>`
 
 ## MessageHeader
 
-| ITK Mapping Element                                                                                                                                                     | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2                                                 |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|-----------------------------------------------------------------------------|
-| `<itk:header><itk:addresslist><itk:address uri="ODS_CODE" />`<br />`<itk:header><itk:addresslist><itk:address type="2.16.840.1.113883.2.1.3.2.4.18.44" uri="DOS_ID" />` |                    | destination.ednpoint (two values concatenated ODS_CODE:DOSServiceID:DOS_ID) |
-| `<itk:header><a:MessageID>`                                                                                                                                             |                    | id                                                                          |
-| `<itk:header><itk:handlingSpecification><itk:spec value>`                                                                                                               |                    | Event                                                                       |
-| Code: `<itk:header><itk:handlingSpecification><itk:spec value>`<br />System: `<itk:header><itk:handlingSpecification><itk:spec key>`                                    |                    | Reason                                                                      |
-| `<itk:header><itk:handlingSpecification><itk:senderAddress>`                                                                                                            |                    | Destination                                                                 |
-| `<ClinicalDocument><effectiveTime>`                                                                                                                                     |                    | timestamp                                                                   |
+The MessageHeader element is mapped primarily from the `itk:header` XML element, which is located at `soap:Body \ itk:DistributionEnvelope \ itk:header`.
+
+| ITK Mapping Element                                                                                                                  | FHIR Mapping Elements 3.0.2 |
+|--------------------------------------------------------------------------------------------------------------------------------------|-----------------------------|
+| `soap:Header / addressing:MessageID`                                                                                                 | id                          |
+| CodeableConcept mapped from `itk:header / itk:handlingSpecification / itk:spec[0][@value]`. See below for details.                   | event                       |
+| ODS sender address concatenated with ":DOSServiceId:" concatenated with the DosServiceId `itk:header / itk:addressList / itk:header` | destination[0].endpoint     |
+| `ClinicalDocument / effectiveTime[@value]`                                                                                           | timestamp                   |
+| Constant: `"NHS 111 Adaptor"`                                                                                                        | source.name                 |
+| Taken from the environment variable `PEM111_SOAP_SEND_TO`                                                                            | source.endpoint             |
+| `itk:header / itk:handlingSpecification / itk:spec[0][@key]`                                                                         | reason.coding[0].system     |
+| `itk:header / itk:handlingSpecification / itk:spec[0][@value]`                                                                       | reason.coding[0].code       |
+
+### MessageHeader.event
+
+This field can be used by the consumer to identify if an event is for action, or for information.
+
+Any spec value beginning with `"urn:nhs-itk:interaction:primary..."`, for example `"urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0"` is mapped to an EventType of Referral.
+
+```json
+{
+  "system": "https://fhir.nhs.uk/STU3/CodeSystem/EventType-1",
+  "code": "referral-1",
+  "display": "Referral"
+}
+```
+
+Any spec value beginning with `"urn:nhs-itk:interaction:copy..."`, for example `"urn:nhs-itk:interaction:copyRecipientNHS111CDADocument-v2-0"` is mapped to an EventType of DischargeDetails.
+
+```json
+{
+  "system": "https://fhir.nhs.uk/STU3/CodeSystem/EventType-1",
+  "code": "discharge-details-1",
+  "display": "Discharge Details"
+}
+```
+
+<details>
+<summary>Example MessageHeader</summary>
+
+```json
+{
+  "fullUrl": "urn:uuid:7AEFFED7-78AF-4940-9EE2-5FAA3920ECFE",
+  "resource": {
+    "resourceType": "MessageHeader",
+    "id": "7AEFFED7-78AF-4940-9EE2-5FAA3920ECFE",
+    "event": {
+      "system": "https://fhir.nhs.uk/STU3/CodeSystem/EventType-1",
+      "code": "referral-1",
+      "display": "Referral"
+    },
+    "destination": [
+      {
+        "endpoint": "urn:nhs-uk:addressing:ods:RSHSO14A:DOSServiceID:2000006423"
+      }
+    ],
+    "timestamp": "2021-04-06T11:33:35.000+00:00",
+    "source": {
+      "name": "NHS 111 Adaptor",
+      "endpoint": "http://localhost:8080/report"
+    },
+    "reason": {
+      "coding": [
+        {
+          "system": "urn:nhs-itk:ns:201005:interaction",
+          "code": "urn:nhs-itk:interaction:primaryEmergencyDepartmentRecipientNHS111CDADocument-v2-0"
+        }
+      ]
+    }
+  }
+}
+```
+</details>
