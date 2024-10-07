@@ -113,37 +113,11 @@ Nginx proxy is used to handle TLS MA. In order to configure it you need to set t
 ## ITK to FHIR Mapping
 Even though the adaptor removes this complexity, the [FHIR field mappings have been documented for information](doc/ITK_FHIR_mapping.md).
 
-## Running the Adaptor
-
-### Pre requisites for running the Adaptor:
-1. JDK 17
-2. Docker
-
-### How to run service:
-* Navigate to `docker`
-* Run script: `./start-local-environment.sh`
-
-The above script builds the necessary docker images and starts the SpringBoot service and ActiveMQ
-* REST service `localhost:10001`
-* ActiveMQ: `localhost:5672`
-
-### How to run unit tests:
-* Navigate to `service`
-* Run: `./gradlew test`
-
-### How to run integration tests:
-* Navigate to `service`
-* Run: `./gradlew integrationTest`
-
-### Example bundle message 
-* An example bundle message can be found [here](doc/example_FHIR_bundle_message.json) of [ITK_Report](./service/src/integration-test/resources/xml/ITK_Report_request.xml) converted to FHIR.
-
-### AMQP Variables
-* Queue name: `encounter-report`
-* Broker: `amqp://activemq:5672`
-
 ## ITK Testbench
 The [ITK Testbench](https://digital.nhs.uk/services/interoperability-toolkit/developer-resources/itk-test-centre/itk-testbench) provided by NHS Digital has an essential tool for ITK interface development and conformance.  This tool provides resources that will allow you to adequately test the 111 adaptor within your own environment.
 
 ## Test Pack
 Our testing pack as well our test harness can be found inside the test-suite directory [Test-Suite](./test-suite)
+
+## NIA Support (NHS England) guidance
+If you are looking to make changes to the adaptor you should first read the [guidance for developing the adaptor](nhs-england-developer-information.md).
