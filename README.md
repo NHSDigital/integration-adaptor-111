@@ -111,8 +111,10 @@ Nginx proxy is used to handle TLS MA. In order to configure it you need to set t
 * NGINX_CRL - Certificate revocation list
 * NGINX_CRL_URL - CRL URL - Nginx can download CRL on startup
 
-## ITK to FHIR Mapping
-Even though the adaptor removes this complexity, the [FHIR field mappings have been documented for information](doc/ITK_FHIR_mapping.md).
+## Mapping documentation
+To help understand what fields are populated by the adaptor we provide [ITK to FHIR field mappings](doc/ITK_FHIR_mapping.md).
+
+We also provide [example JSON payloads](doc/json) of what the adaptor generates from an [incoming XML payload](doc/xml).  
 
 ## ITK Testbench
 The [ITK Testbench] provided by NHS England has an essential tool for ITK interface development and conformance.
