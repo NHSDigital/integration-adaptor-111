@@ -230,7 +230,7 @@
 | Title = `<component><structuredBody> <component><section><title>`<br />Text = `<component><structuredBody> <component><section><text>` |  | Event |
 | See ITK column of Care Plan mapping<br />See ITK column of Referral Request mapping<br />See ITK column of Questionnaire Response mapping<br />`<component><structuredBody> <component><section><title>`<br />`<component><structuredBody> <component><section><text>` | Care planReferral RequestQuestionnaire Response | section |
 
-## Referral Request
+## ReferralRequest
 
 | ITK Mapping Element | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2 |
 | --- | --- | --- |
@@ -293,7 +293,7 @@
 | Not populated |  | link |
 | `<patientRole><patient><ethicGroup>`<br />`<patientRole><patient><religiousAffiliation>`<br />`<patientRole><patient><birthplace>` | HARDCODED: "https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect-EthnicCategory-1"<br />HARDCODED: "https://fhir.hl7.org.uk/STU3/StructureDefinition/Extension-CareConnect"<br />HARDCODED: "http://hl7.org/fhir/StructureDefinition/birthPlace" | Extension |
 
-## Questionnaire Response
+## QuestionnaireResponse
 
 | ITK Mapping Element | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2 |
 | --- | --- | --- |
@@ -309,7 +309,7 @@
 | No mapping |  | Source |
 | See ITK column of Questionnaire Response – Item mapping below |  | item |
 
-## Questionnaire Response – Item
+## QuestionnaireResponse – Item
 
 | ITK Mapping Element | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2 |
 | --- | --- | --- |
@@ -373,7 +373,7 @@
 | No mapping |  | .initial |
 | No mapping |  | .item |
 
-## Procedure Request
+## ProcedureRequest
 
 | ITK Mapping Element | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2 |
 | --- | --- | --- |
@@ -681,7 +681,7 @@ Mapped from `<healthCareFacility><location>`
 | See ITK column of practitioner mapping | Practitioner | individual |
 |  |  |  |
 
-## Practitioner Role (ResponsibleParty)
+## PractitionerRole (ResponsibleParty)
 
 | ITK Mapping Element | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2 |
 | --- | --- | --- |
