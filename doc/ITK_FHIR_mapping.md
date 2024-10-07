@@ -323,7 +323,7 @@
 | No mapping |  | .item |
 | No mapping |  | item |
 
-## Questionnaire
+## Questionnaire
 
 | ITK Mapping Element | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2 |
 | --- | --- | --- |
