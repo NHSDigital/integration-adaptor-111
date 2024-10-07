@@ -1,3 +1,45 @@
+# Bundle
+
+The 111 Adaptor will convert each ITK Clinical Document Architecture XML document into a [FHIR Bundle] encoded as JSON.
+
+| ITK Mapping Element                      | FHIR Objects 3.0.2                                          | FHIR Mapping Elements 3.0.2 |
+|------------------------------------------|-------------------------------------------------------------|-----------------------------|
+|                                          | UTC timestamp of when the adaptor received the ITK document | Meta.lastUpdated            |
+|                                          | HARDCODED: `"ClinicalDocument VersionNumber"`               | identifier.type.text        |
+| ClinicalDocument / versionNumber[@value] |                                                             | identifier.value            |
+|                                          | HARDCODED: `"message"`                                      | type                        |
+|                                          | List of resources as described below                        | entry                       |
+
+Each bundle will include within its `entry` array:
+
+- 0..1 [Appointment](#appointment)
+- 0..* [CarePlan](#careplan)
+- 1    [Composition](#composition)
+- 1    [Condition](#condition)
+- 1    [Consent](#consent)
+- 1    [Device](#device)
+- 1    [Encounter](#encounter)
+- 0..1 Group
+- 0..* [HealthcareService](#healthcareservice)
+- 1    [List](#list)
+- 0..* [Location](#location)
+- 1    [MessageHeader](#messageheader)
+- 0..* [Observation](#observation)
+- 0..* [Organization](#organization)
+- 1    [Organization (service provider)](#organization-service-provider)
+- 0..* [Participant](#participant)
+- 0..* [Patient](#patient)
+- 0..* [Practitioner](#practitioner)
+- 0..* PractitionerRole author
+- 0..1 [PractitionerRole responsibleParty](#practitionerrole-responsibleparty)
+- 0..1 [ProcedureRequest](#procedurerequest)
+- 0..* [Questionnaire](#questionnaire)
+- 0..* [QuestionnaireResponse](#questionnaireresponse)
+- 1    [ReferralRequest](#referralrequest)
+- 0..1 [RelatedPerson](#relatedperson)
+
+[FHIR Bundle]: https://hl7.org/fhir/stu3/bundle.html
+
 ## Encounter
 
 | ITK Mapping Element | FHIR Objects 3.0.2 | FHIR Mapping Elements 3.0.2 |
