@@ -1,5 +1,6 @@
 # integration-adaptor-111
-The 111 adaptor enables GP Practices to receive [NHS 111 Report messages](https://digital.nhs.uk/developer/api-catalogue/nhs-111-hl7-v3) from NHS 111, for example into a GP system, following a patient's call to the free NHS 111 service. 
+
+The 111 adaptor enables GP Practices to receive [NHS 111 Report messages](https://digital.nhs.uk/developer/api-catalogue/nhs-111) from NHS 111, for example into a GP system, following a patient's call to the free NHS 111 service. 
 
 You can receive and route a “post event message” to their GP when NHS 111 requests:
 
