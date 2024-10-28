@@ -40,12 +40,6 @@ dependencies {
     testImplementation 'io.rest-assured:xml-path:5.0.1'
     testImplementation 'ca.uhn.hapi.fhir:hapi-fhir-validation-resources-dstu3:5.7.2'
     testImplementation 'pl.pragmatists:JUnitParams:1.1.1'
-
-    constraints {
-        testImplementation('org.apache.commons:commons-compress:1.21') {
-            because 'to fix https://snyk.io/vuln/SNYK-JAVA-ORGAPACHECOMMONS-1316638'
-        }
-    }
 }
 
 
