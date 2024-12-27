@@ -24,11 +24,11 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Stream;
 
-import javax.jms.BytesMessage;
-import javax.jms.Destination;
-import javax.jms.IllegalStateException;
-import javax.jms.JMSException;
-import javax.jms.Message;
+import jakarta.jms.BytesMessage;
+import jakarta.jms.Destination;
+import jakarta.jms.IllegalStateException;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.json.JSONException;
