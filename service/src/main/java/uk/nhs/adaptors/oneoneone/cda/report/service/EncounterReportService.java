@@ -1,7 +1,7 @@
 package uk.nhs.adaptors.oneoneone.cda.report.service;
 
-import javax.jms.Destination;
-import javax.jms.TextMessage;
+import jakarta.jms.Destination;
+import jakarta.jms.TextMessage;
 
 import org.apache.xmlbeans.XmlException;
 import org.hl7.fhir.dstu3.model.Bundle;
