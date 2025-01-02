@@ -1,0 +1,212 @@
+name: 111 Adaptor Build Workflow
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  checkstyle:
+    name: Checkstyle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21 LTS
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'temurin'
+
+      - name: Checkstyle
+        run: |
+          ./gradlew checkStyleMain checkstyleTest checkstyleIntegrationTest --parallel
+        working-directory: ./service
+
+      - name: Collect Artifacts
+        if: always()
+        run: |
+          mkdir -p artifacts
+          cp -r ./service/build/reports ./artifacts
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 'Checkstyle Reports'
+          path: ./artifacts/**
+          compression-level: 9
+
+      - name: Temporary Artifacts Cleanup
+        run: rm -rf ./artifacts
+
+  spotbugs:
+    name: Spotbugs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21 LTS
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'temurin'
+
+      - name: Spotbugs
+        run: |
+          ./gradlew spotbugsMain spotbugsTest spotbugsIntegrationTest --parallel
+        working-directory: ./service
+
+      - name: Collect Artifacts
+        if: always()
+        run: |
+          mkdir -p artifacts
+          cp -r ./service/build/reports ./artifacts
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 'Spotbugs Reports'
+          path: ./artifacts/**
+          compression-level: 9
+
+      - name: Temporary Artifacts Cleanup
+        run: rm -rf ./artifacts
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: [ checkstyle, spotbugs ]
+    steps:
+      -   name: Checkout Repository
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+      -   name: Setup Java 21 LTS
+          uses: actions/setup-java@v4
+          with:
+            java-version: 21
+            distribution: 'temurin'
+
+      -   name: Execute Unit Tests
+          run: ./gradlew test jacocoTestReport --parallel --build-cache
+          working-directory: ./service
+
+      -   name: Collect Artifacts
+          if: always()
+          run: |
+            mkdir -p artifacts
+            cp -r ./service/build/reports ./artifacts
+
+      -   name: Upload Artifacts
+          uses: actions/upload-artifact@v4
+          if: always()
+          with:
+            name: 'Unit Test Reports'
+            path: ./artifacts/**
+            compression-level: 9
+
+      -   name: Temporary Artifacts Cleanup
+          run: rm -rf ./artifacts
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: [ checkstyle, spotbugs ]
+    steps:
+      -   name: Checkout Repository
+          uses: actions/checkout@v4
+
+      -   name: Setup Java 21 LTS
+          uses: actions/setup-java@v4
+          with:
+            java-version: 21
+            distribution: 'temurin'
+
+      -   name: Start Docker Dependencies
+          env:
+            PEM111_AMQP_BROKER: "amqp://activemq:5672"
+            PEM111_AMQP_PORT: "5672"
+            PEM111_ITK_EXTERNAL_CONFIGURATION_URL: "http://wiremock:8080/configuration/ods-dos"
+            LOG_LEVEL: DEBUG
+          run: |
+            docker network create 111network
+            docker compose build
+            docker compose up activemq wiremock --detach
+          working-directory: ./docker
+
+      -   name: Execute Integration Tests
+          run: ./gradlew integrationTest
+          working-directory: ./service
+
+      -   name: Dump Docker Logs
+          if: always()
+          run: |
+            chmod +x dump_docker_logs.sh
+            ./dump_docker_logs.sh
+          working-directory: ./scripts
+          shell: bash
+
+      -   name: Collect Artifacts
+          if: always()
+          run: |
+            mkdir -p artifacts
+            cp -r ./service/build/reports ./artifacts
+            cp -r ./scripts/logs ./artifacts
+
+      -   name: Upload Artifacts
+          uses: actions/upload-artifact@v4
+          if: always()
+          with:
+            name: 'Integration Test Reports & Docker Logs'
+            path: ./artifacts/**
+            compression-level: 9
+
+      -   name: Stop Docker Dependencies
+          if: always()
+          run: |
+            docker compose down --rmi=local --volumes --remove-orphans
+            docker compose rm
+            docker network rm commonforgpc
+          working-directory: ./docker
+
+      -   name: Temporary Artifacts Cleanup
+          run: rm -rf ./artifacts
+
+  generate-build-id:
+      name: Generate Build ID
+      runs-on: ubuntu-latest
+      needs: [unit-tests, integration-tests]
+      outputs:
+          build-id: ${{ steps.generate.outputs.buildId }}
+      steps:
+          -   name: Checkout Repository
+              uses: actions/checkout@v4
+
+          -   id: generate
+              working-directory: ./scripts
+              shell: bash
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  chmod +x ./create_build_id.sh
+                  
+                  if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+                    GIT_BRANCH=PR
+                  elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
+                    GIT_BRANCH=main
+                  fi
+                  
+                  BUILD_ID=$(./create_build_id.sh $GIT_BRANCH ${{ github.run_number }} ${{ github.sha }})
+                  echo "Generated the build tag: $BUILD_ID"                  
+                  echo "buildId=$BUILD_ID" >> $GITHUB_OUTPUT
+
+  
+
+
