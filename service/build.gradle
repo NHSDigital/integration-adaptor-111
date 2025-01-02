@@ -12,6 +12,11 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'checkstyle'
 apply plugin: "com.github.spotbugs"
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
 repositories {
     mavenCentral()
     flatDir {
