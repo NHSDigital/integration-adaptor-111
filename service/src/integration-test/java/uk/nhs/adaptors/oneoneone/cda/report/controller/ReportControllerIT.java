@@ -24,11 +24,11 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Stream;
 
-import javax.jms.BytesMessage;
-import javax.jms.Destination;
-import javax.jms.IllegalStateException;
-import javax.jms.JMSException;
-import javax.jms.Message;
+import jakarta.jms.BytesMessage;
+import jakarta.jms.Destination;
+import jakarta.jms.IllegalStateException;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.json.JSONException;
@@ -47,7 +47,7 @@ import org.skyscreamer.jsonassert.comparator.CustomComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
