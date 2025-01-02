@@ -173,7 +173,7 @@ jobs:
           run: |
             docker compose down --rmi=local --volumes --remove-orphans
             docker compose rm
-            docker network rm commonforgpc
+            docker network rm 111network
           working-directory: ./docker
 
       -   name: Temporary Artifacts Cleanup
