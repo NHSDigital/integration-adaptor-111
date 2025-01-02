@@ -1,4 +1,4 @@
-FROM gradle:7.6-jdk17 AS build
+FROM gradle:8.8-jdk17 AS build
 COPY --chown=gradle:gradle service /home/gradle/service
 
 WORKDIR /home/gradle/service
