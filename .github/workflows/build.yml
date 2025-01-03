@@ -148,7 +148,9 @@ jobs:
 
             -   name: Dump Docker Logs
                 if: always()
-                run: ./dump_docker_logs.sh
+                run: |
+                    chmod +x dump_docker_logs.sh
+                    ./dump_docker_logs.sh
                 working-directory: ./scripts
                 shell: bash
 
@@ -194,7 +196,7 @@ jobs:
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 run: |
-                    ./create_build_id.sh
+                    chmod +x ./create_build_id.sh
                     
                     if [[ "${{ github.event_name }}" == "pull_request" ]]; then
                       GIT_BRANCH=PR
