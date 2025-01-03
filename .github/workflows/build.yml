@@ -193,8 +193,6 @@ jobs:
             -   id: generate
                 working-directory: ./scripts
                 shell: bash
-                env:
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 run: |
                     chmod +x ./create_build_id.sh
                     
