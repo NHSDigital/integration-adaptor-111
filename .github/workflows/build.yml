@@ -142,6 +142,9 @@ jobs:
                     docker compose up activemq wiremock --detach
                 working-directory: ./docker
 
+            -   name: Check Java Version
+                run: java -version
+
             -   name: Execute Integration Tests
                 run: ./gradlew integrationTest
                 working-directory: ./service
