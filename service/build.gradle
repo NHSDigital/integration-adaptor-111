@@ -5,6 +5,7 @@ plugins {
     id "io.freefair.lombok" version "8.11"
     id "checkstyle"
     id "com.github.spotbugs" version "6.0.27"
+    id "jacoco"
 }
 
 apply plugin: 'java'
@@ -63,6 +64,13 @@ configurations {
 
 test {
     useJUnitPlatform()
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
+    dependsOn test // tests are required to run before generating the report
 }
 
 task integrationTest(type: Test) {
