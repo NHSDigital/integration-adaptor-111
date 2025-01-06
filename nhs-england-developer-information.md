@@ -4,7 +4,7 @@
 > The audience of this documentation is designed for NHS England developers.
 
 ## Pre requisites for running the Adaptor:
-1. JDK 17
+1. JDK 21
 2. Docker
 
 ## How to run service:
