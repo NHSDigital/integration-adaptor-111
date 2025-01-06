@@ -1,4 +1,4 @@
-FROM gradle:8.11.0-jdk21-jammy AS build
+FROM gradle:8.8-jdk21-jammy AS build
 COPY --chown=gradle:gradle service /home/gradle/service
 
 WORKDIR /home/gradle/service
