@@ -148,9 +148,7 @@ jobs:
 
             -   name: Dump Docker Logs
                 if: always()
-                run: |
-                    chmod +x dump_docker_logs.sh
-                    ./dump_docker_logs.sh
+                run: ./dump_docker_logs.sh
                 working-directory: ./scripts
                 shell: bash
 
@@ -194,8 +192,6 @@ jobs:
                 working-directory: ./scripts
                 shell: bash
                 run: |
-                    chmod +x ./create_build_id.sh
-                    
                     if [[ "${{ github.event_name }}" == "pull_request" ]]; then
                       GIT_BRANCH=PR
                     elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/master" ]]; then
