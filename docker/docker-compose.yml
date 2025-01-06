@@ -17,9 +17,7 @@ services:
       - 111network
 
   activemq:
-    build:
-      context: ../
-      dockerfile: ./docker/activemq/Dockerfile
+    build: ./activemq
     ports:
       - "5672:5672"
       - "8161:8161"
