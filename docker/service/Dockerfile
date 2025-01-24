@@ -1,11 +1,11 @@
-FROM gradle:8.8-jdk17 AS build
+FROM gradle:8.8-jdk21-jammy AS build
 COPY --chown=gradle:gradle service /home/gradle/service
 
 WORKDIR /home/gradle/service
 
 RUN ./gradlew --build-cache bootJar
 
-FROM eclipse-temurin:17-jre-jammy
+FROM eclipse-temurin:21-jre-jammy
 
 EXPOSE 8081
 
