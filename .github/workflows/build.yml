@@ -4,10 +4,10 @@ on:
     pull_request:
         types: [opened, synchronize, reopened]
         branches:
-            - master
+            - main
     push:
         branches:
-            - master
+            - main
 
 jobs:
     checkstyle:
@@ -194,8 +194,8 @@ jobs:
                 run: |
                     if [[ "${{ github.event_name }}" == "pull_request" ]]; then
                       GIT_BRANCH=PR
-                    elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/master" ]]; then
-                      GIT_BRANCH=master
+                    elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
+                      GIT_BRANCH=main
                     fi
                     
                     BUILD_ID=$(./create_build_id.sh $GIT_BRANCH ${{ github.run_number }} ${{ github.sha }})
