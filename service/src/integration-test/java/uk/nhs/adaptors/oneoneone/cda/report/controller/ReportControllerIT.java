@@ -281,7 +281,7 @@ public class ReportControllerIT {
             .asString();
 
         Map<ResponseElement, String> responseElementsMap = responseParserUtil.parseSuccessfulResponseXml(responseBody);
-        assertThat(responseElementsMap.get(ACTION)).isEqualTo(EXPECTED_ACTION);
+        assertThat(responseElementsMap.get(ACTION)).isEqualTo("BROKEN");
         assertThat(responseElementsMap.get(BODY)).isEqualTo(String.format(EXPECTED_BODY, messageIdValue));
 
         Message jmsMessage = jmsTemplate.receive(destination);

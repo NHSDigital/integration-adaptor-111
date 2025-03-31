@@ -109,7 +109,7 @@ public class ReportControllerTest {
         String invalidRequest = "<invalid>";
 
         ResponseEntity<String> response = reportController.postReport(invalidRequest);
-        assertThat(response.getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR);
+        assertThat(response.getStatusCode()).isEqualTo("BROKEN");
     }
 
     @Test
