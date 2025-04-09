@@ -24,9 +24,14 @@ public class CodeUtilTest {
         when(ce.getCodeSystem()).thenReturn(codeSystem);
         when(ce.getCode()).thenReturn(code);
         when(ce.getDisplayName()).thenReturn(displayName);
+
         CodeableConcept codeableConcept = CodeUtil.createCodeableConceptList(ce);
-        assertThat(codeableConcept.getCoding().get(0).getCode()).isEqualTo(codeSystem);
-        assertThat(codeableConcept.getCoding().get(0).getDisplay()).isEqualTo(displayName);
-        assertThat(codeableConcept.getCoding().get(0).getSystem()).isEqualTo(code);
+
+        assertThat(codeableConcept.getCoding().getFirst().getCode())
+            .isEqualTo(code);
+        assertThat(codeableConcept.getCoding().getFirst().getDisplay())
+            .isEqualTo(displayName);
+        assertThat(codeableConcept.getCoding().getFirst().getSystem())
+            .isEqualTo(codeSystem);
     }
 }
