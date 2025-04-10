@@ -12,9 +12,9 @@ public class CodeUtil {
     public static CodeableConcept createCodeableConceptList(CE ce) {
         CodeableConcept codeableConcept = new CodeableConcept();
         Coding coding = new Coding();
-        coding.setCode(ce.getCodeSystem());
+        coding.setCode(ce.getCode());
         coding.setDisplay(ce.getDisplayName());
-        coding.setSystem(ce.getCode());
+        coding.setSystem(ce.getCodeSystem());
         codeableConcept.addCoding(coding);
 
         return codeableConcept;
