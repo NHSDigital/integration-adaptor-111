@@ -652,7 +652,7 @@ Mapped from `<healthCareFacility><location>`
 | Not populated |  | birthDate |
 | Not populated |  | Photo |
 | Not populated |  | Qualification |
-| Not populated |  | Coomunication |
+| Not populated |  | Communication |
 
 ### Practitioner for informant & data enterer
 
@@ -668,7 +668,7 @@ Mapped from `<healthCareFacility><location>`
 | Not populated |  | birthDate |
 | Not populated |  | Photo |
 | Not populated |  | Qualification |
-| Not populated |  | Coomunication |
+| Not populated |  | Communication |
 
 ### Practitioner for author
 
@@ -684,7 +684,7 @@ Mapped from `<healthCareFacility><location>`
 | Not populated |  | birthDate |
 | Not populated |  | Photo |
 | Not populated |  | Qualification |
-| Not populated |  | Coomunication |
+| Not populated |  | Communication |
 
 ## Participant
 
