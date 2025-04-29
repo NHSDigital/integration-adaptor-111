@@ -34,7 +34,7 @@ The services will listen on following ports
 * Run ./acceptance.sh
 
 ## Example bundle message 
-* Example FHIR bundle messages can be found [here](./doc/json), they are the result of [input ITK messages](./doc/xml) converted to FHIR. 
+* Example FHIR bundle messages can be found [here](../doc/json), they are the result of [input ITK messages](../doc/xml) converted to FHIR. 
 
 ### Stopping the adapter:
 

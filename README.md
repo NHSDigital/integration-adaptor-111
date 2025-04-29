@@ -15,7 +15,7 @@ The NHS 111 Report adaptor can receive messages from the NHS 111 service and pos
 The main objective of the 111 Adaptor is to hide complex legacy standards and instead present a simple and consistent interface aligned to current NHS England national standards.
 The adaptor receives ITK 2.2 wrapped Clinical Document Architecture (CDA) XML documents over web services, and converts them into structured FHIR messages before posting them onto the GP system's inbound event queue.
 
-The 111 adaptor consists of two docker images:[proxy](https://hub.docker.com/r/nhsdev/nia-111-nginx-adaptor) and [adaptor](https://hub.docker.com/r/nhsdev/nia-111-adaptor), you must deploy it within your own environment.
+The 111 adaptor consists of two docker images: [proxy](https://hub.docker.com/r/nhsdev/nia-111-nginx-adaptor) and [adaptor](https://hub.docker.com/r/nhsdev/nia-111-adaptor), you must deploy it within your own environment.
 
 The following diagram illustrates the NHS 111 Report adaptor: 
 ![111 SysContext](/img/111SysContext.png)

@@ -1,4 +1,4 @@
-#Local
+## Local
 
 ### Installing
 
@@ -32,7 +32,7 @@ You can check if the backend instance is active by running:
 curl -v http://localhost:7070/healthcheck
 ```
 
-#Production
+## Production
 
 ### Installing
 
