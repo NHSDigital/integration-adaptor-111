@@ -305,7 +305,7 @@ public class ReportControllerIT {
         overwriteJson(expectedJsonPath, messageBody);
         assertThat(validator.isValid(messageBody)).isEqualTo(true);
         assertThat(jmsMessage.getStringProperty(MESSAGE_ID)).isEqualTo(messageIdValue);
-        assertMessageContent(messageBody, readResourceAsString(expectedJsonPath));
+        assertMessageContent(readResourceAsString(expectedJsonPath), messageBody);
     }
 
     @SneakyThrows
@@ -321,7 +321,7 @@ public class ReportControllerIT {
         }
     }
 
-    private void assertMessageContent(String actual, String expected) throws JSONException {
+    private void assertMessageContent(String expected, String actual) throws JSONException {
         LOGGER.info("Validating message content:\n{}", actual);
 
         //when comparing json objects, this will ignore various json paths that contain random values like ids or timestamps
