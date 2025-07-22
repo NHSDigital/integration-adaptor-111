@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlTokenSource;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
@@ -32,7 +33,7 @@ public class ReportRequestUtils {
 
     public DistributionEnvelopeDocument extractDistributionEnvelope(Node distributionEnvelope) throws ItkXmlException {
         try {
-            return DistributionEnvelopeDocument.Factory.parse(xmlUtils.serialize(distributionEnvelope));
+            return (DistributionEnvelopeDocument) XmlObject.Factory.parse(distributionEnvelope);
         } catch (XmlException e) {
             throw new ItkXmlException("DistributionEnvelope missing", e.getMessage(), e);
         }
@@ -49,7 +50,8 @@ public class ReportRequestUtils {
 
     @SneakyThrows
     private static POCDMT000002UK01ClinicalDocument1 parseClinicalDoc(Node node) {
-        return ClinicalDocumentDocument1.Factory.parse(node).getClinicalDocument();
+        var clinicalDocumentDocument = (ClinicalDocumentDocument1) XmlObject.Factory.parse(node);
+        return clinicalDocumentDocument.getClinicalDocument();
     }
 
     private List<Node> findClinicalDocs(DistributionEnvelopeDocument envelopedDocument) {

@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.xmlbeans.XmlObject;
 import org.hl7.fhir.dstu3.model.QuestionnaireResponse;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument;
-import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase;
-import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument.PathwaysCase.PathwayDetails.PathwayTriageDetails.PathwayTriage.TriageLineDetails.TriageLine;
+import org.nhspathways.webservices.pathways.pathwayscase.PathwaysCaseDocument
+    .PathwaysCase.PathwayDetails.PathwayTriageDetails
+    .PathwayTriage.TriageLineDetails.TriageLine;
+
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -34,12 +37,13 @@ public class PathwayService {
         String pathwaysCase = findPathwaysCase(clinicalDocument);
         if (pathwaysCase != null) {
             try {
-                PathwaysCase pathwaysCaseDocument = PathwaysCaseDocument.Factory.parse(pathwaysCase).getPathwaysCase();
-                TriageLine[] triageLineArray = pathwaysCaseDocument.getPathwayDetails().getPathwayTriageDetails().getPathwayTriageArray(0)
+                var pathwaysCaseDocument = (PathwaysCaseDocument) XmlObject.Factory.parse(pathwaysCase);
+                var documentPathwaysCase = pathwaysCaseDocument.getPathwaysCase();
+                TriageLine[] triageLineArray = documentPathwaysCase.getPathwayDetails().getPathwayTriageDetails().getPathwayTriageArray(0)
                     .getTriageLineDetails().getTriageLineArray();
 
                 for (TriageLine triageLine : triageLineArray) {
-                    questionnaireResponseList.add(questionnaireResponseMapper.mapQuestionnaireResponse(pathwaysCaseDocument, patient,
+                    questionnaireResponseList.add(questionnaireResponseMapper.mapQuestionnaireResponse(documentPathwaysCase, patient,
                         encounter, triageLine));
                 }
 
