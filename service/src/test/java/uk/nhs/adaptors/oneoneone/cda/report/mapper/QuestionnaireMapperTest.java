@@ -57,6 +57,7 @@ public class QuestionnaireMapperTest {
         when(pathwaysCase.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseId()).thenReturn(CASE_ID);
         when(pathwaysCase.getPathwayDetails().getPathwayTriageDetails().getPathwayTriageArray(0).getUser()).thenReturn(user);
+        when(user.getSkillSet()).thenReturn(null);
         when(pathwaysCase.getCaseReceiveEnd().toString()).thenReturn(DATE);
         when(pathwayUtil.isSetCaseReceiveEnd(pathwaysCase)).thenReturn(true);
         when(triageLine.getQuestion().getTriageLogicId().getPathwayOrderNo()).thenReturn(ORDER_NUMBER);
