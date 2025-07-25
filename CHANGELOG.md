@@ -4,11 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
-
+## [2.0.0] - 2024-07-25
 - [Breaking Change] When mapping `Observation[Condition] / code` in the input XML, the values for `code` and `codeSystem` were swapped in the resultant JSON. The adaptor now correctly maps `[Condition] / code @code` to `Resource[Condtion].code.coding[0].code` and `[Condition] / code @codeSystem` to `Resource[Condtion].code.coding[0].system` as intented.
-  
-
 ## [1.0.5-amd64 & 1.0.5-arm64]
 - Rabbit AMQP 0.9.1 support has been added to allow configuration with a different queue protocol. 
 - Readme has been updated to include the configuration details for AMQP 0.9.1
