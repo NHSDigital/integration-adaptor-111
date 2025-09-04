@@ -1,0 +1,24 @@
+name: Add SBOM to Release
+on:
+  release:
+    types: [published]
+
+jobs:
+  upload-sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@da167eac915b4e86f08b264dbdbc867b61be6f0c
+        with:
+          path: .
+
+      - name: Upload SBOM to release
+        uses: actions/upload-release-asset@e8f9f06c4b078e705bd2ea027f0926603fc9b4d5
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: sbom.json
+          asset_name: sbom.json
+          asset_content_type: application/json
