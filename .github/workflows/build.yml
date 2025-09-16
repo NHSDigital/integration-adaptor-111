@@ -16,7 +16,7 @@ jobs:
             contents: read
         steps:
             - name: Checkout Repository
-              uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+              uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
             - name: Setup Java 21 LTS
               uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 #5.0.0
@@ -53,7 +53,7 @@ jobs:
             contents: read
         steps:
             - name: Checkout Repository
-              uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+              uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
             - name: Setup Java 21 LTS
               uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 #5.0.0
@@ -91,7 +91,7 @@ jobs:
             contents: read
         steps:
             -   name: Checkout Repository
-                uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+                uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
                 with:
                     fetch-depth: 0
             -   name: Setup Java 21 LTS
@@ -129,7 +129,7 @@ jobs:
             contents: read
         steps:
             -   name: Checkout Repository
-                uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+                uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
             -   name: Setup Java 21 LTS
                 uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 #5.0.0
@@ -195,7 +195,7 @@ jobs:
             build-id: ${{ steps.generate.outputs.buildId }}
         steps:
             -   name: Checkout Repository
-                uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+                uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
             -   id: generate
                 working-directory: ./scripts
@@ -230,7 +230,7 @@ jobs:
                       build-context: .
         steps:
             - name: Checkout Repository
-              uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+              uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@a03048d87541d1d9fcf2ecf528a4a65ba9bd7838 # v5.0.0
@@ -273,7 +273,7 @@ jobs:
         runs-on: [ ubuntu-latest ]
         steps:
             - name: Check out code
-              uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+              uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
             - name: Comment PR
               uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3.0.1
               with:
