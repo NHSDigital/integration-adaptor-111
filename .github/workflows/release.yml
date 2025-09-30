@@ -1,18 +1,22 @@
 on:
-  push:
-    tags: "*"
+  release:
+    types: [published]
 
 jobs:
   push_to_dockerhub:
-    name: "Push Docker Images to DockerHub"
     strategy:
       matrix:
-        image:
-          - {folder: service, dockerhub_name: nia-111-adaptor}
-          - {folder: nginx, dockerhub_name: nia-111-nginx-adaptor}
+        config:
+          - folder: docker/service
+            dockerhub_name: nia-111-adaptor
+            upload_url: ${{ github.event.release.upload_url }}
+          - folder: docker/nginx
+            dockerhub_name: nia-111-nginx-adaptor
+            upload_url: ${{ github.event.release.upload_url }}
     uses: NHSDigital/integration-adaptor-actions/.github/workflows/release-adaptor-container-image.yml@main
     with:
-      dockerhub_name: ${{matrix.image.dockerhub_name}}
-      folder: ${{matrix.image.folder}}
-
+      folder: ${{ matrix.config.folder }}
+      dockerhub_name: ${{ matrix.config.dockerhub_name }}
+      upload_url: ${{ matrix.config.upload_url }}
     secrets: inherit
+
